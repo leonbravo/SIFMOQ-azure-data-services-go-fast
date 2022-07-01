@@ -497,8 +497,9 @@ else
     }
     else {
         Set-Location $deploymentFolderPath
-        Set-Location "../SampleFiles/sif/"
+        $samples = "../SampleFiles/sif" 
         $RelativePath = "samples/sif/"
+ 
         Write-Host "Deploying SIF files"
         # first true allow
         if ($tout.is_vnet_isolated -eq $true)
@@ -509,23 +510,25 @@ else
         $result = az storage container create --name "datalakelanding" --account-name $adlsstorage_name --auth-mode login
         $result = az storage container create --name "datalakeraw" --account-name $adlsstorage_name --auth-mode login
 
-        $folders = get-childitem -Exclude ".*" -Directory -Name
-        $folders = $folders = $folders + "`r`n."
+        Set-Location $samples
+        $folders = [String[]](get-childitem -Exclude ".*" -Directory -Name)
+        $folders =  ".`r`n" + $folders 
 
         foreach ($folder in $folders){
-            Set-Location $folder
-            if ($folder -ne "."){ az storage blob directory create   -c "datalakeraw" -d $folder --account-name $adlsstorage_name }
+
             $files = Get-ChildItem -Name | Where { ! $_.PSIsContainer }  
             foreach ($file in $files) {
                 #metadata inserts have been configured from datalakeraw to datalanding
                 #$result = az storage blob upload --file $file --container-name $adlsstorage_name.Replace("adsl","") --name $RelativePath$file --account-name $adlsstorage_name --auth-mode login
-                $result = az storage blob upload --file $file --container-name "datalakeraw" --name $RelativePath$file --account-name $adlsstorage_name --auth-mode login
+                $result = az storage blob upload --file $file --container-name "datalakeraw" --name "$RelativePath/$file" --account-name $adlsstorage_name --auth-mode login
 
                 $name = $file.PSChildName.Replace(".json","")
             }
-            
-            Set-Location ".."
-        }
+             
+            if ($folder -ne "."){ az storage blob directory create   -c "datalakeraw" -d $folder --account-name $adlsstorage_name }
+            Set-Location $deploymentFolderPath
+            Set-Location "$samples\$folder"
+        }  
         #SIFDatabase serverless pool
         Set-Location $deploymentFolderPath
         Set-Location "..\Database\ADSGoFastDbUp\SIF"
