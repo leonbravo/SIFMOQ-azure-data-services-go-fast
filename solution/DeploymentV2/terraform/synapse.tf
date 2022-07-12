@@ -77,7 +77,7 @@ resource "azurerm_synapse_workspace" "synapse" {
 # SQL Dedicated Pool
 # --------------------------------------------------------------------------------------------------------------------
 resource "azurerm_synapse_sql_pool" "synapse_sql_pool" {
-  count                = var.deploy_adls && var.deploy_synapse && var.deploy_synapse_sqlpool && !var.publish_sif_database ? 1 : 0
+  count                = var.deploy_adls && var.deploy_synapse && var.deploy_synapse_sqlpool ? 1 : 0
   name                 = local.synapse_dwpool_name
   synapse_workspace_id = azurerm_synapse_workspace.synapse[0].id
   sku_name             = var.synapse_sku

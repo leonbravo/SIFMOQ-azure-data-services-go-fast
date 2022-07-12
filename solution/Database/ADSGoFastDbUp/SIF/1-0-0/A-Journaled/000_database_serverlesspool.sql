@@ -8,4 +8,10 @@ If you're trying to create SQL objects, users, or change permissions in a databa
 Create a separate database and reference the synchronized tables by using three-part names and cross-database queries.
 */
 
+Declare @check int = 0
+Set @check = (Select count(*) from sys.databases
+where name = '$SynapseDatabaseName$')
+if @check = 0
+begin 
 CREATE DATABASE [$SynapseDatabaseName$]
+end

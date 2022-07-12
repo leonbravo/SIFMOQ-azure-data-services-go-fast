@@ -66,8 +66,8 @@
   </ItemGroup>
 
   <ItemGroup>
-  	  <EmbeddedResource Include="1-0-0\A-Journaled\000_database_serverlesspool.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\001_external_datasource.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\000_database_serverlesspool.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\001_external_datasource.sql" />
     <EmbeddedResource Include="1-0-0\A-Journaled\001-Schemas.sql" />       
     <EmbeddedResource Include="1-0-0\A-Journaled\002-Tables.sql" />       
     <EmbeddedResource Include="1-0-0\A-Journaled\003-Views.sql" />       
@@ -77,45 +77,44 @@
     <EmbeddedResource Include="1-0-0\A-Journaled\007-ManualUpdate.sql" />       
     <EmbeddedResource Include="1-0-0\A-Journaled\008-CreateMSILogins.sql" />    
     <!--EmbeddedResource Include="1-0-0\A-Journaled\009-InsertSIFTaskMasters.sql" /-->
-
-	  <EmbeddedResource Include="1-0-0\A-Journaled\300_dm_dimSexCode.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\300_dm_dimStaffStatus.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\311_vw_CalendarDate.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\312_dm_dimCalendarDate.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\315_vw_StaffPersonal.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\316_dm_dimStaff.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\325_vw_StudentScoreJudgementAgainstStandard.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\326_dm_factStudentScoreJudgementAgainstStandard.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\331_vw_GradingAssignmentScore.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\332_dm_factGradingAssignmentScore.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\335_vw_TeachingGroup.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\336_vw_TeachingGroup_LocalCode.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\337_vw_TeachingGroup_Period.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\338_vw_TeachingGroup_Student.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\339_vw_TeachingGroup_Teacher.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\340_dm_factTeachingGroup.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\341_vw_LearningStandardItem.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\342_dm_dimLearningStandardItem.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\351_vw_GradingAssignment.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\352_dm_dimGradingInfo.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\360_vw_MarkValueInfo_ValidLetterMark.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\362_dm_dimMarkValueInfo.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\365_vw_SchoolInfo.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\366_dm_dimSchoolInfo.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\368_vw_SectionInfo.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\369_dm_dimSectionInfo.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\375_vw_StudentDailyAttendance.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\376_vw_StudentDailyAttendance_OtherCode.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\377_dm_dimStudentAttendance.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\381_vw_StudentGrade.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\382_dm_factStudentGrade.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\385_vw_StudentPersonal.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\386_dm_dimStudent.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\391_vw_StudentSectionEnrollment.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\392_dm_dimStudentSectionEnrollment.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\398_vw_TermInfo.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\399_dm_dimTermInfo.sql" />
-	  <EmbeddedResource Include="1-0-0\A-Journaled\vw_TeachingGroup_OLD.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\300_dm_dimSexCode.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\300_dm_dimStaffStatus.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\311_vw_CalendarDate.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\312_dm_dimCalendarDate.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\315_vw_StaffPersonal.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\316_dm_dimStaff.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\325_vw_StudentScoreJudgementAgainstStandard.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\326_dm_factStudentScoreJudgementAgainstStandard.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\331_vw_GradingAssignmentScore.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\332_dm_factGradingAssignmentScore.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\335_vw_TeachingGroup.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\336_vw_TeachingGroup_LocalCode.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\337_vw_TeachingGroup_Period.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\338_vw_TeachingGroup_Student.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\339_vw_TeachingGroup_Teacher.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\340_dm_factTeachingGroup.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\341_vw_LearningStandardItem.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\342_dm_dimLearningStandardItem.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\351_vw_GradingAssignment.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\352_dm_dimGradingInfo.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\360_vw_MarkValueInfo_ValidLetterMark.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\362_dm_dimMarkValueInfo.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\365_vw_SchoolInfo.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\366_dm_dimSchoolInfo.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\368_vw_SectionInfo.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\369_dm_dimSectionInfo.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\375_vw_StudentDailyAttendance.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\376_vw_StudentDailyAttendance_OtherCode.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\377_dm_dimStudentAttendance.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\381_vw_StudentGrade.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\382_dm_factStudentGrade.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\385_vw_StudentPersonal.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\386_dm_dimStudent.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\391_vw_StudentSectionEnrollment.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\392_dm_dimStudentSectionEnrollment.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\398_vw_TermInfo.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\399_dm_dimTermInfo.sql" />
+	<EmbeddedResource Include="1-0-0\A-Journaled\vw_TeachingGroup_OLD.sql" />
 
 
   </ItemGroup>

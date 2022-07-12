@@ -203,11 +203,3 @@ output "adf_git_host_url" {
 output "synapse_lakedatabase_container_name" {
   value = azurerm_storage_data_lake_gen2_filesystem.dlfs[0].name
 }
-
-output "synapse_sql_administrator_login"{
-  value = var.synapse_sql_login
-}
-
-output "synapse_sql_administrator_login_password"   { 
-  value = local.synapse_sql_password
-  }

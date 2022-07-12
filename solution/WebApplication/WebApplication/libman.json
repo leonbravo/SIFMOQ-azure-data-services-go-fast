@@ -3,7 +3,7 @@
   "defaultProvider": "cdnjs",
   "libraries": [
     {
-      "library": "twitter-bootstrap@4.5.2",
+      "library": "twitter-bootstrap@4.6.1",
       "destination": "wwwroot/lib/twitter-bootstrap/"
     },
     {
@@ -11,7 +11,7 @@
       "destination": "wwwroot/lib/octicons/"
     },
     {
-      "library": "datatables.net@1.10.22",
+      "library": "datatables.net@1.12.1",
       "destination": "wwwroot/lib/datatables.net/"
     },
     {
@@ -60,19 +60,19 @@
       "destination": "wwwroot/lib/jquery-jsonview/"
     },
     {
-      "library": "datatables.net-buttons-bs4@1.6.5",
+      "library": "datatables.net-buttons-bs4@2.2.3",
       "destination": "wwwroot/lib/datatables.net/"
     },
     {
-      "library": "datatables.net-bs4@1.10.22",
+      "library": "datatables.net-bs4@1.12.1",
       "destination": "wwwroot/lib/datatables.net/"
     },
     {
-      "library": "datatables.net-select-bs4@1.3.1",
+      "library": "datatables.net-select-bs4@1.4.0",
       "destination": "wwwroot/lib/datatables.net/"
     },
     {
-      "library": "datatables.net-select@1.3.1",
+      "library": "datatables.net-select@1.4.0",
       "destination": "wwwroot/lib/datatables.net/"
     },
     {
@@ -88,7 +88,7 @@
       "destination": "wwwroot/lib/jquery-validation-unobtrusive/"
     },
     {
-      "library": "datatables.net-buttons@1.6.5",
+      "library": "datatables.net-buttons@2.2.3",
       "destination": "wwwroot/lib/datatables.net/"
     },
     {

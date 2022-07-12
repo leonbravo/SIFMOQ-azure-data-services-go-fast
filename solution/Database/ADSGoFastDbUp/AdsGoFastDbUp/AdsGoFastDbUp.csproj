@@ -51,7 +51,6 @@
     <EmbeddedResource Include="1-0-2\A-Journaled\003-Extend-SubjectAreaMap-Table.sql" /> 
     <EmbeddedResource Include="1-0-2\A-Journaled\004-ModifyTaskMaster.sql" /> 
     <EmbeddedResource Include="1-0-2\A-Journaled\005-AddSynapseContainerAsSource.sql" />
-	  <EmbeddedResource Include="1-0-2\A-Journaled\026-InsertSIFTaskMaster.sql" />
   </ItemGroup>
 
   <ItemGroup>
