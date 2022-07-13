@@ -22,7 +22,7 @@
 					},
 					"parameters": {
 						"object_name": {
-							"value": "contoso_sis",
+							"value": "BCE",
 							"type": "string"
 						},
 						"method_name": {
