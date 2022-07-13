@@ -1,0 +1,553 @@
+{
+	"name": "NEW_Insights_module_setup",
+	"properties": {
+		"folder": {
+			"name": "Insights Module"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "med",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "8bb0411e-3202-4940-a551-c6c5839c0661"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1",
+				"state": {
+					"6d6e5946-0981-4f2c-9e01-d4abb8933977": {
+						"type": "Synapse.DataFrame",
+						"sync_state": {
+							"table": {
+								"rows": [
+									{
+										"0": "PostChannelMessage",
+										"1": "2021-06-02 14:48:11.0000000",
+										"3": "AAMkAGRlM2ViNzg5LWMzOGEtNGYyMC05MTFhLWE5MzAxNTk3NjMzNwBGAAAAAAD6n_vRPyLsQ4uBYtj1MoVQBwBONi1figD3Spv1d4sN1luqAAAAAGZ3AABONi1figD3Spv1d4sN1luqAADDKaaJAAA=",
+										"5": "9ab188a9-815d-411d-83a3-a98b56a6c614",
+										"6": "19:20990825150f4da78ffdcd6a05cfa2e2@thread.tacv2",
+										"7": "Teams",
+										"8": "5ddbce29-3ab9-405d-9350-05945a8a8542",
+										"9": "Student",
+										"10": "1.1"
+									},
+									{
+										"0": "ReplyChannelMessage",
+										"1": "2021-06-02 16:36:46.0000000",
+										"3": "AAMkAGRlM2ViNzg5LWMzOGEtNGYyMC05MTFhLWE5MzAxNTk3NjMzNwBGAAAAAAD6n_vRPyLsQ4uBYtj1MoVQBwBONi1figD3Spv1d4sN1luqAAAAAGZ3AABONi1figD3Spv1d4sN1luqAADDKaaRAAA=",
+										"5": "9ab188a9-815d-411d-83a3-a98b56a6c614",
+										"6": "19:20990825150f4da78ffdcd6a05cfa2e2@thread.tacv2",
+										"7": "Teams",
+										"8": "5ddbce29-3ab9-405d-9350-05945a8a8542",
+										"9": "Student",
+										"10": "1.1"
+									},
+									{
+										"0": "PostChannelMessage",
+										"1": "2021-06-02 14:45:34.0000000",
+										"3": "AAMkADg2NDk3MmIwLTM5NDUtNGQwZS04NDQzLTM5MjViMjZiYzFiNABGAAAAAAAEYRCcXVmaTYyFMuIJ9RetBwDPLnXMbt9HQaxJaYXomUUhAAAAAAEnAADPLnXMbt9HQaxJaYXomUUhAADC-nCbAAA=",
+										"5": "5e0407f7-c973-4f25-9cef-302117b080c6",
+										"6": "19:1500af388f6647739e2300bdc1db53a2@thread.tacv2",
+										"7": "Teams",
+										"8": "7951c64a-b45d-4adb-8842-5e7ab60d17e1",
+										"10": "1.1"
+									},
+									{
+										"0": "ReplyChannelMessage",
+										"1": "2021-06-02 14:45:58.0000000",
+										"3": "AAMkADg2NDk3MmIwLTM5NDUtNGQwZS04NDQzLTM5MjViMjZiYzFiNABGAAAAAAAEYRCcXVmaTYyFMuIJ9RetBwDPLnXMbt9HQaxJaYXomUUhAAAAAAEnAADPLnXMbt9HQaxJaYXomUUhAADC-nCcAAA=",
+										"5": "5e0407f7-c973-4f25-9cef-302117b080c6",
+										"6": "19:1500af388f6647739e2300bdc1db53a2@thread.tacv2",
+										"7": "Teams",
+										"8": "7951c64a-b45d-4adb-8842-5e7ab60d17e1",
+										"10": "1.1"
+									},
+									{
+										"0": "PostChannelMessage",
+										"1": "2021-06-02 14:45:34.0000000",
+										"3": "AAMkADg2NDk3MmIwLTM5NDUtNGQwZS04NDQzLTM5MjViMjZiYzFiNABGAAAAAAAEYRCcXVmaTYyFMuIJ9RetBwDPLnXMbt9HQaxJaYXomUUhAAAAAAEnAADPLnXMbt9HQaxJaYXomUUhAADC-nCbAAA=",
+										"5": "5e0407f7-c973-4f25-9cef-302117b080c6",
+										"6": "19:1500af388f6647739e2300bdc1db53a2@thread.tacv2",
+										"7": "Teams",
+										"8": "7951c64a-b45d-4adb-8842-5e7ab60d17e1",
+										"10": "1.1"
+									}
+								],
+								"schema": [
+									{
+										"key": "0",
+										"name": "_c0",
+										"type": "string"
+									},
+									{
+										"key": "1",
+										"name": "_c1",
+										"type": "string"
+									},
+									{
+										"key": "2",
+										"name": "_c2",
+										"type": "string"
+									},
+									{
+										"key": "3",
+										"name": "_c3",
+										"type": "string"
+									},
+									{
+										"key": "4",
+										"name": "_c4",
+										"type": "string"
+									},
+									{
+										"key": "5",
+										"name": "_c5",
+										"type": "string"
+									},
+									{
+										"key": "6",
+										"name": "_c6",
+										"type": "string"
+									},
+									{
+										"key": "7",
+										"name": "_c7",
+										"type": "string"
+									},
+									{
+										"key": "8",
+										"name": "_c8",
+										"type": "string"
+									},
+									{
+										"key": "9",
+										"name": "_c9",
+										"type": "string"
+									},
+									{
+										"key": "10",
+										"name": "_c10",
+										"type": "string"
+									},
+									{
+										"key": "11",
+										"name": "_c11",
+										"type": "string"
+									},
+									{
+										"key": "12",
+										"name": "_c12",
+										"type": "string"
+									},
+									{
+										"key": "13",
+										"name": "_c13",
+										"type": "string"
+									},
+									{
+										"key": "14",
+										"name": "_c14",
+										"type": "string"
+									},
+									{
+										"key": "15",
+										"name": "_c15",
+										"type": "string"
+									},
+									{
+										"key": "16",
+										"name": "_c16",
+										"type": "string"
+									},
+									{
+										"key": "17",
+										"name": "_c17",
+										"type": "string"
+									},
+									{
+										"key": "18",
+										"name": "_c18",
+										"type": "string"
+									}
+								]
+							},
+							"isSummary": false,
+							"language": "scala"
+						},
+						"persist_state": {
+							"view": {
+								"type": "details",
+								"chartOptions": {
+									"chartType": "bar",
+									"aggregationType": "count",
+									"categoryFieldKeys": [
+										"0"
+									],
+									"seriesFieldKeys": [
+										"0"
+									],
+									"isStacked": false
+								}
+							}
+						}
+					}
+				}
+			},
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/7b9a4896-4541-483f-bdc7-d8f4ec6be3ee/resourceGroups/rg-oea-hybriddev4/providers/Microsoft.Synapse/workspaces/syn-oea-hybriddev4/bigDataPools/med",
+				"name": "med",
+				"type": "Spark",
+				"endpoint": "https://syn-oea-hybriddev4.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/med",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "2.4",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"extraHeader": null
+			}
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Microsoft Insights Module Example Notebook\r\n",
+					"This notebook creates 26 tables into two new Spark databases called s2np_insights and s2p_insights.\r\n",
+					"\r\n",
+					"s2p_insights is utilized for the Graph Reports API PowerBI dashboard provided"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### Provision storage accounts\r\n",
+					"\r\n",
+					"The storage account variable has to be changed to the name of the storage account associated with your Azure resource group."
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType, ArrayType\r\n",
+					"from pyspark.sql.functions import *\r\n",
+					"from pyspark.sql.window import Window\r\n",
+					"from faker import Faker\r\n",
+					"import datetime\r\n",
+					"\r\n",
+					"\r\n",
+					"# data lake and container information\r\n",
+					"storage_account = 'stoeahybriddev4'\r\n",
+					"use_test_env = False\r\n",
+					"\r\n",
+					"if use_test_env:\r\n",
+					"    stage1np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage1np'\r\n",
+					"    stage2np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2np'\r\n",
+					"    stage2p = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2p'\r\n",
+					"else:\r\n",
+					"    stage1np = 'abfss://stage1np@' + storage_account + '.dfs.core.windows.net'\r\n",
+					"    stage2np = 'abfss://stage2np@' + storage_account + '.dfs.core.windows.net'\r\n",
+					"    stage2p = 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
+				],
+				"attachments": null,
+				"execution_count": 1
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### Load Raw Data from Lake\r\n",
+					"To ensure that that the right tables are loaded, confirm that the file paths match your data lake storage containers. \r\n",
+					"\r\n",
+					"The top cell sets the date of the data to be processed (this is currently set up to process the test data). \r\n",
+					"\r\n",
+					"To process your own data:\r\n",
+					" - Uncomment the top four lines of code (lines 2, 3, 4, and 5)\r\n",
+					" - Comment out the last two line of code (lines 6 and 7)"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Set the date to be processed\r\n",
+					"#today = datetime.datetime.now()\r\n",
+					"#date1 = today.strftime('%Y-%m-%d')\r\n",
+					"#date1.cast('string')\r\n",
+					"#date2 = date1\r\n",
+					"date1 = \"2021-06-02\"\r\n",
+					"date2 = \"2021-09-05\""
+				],
+				"attachments": null,
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# load needed activity table(s) from data lake storage\r\n",
+					"dfActivityRaw = spark.read.format('csv').load(f'{stage1np}/M365/activity/'+ date1 + '/*.csv')\r\n",
+					"# load needed roster tables from data lake storage\r\n",
+					"#dfAADGroupRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/AadGroup/*.csv')\r\n",
+					"#dfAADGroupMembershipRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/AadGroupMembership/*.csv')\r\n",
+					"#dfAADUserRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/AadUser/*.csv')\r\n",
+					"#dfAADUserPersonMappingRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/AadUserPersonMapping/*.csv')\r\n",
+					"#dfCourseRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/Course/*.csv')\r\n",
+					"#dfCourseGradeLevelRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/CourseGradeLevel/*.csv')\r\n",
+					"#dfCourseSubjectRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/CourseSubject/*.csv')\r\n",
+					"#dfEnrollmentRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/Enrollment/*.csv')\r\n",
+					"#dfOrganizationRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/Organization/*.csv')\r\n",
+					"#dfPersonRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/Person/*.csv')\r\n",
+					"#dfPersonDemographicRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/PersonDemographic/*.csv')\r\n",
+					"#dfPersonDemographicEthnicityRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/PersonDemographicEthnicity/*.csv')\r\n",
+					"#dfPersonDemographicPersonFlagRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/PersonDemographicPersonFlag/*.csv')\r\n",
+					"#dfPersonDemographicRaceRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/PersonDemographicRace/*.csv')\r\n",
+					"#dfPersonEmailAddressRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/PersonEmailAddress/*.csv')\r\n",
+					"#dfPersonIdentifierRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/PersonIdentifier/*.csv')\r\n",
+					"#dfPersonOrganizationRoleRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/PersonOrganizationRole/*.csv')\r\n",
+					"#dfPersonPhoneNumberRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/PersonPhoneNumber/*.csv')\r\n",
+					"#dfPersonRelationshipRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/PersonRelationship/*.csv')\r\n",
+					"#dfRefDefinitionRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/RefDefinition/*.csv')\r\n",
+					"#dfSectionRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/Section/*.csv')\r\n",
+					"#dfSectionSessionRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/SectionSession/*.csv')\r\n",
+					"#dfSectionSubjectRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/SectionSubject/*.csv')\r\n",
+					"#dfSessionRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/Session/*.csv')\r\n",
+					"#dfSourceSystemRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
+				],
+				"attachments": null,
+				"execution_count": 3
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## 1. Activity table\r\n",
+					"Contains all activities (students and teachers) at a school-system level\r\n",
+					"\r\n",
+					"** Databases and tables used: **\r\n",
+					"\r\n",
+					" - None \r\n",
+					" \r\n",
+					"**CSV files used:**\r\n",
+					"\r\n",
+					"- M365/activity/(whatever the set date is)/*.csv\r\n",
+					"\r\n",
+					"**Database and table created:**\r\n",
+					"\r\n",
+					"1. Spark DB: s2p_insights\r\n",
+					"- Table: techactivity\r\n",
+					"2. Spark DB: s2np_insights\r\n",
+					"- Table: techactivity"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"display(dfActivityRaw.limit(10))"
+				],
+				"attachments": null,
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%run /OEA_py"
+				],
+				"attachments": null,
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%run /NEW_MSInsights_py"
+				],
+				"attachments": null,
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# 0) Initialize the OEA framework and MSInsights module.\r\n",
+					"oea = OEA()\r\n",
+					"ms_insights = MSInsights(oea, source_folder='M365')"
+				],
+				"attachments": null,
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# 1) Process the raw activity data (csv format) from stage1 into stage2 data lake \r\n",
+					"# (adds schema details and writes out in parquet format).\r\n",
+					"# NOTE: Does not write out to delta lake. \r\n",
+					"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
+					"ms_insights.process_activity()"
+				],
+				"attachments": null,
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# 1b) Process the raw roster data (csv format) from stage1 into stage2 data lake\r\n",
+					"# (adds schema details and writes out in parquet format).\r\n",
+					"# NOTE: Does not write out to delta lake. \r\n",
+					"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
+					"ms_insights._process_roster_date_folder(date_folder_path='2021-09-05')"
+				],
+				"attachments": null,
+				"execution_count": null
+			}
+		]
+	}
+}
