@@ -3,54 +3,9 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Extract Insights test data from source",
-				"description": "Landed in stage1np",
-				"type": "ExecutePipeline",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "Insights_copy_test_data",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"endpointsSet1": {
-							"value": "@json('[{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/AadGroup/part-00000-04254045-edb4-49bf-a639-7fabc1a8971a-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"AadGroup/AadGroup_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/AadGroupMembership/part-00000-390d8b78-8b57-4530-8a13-ed75885ac553-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"AadGroupMembership/AadGroupMembership_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/AadUser/part-00000-b5bedb81-1176-4f76-b11f-cb620bafafc6-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"AadUser/AadUser_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/AadUserPersonMapping/part-00000-76604d6e-d34b-45ac-9eb8-fb3aac759e8c-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"AadUserPersonMapping/AadUserPersonMapping_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/Course/part-00000-bf140e7d-1345-4723-94c7-d498c26ebbfc-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"Course/Course_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/CourseGradeLevel/part-00000-73eeef7d-be0e-4e6a-9570-e0f0708d83d6-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"CourseGradeLevel/CourseGradeLevel_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/CourseSubject/part-00000-f303f28d-b1a8-43f2-bcba-66e21d33e05c-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"CourseSubject/CourseSubject_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/Enrollment/part-00000-83fc05f5-bb54-4537-bfae-7e2b266ac1e2-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"Enrollment/Enrollment_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/Organization/part-00000-c110a403-1452-4eab-bfa6-2b5efffcf2ab-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"Organization/Organization_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/Person/part-00000-10fdcb4f-e1ec-49bc-8a78-cb86b7fb1620-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"Person/Person_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/PersonDemographic/part-00000-c8cd99b8-e9cb-42a6-a35f-7ad5e763c2f9-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"PersonDemographic/PersonDemographic_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/PersonDemographicEthnicity/part-00000-4443336b-1885-4648-90c8-bbab11f99f3b-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"PersonDemographicEthnicity/PersonDemographicEthnicity_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/PersonDemographicPersonFlag/part-00000-918f80a4-a41d-4449-af96-6c0f4fb65d98-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"PersonDemographicPersonFlag/PersonDemographicPersonFlag_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/PersonDemographicRace/part-00000-219d6085-eac8-4165-ab06-17aeda6a0f99-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"PersonDemographicRace/PersonDemographicRace_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/PersonEmailAddress/part-00000-1584aa54-d3e7-4bd2-b097-33bc989b7d0f-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"PersonEmailAddress/PersonEmailAddress_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/PersonIdentifier/part-00000-c80882e2-a056-4e81-b20b-0f6549a3a4cb-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"PersonIdentifier/PersonIdentifier_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/PersonOrganizationRole/part-00000-d449a36a-692a-481f-809d-f0f48fc6f1f1-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"PersonOrganizationRole/PersonOrganizationRole_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/PersonPhoneNumber/part-00000-d0369521-7778-405d-9662-9a81ee12fd04-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"PersonPhoneNumber/PersonPhoneNumber_test_data.csv\"}]')",
-							"type": "Expression"
-						},
-						"endpointsSet2": {
-							"value": "@json('[{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Insights/test_data/schema/activity.v0.1.0.cdm.json\",\"sinkDirectory\":\"M365/schema\",\"sinkFilename\":\"activity.v0.1.0.cdm.json\"},{\"URL\":\"https://github.com/microsoft/OpenEduAnalytics/blob/main/modules/Microsoft_Insights/test_data/schema/roster.v0.3.2.cdm.json\",\"sinkDirectory\":\"M365/schema\",\"sinkFilename\":\"roster.v0.3.2.cdm.json\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Insights/test_data/current.manifest.cdm.json\",\"sinkDirectory\":\"M365\",\"sinkFilename\":\"current.manifest.cdm.json\"}]')",
-							"type": "Expression"
-						},
-						"endpointsSet3": {
-							"value": "@json('[{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/snapshot.roster.manifest.cdm.json\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"snapshot.roster.manifest.cdm.json\"}]')",
-							"type": "Expression"
-						},
-						"endpointsSet4": {
-							"value": "@json('[{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/activity/2021-06-02/ApplicationUsage.csv\",\"sinkDirectory\":\"M365/activity\",\"sinkFilename\":\"ApplicationUsage_test_data.csv\"}]')",
-							"type": "Expression"
-						},
-						"endpointsSet5": {
-							"value": "@json('[{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/PersonRelationship/part-00000-3f9588e6-0a2e-42b7-9606-05bdbff4039d-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"PersonRelationship/PersonRelationship_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/RefDefinition/part-00000-2497f6cf-6941-46c6-ab81-c0ff785ca16d-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"RefDefinition/RefDefinition_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/Section/part-00000-0ce48dec-6a1a-447a-a437-7819b33f19fa-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"Section/Section_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/SectionGradeLevel/part-00000-06992aa4-1f0e-4977-b644-bdc3a487df2c-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"SectionGradeLevel/SectionGradeLevel_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/SectionSession/part-00000-738b71ea-77a6-4b23-aac6-f1634fbaf5ed-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"SectionSession/SectionSession_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/SectionSubject/part-00000-e14655cb-b612-495b-936f-12fd20a2c571-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"SectionSubject/SectionSubject_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Data/Microsoft_Education_Insights_Premium/test_data/roster/2021-09-05T06-16-22/Session/part-00000-9114f0ae-c950-49b3-8f73-2ab1e3ebdc30-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"Session/Session_test_data.csv\"},{\"URL\":\"https://raw.githubusercontent.com/microsoft/OpenEduAnalytics/main/modules/Microsoft_Insights/test_data/roster/2021-09-05T06-16-22/SourceSystem/part-00000-71379e08-1ce0-425f-9447-775b0dc134f1-c000.csv\",\"sinkDirectory\":\"M365/roster\",\"sinkFilename\":\"SourceSystem/SourceSystem_test_data.csv\"}]')",
-							"type": "Expression"
-						},
-						"sinkFilesystem": "stage1np",
-						"timezone": "Central Standard Time"
-					}
-				}
-			},
-			{
 				"name": "ingest into stage2p and stage2np",
 				"type": "SynapseNotebook",
-				"dependsOn": [
-					{
-						"activity": "Extract Insights test data from source",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -64,7 +19,19 @@
 						"referenceName": "NEW_Insights_module_setup",
 						"type": "NotebookReference"
 					},
-					"snapshot": true
+					"parameters": {
+						"Storage_account": {
+							"value": {
+								"value": "@pipeline().parameters.storageAccount",
+								"type": "Expression"
+							}
+						}
+					},
+					"snapshot": true,
+					"sparkPool": {
+						"referenceName": "spark3p1sm",
+						"type": "BigDataPoolReference"
+					}
 				}
 			},
 			{
