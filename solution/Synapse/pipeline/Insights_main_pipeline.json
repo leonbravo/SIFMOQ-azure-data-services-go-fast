@@ -116,11 +116,11 @@
 		"parameters": {
 			"storageAccount": {
 				"type": "string",
-				"defaultValue": "stoeahybriddev4"
+				"defaultValue": "bceaaeoeadevlrs"
 			},
 			"sourceDirectory": {
 				"type": "string",
-				"defaultValue": "insights"
+				"defaultValue": "SDS"
 			},
 			"create_sql_db": {
 				"type": "bool",
