@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "214588a7-7e3b-4c2b-9658-23ddd08e3305"
+				"spark.autotune.trackingId": "02304557-95c1-4f94-87f6-76eb56e16eda"
 			}
 		},
 		"metadata": {
@@ -325,6 +325,7 @@
 				"source": [
 					"# 0) Initialize the OEA framework and MSInsights module.\r\n",
 					"oea = OEA()\r\n",
+					"#changed newinsights(oea, path)\r\n",
 					"ms_insights = Insights(oea)"
 				],
 				"execution_count": 7
