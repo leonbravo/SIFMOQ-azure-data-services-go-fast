@@ -24,7 +24,8 @@
 							"value": {
 								"value": "@pipeline().parameters.storageAccount",
 								"type": "Expression"
-							}
+							},
+							"type": "string"
 						}
 					},
 					"snapshot": true,
