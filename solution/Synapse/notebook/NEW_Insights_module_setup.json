@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "10bfa8ae-9d74-4561-b3aa-065649bbce72"
+				"spark.autotune.trackingId": "76e12d65-ef51-4c04-9451-c98b02352d12"
 			}
 		},
 		"metadata": {
@@ -164,12 +164,12 @@
 				},
 				"source": [
 					"# Set the date to be processed\r\n",
-					"#today = datetime.datetime.now()\r\n",
-					"#date1 = today.strftime('%Y-%m-%d')\r\n",
-					"#date1.cast('string')\r\n",
-					"#date2 = date1\r\n",
-					"date1 = \"2021-06-02\"\r\n",
-					"date2 = \"2021-09-05\""
+					"today = datetime.datetime.now()\r\n",
+					"date1 = today.strftime('%Y-%m-%d')\r\n",
+					"date1.cast('string')\r\n",
+					"date2 = date1\r\n",
+					"#date1 = \"2021-06-02\"\r\n",
+					"#date2 = \"2021-09-05\""
 				],
 				"execution_count": 2
 			},
