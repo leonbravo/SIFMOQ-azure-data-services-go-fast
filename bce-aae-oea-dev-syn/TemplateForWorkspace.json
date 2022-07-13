@@ -1193,7 +1193,7 @@
 							},
 							"parameters": {
 								"object_name": {
-									"value": "contoso_sis",
+									"value": "BCE",
 									"type": "string"
 								},
 								"method_name": {
@@ -2834,20 +2834,44 @@
 					"executorCores": 4,
 					"numExecutors": 2,
 					"runAsWorkspaceSystemIdentity": false,
-					"conf": {}
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "deb3ab7f-162f-41b3-a5f8-fc5eebb5bd0c"
+					}
 				},
 				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
 						"display_name": "python"
 					},
 					"language_info": {
 						"name": "python"
-					}
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
+						"name": "spark3p1sm",
+						"type": "Spark",
+						"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 4,
+						"memory": 28,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"class ContosoSIS(BaseOEAModule):\n",
 							"    def __init__(self, source_folder='contoso_sis', pseudonymize = True):\n",
@@ -2892,7 +2916,6 @@
 							"\n",
 							"contoso_sis = ContosoSIS()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -4220,14 +4243,11 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "a83089ad-2ecb-4ff0-b93d-774ec1090568"
+						"spark.autotune.trackingId": "56a34c2f-853f-497f-bf03-b7cfd44e6967"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
-					"synapse_widget": {
-						"version": "0.1"
-					},
 					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
@@ -4249,7 +4269,7 @@
 						"nodeCount": 3,
 						"cores": 4,
 						"memory": 28,
-						"extraHeader": null
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -4268,8 +4288,7 @@
 							"This notebook provides a way for invoking methods on the OEA framework or supporting modules from a pipeline.\n",
 							"\n",
 							"When setting up a new module, be sure to include a new cell below that imports that module, so that its methods can be invoked by pipelines."
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -4295,7 +4314,6 @@
 							"method_name = ''\r\n",
 							"kwargs = '{}'"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					},
@@ -4316,7 +4334,6 @@
 						"source": [
 							"%run /OEA_py"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -4337,7 +4354,6 @@
 						"source": [
 							"%run /ContosoSIS_py"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -4361,7 +4377,6 @@
 							"result = m(**kwargs)\r\n",
 							"mssparkutils.notebook.exit(result)"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -4387,16 +4402,39 @@
 					"executorCores": 4,
 					"numExecutors": 2,
 					"runAsWorkspaceSystemIdentity": false,
-					"conf": {}
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "f2d65ccd-8248-45e8-8d70-7227baf55306"
+					}
 				},
 				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
 						"display_name": "python"
 					},
 					"language_info": {
 						"name": "python"
-					}
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
+						"name": "spark3p1sm",
+						"type": "Spark",
+						"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 4,
+						"memory": 28,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -4954,7 +4992,6 @@
 							"\n",
 							"oea = OEA()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -4991,6 +5028,1295 @@
 			},
 			"dependsOn": [],
 			"location": "australiaeast"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SIFLoadCodeSets')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "SIF"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "d63e9ded-b1d2-4d42-bcb1-b12fcaa81a29"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"tags": [
+								"parameters"
+							]
+						},
+						"source": [
+							"StorageAccountName = \"adsdevdlsadsalfsadsl\"\r\n",
+							"StorageAccountContainer = \"datalakeraw\"\r\n",
+							"StorageAccountFolder = \"/samples/sif/\"\r\n",
+							"SifDbName = \"sif\"\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 5
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**Read in Full Json Schema from SIF repo**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"import json\r\n",
+							"rdd =  spark.sparkContext.wholeTextFiles(\"abfss://\"+StorageAccountContainer+\"@\"+StorageAccountName+\".dfs.core.windows.net\"+StorageAccountFolder+\"SifOpenApi/jsonSchemaCreate_AU.json\")\r\n",
+							"text = rdd.collect()[0][1]\r\n",
+							"dict1 = json.loads(str(text))"
+						],
+						"outputs": [],
+						"execution_count": 6
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**Declare Function that will register codesets as managed tables**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"from pyspark.sql import SparkSession\r\n",
+							"from pyspark.sql.types  import *\r\n",
+							"from pyspark.sql import Row\r\n",
+							"\r\n",
+							"def PersistRefData(name, dict1):\r\n",
+							"    ref = dict1['definitions'][name]['oneOf']\r\n",
+							"    schema = StructType([StructField('const', StringType()), StructField('title',StringType())])\r\n",
+							"    refdf = spark.createDataFrame(data=ref, schema = schema)\r\n",
+							"    tablename = \"ref_\" + name\r\n",
+							"    spark.catalog.setCurrentDatabase(SifDbName)\r\n",
+							"    refdf.write.mode(\"overwrite\").saveAsTable(tablename)"
+						],
+						"outputs": [],
+						"execution_count": 7
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**Call Function for Each Codeset Entity**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"microsoft": {}
+						},
+						"source": [
+							"entities = [\"AbstractContentElement\" \\\n",
+							",\"AUCodeSets0211ProgramAvailability\" \\\n",
+							",\"AUCodeSets0792IdentificationProcedure\" \\\n",
+							",\"AUCodeSetsAccompaniment\" \\\n",
+							",\"AUCodeSetsACStrand\" \\\n",
+							",\"AUCodeSetsActivityInvolvementCode\" \\\n",
+							",\"AUCodeSetsActivityType\" \\\n",
+							",\"AUCodeSetsAddressRole\" \\\n",
+							",\"AUCodeSetsAddressType\" \\\n",
+							",\"AUCodeSetsAGCollection\" \\\n",
+							",\"AUCodeSetsAGContextQuestion\" \\\n",
+							",\"AUCodeSetsAGSubmissionStatus\" \\\n",
+							",\"AUCodeSetsAssessmentReportingMethod\" \\\n",
+							",\"AUCodeSetsAssessmentType\" \\\n",
+							",\"AUCodeSetsAttendanceCode\" \\\n",
+							",\"AUCodeSetsAttendanceStatus\" \\\n",
+							",\"AUCodeSetsAustralianCitizenshipStatus\" \\\n",
+							",\"AUCodeSetsAustralianStandardClassificationOfCulturalAndEthnicGroupsASCCEG\" \\\n",
+							",\"AUCodeSetsAustralianStandardClassificationOfLanguagesASCL\" \\\n",
+							",\"AUCodeSetsAustralianStandardClassificationOfReligiousGroupsASCRG\" \\\n",
+							",\"AUCodeSetsAustralianStandardGeographicalClassificationASGC\" \\\n",
+							",\"AUCodeSetsAustralianTimeZone\" \\\n",
+							",\"AUCodeSetsBirthdateVerification\" \\\n",
+							",\"AUCodeSetsBoarding\" \\\n",
+							",\"AUCodeSetsCalendarEvent\" \\\n",
+							",\"AUCodeSetsContactMethod\" \\\n",
+							",\"AUCodeSetsDayValueCode\" \\\n",
+							",\"AUCodeSetsDetentionCategory\" \\\n",
+							",\"AUCodeSetsDwellingArrangement\" \\\n",
+							",\"AUCodeSetsEducationAgencyType\" \\\n",
+							",\"AUCodeSetsEducationLevel\" \\\n",
+							",\"AUCodeSetsElectronicIdType\" \\\n",
+							",\"AUCodeSetsEmailType\" \\\n",
+							",\"AUCodeSetsEmploymentType\" \\\n",
+							",\"AUCodeSetsEnglishProficiency\" \\\n",
+							",\"AUCodeSetsEnrollmentTimeFrame\" \\\n",
+							",\"AUCodeSetsEntryType\" \\\n",
+							",\"AUCodeSetsEquipmentType\" \\\n",
+							",\"AUCodeSetsEventCategory\" \\\n",
+							",\"AUCodeSetsEventSubCategory\" \\\n",
+							",\"AUCodeSetsExitWithdrawalStatus\" \\\n",
+							",\"AUCodeSetsExitWithdrawalType\" \\\n",
+							",\"AUCodeSetsFederalElectorate\" \\\n",
+							",\"AUCodeSetsFFPOSStatusCode\" \\\n",
+							",\"AUCodeSetsFTPTStatusCode\" \\\n",
+							",\"AUCodeSetsGroupCategoryCode\" \\\n",
+							",\"AUCodeSetsImmunisationCertificateStatus\" \\\n",
+							",\"AUCodeSetsIndigenousStatus\" \\\n",
+							",\"AUCodeSetsLanguageType\" \\\n",
+							",\"AUCodeSetsLearningStandardItemRelationshipTypes\" \\\n",
+							",\"AUCodeSetsMaritalStatusAIHW\" \\\n",
+							",\"AUCodeSetsMediumOfInstruction\" \\\n",
+							",\"AUCodeSetsNameUsageType\" \\\n",
+							",\"AUCodeSetsNAPJurisdiction\" \\\n",
+							",\"AUCodeSetsNAPParticipationCode\" \\\n",
+							",\"AUCodeSetsNAPResponseCorrectness\" \\\n",
+							",\"AUCodeSetsNAPTestDomain\" \\\n",
+							",\"AUCodeSetsNAPTestItemMarkingType\" \\\n",
+							",\"AUCodeSetsNAPTestItemType\" \\\n",
+							",\"AUCodeSetsNAPTestType\" \\\n",
+							",\"AUCodeSetsNAPWritingGenre\" \\\n",
+							",\"AUCodeSetsNonSchoolEducation\" \\\n",
+							",\"AUCodeSetsOperationalStatus\" \\\n",
+							",\"AUCodeSetsPermanentResidentStatus\" \\\n",
+							",\"AUCodeSetsPermissionCategoryCode\" \\\n",
+							",\"AUCodeSetsPersonalisedPlan\" \\\n",
+							",\"AUCodeSetsPictureSource\" \\\n",
+							",\"AUCodeSetsPNPCode\" \\\n",
+							",\"AUCodeSetsPrePrimaryHours\" \\\n",
+							",\"AUCodeSetsProgramFundingSourceCode\" \\\n",
+							",\"AUCodeSetsProgressLevel\" \\\n",
+							",\"AUCodeSetsPublicSchoolCatchmentStatus\" \\\n",
+							",\"AUCodeSetsReceivingLocationOfInstruction\" \\\n",
+							",\"AUCodeSetsRelationshipToStudent\" \\\n",
+							",\"AUCodeSetsResourceUsageContentType\" \\\n",
+							",\"AUCodeSetsScheduledActivityType\" \\\n",
+							",\"AUCodeSetsSchoolCoEdStatus\" \\\n",
+							",\"AUCodeSetsSchoolEducationLevelType\" \\\n",
+							",\"AUCodeSetsSchoolEnrollmentType\" \\\n",
+							",\"AUCodeSetsSchoolFocusCode\" \\\n",
+							",\"AUCodeSetsSchoolLevel\" \\\n",
+							",\"AUCodeSetsSchoolLocation\" \\\n",
+							",\"AUCodeSetsSchoolSectorCode\" \\\n",
+							",\"AUCodeSetsSchoolSystem\" \\\n",
+							",\"AUCodeSetsSessionType\" \\\n",
+							",\"AUCodeSetsSexCode\" \\\n",
+							",\"AUCodeSetsSourceCodeType\" \\\n",
+							",\"AUCodeSetsStaffActivity\" \\\n",
+							",\"AUCodeSetsStaffStatus\" \\\n",
+							",\"AUCodeSetsStandardAustralianClassificationOfCountriesSACC\" \\\n",
+							",\"AUCodeSetsStateTerritoryCode\" \\\n",
+							",\"AUCodeSetsStudentFamilyProgramType\" \\\n",
+							",\"AUCodeSetsSuspensionCategory\"  \\\n",
+							",\"AUCodeSetsSystemicStatus\" \\\n",
+							",\"AUCodeSetsTeacherCoverCredit\" \\\n",
+							",\"AUCodeSetsTeacherCoverSupervision\" \\\n",
+							",\"AUCodeSetsTelephoneNumberType\" \\\n",
+							",\"AUCodeSetsTravelMode\" \\\n",
+							",\"AUCodeSetsVisaStudyEntitlement\" \\\n",
+							",\"AUCodeSetsVisaSubClass\" \\\n",
+							",\"AUCodeSetsWellbeingAlertCategory\" \\\n",
+							",\"AUCodeSetsWellbeingAppealStatus\" \\\n",
+							",\"AUCodeSetsWellbeingCharacteristicCategory\" \\\n",
+							",\"AUCodeSetsWellbeingCharacteristicClassification\" \\\n",
+							",\"AUCodeSetsWellbeingCharacteristicSubCategory\" \\\n",
+							",\"AUCodeSetsWellbeingEventCategoryClass\" \\\n",
+							",\"AUCodeSetsWellbeingEventLocation\" \\\n",
+							",\"AUCodeSetsWellbeingEventTimePeriod\" \\\n",
+							",\"AUCodeSetsWellbeingResponseCategory\" \\\n",
+							",\"AUCodeSetsWellbeingStatus\" \\\n",
+							",\"AUCodeSetsYearLevelCode\" \\\n",
+							",\"AUCodeSetsYesOrNoCategory\" \\\n",
+							",\"DefinedProtocols\" \\\n",
+							",\"GenericYesNo\" \\\n",
+							",\"ISO4217CurrencyNamesAndCodeElements\"]\n",
+							"\n",
+							"\n",
+							"from multiprocessing.pool import ThreadPool\n",
+							"pool = ThreadPool(5)\n",
+							"pool.map(lambda e: PersistRefData(e,dict1),entities)"
+						],
+						"outputs": [],
+						"execution_count": 11
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SIFLoadDimStaffPersonal')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "SIF"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "f1c1bbb8-c1ac-4d4f-b4cc-460f4270b9ca"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"outputs_hidden": false,
+								"source_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"tags": [
+								"parameters"
+							]
+						},
+						"source": [
+							"SifDbName = \"sif\""
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"outputs_hidden": false,
+								"source_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"spark.catalog.setCurrentDatabase(SifDbName)"
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"outputs_hidden": false,
+								"source_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"from pyspark.sql.functions import *\n",
+							"df_Raw = spark.sql(\"select * from raw_staffpersonal\")\n",
+							"df_RawWJ = df_Raw.withColumn('json',to_json (struct (col ('*')))).select(\"RefId\", \"json\")\n",
+							"\n",
+							"df_Out = df_RawWJ \\\n",
+							".withColumn('LocalId',get_json_object(col('json'), '$.LocalId')) \\\n",
+							".withColumn('StateProvinceId',get_json_object(col('json'), '$.StateProvinceId')) \\\n",
+							".withColumn('FirstName',get_json_object(col('json'), '$.FirstName')) \\\n",
+							".withColumn('LastName',get_json_object(col('json'), '$.LastName')) \\\n",
+							".withColumn('MiddleName',get_json_object(col('json'), '$.MiddleName')) \\\n",
+							".withColumn('OtherNames',get_json_object(col('json'), '$.OtherNames')) \\\n",
+							".withColumn('EmploymentStatus',get_json_object(col('json'), '$.EmploymentStatus')) \\\n",
+							".withColumn('Title',get_json_object(col('json'), '$.Title')) \\\n",
+							".withColumn('IndigenousStatus',get_json_object(col('json'), '$.IndigenousStatus')) \\\n",
+							".withColumn('Sex',get_json_object(col('json'), '$.Sex')) \\\n",
+							".withColumn('BirthDate',get_json_object(col('json'), '$.BirthDate')) \\\n",
+							".withColumn('DateOfDeath',get_json_object(col('json'), '$.DateOfDeath')) \\\n",
+							".withColumn('Deceased',get_json_object(col('json'), '$.Deceased')) \\\n",
+							".withColumn('BirthDateVerification',get_json_object(col('json'), '$.BirthDateVerification')) \\\n",
+							".withColumn('PlaceOfBirth',get_json_object(col('json'), '$.PlaceOfBirth')) \\\n",
+							".withColumn('StateOfBirth',get_json_object(col('json'), '$.StateOfBirth')) \\\n",
+							".withColumn('CountryOfBirth ',get_json_object(col('json'), '$.CountryOfBirth ')) \\\n",
+							".withColumn('CountryOfCitizenship ',get_json_object(col('json'), '$.CountryOfCitizenship ')) \\\n",
+							".withColumn('CountryOfResidency',get_json_object(col('json'), '$.CountryOfResidency')) \\\n",
+							".withColumn('CountryArrivalDate',get_json_object(col('json'), '$.CountryArrivalDate')) \\\n",
+							".withColumn('AustralianCitizenshipStatus',get_json_object(col('json'), '$.AustralianCitizenshipStatus')) \\\n",
+							".withColumn('EnglishProficiency',get_json_object(col('json'), '$.EnglishProficiency')) \\\n",
+							".withColumn('LanguageList',get_json_object(col('json'), '$.LanguageList')) \\\n",
+							".withColumn('DwellingArrangement',get_json_object(col('json'), '$.DwellingArrangement')) \\\n",
+							".withColumn('Religion',get_json_object(col('json'), '$.Religion')) \\\n",
+							".withColumn('ReligiousEventList',get_json_object(col('json'), '$.ReligiousEventList')) \\\n",
+							".withColumn('ReligiousRegion',get_json_object(col('json'), '$.ReligiousRegion')) \\\n",
+							".withColumn('PermanentResident',get_json_object(col('json'), '$.PermanentResident')) \\\n",
+							".withColumn('VisaSubClass',get_json_object(col('json'), '$.VisaSubClass')) \\\n",
+							".withColumn('VisaStatisticalCode',get_json_object(col('json'), '$.VisaStatisticalCode')) \\\n",
+							".withColumn('EmailList',get_json_object(col('json'), '$.EmailList')) \\\n",
+							".withColumn('PhoneNumberList',get_json_object(col('json'), '$.PhoneNumberList')) \\\n",
+							".withColumn('AddressList',get_json_object(col('json'), '$.AddressList')) \\\n",
+							".select('RefId',\t'LocalId',\t'StateProvinceId',\t'FirstName',\t'LastName',\t'MiddleName',\t'OtherNames',\t'EmploymentStatus',\t'Title',\t'IndigenousStatus',\t'Sex',\t'BirthDate',\t'DateOfDeath',\t'Deceased',\t'BirthDateVerification',\t'PlaceOfBirth',\t'StateOfBirth',\t'CountryOfBirth ',\t'CountryOfCitizenship ',\t'CountryOfResidency',\t'CountryArrivalDate',\t'AustralianCitizenshipStatus',\t'EnglishProficiency',\t'LanguageList',\t'DwellingArrangement',\t'Religion',\t'ReligiousEventList',\t'ReligiousRegion',\t'PermanentResident',\t'VisaSubClass',\t'VisaStatisticalCode',\t'EmailList',\t'PhoneNumberList',\t'AddressList',\n",
+							") \n",
+							"\n",
+							"\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"outputs_hidden": false,
+								"source_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"df_Out.write.mode(\"overwrite\").saveAsTable(\"dm_staffpersonal\")"
+						],
+						"outputs": [],
+						"execution_count": null
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SIFLoadDimStudentPersonal')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "SIF"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "339c5203-5898-44ca-ae88-6e1ec1abebc0"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"tags": [
+								"parameters"
+							]
+						},
+						"source": [
+							"SifDbName = \"sif\""
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"spark.catalog.setCurrentDatabase(SifDbName)"
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"from pyspark.sql.functions import *\r\n",
+							"df_Raw = spark.sql(\"select * from raw_studentpersonal\")\r\n",
+							"df_RawWJ = df_Raw.withColumn('json',to_json (struct (col ('*')))).select(\"RefId\", \"json\")\r\n",
+							"\r\n",
+							"df_Out = df_RawWJ \\\r\n",
+							".withColumn('StateProvinceId',get_json_object(col('json'), '$.StateProvinceId')) \\\r\n",
+							".withColumn('NationalUniqueStudentIdentifier',get_json_object(col('json'), '$.NationalUniqueStudentIdentifier')) \\\r\n",
+							".withColumn('AlertMessages',get_json_object(col('json'), '$.AlertMessages')) \\\r\n",
+							".withColumn('MedicalAlertMessages',get_json_object(col('json'), '$.MedicalAlertMessages')) \\\r\n",
+							".withColumn('FirstName',get_json_object(col('json'), '$.PersonInfo.Name.GivenName')) \\\r\n",
+							".withColumn('LastName',get_json_object(col('json'), '$.PersonInfo.Name.FamilyName')) \\\r\n",
+							".withColumn('MiddleName',get_json_object(col('json'), '$.MiddleName')) \\\r\n",
+							".withColumn('OtherNames',get_json_object(col('json'), '$.PersonInfo.OtherNames')) \\\r\n",
+							".withColumn('ProjectedGraduationYear',get_json_object(col('json'), '$.ProjectedGraduationYear')) \\\r\n",
+							".withColumn('OnTimeGraduationYear',get_json_object(col('json'), '$.OnTimeGraduationYear')) \\\r\n",
+							".withColumn('GraduationDate',get_json_object(col('json'), '$.GraduationDate')) \\\r\n",
+							".withColumn('MostRecent',get_json_object(col('json'), '$.MostRecent')) \\\r\n",
+							".withColumn('AcceptableUsePolicy',get_json_object(col('json'), '$.AcceptableUsePolicy')) \\\r\n",
+							".withColumn('GiftedTalented',get_json_object(col('json'), '$.GiftedTalented')) \\\r\n",
+							".withColumn('EconomicDisadvantage',get_json_object(col('json'), '$.EconomicDisadvantage')) \\\r\n",
+							".withColumn('ESL',get_json_object(col('json'), '$.ESL')) \\\r\n",
+							".withColumn('ESLDateAssessed',get_json_object(col('json'), '$.ESLDateAssessed')) \\\r\n",
+							".withColumn('YoungCarersRole',get_json_object(col('json'), '$.YoungCarersRole')) \\\r\n",
+							".withColumn('Disability',get_json_object(col('json'), '$.Disability')) \\\r\n",
+							".withColumn('IntegrationAide',get_json_object(col('json'), '$.IntegrationAide')) \\\r\n",
+							".withColumn('EducationSupport',get_json_object(col('json'), '$.EducationSupport')) \\\r\n",
+							".withColumn('HomeSchooledStudent',get_json_object(col('json'), '$.HomeSchooledStudent')) \\\r\n",
+							".withColumn('IndependentStudent',get_json_object(col('json'), '$.IndependentStudent')) \\\r\n",
+							".withColumn('Sensitive',get_json_object(col('json'), '$.Sensitive')) \\\r\n",
+							".withColumn('OfflineDelivery',get_json_object(col('json'), '$.OfflineDelivery')) \\\r\n",
+							".withColumn('ESLSupport',get_json_object(col('json'), '$.ESLSupport')) \\\r\n",
+							".withColumn('PrePrimaryEducation',get_json_object(col('json'), '$.PrePrimaryEducation')) \\\r\n",
+							".withColumn('PrePrimaryEducationHours',get_json_object(col('json'), '$.PrePrimaryEducationHours')) \\\r\n",
+							".withColumn('FirstAUSchoolEnrollment',get_json_object(col('json'), '$.FirstAUSchoolEnrollment')) \\\r\n",
+							".withColumn('EmailList',get_json_object(col('json'), '$.PersonInfo.EmailList')) \\\r\n",
+							".withColumn('PhoneNumberList',get_json_object(col('json'), '$.PersonInfo.PhoneNumberList')) \\\r\n",
+							".withColumn('AddressList',get_json_object(col('json'), '$.PersonInfo.AddressList')) \\\r\n",
+							".withColumn('IndigenousStatus',get_json_object(col('json'), '$.PersonInfo.Demographics.IndigenousStatus')) \\\r\n",
+							".withColumn('Sex',get_json_object(col('json'), '$.PersonInfo.Demographics.Sex')) \\\r\n",
+							".withColumn('BirthDate',get_json_object(col('json'), '$.PersonInfo.Demographics.BirthDate')) \\\r\n",
+							".withColumn('DateOfDeath',get_json_object(col('json'), '$.PersonInfo.Demographics.DateOfDeath')) \\\r\n",
+							".withColumn('Deceased',get_json_object(col('json'), '$.PersonInfo.Demographics.Deceased')) \\\r\n",
+							".withColumn('BirthDateVerification',get_json_object(col('json'), '$.PersonInfo.Demographics.BirthDateVerification')) \\\r\n",
+							".withColumn('PlaceOfBirth',get_json_object(col('json'), '$.PersonInfo.Demographics.PlaceOfBirth')) \\\r\n",
+							".withColumn('StateOfBirth',get_json_object(col('json'), '$.PersonInfo.Demographics.StateOfBirth')) \\\r\n",
+							".withColumn('CountryOfBirth',get_json_object(col('json'), '$.PersonInfo.Demographics.CountryOfBirth')) \\\r\n",
+							".withColumn('CountryOfCitizenship',get_json_object(col('json'), '$.PersonInfo.Demographics.CountriesOfCitizenship')) \\\r\n",
+							".withColumn('CountryOfResidency',get_json_object(col('json'), '$.PersonInfo.Demographics.CountriesOfResidency')) \\\r\n",
+							".withColumn('CountryArrivalDate',get_json_object(col('json'), '$.PersonInfo.Demographics.CountryArrivalDate')) \\\r\n",
+							".withColumn('AustralianCitizenshipStatus',get_json_object(col('json'), '$.PersonInfo.Demographics.AustralianCitizenshipStatus')) \\\r\n",
+							".withColumn('EnglishProficiency',get_json_object(col('json'), '$.PersonInfo.Demographics.EnglishProficiency.Code')) \\\r\n",
+							".withColumn('MainLanguageSpokenAtHome',get_json_object(col('json'), '$.PersonInfo.Demographics.LanguageList.Language[0].Code')) \\\r\n",
+							".withColumn('SecondLanguage',get_json_object(col('json'), '$.PersonInfo.Demographics.LanguageList.Language[1].Code')) \\\r\n",
+							".withColumn('OtherLanguage',get_json_object(col('json'), '$.PersonInfo.Demographics.LanguageList.Language[2].Code')) \\\r\n",
+							".withColumn('DwellingArrangement',get_json_object(col('json'), '$.PersonInfo.Demographics.DwellingArrangement.Code')) \\\r\n",
+							".withColumn('Religion',get_json_object(col('json'), '$.PersonInfo.Demographics.Religion.Code')) \\\r\n",
+							".withColumn('ReligiousEventList',get_json_object(col('json'), '$.PersonInfo.Demographics.ReligiousEventList')) \\\r\n",
+							".withColumn('ReligiousRegion',get_json_object(col('json'), '$.PersonInfo.Demographics.ReligiousRegion')) \\\r\n",
+							".withColumn('PermanentResident',get_json_object(col('json'), '$.PersonInfo.Demographics.PermanentResident')) \\\r\n",
+							".withColumn('VisaSubClass',get_json_object(col('json'), '$.PersonInfo.Demographics.VisaSubClass')) \\\r\n",
+							".withColumn('VisaStatisticalCode',get_json_object(col('json'), '$.PersonInfo.Demographics.VisaStatisticalCode')) \\\r\n",
+							".withColumn('VisaSubClassList',get_json_object(col('json'), '$.PersonInfo.Demographics.VisaSubClassList')) \\\r\n",
+							".withColumn('PassportNumber',get_json_object(col('json'), '$.PersonInfo.Demographics.Passport.Number')) \\\r\n",
+							".withColumn('PassportExpiryDate',get_json_object(col('json'), '$.PersonInfo.Demographics.Passport.ExpiryDate')) \\\r\n",
+							".withColumn('PassportCountry',get_json_object(col('json'), '$.PersonInfo.Demographics.Passport.Country')) \\\r\n",
+							".withColumn('LBOTE',get_json_object(col('json'), '$.LBOTE')) \\\r\n",
+							".withColumn('InterpreterRequired',get_json_object(col('json'), '$.InterpreterRequired')) \\\r\n",
+							".withColumn('ImmunisationCertificateStatus',get_json_object(col('json'), '$.ImmunisationCertificateStatus')) \\\r\n",
+							".withColumn('CulturalBackground',get_json_object(col('json'), '$.CulturalBackground')) \\\r\n",
+							".withColumn('MaritalStatus',get_json_object(col('json'), '$.MaritalStatus')) \\\r\n",
+							".withColumn('MedicareNumber',get_json_object(col('json'), '$.MedicareNumber')) \\\r\n",
+							".withColumn('MedicarePositionNumber',get_json_object(col('json'), '$.MedicarePositionNumber')) \\\r\n",
+							".withColumn('MedicareCardHolderName',get_json_object(col('json'), '$.MedicareCardHolderName')) \\\r\n",
+							".withColumn('PrivateHealthInsurance',get_json_object(col('json'), '$.PrivateHealthInsurance')) \\\r\n",
+							".select('RefId',\t'StateProvinceId',\t'NationalUniqueStudentIdentifier',\t'AlertMessages',\t'MedicalAlertMessages',\t'FirstName',\t'LastName',\t'MiddleName',\t'OtherNames',\t'ProjectedGraduationYear',\t'OnTimeGraduationYear',\t'GraduationDate',\t'MostRecent',\t'AcceptableUsePolicy',\t'GiftedTalented',\t'EconomicDisadvantage',\t'ESL',\t'ESLDateAssessed',\t'YoungCarersRole',\t'Disability',\t'IntegrationAide',\t'EducationSupport',\t'HomeSchooledStudent',\t'IndependentStudent',\t'Sensitive',\t'OfflineDelivery',\t'ESLSupport',\t'PrePrimaryEducation',\t'PrePrimaryEducationHours',\t'FirstAUSchoolEnrollment',\t'EmailList',\t'PhoneNumberList',\t'AddressList',\t'IndigenousStatus',\t'Sex',\t'BirthDate',\t'DateOfDeath',\t'Deceased',\t'BirthDateVerification',\t'PlaceOfBirth',\t'StateOfBirth',\t'CountryOfBirth',\t'CountryOfCitizenship',\t'CountryOfResidency',\t'CountryArrivalDate',\t'AustralianCitizenshipStatus',\t'EnglishProficiency',\t'MainLanguageSpokenAtHome', 'SecondLanguage', 'OtherLanguage',\t'DwellingArrangement',\t'Religion',\t'ReligiousEventList',\t'ReligiousRegion',\t'PermanentResident',\t'VisaSubClass',\t'VisaStatisticalCode',\t'VisaSubClassList',\t'PassportNumber', 'PassportExpiryDate', 'PassportCountry',\t'LBOTE',\t'InterpreterRequired',\t'ImmunisationCertificateStatus',\t'CulturalBackground',\t'MaritalStatus',\t'MedicareNumber',\t'MedicarePositionNumber',\t'MedicareCardHolderName',\t'PrivateHealthInsurance') \r\n",
+							"\r\n",
+							"\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"df_Out.write.mode(\"overwrite\").saveAsTable(\"dm_studentpersonal\")"
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": false
+						},
+						"source": [
+							"display(spark.sql(\"select * from dm_studentpersonal\"))"
+						],
+						"outputs": [],
+						"execution_count": null
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SIFLoadMain')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "SIF"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "e191434e-cceb-4cc9-88a5-b4a2dda415fc"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"tags": [
+								"parameters"
+							]
+						},
+						"source": [
+							"StorageAccountName = \"adsdevdlsadsalfsadsl\"\r\n",
+							"StorageAccountContainer = \"datalakeraw\"\r\n",
+							"StorageAccountFolder = \"/samples/sif/\"\r\n",
+							"SifDbName = \"sif\""
+						],
+						"outputs": [],
+						"execution_count": 1
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**Persist Codesets**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"import json\r\n",
+							"dict1 = json.loads('{\"StorageAccountName\": \"' + StorageAccountName + '\", \"StorageAccountContainer\":\"' + StorageAccountContainer + '\", \"StorageAccountFolder\": \"'+StorageAccountFolder+'SifOpenApi/\", \"SifDbName\":\"' + SifDbName + '\"}')\r\n",
+							"dict2 = json.dumps(dict1)\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFLoadCodeSets\", 900,dict1)"
+						],
+						"outputs": [],
+						"execution_count": 71
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**Declare Function to Create TaskObject**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"def RunDimNoteBook(StorageAccountName, Entity):\r\n",
+							"    OutputDict = {}\r\n",
+							"    TaskObject = \"{\\\"TaskInstanceId\\\":53,\\\"TaskMasterId\\\":1,\\\"TaskStatus\\\":\\\"InProgress\\\",\\\"TaskType\\\":\\\"Execute Synapse Notebook\\\",\\\"Enabled\\\":1,\\\"ExecutionUid\\\":\\\"dc872650-b992-4cae-9ae2-c714c95563ee\\\",\\\"NumberOfRetries\\\":2,\\\"DegreeOfCopyParallelism\\\":1, \\\"KeyVaultBaseUrl\\\":\\\"https://ads-dev-kv-ads-tad5.vault.azure.net/\\\",\\\"ScheduleMasterId\\\":\\\"-4\\\",\\\"TaskGroupConcurrency\\\":\\\"10\\\",\\\"TaskGroupPriority\\\":0,\\\"TaskExecutionType\\\":\\\"ADF\\\",\\\"Source\\\":{\\\"System\\\":{\\\"SystemId\\\":-4, \\\"SystemServer\\\":\\\"https://\"+StorageAccountName+\".dfs.core.windows.net\\\",\\\"AuthenticationType\\\":\\\"MSI\\\",\\\"Type\\\":\\\"ADLS\\\",\\\"Username\\\":null,\\\"Container\\\":\\\"datalakeraw\\\"},\\\"Instance\\\":{\\\"SourceRelativePath\\\":\\\"/samples/sif/\\\",  \\\"TargetRelativePath\\\":\\\"/samples/sif/\"+Entity+\"/\\\"},\\\"DataFileName\\\":\\\"\"+Entity+\".json\\\",\\\"RelativePath\\\":\\\"/samples/sif/\\\",\\\"SchemaFileName\\\":\\\"\\\",\\\"Type\\\":\\\"Notebook-Optional\\\",\\\"WriteSchemaToPurview\\\":\\\"Disabled\\\"}, \\\"Target\\\":{\\\"System\\\":{\\\"SystemId\\\":-4,\\\"SystemServer\\\":\\\"https://\"+StorageAccountName+\".dfs.core.windows.net\\\",\\\"AuthenticationType\\\":\\\"MSI\\\",\\\"Type\\\":\\\"ADLS\\\",\\\"Username\\\":null,\\\"Container\\\":\\\"datalakeraw\\\"},\\\"Instance\\\":{\\\"SourceRelativePath\\\":\\\"/samples/sif/\\\",\\\"TargetRelativePath\\\":\\\"/samples/sif/\"+Entity+\"/\\\"},\\\"DataFileName\\\":\\\"\"+Entity+\".parquet\\\",\\\"RelativePath\\\":\\\"/samples/sif/\"+Entity+\"/\\\", \\\"SchemaFileName\\\":\\\"\\\",\\\"Type\\\":\\\"Notebook-Optional\\\",\\\"WriteSchemaToPurview\\\":\\\"Disabled\\\"},\\\"TMOptionals\\\":{\\\"CustomDefinitions\\\":\\\"\\\",\\\"ExecuteNotebook\\\":\\\"SIFParameterizedJson\\\",\\\"Purview\\\":\\\"Disabled\\\", \\\"QualifiedIDAssociation\\\":\\\"TaskMasterId\\\",\\\"UseNotebookActivity\\\":\\\"Enabled\\\"}}\"\r\n",
+							"    OutputDict['TaskObject'] = TaskObject\r\n",
+							"    mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 87
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**Generate Task Object and Execute Delta Lake Load for Each Raw SIF Entity**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"entities = [\"CalendarDate\" \\\r\n",
+							",\"GradingAssignment\" \\\r\n",
+							",\"GradingAssignmentScore\" \\\r\n",
+							",\"LearningStandardItem\" \\\r\n",
+							",\"MarkValueInfo\" \\\r\n",
+							",\"SchoolInfo2\" \\\r\n",
+							",\"SectionInfo\" \\\r\n",
+							",\"StaffAssignment\" \\\r\n",
+							",\"StaffPersonal\" \\\r\n",
+							",\"StudentContactPersonal\" \\\r\n",
+							",\"StudentContactRelationship\" \\\r\n",
+							",\"StudentDailyAttendance\" \\\r\n",
+							",\"StudentGrade\" \\\r\n",
+							",\"StudentPersonal\" \\\r\n",
+							",\"StudentSchoolEnrollment\" \\\r\n",
+							",\"StudentScoreJudgementAgainstStandard\" \\\r\n",
+							",\"StudentSectionEnrollment\" \\\r\n",
+							",\"TeachingGroup\" \\\r\n",
+							",\"TermInfo\" \\\r\n",
+							",\"TermInfo2\" \\\r\n",
+							",\"TermInfo3\" \\\r\n",
+							",\"schoolinfo\" \\\r\n",
+							"]\r\n",
+							"\r\n",
+							"\r\n",
+							"from multiprocessing.pool import ThreadPool\r\n",
+							"pool = ThreadPool(5)\r\n",
+							"pool.map(lambda e: RunDimNoteBook(StorageAccountName, e),entities)"
+						],
+						"outputs": [],
+						"execution_count": 88
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"OutputDict = {}\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"CalendarDate\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"GradingAssignment\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"GradingAssignmentScore\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"LearningStandardItem\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"MarkValueInfo\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"SchoolInfo2\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"SectionInfo\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"StaffAssignment\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"StaffPersonal\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"StudentContactPersonal\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"StudentContactRelationship\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"StudentDailyAttendance\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"StudentGrade\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"StudentPersonal\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"StudentSchoolEnrollment\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"StudentScoreJudgementAgainstStandard\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"StudentSectionEnrollment\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"TeachingGroup\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"TermInfo\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"TermInfo2\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"TermInfo3\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"OutputDict['TaskObject'] = GetTaskObject(StorageAccountName = StorageAccountName, Entity=\"schoolinfo\")\r\n",
+							"mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFParameterizedJson\",900, OutputDict)\r\n",
+							"\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 73
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**Create SIF Dimensional Artefacts**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": false
+						},
+						"source": [
+							"import json\r\n",
+							"from pyspark.sql.types import StructType,StructField, StringType,LongType\r\n",
+							"from pyspark.sql.functions import concat,col\r\n",
+							"\r\n",
+							"\r\n",
+							"#Schema = StructType([       \r\n",
+							"#    StructField('Notebookname', StringType(), True)   \r\n",
+							"#])\r\n",
+							"\r\n",
+							"dict1 = json.loads('{\"SifDbName\":\"' + SifDbName + '\"}')\r\n",
+							"\r\n",
+							"#Data = [[\"SIFLoadStaffPersonal\"],[\"SIFLoadStudentPersonal\"]]\r\n",
+							"#df = spark.createDataFrame(data = Data, schema = [\"NotebookName\"])\r\n",
+							"\r\n",
+							"def fnc_calldimnotebook(NotebookName, dict1, returnType=StringType()):\r\n",
+							"  NotebookName = concat('FrameworkNotebooks/sif/' + str(NotebookName))  \r\n",
+							"  #mssparkutils.notebook.run(str(NotebookName), 900,dict1)\r\n",
+							"  return NotebookName\r\n",
+							"\r\n",
+							"#spark.udf.register('fnc_calldimnotebook_udf', fnc_calldimnotebook, StringType())\r\n",
+							"\r\n",
+							"#df2 = df.withColumn(\"FncCall\", fnc_calldimnotebook(col('NotebookName'), dict1))\r\n",
+							"#display(df2)\r\n",
+							"\r\n",
+							"from multiprocessing.pool import ThreadPool\r\n",
+							"pool = ThreadPool(5)\r\n",
+							"notebooks = ['SIFLoadDimStaffPersonal','SIFLoadDimStudentPersonal']\r\n",
+							"pool.map(lambda path: mssparkutils.notebook.run(\"/FrameworkNotebooks/sif/\"+path, timeout_seconds= 600, arguments=dict1),notebooks)\r\n",
+							"\r\n",
+							"#mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFLoadStaffPersonal\", 900,dict1)\r\n",
+							"#mssparkutils.notebook.run(\"FrameworkNotebooks/sif/SIFLoadStudentPersonal\", 900,dict1)\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 90
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SIFParameterizedJson')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "SIF"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "922375de-fb1c-4134-8205-97e4fd5e561a"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {
+							"tags": [
+								"parameters"
+							]
+						},
+						"source": [
+							"TaskObject = \"{\\\"TaskInstanceId\\\":53,\\\"TaskMasterId\\\":1,\\\"TaskStatus\\\":\\\"InProgress\\\",\\\"TaskType\\\":\\\"Execute Synapse Notebook\\\",\\\"Enabled\\\":1,\\\"ExecutionUid\\\":\\\"dc872650-b992-4cae-9ae2-c714c95563ee\\\",\\\"NumberOfRetries\\\":2,\\\"DegreeOfCopyParallelism\\\":1,\\\"KeyVaultBaseUrl\\\":\\\"https://ads-dev-kv-ads-tad5.vault.azure.net/\\\",\\\"ScheduleMasterId\\\":\\\"-4\\\",\\\"TaskGroupConcurrency\\\":\\\"10\\\",\\\"TaskGroupPriority\\\":0,\\\"TaskExecutionType\\\":\\\"ADF\\\",\\\"Source\\\":{\\\"System\\\":{\\\"SystemId\\\":-4,\\\"SystemServer\\\":\\\"https://adsdevdlsadstad5adsl.dfs.core.windows.net\\\",\\\"AuthenticationType\\\":\\\"MSI\\\",\\\"Type\\\":\\\"ADLS\\\",\\\"Username\\\":null,\\\"Container\\\":\\\"datalakeraw\\\"},\\\"Instance\\\":{\\\"SourceRelativePath\\\":\\\"/samples/sif/\\\",\\\"TargetRelativePath\\\":\\\"/samples/sif/StudentPersonal/\\\"},\\\"DataFileName\\\":\\\"StudentPersonal.json\\\",\\\"RelativePath\\\":\\\"/samples/sif/\\\",\\\"SchemaFileName\\\":\\\"\\\",\\\"Type\\\":\\\"Notebook-Optional\\\",\\\"WriteSchemaToPurview\\\":\\\"Disabled\\\"},\\\"Target\\\":{\\\"System\\\":{\\\"SystemId\\\":-4,\\\"SystemServer\\\":\\\"https://adsdevdlsadstad5adsl.dfs.core.windows.net\\\",\\\"AuthenticationType\\\":\\\"MSI\\\",\\\"Type\\\":\\\"ADLS\\\",\\\"Username\\\":null,\\\"Container\\\":\\\"datalakeraw\\\"},\\\"Instance\\\":{\\\"SourceRelativePath\\\":\\\"/samples/sif/\\\",\\\"TargetRelativePath\\\":\\\"/samples/sif/StudentPersonal/\\\"},\\\"DataFileName\\\":\\\"StudentPersonal.parquet\\\",\\\"RelativePath\\\":\\\"/samples/sif/StudentPersonal/\\\",\\\"SchemaFileName\\\":\\\"\\\",\\\"Type\\\":\\\"Notebook-Optional\\\",\\\"WriteSchemaToPurview\\\":\\\"Disabled\\\"},\\\"TMOptionals\\\":{\\\"CustomDefinitions\\\":\\\"\\\",\\\"ExecuteNotebook\\\":\\\"SIFParameterizedJson\\\",\\\"Purview\\\":\\\"Disabled\\\",\\\"QualifiedIDAssociation\\\":\\\"TaskMasterId\\\",\\\"UseNotebookActivity\\\":\\\"Enabled\\\"}}\""
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"TaskObject"
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"import random\r\n",
+							"import json\r\n",
+							"from pyspark.sql import Row\r\n",
+							"from pyspark.sql.types import *\r\n",
+							"from pyspark.sql.functions import *\r\n",
+							"\r\n",
+							"session_id = random.randint(0,1000000)\r\n",
+							"#invalid source\r\n",
+							"##TaskObject = \"{\\\"TaskInstanceId\\\":1,\\\"TaskMasterId\\\":2,\\\"TaskStatus\\\":\\\"InProgress\\\",\\\"TaskType\\\":\\\"TestTask Type Name\\\",\\\"Enabled\\\":1,\\\"ExecutionUid\\\":\\\"8448eabb-9ba4-4779-865b-29e973431273\\\",\\\"NumberOfRetries\\\":0,\\\"DegreeOfCopyParallelism\\\":1,\\\"KeyVaultBaseUrl\\\":\\\"https://ark-stg-kv-ads-irud.vault.azure.net/\\\",\\\"ScheduleMasterId\\\":\\\"-4\\\",\\\"TaskGroupConcurrency\\\":\\\"10\\\",\\\"TaskGroupPriority\\\":0,\\\"TaskExecutionType\\\":\\\"ADF\\\",\\\"ExecutionEngine\\\":{\\\"EngineId\\\":-1,\\\"EngineName\\\":\\\"ark-stg-adf-ads-irud\\\",\\\"SystemType\\\":\\\"Datafactory\\\",\\\"ResourceGroup\\\":\\\"dlzdev04\\\",\\\"SubscriptionId\\\":\\\"ed1206e0-17c7-4bc2-ad4b-f8d4dab9284f\\\",\\\"ADFPipeline\\\":\\\"GPL_AzureSqlTable_NA_AzureBlobFS_Parquet_Azure\\\",\\\"EngineJson\\\":\\\"{}\\\",\\\"TaskDatafactoryIR\\\":\\\"Azure\\\",\\\"JsonProperties\\\":{}},\\\"Source\\\":{\\\"System\\\":{\\\"SystemId\\\":-8,\\\"SystemServer\\\":\\\"https://arkstgdlsadsirudadsl.dfs.core.windows.net\\\",\\\"AuthenticationType\\\":\\\"MSI\\\",\\\"Type\\\":\\\"ADLS\\\",\\\"Username\\\":null,\\\"Container\\\":\\\"datalakelanding\\\"},\\\"Instance\\\":{\\\"TargetRelativePath\\\":\\\"\\\"},\\\"DataFileName\\\":\\\"TestFile.parquet\\\",\\\"RelativePath\\\":\\\"\\\",\\\"SchemaFileName\\\":\\\"TestFile.json\\\"},\\\"Target\\\":{\\\"System\\\":{\\\"SystemId\\\":-8,\\\"SystemServer\\\":\\\"https://arkstgdlsadsirudadsl.dfs.core.windows.net\\\",\\\"AuthenticationType\\\":\\\"MSI\\\",\\\"Type\\\":\\\"ADLS\\\",\\\"Username\\\":null,\\\"Container\\\":\\\"datalakelanding\\\"},\\\"Instance\\\":{\\\"TargetRelativePath\\\":\\\"\\\"},\\\"DataFileName\\\":\\\"TestFile.parquet\\\",\\\"RelativePath\\\":\\\"\\\",\\\"SchemaFileName\\\":\\\"TestFile.json\\\",\\\"Type\\\":\\\"Parquet\\\"}}\"\r\n",
+							"#valid source\r\n",
+							"#TaskObject = \"{\\\"TaskInstanceId\\\":1,\\\"TaskMasterId\\\":2,\\\"TaskStatus\\\":\\\"InProgress\\\",\\\"TaskType\\\":\\\"TestTask Type Name\\\", \\\"Enabled\\\":1,\\\"ExecutionUid\\\":\\\"8448eabb-9ba4-4779-865b-29e973431273\\\",\\\"NumberOfRetries\\\":0,\\\"DegreeOfCopyParallelism\\\":1, \\\"KeyVaultBaseUrl\\\":\\\"https://ads-dev-kv-ads-ic038069.vault.azure.net/\\\",\\\"ScheduleMasterId\\\":\\\"-4\\\",\\\"TaskGroupConcurrency\\\":\\\"10\\\", \\\"TaskGroupPriority\\\":0,\\\"TaskExecutionType\\\":\\\"ADF\\\",\\\"ExecutionEngine\\\":{\\\"EngineId\\\":-1,\\\"EngineName\\\":\\\"ads-dev-kv-ads-ic038069\\\", \\\"SystemType\\\":\\\"Microsoft.Synapse/workspaces\\\",\\\"ResourceGroup\\\":\\\"sifgofast\\\",\\\"SubscriptionId\\\":\\\"cd486ba9-eef3-466d-b16c-7f1b2941ae9d\\\", \\\"ADFPipeline\\\":\\\"GPL_AzureSqlTable_NA_AzureBlobFS_Parquet_Azure\\\",\\\"EngineJson\\\":\\\"{}\\\",\\\"TaskDatafactoryIR\\\":\\\"Azure\\\", \\\"JsonProperties\\\":{}},\\\"Source\\\":{\\\"System\\\":{\\\"SystemId\\\":-8,\\\"SystemServer\\\":\\\"https://adsdevdlsadsic03adsl.blob.core.windows.net\\\", \\\"AuthenticationType\\\":\\\"MSI\\\",\\\"Type\\\":\\\"ADLS\\\",\\\"Username\\\":null,\\\"Container\\\":\\\"adsdevdlsadsic03\\\"},\\\"Instance\\\":\\\"\\\",{\\\"TargetRelativePath\\\":\\\"synapse/sif\\\"}, \\\"DataFileName\\\":\\\"StudentPersonal.parquet\\\",\\\"SourceRelativePath\\\":\\\"synapse/sif\\\",\\\"SchemaFileName\\\":\\\"StudentPersonal.json\\\",\\\"Type\\\":\\\"Parquet\\\"}, \\\"Target\\\":{\\\"System\\\":{\\\"SystemId\\\":-8,\\\"SystemServer\\\":\\\"https://adsdevdlsadsic03adsl.blob.core.windows.net\\\", \\\"AuthenticationType\\\":\\\"MSI\\\",\\\"Type\\\":\\\"ABS\\\",\\\"Username\\\":null,\\\"Container\\\":\\\"adsdevdlsadsic03\\\"}, \\\"Instance\\\":{\\\"TargetRelativePath\\\":\\\"\\\"},\\\"DataFileName\\\":\\\"StudentPersonal.parquet\\\",\\\"SourceRelativePath\\\":\\\"synapse\\/sif\\\", \\\"SchemaFileName\\\":\\\"StudentPersonal.json\\\",\\\"Type\\\":\\\"Parquet\\\"}}\"\r\n",
+							"TaskDict = {}\r\n",
+							"OutputDict = {}\r\n",
+							"TaskObjectJson = json.loads(TaskObject)\r\n",
+							"\r\n",
+							"\r\n",
+							"\r\n",
+							"##we want to delete EngineJson as it causes issues when converting back to a json and it is not needed as its properties are within JsonProperties as children\r\n",
+							"try:\r\n",
+							"    del TaskObjectJson['ExecutionEngine']['EngineJson']\r\n",
+							"except:\r\n",
+							"    print(\"No EngineJson Found\")\r\n",
+							"\r\n",
+							"Source = TaskObjectJson['Source']['System']['Container'] + \"@\" + TaskObjectJson['Source']['System']['SystemServer'].replace(\"https://\",\"\").replace(\"blob\",\"dfs\") + \"/\"\r\n",
+							"Source = Source.replace('///', '/')\r\n",
+							"Source = Source.replace('//', '/')\r\n",
+							"print(Source)\r\n",
+							"Source = Source + TaskObjectJson['Source'][\"Instance\"]['SourceRelativePath']\r\n",
+							"print(Source)\r\n",
+							"Source = Source  +\"/\" + TaskObjectJson['Source']['DataFileName'] \r\n",
+							"print(Source)\r\n",
+							"Source = Source.replace('///', '/')\r\n",
+							"Source = Source.replace('//', '/')\r\n",
+							"print(Source)\r\n",
+							"Source = \"abfss://\" + Source \r\n",
+							"print(Source)"
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"Target = TaskObjectJson['Target']['System']['Container'] + \"@\" + TaskObjectJson['Target']['System']['SystemServer'].replace(\"https://\",\"\").replace(\"blob\",\"dfs\") + \"/\"\r\n",
+							"Target = Target.replace('///', '/')\r\n",
+							"Target = Target.replace('//', '/')\r\n",
+							"print(Target)\r\n",
+							"Target = Target + TaskObjectJson['Target'][\"Instance\"]['TargetRelativePath']\r\n",
+							"Target = Target  +\"/\" + TaskObjectJson['Target']['DataFileName'] \r\n",
+							"print(Target)\r\n",
+							"Target = Target.replace('///', '/')\r\n",
+							"Target = Target.replace('//', '/')\r\n",
+							"print(Target)\r\n",
+							"Target = \"abfss://\" + Target \r\n",
+							"print(Target)"
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": false
+						},
+						"source": [
+							"from pyspark.sql.functions import col, explode_outer, from_json, lit, concat\r\n",
+							"from pyspark.sql.types import StructType, ArrayType\r\n",
+							"print(Source)\r\n",
+							"input_df = spark.read.option(\"multiline\",\"true\").json(Source)\r\n",
+							"#display(input_df)\r\n",
+							"\r\n",
+							"\r\n",
+							"#output_df = execute_autoflatten_with_PK(input_df,None)\r\n",
+							"#display(output_df)\r\n",
+							"\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"from delta.tables import *\r\n",
+							"\r\n",
+							"df = input_df\r\n",
+							"\r\n",
+							"#SIF model uses RefId as Unique identifier in all the structures\r\n",
+							"mergeCondition = \"oldData.RefId = newData.RefId\"\r\n",
+							"\r\n",
+							"\r\n",
+							"\r\n",
+							"\r\n",
+							"print(\"SourceDT = \" + TaskObjectJson['Source']['Type']  + \", TargetDT = \" + TaskObjectJson['Target']['Type'] )\r\n",
+							"#df = spark.read.load(Source, format=SourceDT)\r\n",
+							"\r\n",
+							"var_check = DeltaTable.isDeltaTable(spark, Target )\r\n",
+							"try:\r\n",
+							"    if (var_check):\r\n",
+							"        print(\"Performing Merge... on Existing table\")\r\n",
+							"\r\n",
+							"        olddt = DeltaTable.forPath(spark, Target) \r\n",
+							"\r\n",
+							"        olddt.alias(\"oldData\").merge(\r\n",
+							"            df.alias(\"newData\"),\r\n",
+							"            mergeCondition) \\\r\n",
+							"        .whenMatchedUpdateAll() \\\r\n",
+							"        .whenNotMatchedInsertAll() \\\r\n",
+							"        .execute()\r\n",
+							"    else:\r\n",
+							"        print(\"Creating new Delta Table.\")    \r\n",
+							"        df.write.format(\"Delta\").save(Target)\r\n",
+							"except:\r\n",
+							"    print(\"Table does not exist. Creating new Delta Table.\")    \r\n",
+							"    df.write.format(\"Delta\").save(Target)\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"print(\"Creating Spark Table\")\r\n",
+							"df = spark.read.load(Target, format='delta')\r\n",
+							"targetDB = \"sif\"\r\n",
+							"targetTable = \"raw_\" + TaskObjectJson['Target']['DataFileName'].split(\".\")[0] \r\n",
+							"#if the target datatype is parquet then we do not need to create a copy of the data - we can use the recently saved sink target\r\n",
+							"if (TaskObjectJson['Target']['Type'] == 'Parquet'):\r\n",
+							"    SnapshotTarget = Target\r\n",
+							"else:\r\n",
+							"    SnapshotTarget = Target + '/Snapshot/' + targetTable\r\n",
+							"    #we need to update the parquet file - this is not very efficient but there isnt a current better way as delta tables are not supported for persistent tables\r\n",
+							"    df.write.format(\"parquet\").mode(\"overwrite\").save(SnapshotTarget)\r\n",
+							"\r\n",
+							"\r\n",
+							"#we need to make the DB and table lowercase as synapse persistent tables dont identify them as different identities\r\n",
+							"targetDB = targetDB.lower()\r\n",
+							"targetTable = targetTable.lower()\r\n",
+							"\r\n",
+							"#check if the specified DB / table exists - if so only do required actions.\r\n",
+							"dbList = spark.catalog.listDatabases()\r\n",
+							"dbExists = False\r\n",
+							"for db in dbList:\r\n",
+							"    if (db.name == targetDB):\r\n",
+							"        dbExists = True\r\n",
+							"        break\r\n",
+							"if (dbExists):\r\n",
+							"    print(\"DB Exists\")\r\n",
+							"    tableExists = False\r\n",
+							"    spark.catalog.setCurrentDatabase(targetDB)\r\n",
+							"    tableList = spark.catalog.listTables()\r\n",
+							"    for table in tableList:\r\n",
+							"        if (table.name == targetTable):\r\n",
+							"            tableExists = True\r\n",
+							"            break\r\n",
+							"    if (tableExists):\r\n",
+							"        print(\"Table exists - nothing needed to be done\")\r\n",
+							"        spark.catalog.refreshTable(targetTable)\r\n",
+							"    else:\r\n",
+							"        print(\"Table doesnt exist - creating\")\r\n",
+							"        spark.catalog.createExternalTable(targetTable, path=SnapshotTarget, source='parquet')\r\n",
+							"else:\r\n",
+							"    print(\"DB Doesnt exist - creating DB and table\")\r\n",
+							"    createDBString = \"CREATE DATABASE \" + targetDB \r\n",
+							"    spark.sql(createDBString)\r\n",
+							"    spark.catalog.setCurrentDatabase(targetDB)\r\n",
+							"    spark.catalog.createExternalTable(targetTable, path=SnapshotTarget, source='parquet')"
+						],
+						"outputs": [],
+						"execution_count": null
+					}
+				]
+			},
+			"dependsOn": []
 		}
 	]
 }
