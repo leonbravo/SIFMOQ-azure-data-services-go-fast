@@ -20,192 +20,11 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "8bb0411e-3202-4940-a551-c6c5839c0661"
+				"spark.autotune.trackingId": "10bfa8ae-9d74-4561-b3aa-065649bbce72"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1",
-				"state": {
-					"6d6e5946-0981-4f2c-9e01-d4abb8933977": {
-						"type": "Synapse.DataFrame",
-						"sync_state": {
-							"table": {
-								"rows": [
-									{
-										"0": "PostChannelMessage",
-										"1": "2021-06-02 14:48:11.0000000",
-										"3": "AAMkAGRlM2ViNzg5LWMzOGEtNGYyMC05MTFhLWE5MzAxNTk3NjMzNwBGAAAAAAD6n_vRPyLsQ4uBYtj1MoVQBwBONi1figD3Spv1d4sN1luqAAAAAGZ3AABONi1figD3Spv1d4sN1luqAADDKaaJAAA=",
-										"5": "9ab188a9-815d-411d-83a3-a98b56a6c614",
-										"6": "19:20990825150f4da78ffdcd6a05cfa2e2@thread.tacv2",
-										"7": "Teams",
-										"8": "5ddbce29-3ab9-405d-9350-05945a8a8542",
-										"9": "Student",
-										"10": "1.1"
-									},
-									{
-										"0": "ReplyChannelMessage",
-										"1": "2021-06-02 16:36:46.0000000",
-										"3": "AAMkAGRlM2ViNzg5LWMzOGEtNGYyMC05MTFhLWE5MzAxNTk3NjMzNwBGAAAAAAD6n_vRPyLsQ4uBYtj1MoVQBwBONi1figD3Spv1d4sN1luqAAAAAGZ3AABONi1figD3Spv1d4sN1luqAADDKaaRAAA=",
-										"5": "9ab188a9-815d-411d-83a3-a98b56a6c614",
-										"6": "19:20990825150f4da78ffdcd6a05cfa2e2@thread.tacv2",
-										"7": "Teams",
-										"8": "5ddbce29-3ab9-405d-9350-05945a8a8542",
-										"9": "Student",
-										"10": "1.1"
-									},
-									{
-										"0": "PostChannelMessage",
-										"1": "2021-06-02 14:45:34.0000000",
-										"3": "AAMkADg2NDk3MmIwLTM5NDUtNGQwZS04NDQzLTM5MjViMjZiYzFiNABGAAAAAAAEYRCcXVmaTYyFMuIJ9RetBwDPLnXMbt9HQaxJaYXomUUhAAAAAAEnAADPLnXMbt9HQaxJaYXomUUhAADC-nCbAAA=",
-										"5": "5e0407f7-c973-4f25-9cef-302117b080c6",
-										"6": "19:1500af388f6647739e2300bdc1db53a2@thread.tacv2",
-										"7": "Teams",
-										"8": "7951c64a-b45d-4adb-8842-5e7ab60d17e1",
-										"10": "1.1"
-									},
-									{
-										"0": "ReplyChannelMessage",
-										"1": "2021-06-02 14:45:58.0000000",
-										"3": "AAMkADg2NDk3MmIwLTM5NDUtNGQwZS04NDQzLTM5MjViMjZiYzFiNABGAAAAAAAEYRCcXVmaTYyFMuIJ9RetBwDPLnXMbt9HQaxJaYXomUUhAAAAAAEnAADPLnXMbt9HQaxJaYXomUUhAADC-nCcAAA=",
-										"5": "5e0407f7-c973-4f25-9cef-302117b080c6",
-										"6": "19:1500af388f6647739e2300bdc1db53a2@thread.tacv2",
-										"7": "Teams",
-										"8": "7951c64a-b45d-4adb-8842-5e7ab60d17e1",
-										"10": "1.1"
-									},
-									{
-										"0": "PostChannelMessage",
-										"1": "2021-06-02 14:45:34.0000000",
-										"3": "AAMkADg2NDk3MmIwLTM5NDUtNGQwZS04NDQzLTM5MjViMjZiYzFiNABGAAAAAAAEYRCcXVmaTYyFMuIJ9RetBwDPLnXMbt9HQaxJaYXomUUhAAAAAAEnAADPLnXMbt9HQaxJaYXomUUhAADC-nCbAAA=",
-										"5": "5e0407f7-c973-4f25-9cef-302117b080c6",
-										"6": "19:1500af388f6647739e2300bdc1db53a2@thread.tacv2",
-										"7": "Teams",
-										"8": "7951c64a-b45d-4adb-8842-5e7ab60d17e1",
-										"10": "1.1"
-									}
-								],
-								"schema": [
-									{
-										"key": "0",
-										"name": "_c0",
-										"type": "string"
-									},
-									{
-										"key": "1",
-										"name": "_c1",
-										"type": "string"
-									},
-									{
-										"key": "2",
-										"name": "_c2",
-										"type": "string"
-									},
-									{
-										"key": "3",
-										"name": "_c3",
-										"type": "string"
-									},
-									{
-										"key": "4",
-										"name": "_c4",
-										"type": "string"
-									},
-									{
-										"key": "5",
-										"name": "_c5",
-										"type": "string"
-									},
-									{
-										"key": "6",
-										"name": "_c6",
-										"type": "string"
-									},
-									{
-										"key": "7",
-										"name": "_c7",
-										"type": "string"
-									},
-									{
-										"key": "8",
-										"name": "_c8",
-										"type": "string"
-									},
-									{
-										"key": "9",
-										"name": "_c9",
-										"type": "string"
-									},
-									{
-										"key": "10",
-										"name": "_c10",
-										"type": "string"
-									},
-									{
-										"key": "11",
-										"name": "_c11",
-										"type": "string"
-									},
-									{
-										"key": "12",
-										"name": "_c12",
-										"type": "string"
-									},
-									{
-										"key": "13",
-										"name": "_c13",
-										"type": "string"
-									},
-									{
-										"key": "14",
-										"name": "_c14",
-										"type": "string"
-									},
-									{
-										"key": "15",
-										"name": "_c15",
-										"type": "string"
-									},
-									{
-										"key": "16",
-										"name": "_c16",
-										"type": "string"
-									},
-									{
-										"key": "17",
-										"name": "_c17",
-										"type": "string"
-									},
-									{
-										"key": "18",
-										"name": "_c18",
-										"type": "string"
-									}
-								]
-							},
-							"isSummary": false,
-							"language": "scala"
-						},
-						"persist_state": {
-							"view": {
-								"type": "details",
-								"chartOptions": {
-									"chartType": "bar",
-									"aggregationType": "count",
-									"categoryFieldKeys": [
-										"0"
-									],
-									"seriesFieldKeys": [
-										"0"
-									],
-									"isStacked": false
-								}
-							}
-						}
-					}
-				}
-			},
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
@@ -217,18 +36,12 @@
 			"a365ComputeOptions": {
 				"id": "/subscriptions/7b9a4896-4541-483f-bdc7-d8f4ec6be3ee/resourceGroups/rg-oea-hybriddev4/providers/Microsoft.Synapse/workspaces/syn-oea-hybriddev4/bigDataPools/med",
 				"name": "med",
-				"type": "Spark",
-				"endpoint": "https://syn-oea-hybriddev4.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/med",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
-				},
-				"sparkVersion": "2.4",
-				"nodeCount": 10,
-				"cores": 8,
-				"memory": 56,
-				"extraHeader": null
-			}
+				}
+			},
+			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
 			{
@@ -245,8 +58,7 @@
 					"This notebook creates 26 tables into two new Spark databases called s2np_insights and s2p_insights.\r\n",
 					"\r\n",
 					"s2p_insights is utilized for the Graph Reports API PowerBI dashboard provided"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "markdown",
@@ -261,8 +73,26 @@
 					"### Provision storage accounts\r\n",
 					"\r\n",
 					"The storage account variable has to be changed to the name of the storage account associated with your Azure resource group."
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"storage_account = 'bceaaeoeadevlrs'\r\n",
+					"use_test_env = False"
 				],
-				"attachments": null
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -286,8 +116,7 @@
 					"\r\n",
 					"\r\n",
 					"# data lake and container information\r\n",
-					"storage_account = 'stoeahybriddev4'\r\n",
-					"use_test_env = False\r\n",
+					"\r\n",
 					"\r\n",
 					"if use_test_env:\r\n",
 					"    stage1np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage1np'\r\n",
@@ -298,7 +127,6 @@
 					"    stage2np = 'abfss://stage2np@' + storage_account + '.dfs.core.windows.net'\r\n",
 					"    stage2p = 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
 				],
-				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -319,8 +147,7 @@
 					"To process your own data:\r\n",
 					" - Uncomment the top four lines of code (lines 2, 3, 4, and 5)\r\n",
 					" - Comment out the last two line of code (lines 6 and 7)"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -344,7 +171,6 @@
 					"date1 = \"2021-06-02\"\r\n",
 					"date2 = \"2021-09-05\""
 				],
-				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -390,7 +216,6 @@
 					"#dfSessionRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/Session/*.csv')\r\n",
 					"#dfSourceSystemRaw = spark.read.format('csv').load(f'{stage1np}/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
 				],
-				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -420,8 +245,7 @@
 					"- Table: techactivity\r\n",
 					"2. Spark DB: s2np_insights\r\n",
 					"- Table: techactivity"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -440,7 +264,6 @@
 				"source": [
 					"display(dfActivityRaw.limit(10))"
 				],
-				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -459,7 +282,6 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"attachments": null,
 				"execution_count": 5
 			},
 			{
@@ -478,7 +300,6 @@
 				"source": [
 					"%run /NEW_MSInsights_py"
 				],
-				"attachments": null,
 				"execution_count": 6
 			},
 			{
@@ -499,7 +320,6 @@
 					"oea = OEA()\r\n",
 					"ms_insights = MSInsights(oea, source_folder='M365')"
 				],
-				"attachments": null,
 				"execution_count": 7
 			},
 			{
@@ -522,7 +342,6 @@
 					"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
 					"ms_insights.process_activity()"
 				],
-				"attachments": null,
 				"execution_count": 8
 			},
 			{
@@ -545,7 +364,6 @@
 					"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
 					"ms_insights._process_roster_date_folder(date_folder_path='2021-09-05')"
 				],
-				"attachments": null,
 				"execution_count": null
 			}
 		]
