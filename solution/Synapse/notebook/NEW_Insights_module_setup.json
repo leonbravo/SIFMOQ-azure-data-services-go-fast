@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "3a7e8638-9626-48d4-b0d7-555dc121bfd0"
+				"spark.autotune.trackingId": "0ff95b57-e431-4978-a21b-909d716b488a"
 			}
 		},
 		"metadata": {
@@ -305,7 +305,7 @@
 					}
 				},
 				"source": [
-					"%run /NEW_MSInsights_py"
+					"%run /Insights_py"
 				],
 				"execution_count": 6
 			},
