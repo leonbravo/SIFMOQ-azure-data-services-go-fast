@@ -4067,14 +4067,11 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "8b91d015-1a65-47c2-add0-ea45dbe38c14"
+						"spark.autotune.trackingId": "fca9d4f3-ccea-4525-ad5f-8e0e4f525224"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
-					"synapse_widget": {
-						"version": "0.1"
-					},
 					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
@@ -4096,7 +4093,7 @@
 						"nodeCount": 3,
 						"cores": 4,
 						"memory": 28,
-						"extraHeader": null
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -4112,8 +4109,7 @@
 						},
 						"source": [
 							"# Microsoft Insights Class"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -4144,7 +4140,7 @@
 							"    In stage2, everything is written to stage2np/ms_insights and stage2p/ms_insights\r\n",
 							"    \"\"\"\r\n",
 							"\r\n",
-							"    def __init__(self, source_folder='SDS/M365'):\r\n",
+							"    def __init__(self, source_folder= 'SDS/M365'):\r\n",
 							"        BaseOEAModule.__init__(self, source_folder)\r\n",
 							"\r\n",
 							"        self.stage1np_activity = self.stage1np + '/activity'\r\n",
@@ -4438,7 +4434,6 @@
 							"  \r\n",
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					}
@@ -4470,7 +4465,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "df4a8116-ced6-4c42-9ffe-d002d6f03268"
+						"spark.autotune.trackingId": "c14ec9b2-c314-4ef2-a826-dbfcba1c383b"
 					}
 				},
 				"metadata": {
@@ -4495,8 +4490,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -4552,7 +4546,7 @@
 							"use_test_env = False"
 						],
 						"outputs": [],
-						"execution_count": 1
+						"execution_count": 11
 					},
 					{
 						"cell_type": "code",
@@ -4585,7 +4579,7 @@
 							"    stage2p = 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": 12
 					},
 					{
 						"cell_type": "markdown",
@@ -4631,7 +4625,7 @@
 							"date1 = date2"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 13
 					},
 					{
 						"cell_type": "code",
@@ -4677,7 +4671,7 @@
 							"dfSourceSystemRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
 						],
 						"outputs": [],
-						"execution_count": 6
+						"execution_count": 14
 					},
 					{
 						"cell_type": "markdown",
@@ -4726,7 +4720,7 @@
 							"display(dfActivityRaw.limit(10))"
 						],
 						"outputs": [],
-						"execution_count": 7
+						"execution_count": 15
 					},
 					{
 						"cell_type": "code",
@@ -4745,7 +4739,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 8
+						"execution_count": 16
 					},
 					{
 						"cell_type": "code",
@@ -4764,7 +4758,7 @@
 							"%run /Insights_py"
 						],
 						"outputs": [],
-						"execution_count": 10
+						"execution_count": 17
 					},
 					{
 						"cell_type": "code",
@@ -4781,11 +4775,12 @@
 						},
 						"source": [
 							"# 0) Initialize the OEA framework and MSInsights module.\r\n",
-							"oea = OEA()\r\n",
-							"ms_insights = Insights(oea, source_folder='M365')"
+							"oea = OEA(storage_account)\r\n",
+							"source_folder='SDS/M365'\r\n",
+							"ms_insights = Insights(oea)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 22
 					},
 					{
 						"cell_type": "code",
