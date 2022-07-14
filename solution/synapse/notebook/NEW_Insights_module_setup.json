@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "5a873772-a2bf-413f-b544-4ade663a59c2"
+				"spark.autotune.trackingId": "3dbfb97f-1e98-44ee-96f4-5f3072069242"
 			}
 		},
 		"metadata": {
@@ -96,16 +96,33 @@
 					}
 				},
 				"source": [
+					"# data lake and container information\r\n",
+					"# meant to be parameters\r\n",
+					"storage_account = 'bceaaeoeadevlrs'\r\n",
+					"use_test_env = False"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
 					"from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType, ArrayType\r\n",
 					"from pyspark.sql.functions import *\r\n",
 					"from pyspark.sql.window import Window\r\n",
 					"from faker import Faker\r\n",
 					"import datetime\r\n",
 					"\r\n",
-					"\r\n",
-					"# data lake and container information\r\n",
-					"storage_account = 'stoeahybriddev4'\r\n",
-					"use_test_env = False\r\n",
 					"\r\n",
 					"if use_test_env:\r\n",
 					"    stage1np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage1np'\r\n",
