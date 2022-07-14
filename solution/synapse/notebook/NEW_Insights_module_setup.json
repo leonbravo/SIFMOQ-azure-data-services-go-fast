@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a8288597-3d79-4219-9051-4e77590357fa"
+				"spark.autotune.trackingId": "d935f61d-8d2c-493c-8ebe-77810bd8dff0"
 			}
 		},
 		"metadata": {
@@ -325,7 +325,7 @@
 				"source": [
 					"# 0) Initialize the OEA framework and MSInsights module.\r\n",
 					"oea = OEA()\r\n",
-					"ms_insights = MSInsights(oea, source_folder='M365')"
+					"ms_insights = Insights(oea, source_folder='M365')"
 				],
 				"execution_count": null
 			},
@@ -369,7 +369,7 @@
 					"# (adds schema details and writes out in parquet format).\r\n",
 					"# NOTE: Does not write out to delta lake. \r\n",
 					"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
-					"ms_insights._process_roster_date_folder(date_folder_path='2021-09-05')"
+					"ms_insights._process_roster_date_folder(date_folder_path=date2)"
 				],
 				"execution_count": null
 			}
