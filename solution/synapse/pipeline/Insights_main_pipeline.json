@@ -19,7 +19,11 @@
 						"referenceName": "NEW_Insights_module_setup",
 						"type": "NotebookReference"
 					},
-					"snapshot": true
+					"snapshot": true,
+					"sparkPool": {
+						"referenceName": "spark3p1sm",
+						"type": "BigDataPoolReference"
+					}
 				}
 			},
 			{
