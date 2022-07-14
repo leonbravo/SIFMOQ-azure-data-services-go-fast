@@ -18,14 +18,11 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "8b91d015-1a65-47c2-add0-ea45dbe38c14"
+				"spark.autotune.trackingId": "845a9581-db0d-4432-90d1-47ce9e419f4b"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
@@ -47,7 +44,7 @@
 				"nodeCount": 3,
 				"cores": 4,
 				"memory": 28,
-				"extraHeader": null
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -63,8 +60,7 @@
 				},
 				"source": [
 					"# Microsoft Insights Class"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -80,7 +76,7 @@
 					}
 				},
 				"source": [
-					"class Insights(BaseOEAModule):\r\n",
+					"class Insights(BaseOEAModule,source_folder ):\r\n",
 					"    \"\"\"\r\n",
 					"    Provides data processing methods for MS Insights data.\r\n",
 					"    Data is expected to be received via ADS into stage1np/ms_insights\r\n",
@@ -389,7 +385,6 @@
 					"  \r\n",
 					""
 				],
-				"attachments": null,
 				"execution_count": 1
 			}
 		]
