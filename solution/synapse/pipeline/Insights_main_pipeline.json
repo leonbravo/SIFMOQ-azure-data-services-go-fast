@@ -1,0 +1,136 @@
+{
+	"name": "Insights_main_pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "ingest into stage2p and stage2np",
+				"type": "SynapseNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "NEW_Insights_module_setup",
+						"type": "NotebookReference"
+					},
+					"snapshot": true
+				}
+			},
+			{
+				"name": "If create_sql_db",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "ingest into stage2p and stage2np",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@pipeline().parameters.create_sql_db",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "create_sql_db",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "create_sql_db1",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"storageAccount": {
+										"value": "@pipeline().parameters.storageAccount",
+										"type": "Expression"
+									},
+									"sourceDirectory": {
+										"value": "@pipeline().parameters.sourceDirectory",
+										"type": "Expression"
+									},
+									"stage": "2"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "If create_lake_db",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "ingest into stage2p and stage2np",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@pipeline().parameters.create_lake_db",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "create_lake_db",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "create_lake_db1",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"stageNum": "2",
+									"sourceDirectory": {
+										"value": "@pipeline().parameters.sourceDirectory",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"storageAccount": {
+				"type": "string",
+				"defaultValue": "stoeahybriddev4"
+			},
+			"sourceDirectory": {
+				"type": "string",
+				"defaultValue": "insights"
+			},
+			"create_sql_db": {
+				"type": "bool",
+				"defaultValue": true
+			},
+			"create_lake_db": {
+				"type": "bool",
+				"defaultValue": true
+			}
+		},
+		"folder": {
+			"name": "Insights Module"
+		},
+		"annotations": [],
+		"lastPublishTime": "2021-11-23T20:25:17Z"
+	}
+}
