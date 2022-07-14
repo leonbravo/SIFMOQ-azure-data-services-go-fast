@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "845a9581-db0d-4432-90d1-47ce9e419f4b"
+				"spark.autotune.trackingId": "c909dd22-562b-4aa6-bb49-b377cde6d074"
 			}
 		},
 		"metadata": {
@@ -76,7 +76,7 @@
 					}
 				},
 				"source": [
-					"class Insights(BaseOEAModule,source_folder ):\r\n",
+					"class Insights(BaseOEAModule):\r\n",
 					"    \"\"\"\r\n",
 					"    Provides data processing methods for MS Insights data.\r\n",
 					"    Data is expected to be received via ADS into stage1np/ms_insights\r\n",
@@ -91,7 +91,7 @@
 					"    In stage2, everything is written to stage2np/ms_insights and stage2p/ms_insights\r\n",
 					"    \"\"\"\r\n",
 					"\r\n",
-					"    def __init__(self, source_folder='SDS/M365'):\r\n",
+					"    def __init__(self, source_folder):\r\n",
 					"        BaseOEAModule.__init__(self, source_folder)\r\n",
 					"\r\n",
 					"        self.stage1np_activity = self.stage1np + '/activity'\r\n",
