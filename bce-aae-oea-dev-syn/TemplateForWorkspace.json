@@ -4067,7 +4067,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "fca9d4f3-ccea-4525-ad5f-8e0e4f525224"
+						"spark.autotune.trackingId": "bf540add-9137-44a9-adfc-e4cdaace88dd"
 					}
 				},
 				"metadata": {
@@ -4465,7 +4465,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "c14ec9b2-c314-4ef2-a826-dbfcba1c383b"
+						"spark.autotune.trackingId": "ba4c9145-2d46-4a8c-a1cb-46618dabf126"
 					}
 				},
 				"metadata": {
@@ -4490,7 +4490,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -4546,7 +4547,7 @@
 							"use_test_env = False"
 						],
 						"outputs": [],
-						"execution_count": 11
+						"execution_count": 25
 					},
 					{
 						"cell_type": "code",
@@ -4579,7 +4580,7 @@
 							"    stage2p = 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
 						],
 						"outputs": [],
-						"execution_count": 12
+						"execution_count": 26
 					},
 					{
 						"cell_type": "markdown",
@@ -4625,7 +4626,7 @@
 							"date1 = date2"
 						],
 						"outputs": [],
-						"execution_count": 13
+						"execution_count": 27
 					},
 					{
 						"cell_type": "code",
@@ -4671,7 +4672,7 @@
 							"dfSourceSystemRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
 						],
 						"outputs": [],
-						"execution_count": 14
+						"execution_count": 28
 					},
 					{
 						"cell_type": "markdown",
@@ -4720,7 +4721,7 @@
 							"display(dfActivityRaw.limit(10))"
 						],
 						"outputs": [],
-						"execution_count": 15
+						"execution_count": 29
 					},
 					{
 						"cell_type": "code",
@@ -4739,7 +4740,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 16
+						"execution_count": 30
 					},
 					{
 						"cell_type": "code",
@@ -4758,7 +4759,7 @@
 							"%run /Insights_py"
 						],
 						"outputs": [],
-						"execution_count": 17
+						"execution_count": 31
 					},
 					{
 						"cell_type": "code",
@@ -4777,10 +4778,10 @@
 							"# 0) Initialize the OEA framework and MSInsights module.\r\n",
 							"oea = OEA(storage_account)\r\n",
 							"source_folder='SDS/M365'\r\n",
-							"ms_insights = Insights(oea)"
+							"ms_insights = Insights(source_folder)"
 						],
 						"outputs": [],
-						"execution_count": 22
+						"execution_count": 34
 					},
 					{
 						"cell_type": "code",
@@ -4800,10 +4801,12 @@
 							"# (adds schema details and writes out in parquet format).\r\n",
 							"# NOTE: Does not write out to delta lake. \r\n",
 							"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
-							"ms_insights.process_activity()"
+							"#ms_insights.process_activity()\r\n",
+							"\r\n",
+							"ms_insights.ingest()"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 35
 					},
 					{
 						"cell_type": "code",
@@ -4823,7 +4826,7 @@
 							"# (adds schema details and writes out in parquet format).\r\n",
 							"# NOTE: Does not write out to delta lake. \r\n",
 							"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
-							"ms_insights._process_roster_date_folder(date_folder_path=date2)"
+							"#ms_insights._process_roster_date_folder(date_folder_path=date2)"
 						],
 						"outputs": [],
 						"execution_count": null
@@ -5164,16 +5167,39 @@
 					"executorCores": 4,
 					"numExecutors": 2,
 					"runAsWorkspaceSystemIdentity": false,
-					"conf": {}
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "3d1da599-70d1-4919-8558-51e678be31c9"
+					}
 				},
 				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
 						"display_name": "python"
 					},
 					"language_info": {
 						"name": "python"
-					}
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
+						"name": "spark3p1sm",
+						"type": "Spark",
+						"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 4,
+						"memory": 28,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -5731,7 +5757,6 @@
 							"\n",
 							"oea = OEA()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
