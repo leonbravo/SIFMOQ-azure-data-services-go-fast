@@ -116,7 +116,7 @@
 			},
 			"sourceDirectory": {
 				"type": "string",
-				"defaultValue": "insights"
+				"defaultValue": "SDS"
 			},
 			"create_sql_db": {
 				"type": "bool",
