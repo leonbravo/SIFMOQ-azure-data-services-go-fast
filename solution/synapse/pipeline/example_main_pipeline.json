@@ -89,21 +89,10 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "create_sql_db",
+									"referenceName": "create_sql_db1",
 									"type": "PipelineReference"
 								},
-								"waitOnCompletion": true,
-								"parameters": {
-									"storageAccount": {
-										"value": "@pipeline().parameters.storageAccount",
-										"type": "Expression"
-									},
-									"sourceDirectory": {
-										"value": "@pipeline().parameters.sourceDirectory",
-										"type": "Expression"
-									},
-									"stage": "2"
-								}
+								"waitOnCompletion": true
 							}
 						}
 					]
@@ -133,10 +122,6 @@
 							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
-								"pipeline": {
-									"referenceName": "create_lake_db",
-									"type": "PipelineReference"
-								},
 								"waitOnCompletion": true,
 								"parameters": {
 									"stageNum": "2",
