@@ -112,7 +112,7 @@
 		"parameters": {
 			"storageAccount": {
 				"type": "string",
-				"defaultValue": "stoeahybriddev4"
+				"defaultValue": "bceaaeoeadevlrs"
 			},
 			"sourceDirectory": {
 				"type": "string",
