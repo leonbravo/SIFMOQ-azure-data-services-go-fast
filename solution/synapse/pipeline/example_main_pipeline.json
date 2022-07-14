@@ -122,14 +122,11 @@
 							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
-								"waitOnCompletion": true,
-								"parameters": {
-									"stageNum": "2",
-									"sourceDirectory": {
-										"value": "@pipeline().parameters.sourceDirectory",
-										"type": "Expression"
-									}
-								}
+								"pipeline": {
+									"referenceName": "create_lake_db1",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
 							}
 						}
 					]
