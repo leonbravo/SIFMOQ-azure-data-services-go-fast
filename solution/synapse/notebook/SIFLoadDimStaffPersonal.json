@@ -1,0 +1,159 @@
+{
+	"name": "SIFLoadDimStaffPersonal",
+	"properties": {
+		"folder": {
+			"name": "SIF"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "f1c1bbb8-c1ac-4d4f-b4cc-460f4270b9ca"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"tags": [
+						"parameters"
+					]
+				},
+				"source": [
+					"SifDbName = \"sif\""
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"spark.catalog.setCurrentDatabase(SifDbName)"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from pyspark.sql.functions import *\n",
+					"df_Raw = spark.sql(\"select * from raw_staffpersonal\")\n",
+					"df_RawWJ = df_Raw.withColumn('json',to_json (struct (col ('*')))).select(\"RefId\", \"json\")\n",
+					"\n",
+					"df_Out = df_RawWJ \\\n",
+					".withColumn('LocalId',get_json_object(col('json'), '$.LocalId')) \\\n",
+					".withColumn('StateProvinceId',get_json_object(col('json'), '$.StateProvinceId')) \\\n",
+					".withColumn('FirstName',get_json_object(col('json'), '$.FirstName')) \\\n",
+					".withColumn('LastName',get_json_object(col('json'), '$.LastName')) \\\n",
+					".withColumn('MiddleName',get_json_object(col('json'), '$.MiddleName')) \\\n",
+					".withColumn('OtherNames',get_json_object(col('json'), '$.OtherNames')) \\\n",
+					".withColumn('EmploymentStatus',get_json_object(col('json'), '$.EmploymentStatus')) \\\n",
+					".withColumn('Title',get_json_object(col('json'), '$.Title')) \\\n",
+					".withColumn('IndigenousStatus',get_json_object(col('json'), '$.IndigenousStatus')) \\\n",
+					".withColumn('Sex',get_json_object(col('json'), '$.Sex')) \\\n",
+					".withColumn('BirthDate',get_json_object(col('json'), '$.BirthDate')) \\\n",
+					".withColumn('DateOfDeath',get_json_object(col('json'), '$.DateOfDeath')) \\\n",
+					".withColumn('Deceased',get_json_object(col('json'), '$.Deceased')) \\\n",
+					".withColumn('BirthDateVerification',get_json_object(col('json'), '$.BirthDateVerification')) \\\n",
+					".withColumn('PlaceOfBirth',get_json_object(col('json'), '$.PlaceOfBirth')) \\\n",
+					".withColumn('StateOfBirth',get_json_object(col('json'), '$.StateOfBirth')) \\\n",
+					".withColumn('CountryOfBirth ',get_json_object(col('json'), '$.CountryOfBirth ')) \\\n",
+					".withColumn('CountryOfCitizenship ',get_json_object(col('json'), '$.CountryOfCitizenship ')) \\\n",
+					".withColumn('CountryOfResidency',get_json_object(col('json'), '$.CountryOfResidency')) \\\n",
+					".withColumn('CountryArrivalDate',get_json_object(col('json'), '$.CountryArrivalDate')) \\\n",
+					".withColumn('AustralianCitizenshipStatus',get_json_object(col('json'), '$.AustralianCitizenshipStatus')) \\\n",
+					".withColumn('EnglishProficiency',get_json_object(col('json'), '$.EnglishProficiency')) \\\n",
+					".withColumn('LanguageList',get_json_object(col('json'), '$.LanguageList')) \\\n",
+					".withColumn('DwellingArrangement',get_json_object(col('json'), '$.DwellingArrangement')) \\\n",
+					".withColumn('Religion',get_json_object(col('json'), '$.Religion')) \\\n",
+					".withColumn('ReligiousEventList',get_json_object(col('json'), '$.ReligiousEventList')) \\\n",
+					".withColumn('ReligiousRegion',get_json_object(col('json'), '$.ReligiousRegion')) \\\n",
+					".withColumn('PermanentResident',get_json_object(col('json'), '$.PermanentResident')) \\\n",
+					".withColumn('VisaSubClass',get_json_object(col('json'), '$.VisaSubClass')) \\\n",
+					".withColumn('VisaStatisticalCode',get_json_object(col('json'), '$.VisaStatisticalCode')) \\\n",
+					".withColumn('EmailList',get_json_object(col('json'), '$.EmailList')) \\\n",
+					".withColumn('PhoneNumberList',get_json_object(col('json'), '$.PhoneNumberList')) \\\n",
+					".withColumn('AddressList',get_json_object(col('json'), '$.AddressList')) \\\n",
+					".select('RefId',\t'LocalId',\t'StateProvinceId',\t'FirstName',\t'LastName',\t'MiddleName',\t'OtherNames',\t'EmploymentStatus',\t'Title',\t'IndigenousStatus',\t'Sex',\t'BirthDate',\t'DateOfDeath',\t'Deceased',\t'BirthDateVerification',\t'PlaceOfBirth',\t'StateOfBirth',\t'CountryOfBirth ',\t'CountryOfCitizenship ',\t'CountryOfResidency',\t'CountryArrivalDate',\t'AustralianCitizenshipStatus',\t'EnglishProficiency',\t'LanguageList',\t'DwellingArrangement',\t'Religion',\t'ReligiousEventList',\t'ReligiousRegion',\t'PermanentResident',\t'VisaSubClass',\t'VisaStatisticalCode',\t'EmailList',\t'PhoneNumberList',\t'AddressList',\n",
+					") \n",
+					"\n",
+					"\n",
+					""
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df_Out.write.mode(\"overwrite\").saveAsTable(\"dm_staffpersonal\")"
+				],
+				"attachments": null,
+				"execution_count": null
+			}
+		]
+	}
+}

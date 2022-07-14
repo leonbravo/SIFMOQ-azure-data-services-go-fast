@@ -1,0 +1,214 @@
+{
+	"name": "SIFLoadDimStudentPersonal",
+	"properties": {
+		"folder": {
+			"name": "SIF"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "339c5203-5898-44ca-ae88-6e1ec1abebc0"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"tags": [
+						"parameters"
+					]
+				},
+				"source": [
+					"SifDbName = \"sif\""
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"spark.catalog.setCurrentDatabase(SifDbName)"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from pyspark.sql.functions import *\r\n",
+					"df_Raw = spark.sql(\"select * from raw_studentpersonal\")\r\n",
+					"df_RawWJ = df_Raw.withColumn('json',to_json (struct (col ('*')))).select(\"RefId\", \"json\")\r\n",
+					"\r\n",
+					"df_Out = df_RawWJ \\\r\n",
+					".withColumn('StateProvinceId',get_json_object(col('json'), '$.StateProvinceId')) \\\r\n",
+					".withColumn('NationalUniqueStudentIdentifier',get_json_object(col('json'), '$.NationalUniqueStudentIdentifier')) \\\r\n",
+					".withColumn('AlertMessages',get_json_object(col('json'), '$.AlertMessages')) \\\r\n",
+					".withColumn('MedicalAlertMessages',get_json_object(col('json'), '$.MedicalAlertMessages')) \\\r\n",
+					".withColumn('FirstName',get_json_object(col('json'), '$.PersonInfo.Name.GivenName')) \\\r\n",
+					".withColumn('LastName',get_json_object(col('json'), '$.PersonInfo.Name.FamilyName')) \\\r\n",
+					".withColumn('MiddleName',get_json_object(col('json'), '$.MiddleName')) \\\r\n",
+					".withColumn('OtherNames',get_json_object(col('json'), '$.PersonInfo.OtherNames')) \\\r\n",
+					".withColumn('ProjectedGraduationYear',get_json_object(col('json'), '$.ProjectedGraduationYear')) \\\r\n",
+					".withColumn('OnTimeGraduationYear',get_json_object(col('json'), '$.OnTimeGraduationYear')) \\\r\n",
+					".withColumn('GraduationDate',get_json_object(col('json'), '$.GraduationDate')) \\\r\n",
+					".withColumn('MostRecent',get_json_object(col('json'), '$.MostRecent')) \\\r\n",
+					".withColumn('AcceptableUsePolicy',get_json_object(col('json'), '$.AcceptableUsePolicy')) \\\r\n",
+					".withColumn('GiftedTalented',get_json_object(col('json'), '$.GiftedTalented')) \\\r\n",
+					".withColumn('EconomicDisadvantage',get_json_object(col('json'), '$.EconomicDisadvantage')) \\\r\n",
+					".withColumn('ESL',get_json_object(col('json'), '$.ESL')) \\\r\n",
+					".withColumn('ESLDateAssessed',get_json_object(col('json'), '$.ESLDateAssessed')) \\\r\n",
+					".withColumn('YoungCarersRole',get_json_object(col('json'), '$.YoungCarersRole')) \\\r\n",
+					".withColumn('Disability',get_json_object(col('json'), '$.Disability')) \\\r\n",
+					".withColumn('IntegrationAide',get_json_object(col('json'), '$.IntegrationAide')) \\\r\n",
+					".withColumn('EducationSupport',get_json_object(col('json'), '$.EducationSupport')) \\\r\n",
+					".withColumn('HomeSchooledStudent',get_json_object(col('json'), '$.HomeSchooledStudent')) \\\r\n",
+					".withColumn('IndependentStudent',get_json_object(col('json'), '$.IndependentStudent')) \\\r\n",
+					".withColumn('Sensitive',get_json_object(col('json'), '$.Sensitive')) \\\r\n",
+					".withColumn('OfflineDelivery',get_json_object(col('json'), '$.OfflineDelivery')) \\\r\n",
+					".withColumn('ESLSupport',get_json_object(col('json'), '$.ESLSupport')) \\\r\n",
+					".withColumn('PrePrimaryEducation',get_json_object(col('json'), '$.PrePrimaryEducation')) \\\r\n",
+					".withColumn('PrePrimaryEducationHours',get_json_object(col('json'), '$.PrePrimaryEducationHours')) \\\r\n",
+					".withColumn('FirstAUSchoolEnrollment',get_json_object(col('json'), '$.FirstAUSchoolEnrollment')) \\\r\n",
+					".withColumn('EmailList',get_json_object(col('json'), '$.PersonInfo.EmailList')) \\\r\n",
+					".withColumn('PhoneNumberList',get_json_object(col('json'), '$.PersonInfo.PhoneNumberList')) \\\r\n",
+					".withColumn('AddressList',get_json_object(col('json'), '$.PersonInfo.AddressList')) \\\r\n",
+					".withColumn('IndigenousStatus',get_json_object(col('json'), '$.PersonInfo.Demographics.IndigenousStatus')) \\\r\n",
+					".withColumn('Sex',get_json_object(col('json'), '$.PersonInfo.Demographics.Sex')) \\\r\n",
+					".withColumn('BirthDate',get_json_object(col('json'), '$.PersonInfo.Demographics.BirthDate')) \\\r\n",
+					".withColumn('DateOfDeath',get_json_object(col('json'), '$.PersonInfo.Demographics.DateOfDeath')) \\\r\n",
+					".withColumn('Deceased',get_json_object(col('json'), '$.PersonInfo.Demographics.Deceased')) \\\r\n",
+					".withColumn('BirthDateVerification',get_json_object(col('json'), '$.PersonInfo.Demographics.BirthDateVerification')) \\\r\n",
+					".withColumn('PlaceOfBirth',get_json_object(col('json'), '$.PersonInfo.Demographics.PlaceOfBirth')) \\\r\n",
+					".withColumn('StateOfBirth',get_json_object(col('json'), '$.PersonInfo.Demographics.StateOfBirth')) \\\r\n",
+					".withColumn('CountryOfBirth',get_json_object(col('json'), '$.PersonInfo.Demographics.CountryOfBirth')) \\\r\n",
+					".withColumn('CountryOfCitizenship',get_json_object(col('json'), '$.PersonInfo.Demographics.CountriesOfCitizenship')) \\\r\n",
+					".withColumn('CountryOfResidency',get_json_object(col('json'), '$.PersonInfo.Demographics.CountriesOfResidency')) \\\r\n",
+					".withColumn('CountryArrivalDate',get_json_object(col('json'), '$.PersonInfo.Demographics.CountryArrivalDate')) \\\r\n",
+					".withColumn('AustralianCitizenshipStatus',get_json_object(col('json'), '$.PersonInfo.Demographics.AustralianCitizenshipStatus')) \\\r\n",
+					".withColumn('EnglishProficiency',get_json_object(col('json'), '$.PersonInfo.Demographics.EnglishProficiency.Code')) \\\r\n",
+					".withColumn('MainLanguageSpokenAtHome',get_json_object(col('json'), '$.PersonInfo.Demographics.LanguageList.Language[0].Code')) \\\r\n",
+					".withColumn('SecondLanguage',get_json_object(col('json'), '$.PersonInfo.Demographics.LanguageList.Language[1].Code')) \\\r\n",
+					".withColumn('OtherLanguage',get_json_object(col('json'), '$.PersonInfo.Demographics.LanguageList.Language[2].Code')) \\\r\n",
+					".withColumn('DwellingArrangement',get_json_object(col('json'), '$.PersonInfo.Demographics.DwellingArrangement.Code')) \\\r\n",
+					".withColumn('Religion',get_json_object(col('json'), '$.PersonInfo.Demographics.Religion.Code')) \\\r\n",
+					".withColumn('ReligiousEventList',get_json_object(col('json'), '$.PersonInfo.Demographics.ReligiousEventList')) \\\r\n",
+					".withColumn('ReligiousRegion',get_json_object(col('json'), '$.PersonInfo.Demographics.ReligiousRegion')) \\\r\n",
+					".withColumn('PermanentResident',get_json_object(col('json'), '$.PersonInfo.Demographics.PermanentResident')) \\\r\n",
+					".withColumn('VisaSubClass',get_json_object(col('json'), '$.PersonInfo.Demographics.VisaSubClass')) \\\r\n",
+					".withColumn('VisaStatisticalCode',get_json_object(col('json'), '$.PersonInfo.Demographics.VisaStatisticalCode')) \\\r\n",
+					".withColumn('VisaSubClassList',get_json_object(col('json'), '$.PersonInfo.Demographics.VisaSubClassList')) \\\r\n",
+					".withColumn('PassportNumber',get_json_object(col('json'), '$.PersonInfo.Demographics.Passport.Number')) \\\r\n",
+					".withColumn('PassportExpiryDate',get_json_object(col('json'), '$.PersonInfo.Demographics.Passport.ExpiryDate')) \\\r\n",
+					".withColumn('PassportCountry',get_json_object(col('json'), '$.PersonInfo.Demographics.Passport.Country')) \\\r\n",
+					".withColumn('LBOTE',get_json_object(col('json'), '$.LBOTE')) \\\r\n",
+					".withColumn('InterpreterRequired',get_json_object(col('json'), '$.InterpreterRequired')) \\\r\n",
+					".withColumn('ImmunisationCertificateStatus',get_json_object(col('json'), '$.ImmunisationCertificateStatus')) \\\r\n",
+					".withColumn('CulturalBackground',get_json_object(col('json'), '$.CulturalBackground')) \\\r\n",
+					".withColumn('MaritalStatus',get_json_object(col('json'), '$.MaritalStatus')) \\\r\n",
+					".withColumn('MedicareNumber',get_json_object(col('json'), '$.MedicareNumber')) \\\r\n",
+					".withColumn('MedicarePositionNumber',get_json_object(col('json'), '$.MedicarePositionNumber')) \\\r\n",
+					".withColumn('MedicareCardHolderName',get_json_object(col('json'), '$.MedicareCardHolderName')) \\\r\n",
+					".withColumn('PrivateHealthInsurance',get_json_object(col('json'), '$.PrivateHealthInsurance')) \\\r\n",
+					".select('RefId',\t'StateProvinceId',\t'NationalUniqueStudentIdentifier',\t'AlertMessages',\t'MedicalAlertMessages',\t'FirstName',\t'LastName',\t'MiddleName',\t'OtherNames',\t'ProjectedGraduationYear',\t'OnTimeGraduationYear',\t'GraduationDate',\t'MostRecent',\t'AcceptableUsePolicy',\t'GiftedTalented',\t'EconomicDisadvantage',\t'ESL',\t'ESLDateAssessed',\t'YoungCarersRole',\t'Disability',\t'IntegrationAide',\t'EducationSupport',\t'HomeSchooledStudent',\t'IndependentStudent',\t'Sensitive',\t'OfflineDelivery',\t'ESLSupport',\t'PrePrimaryEducation',\t'PrePrimaryEducationHours',\t'FirstAUSchoolEnrollment',\t'EmailList',\t'PhoneNumberList',\t'AddressList',\t'IndigenousStatus',\t'Sex',\t'BirthDate',\t'DateOfDeath',\t'Deceased',\t'BirthDateVerification',\t'PlaceOfBirth',\t'StateOfBirth',\t'CountryOfBirth',\t'CountryOfCitizenship',\t'CountryOfResidency',\t'CountryArrivalDate',\t'AustralianCitizenshipStatus',\t'EnglishProficiency',\t'MainLanguageSpokenAtHome', 'SecondLanguage', 'OtherLanguage',\t'DwellingArrangement',\t'Religion',\t'ReligiousEventList',\t'ReligiousRegion',\t'PermanentResident',\t'VisaSubClass',\t'VisaStatisticalCode',\t'VisaSubClassList',\t'PassportNumber', 'PassportExpiryDate', 'PassportCountry',\t'LBOTE',\t'InterpreterRequired',\t'ImmunisationCertificateStatus',\t'CulturalBackground',\t'MaritalStatus',\t'MedicareNumber',\t'MedicarePositionNumber',\t'MedicareCardHolderName',\t'PrivateHealthInsurance') \r\n",
+					"\r\n",
+					"\r\n",
+					""
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df_Out.write.mode(\"overwrite\").saveAsTable(\"dm_studentpersonal\")"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"display(spark.sql(\"select * from dm_studentpersonal\"))"
+				],
+				"attachments": null,
+				"execution_count": null
+			}
+		]
+	}
+}
