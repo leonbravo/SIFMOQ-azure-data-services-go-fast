@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c909dd22-562b-4aa6-bb49-b377cde6d074"
+				"spark.autotune.trackingId": "661e8918-20ec-4c18-8489-06a92650303d"
 			}
 		},
 		"metadata": {
@@ -91,7 +91,7 @@
 					"    In stage2, everything is written to stage2np/ms_insights and stage2p/ms_insights\r\n",
 					"    \"\"\"\r\n",
 					"\r\n",
-					"    def __init__(self, source_folder):\r\n",
+					"    def __init__(self, source_folder= 'SDS/M365'):\r\n",
 					"        BaseOEAModule.__init__(self, source_folder)\r\n",
 					"\r\n",
 					"        self.stage1np_activity = self.stage1np + '/activity'\r\n",

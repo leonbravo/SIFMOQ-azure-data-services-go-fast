@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "490c0dda-f117-4efc-beba-5378d304eff8"
+				"spark.autotune.trackingId": "c14ec9b2-c314-4ef2-a826-dbfcba1c383b"
 			}
 		},
 		"metadata": {
@@ -324,10 +324,11 @@
 				},
 				"source": [
 					"# 0) Initialize the OEA framework and MSInsights module.\r\n",
-					"oea = OEA()\r\n",
-					"ms_insights = Insights(oea, 'SDS/M365')"
+					"oea = OEA(storage_account)\r\n",
+					"source_folder='SDS/M365'\r\n",
+					"ms_insights = Insights(oea)"
 				],
-				"execution_count": 19
+				"execution_count": 22
 			},
 			{
 				"cell_type": "code",
