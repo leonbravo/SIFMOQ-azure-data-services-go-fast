@@ -124,11 +124,11 @@
 			},
 			"create_sql_db": {
 				"type": "bool",
-				"defaultValue": true
+				"defaultValue": false
 			},
 			"create_lake_db": {
 				"type": "bool",
-				"defaultValue": true
+				"defaultValue": false
 			}
 		},
 		"folder": {
