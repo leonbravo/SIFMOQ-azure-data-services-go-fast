@@ -3065,6 +3065,338 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/ContosoISD_example')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Insights Module"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "ae4a5a35-e27f-442d-bcd6-1536d9fd9925"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# ContosoISD Example\r\n",
+							"This example demonstrates how to use the OEA framework and modules to process incoming data, perform data prep, and view the data in an example Power BI dashboard.\r\n",
+							"\r\n",
+							"# Running the example\r\n",
+							"1) Select your spark pool in the \"Attach to\" dropdown list above.\r\n",
+							"\r\n",
+							"2) Click on \"Publish\" in the top nav bar (and wait a few seconds for the notification that says \"Publishing completed\").\r\n",
+							"\r\n",
+							"3) Click on \"Run all\" at the top of this tab (and wait for the processing to complete - which can take around 5 to 10 minutes).\r\n",
+							"\r\n",
+							"4) Open the dashboard in Power BI desktop and point it to your newly setup data lake (you can download the pbix from here: [techInequityDashboardContoso v2.pbix](https://github.com/microsoft/OpenEduAnalytics/blob/main/packages/ContosoISD/power_bi/techInequityDashboardContoso%20v2.pbix) )\r\n",
+							"\r\n",
+							"# More info\r\n",
+							"See [OEA Solution Guide](https://github.com/microsoft/OpenEduAnalytics/blob/main/docs/OpenEduAnalyticsSolutionGuide.pdf) for more details on this example."
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"%run /OEA_py"
+						],
+						"outputs": [],
+						"execution_count": 12
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"%run /example_modules_py"
+						],
+						"outputs": [],
+						"execution_count": 13
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# 0) Initialize the OEA framework and modules needed.\r\n",
+							"oea = OEA()\r\n",
+							"m365 = M365(oea)\r\n",
+							"contoso_sis = ContosoSIS(oea, 'contoso_sis', False)"
+						],
+						"outputs": [],
+						"execution_count": 14
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# 1) Land data into stage1 of your data lake, from multiple source systems (this example copies in test data sets that came with the OEA installation).\r\n",
+							"contoso_sis.copy_test_data_to_stage1()\r\n",
+							"m365.copy_test_data_to_stage1()"
+						],
+						"outputs": [],
+						"execution_count": 15
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# 2) Process the raw data (csv format) from stage1 into stage2 (adds schema details and writes out in parquet format).\r\n",
+							"#    [Note: we're not performing pseudonymization in this example, so everything is written to container stage2np.]\r\n",
+							"m365.process_roster_data_from_stage1()\r\n",
+							"contoso_sis.process_data_from_stage1()\r\n",
+							"m365.process_activity_data_from_stage1()"
+						],
+						"outputs": [],
+						"execution_count": 16
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# 3) Run additional prep on the data to create a unified dataset that can be used in a Power BI report\r\n",
+							"\r\n",
+							"# Process sectionmark data. Convert id values to use the Person.Id and Section.Id values set in the m365 data.\r\n",
+							"sqlContext.registerDataFrameAsTable(spark.read.format('parquet').load(oea.stage2np + '/contoso_sis/studentsectionmark'), 'SectionMark')\r\n",
+							"sqlContext.registerDataFrameAsTable(spark.read.format('parquet').load(oea.stage2np + '/m365/Person'), 'Person')\r\n",
+							"sqlContext.registerDataFrameAsTable(spark.read.format('parquet').load(oea.stage2np + '/m365/Section'), 'Section')\r\n",
+							"df = spark.sql(\"select sm.id Id, p.Id PersonId, s.Id SectionId, cast(sm.numeric_grade_earned as int) NumericGrade, \\\r\n",
+							"sm.alpha_grade_earned AlphaGrade, sm.is_final_grade IsFinalGrade, cast(sm.credits_attempted as int) CreditsAttempted, cast(sm.credits_earned as int) CreditsEarned, \\\r\n",
+							"sm.grad_credit_type GraduationCreditType, sm.id ExternalId, CURRENT_TIMESTAMP CreateDate, CURRENT_TIMESTAMP LastModifiedDate, true IsActive \\\r\n",
+							"from SectionMark sm, Person p, Section s \\\r\n",
+							"where sm.student_id = p.ExternalId \\\r\n",
+							"and sm.section_id = s.ExternalId\")\r\n",
+							"#df.write.format('parquet').mode('overwrite').save(oea.stage2np + '/ContosoISD/SectionMark')\r\n",
+							"\r\n",
+							"# Repeat the above process, this time for student attendance\r\n",
+							"# Convert id values to use the Person.Id, Org.Id and Section.Id values\r\n",
+							"sqlContext.registerDataFrameAsTable(spark.read.format('parquet').load(oea.stage2np + '/contoso_sis/studentattendance'), 'Attendance')\r\n",
+							"sqlContext.registerDataFrameAsTable(spark.read.format('parquet').load(oea.stage2np + '/m365/Org'), 'Org')\r\n",
+							"df = spark.sql(\"select att.id Id, p.Id PersonId, att.school_year SchoolYear, o.Id OrgId, att.attendance_date AttendanceDate, \\\r\n",
+							"att.all_day AllDay, att.Period Period, s.Id SectionId, att.AttendanceCode AttendanceCode, att.PresenceFlag PresenceFlag, \\\r\n",
+							"att.attendance_status AttendanceStatus, att.attendance_type AttendanceType, att.attendance_sequence AttendanceSequence \\\r\n",
+							"from Attendance att, Org o, Person p, Section s \\\r\n",
+							"where att.student_id = p.ExternalId \\\r\n",
+							"and att.school_id = o.ExternalId \\\r\n",
+							"and att.section_id = s.ExternalId\")\r\n",
+							"#df.write.format('parquet').mode('overwrite').save(oea.stage2np +'/ContosoISD/Attendance')\r\n",
+							"\r\n",
+							"# Add 'Department' column to Course (hardcoded to \"Math\" for this Contoso example)\r\n",
+							"sqlContext.registerDataFrameAsTable(spark.read.format('parquet').load(oea.stage2np + '/m365/Course'), 'Course')\r\n",
+							"df = spark.sql(\"select Id, Name, Code, Description, ExternalId, CreateDate, LastModifiedDate, IsActive, CalendarId, 'Math' Department from Course\")\r\n",
+							"#df.write.format('parquet').mode('overwrite').save(oea.stage2np + '/ContosoISD/Course')"
+						],
+						"outputs": [],
+						"execution_count": 17
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# 4) Create spark db's that point to the data in the data lake to allow for connecting via Power BI through use of the Serverless SQL endpoint.\r\n",
+							"contoso_sis.create_stage2_db('PARQUET')\r\n",
+							"m365.create_stage2_db('PARQUET')\r\n",
+							"\r\n",
+							"#spark.sql('CREATE DATABASE IF NOT EXISTS s2_ContosoISD')\r\n",
+							"#spark.sql(\"create table if not exists s2_ContosoISD.Activity using PARQUET location '\" + oea.stage2np + \"/m365/TechActivity'\")\r\n",
+							"#spark.sql(\"create table if not exists s2_ContosoISD.Calendar using PARQUET location '\" + oea.stage2np + \"/m365/Calendar'\")\r\n",
+							"#spark.sql(\"create table if not exists s2_ContosoISD.Org using PARQUET location '\" + oea.stage2np + \"/m365/Org'\")\r\n",
+							"#spark.sql(\"create table if not exists s2_ContosoISD.Person using PARQUET location '\" + oea.stage2np + \"/m365/Person'\")\r\n",
+							"#spark.sql(\"create table if not exists s2_ContosoISD.PersonIdentifier using PARQUET location '\" + oea.stage2np + \"/m365/PersonIdentifier'\")\r\n",
+							"#spark.sql(\"create table if not exists s2_ContosoISD.RefDefinition using PARQUET location '\" + oea.stage2np + \"/m365/RefDefinition'\")\r\n",
+							"#spark.sql(\"create table if not exists s2_ContosoISD.Section using PARQUET location '\" + oea.stage2np + \"/m365/Section'\")\r\n",
+							"#spark.sql(\"create table if not exists s2_ContosoISD.Session using PARQUET location '\" + oea.stage2np + \"/m365/Session'\")\r\n",
+							"#spark.sql(\"create table if not exists s2_ContosoISD.StaffOrgAffiliation using PARQUET location '\" + oea.stage2np + \"/m365/StaffOrgAffiliation'\")\r\n",
+							"#spark.sql(\"create table if not exists s2_ContosoISD.StaffSectionMembership using PARQUET location '\" + oea.stage2np + \"/m365/StaffSectionMembership'\")\r\n",
+							"#spark.sql(\"create table if not exists s2_ContosoISD.StudentOrgAffiliation using PARQUET location '\" + oea.stage2np + \"/m365/StudentOrgAffiliation'\")\r\n",
+							"#spark.sql(\"create table if not exists s2_ContosoISD.StudentSectionMembership using PARQUET location '\" + oea.stage2np + \"/m365/StudentSectionMembership'\")\r\n",
+							"#spark.sql(\"create table if not exists s2_ContosoISD.Course using PARQUET location '\" + oea.stage2np + \"/ContosoISD/Course'\")\r\n",
+							"#spark.sql(\"create table if not exists s2_ContosoISD.Attendance using PARQUET location '\" + oea.stage2np + \"/ContosoISD/Attendance'\")\r\n",
+							"#spark.sql(\"create table if not exists s2_ContosoISD.SectionMark using PARQUET location '\" + oea.stage2np + \"/ContosoISD/SectionMark'\")\r\n",
+							"#spark.sql(\"create table if not exists s2_ContosoISD.Students using PARQUET location '\" + oea.stage2np + \"/ContosoISD/Students'\")\r\n",
+							"\r\n",
+							"print(f\"Created spark db's.\\nYou can now open the 'techInequityDashboardContoso v2.pbix' dashboard and change the datasource to point to: {oea.serverless_sql_endpoint}\")"
+						],
+						"outputs": [],
+						"execution_count": 18
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Reset everything\r\n",
+							"You can uncomment line 11 in the cell below and run the cell to reset everything and walk through the process again from the top.\r\n",
+							"\r\n",
+							"Note: remember to comment out line 11 again to prevent accidental resetting of the example"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"def reset_all_processing():\r\n",
+							"    contoso_sis.delete_all_stages()\r\n",
+							"    m365.delete_all_stages()\r\n",
+							"    oea.rm_if_exists(oea.stage2np + '/ContosoISD')\r\n",
+							"\r\n",
+							"    oea.drop_db('s2_contoso_sis')\r\n",
+							"    #oea.drop_db('s2_contosoisd')\r\n",
+							"    oea.drop_db('s2_m365')\r\n",
+							"\r\n",
+							"# Uncomment the following line and run this cell to reset everything if you want to walk through the process again.\r\n",
+							"#reset_all_processing()"
+						],
+						"outputs": [],
+						"execution_count": 19
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							""
+						],
+						"outputs": [],
+						"execution_count": null
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/ContosoSIS_py')]",
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
@@ -7059,6 +7391,1454 @@
 						"attachments": null,
 						"outputs": [],
 						"execution_count": null
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/example_modules_py')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Insights Module"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "31659899-3137-4e68-a40b-a758bc86e7ec"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "python"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"source": [
+							"class ContosoSIS(BaseOEAModule):\r\n",
+							"    def __init__(self, oea, source_folder='contoso_sis', pseudonymize = True):\r\n",
+							"        BaseOEAModule.__init__(self, oea, source_folder, pseudonymize)\r\n",
+							"        self.schemas['studentattendance'] = [['id', 'string', 'no-op'],\r\n",
+							"                                            ['student_id', 'string', 'hash-no-lookup'],\r\n",
+							"                                            ['school_year', 'integer', 'no-op'],\r\n",
+							"                                            ['school_id', 'string', 'no-op'],\r\n",
+							"                                            ['attendance_date', 'string', 'no-op'],\r\n",
+							"                                            ['all_day', 'string', 'no-op'],\r\n",
+							"                                            ['Period', 'short', 'no-op'],\r\n",
+							"                                            ['section_id', 'string', 'no-op'],\r\n",
+							"                                            ['AttendanceCode', 'string', 'no-op'],\r\n",
+							"                                            ['PresenceFlag', 'integer', 'no-op'],\r\n",
+							"                                            ['attendance_status', 'string', 'no-op'],\r\n",
+							"                                            ['attendance_type', 'string', 'no-op'],\r\n",
+							"                                            ['attendance_sequence', 'short', 'no-op']]\r\n",
+							"\r\n",
+							"        self.schemas['studentsectionmark'] = [['id', 'string', 'no-op'],\r\n",
+							"                                            ['student_id', 'string', 'hash-no-lookup'],\r\n",
+							"                                            ['section_id', 'string', 'no-op'],\r\n",
+							"                                            ['school_year', 'string', 'no-op'],\r\n",
+							"                                            ['term_id', 'string', 'no-op'],\r\n",
+							"                                            ['numeric_grade_earned', 'short', 'no-op'],\r\n",
+							"                                            ['alpha_grade_earned', 'string', 'no-op'],\r\n",
+							"                                            ['is_final_grade', 'string', 'no-op'],\r\n",
+							"                                            ['credits_attempted', 'short', 'no-op'],\r\n",
+							"                                            ['credits_earned', 'short', 'no-op'],\r\n",
+							"                                            ['grad_credit_type', 'string', 'no-op']]\r\n",
+							"                                            \r\n",
+							"        self.schemas['students'] = [['SIS ID', 'string', 'hash-no-lookup'],\r\n",
+							"                                            ['School SIS ID', 'string', 'no-op'],\r\n",
+							"                                            ['Username', 'string', 'no-op'],\r\n",
+							"                                            ['Password', 'string', 'no-op'],\r\n",
+							"                                            ['First Name', 'string', 'no-op'],\r\n",
+							"                                            ['Last Name', 'string', 'no-op'],\r\n",
+							"                                            ['Middle Name', 'string', 'no-op'],\r\n",
+							"                                            ['Secondary Email', 'string', 'no-op'],\r\n",
+							"                                            ['Student Number', 'string', 'no-op'],\r\n",
+							"                                            ['Grade', 'string', 'no-op'],\r\n",
+							"                                            ['State Id', 'string', 'no-op'],\r\n",
+							"                                            ['Status', 'string', 'no-op'],\r\n",
+							"                                            ['Birthdate', 'string', 'no-op'],\r\n",
+							"                                            ['Graduation Year', 'string', 'no-op'],\r\n",
+							"                                            ['Gender', 'string', 'no-op'],\r\n",
+							"                                            ['FederalRaceCategory', 'string', 'no-op'],\r\n",
+							"                                            ['PrimaryLanguage', 'string', 'no-op'],\r\n",
+							"                                            ['ELLStatus', 'string', 'no-op'],\r\n",
+							"                                            ['SpecialEducation', 'string', 'no-op'],\r\n",
+							"                                            ['LowIncome', 'string', 'no-op'],\r\n",
+							"                                            ['CumulativeGPA', 'string', 'no-op']]\r\n",
+							"\r\n",
+							"    def process_data_from_stage1(self):\r\n",
+							"        self._process_entity_from_stage1('studentattendance', 'csv', 'overwrite', 'true')\r\n",
+							"        self._process_entity_from_stage1('studentsectionmark', 'csv', 'overwrite', 'true')\r\n",
+							"        self._process_entity_from_stage1('students', 'csv', 'overwrite', 'true')\r\n",
+							"\r\n",
+							"    def copy_test_data_to_stage1(self):\r\n",
+							"        mssparkutils.fs.cp(self.module_path + '/test_data/studentattendance.csv', self.stage1np + '/studentattendance/studentattendance.csv', True)\r\n",
+							"        mssparkutils.fs.cp(self.module_path + '/test_data/studentsectionmark.csv', self.stage1np + '/studentsectionmark/studentsectionmark.csv', True)\r\n",
+							"        mssparkutils.fs.cp(self.module_path + '/test_data/students.csv', self.stage1np + '/students/students.csv', True)\r\n",
+							"\r\n",
+							"class M365(BaseOEAModule):\r\n",
+							"    \"\"\"\r\n",
+							"    Provides data processing methods for MS Insights data v0.2 format.\r\n",
+							"    \"\"\"\r\n",
+							"\r\n",
+							"    def __init__(self, oea, source_folder='m365'):\r\n",
+							"        BaseOEAModule.__init__(self, oea, source_folder)\r\n",
+							"\r\n",
+							"        self.stage1np_activity = self.stage1np + '/DIPData/Activity/ApplicationUsage'\r\n",
+							"        self.stage1np_roster = self.stage1np + '/DIPData/Roster'\r\n",
+							"\r\n",
+							"        self.schemas['Activity0p2'] = [['SignalType', 'string', 'no-op'],\r\n",
+							"                                            ['StartTime', 'timestamp', 'no-op'],\r\n",
+							"                                            ['UserAgent', 'string', 'no-op'],\r\n",
+							"                                            ['SignalId', 'string', 'no-op'],\r\n",
+							"                                            ['SISClassId', 'string', 'no-op'],\r\n",
+							"                                            ['OfficeClassId', 'string', 'no-op'],\r\n",
+							"                                            ['ChannelId', 'string', 'no-op'],\r\n",
+							"                                            ['AppName', 'string', 'no-op'],\r\n",
+							"                                            ['ActorId', 'string', 'hash-no-lookup'],\r\n",
+							"                                            ['ActorRole', 'string', 'no-op'],\r\n",
+							"                                            ['SchemaVersion', 'string', 'no-op'],\r\n",
+							"                                            ['AssignmentId', 'string', 'no-op'],\r\n",
+							"                                            ['SubmissionId', 'string', 'no-op'],\r\n",
+							"                                            ['Action', 'string', 'no-op'],\r\n",
+							"                                            ['AssginmentDueDate', 'string', 'no-op'],\r\n",
+							"                                            ['ClassCreationDate', 'string', 'no-op'],\r\n",
+							"                                            ['Grade', 'string', 'no-op'],\r\n",
+							"                                            ['SourceFileExtension', 'string', 'no-op'],\r\n",
+							"                                            ['MeetingDuration', 'string', 'no-op']]\r\n",
+							"        self.schemas['Calendar'] = [['Id', 'string', 'no-op'],\r\n",
+							"                                            ['Name', 'string', 'no-op'],\r\n",
+							"                                            ['Description', 'string', 'no-op'],\r\n",
+							"                                            ['SchoolYear', 'integer', 'no-op'],\r\n",
+							"                                            ['IsCurrent', 'boolean', 'no-op'],\r\n",
+							"                                            ['ExternalId', 'string', 'no-op'],\r\n",
+							"                                            ['CreateDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['LastModifiedDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['IsActive', 'boolean', 'no-op'],\r\n",
+							"                                            ['OrgId', 'string', 'no-op']]\r\n",
+							"        self.schemas['Course'] = [['Id', 'string', 'no-op'],\r\n",
+							"                                            ['Name', 'string', 'no-op'],\r\n",
+							"                                            ['Code', 'string', 'no-op'],\r\n",
+							"                                            ['Description', 'string', 'no-op'],\r\n",
+							"                                            ['ExternalId', 'string', 'no-op'],\r\n",
+							"                                            ['CreateDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['LastModifiedDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['IsActive', 'boolean', 'no-op'],\r\n",
+							"                                            ['CalendarId', 'string', 'no-op']]\r\n",
+							"        self.schemas['Org'] = [['Id', 'string', 'no-op'],\r\n",
+							"                                            ['Name', 'string', 'no-op'],\r\n",
+							"                                            ['Identifier', 'string', 'no-op'],\r\n",
+							"                                            ['ExternalId', 'string', 'no-op'],\r\n",
+							"                                            ['CreateDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['LastModifiedDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['IsActive', 'boolean', 'no-op'],\r\n",
+							"                                            ['ParentOrgId', 'string', 'no-op'],\r\n",
+							"                                            ['RefOrgTypeId', 'string', 'no-op'],\r\n",
+							"                                            ['SourceSystemId', 'string', 'no-op']]\r\n",
+							"        self.schemas['Person'] = [['Id', 'string', 'hash'],\r\n",
+							"                                            ['FirstName', 'string', 'mask'],\r\n",
+							"                                            ['MiddleName', 'string', 'mask'],\r\n",
+							"                                            ['LastName', 'string', 'mask'],\r\n",
+							"                                            ['GenerationCode', 'string', 'no-op'],\r\n",
+							"                                            ['Prefix', 'string', 'no-op'],\r\n",
+							"                                            ['EnabledUser', 'string', 'no-op'],\r\n",
+							"                                            ['ExternalId', 'string', 'hash'],\r\n",
+							"                                            ['CreateDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['LastModifiedDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['IsActive', 'boolean', 'no-op'],\r\n",
+							"                                            ['SourceSystemId', 'string', 'no-op']]\r\n",
+							"        self.schemas['PersonIdentifier'] = [['Id', 'string', 'hash'],\r\n",
+							"                                            ['Identifier', 'string', 'hash'],\r\n",
+							"                                            ['Description', 'string', 'no-op'],\r\n",
+							"                                            ['RefIdentifierTypeId', 'string', 'no-op'],\r\n",
+							"                                            ['ExternalId', 'string', 'hash'],\r\n",
+							"                                            ['CreateDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['LastModifiedDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['IsActive', 'boolean', 'no-op'],\r\n",
+							"                                            ['PersonId', 'string', 'hash'],\r\n",
+							"                                            ['SourceSystemId', 'string', 'no-op']]\r\n",
+							"        self.schemas['RefDefinition'] = [['Id', 'string', 'no-op'],\r\n",
+							"                                            ['RefType', 'string', 'no-op'],\r\n",
+							"                                            ['Namespace', 'string', 'no-op'],\r\n",
+							"                                            ['Code', 'string', 'no-op'],\r\n",
+							"                                            ['SortOrder', 'integer', 'no-op'],\r\n",
+							"                                            ['Description', 'string', 'no-op'],\r\n",
+							"                                            ['IsActive', 'boolean', 'no-op']]\r\n",
+							"        self.schemas['Section'] = [['Id', 'string', 'no-op'],\r\n",
+							"                                            ['Name', 'string', 'no-op'],\r\n",
+							"                                            ['Code', 'string', 'no-op'],\r\n",
+							"                                            ['Location', 'string', 'no-op'],\r\n",
+							"                                            ['ExternalId', 'string', 'no-op'],\r\n",
+							"                                            ['CreateDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['LastModifiedDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['IsActive', 'boolean', 'no-op'],\r\n",
+							"                                            ['CourseId', 'string', 'no-op'],\r\n",
+							"                                            ['RefSectionTypeId', 'string', 'no-op'],\r\n",
+							"                                            ['SessionId', 'string', 'no-op'],\r\n",
+							"                                            ['OrgId', 'string', 'no-op']]\r\n",
+							"        self.schemas['Session'] = [['Id', 'string', 'no-op'],\r\n",
+							"                                            ['Name', 'string', 'no-op'],\r\n",
+							"                                            ['BeginDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['EndDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['ExternalId', 'string', 'no-op'],\r\n",
+							"                                            ['CreateDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['LastModifiedDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['IsActive', 'boolean', 'no-op'],\r\n",
+							"                                            ['CalendarId', 'string', 'no-op'],\r\n",
+							"                                            ['ParentSessionId', 'string', 'no-op'],\r\n",
+							"                                            ['RefSessionTypeId', 'string', 'no-op']]\r\n",
+							"        self.schemas['StaffOrgAffiliation'] = [['Id', 'string', 'no-op'],\r\n",
+							"                                            ['IsPrimary', 'boolean', 'no-op'],\r\n",
+							"                                            ['EntryDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['ExitDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['ExternalId', 'string', 'no-op'],\r\n",
+							"                                            ['CreateDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['LastModifiedDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['IsActive', 'boolean', 'no-op'],\r\n",
+							"                                            ['OrgId', 'string', 'no-op'],\r\n",
+							"                                            ['PersonId', 'string', 'hash'],\r\n",
+							"                                            ['RefStaffOrgRoleId', 'string', 'no-op']]\r\n",
+							"        self.schemas['StaffSectionMembership'] = [['Id', 'string', 'no-op'],\r\n",
+							"                                            ['IsPrimaryStaffForSection', 'boolean', 'no-op'],\r\n",
+							"                                            ['EntryDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['ExitDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['ExternalId', 'string', 'no-op'],\r\n",
+							"                                            ['CreateDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['LastModifiedDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['IsActive', 'boolean', 'no-op'],\r\n",
+							"                                            ['PersonId', 'string', 'hash'],\r\n",
+							"                                            ['RefStaffSectionRoleId', 'string', 'no-op'],\r\n",
+							"                                            ['SectionId', 'string', 'no-op']]\r\n",
+							"        self.schemas['StudentOrgAffiliation'] = [['Id', 'string', 'no-op'],\r\n",
+							"                                            ['IsPrimary', 'boolean', 'no-op'],\r\n",
+							"                                            ['EntryDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['ExitDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['ExternalId', 'string', 'no-op'],\r\n",
+							"                                            ['CreateDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['LastModifiedDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['IsActive', 'boolean', 'no-op'],\r\n",
+							"                                            ['OrgId', 'string', 'no-op'],\r\n",
+							"                                            ['PersonId', 'string', 'hash'],\r\n",
+							"                                            ['RefGradeLevelId', 'string', 'no-op'],\r\n",
+							"                                            ['RefStudentOrgRoleId', 'string', 'no-op'],\r\n",
+							"                                            ['RefEnrollmentStatusId', 'string', 'no-op']]\r\n",
+							"        self.schemas['StudentSectionMembership'] = [['Id', 'string', 'no-op'],\r\n",
+							"                                            ['EntryDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['ExitDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['ExternalId', 'string', 'no-op'],\r\n",
+							"                                            ['CreateDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['LastModifiedDate', 'timestamp', 'no-op'],\r\n",
+							"                                            ['IsActive', 'boolean', 'no-op'],\r\n",
+							"                                            ['PersonId', 'string', 'hash'],\r\n",
+							"                                            ['RefGradeLevelWhenCourseTakenId', 'string', 'no-op'],\r\n",
+							"                                            ['RefStudentSectionRoleId', 'string', 'no-op'],\r\n",
+							"                                            ['SectionId', 'string', 'no-op']]\r\n",
+							"    \r\n",
+							"    def process_activity_data_from_stage1(self):\r\n",
+							"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \r\n",
+							"            https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html\r\n",
+							"        \"\"\"\r\n",
+							"        logger.info(\"Processing ms_insights activity data from: \" + self.stage1np_activity)\r\n",
+							"\r\n",
+							"        spark_schema = self.oea.to_spark_schema(self.schemas['Activity0p2'])\r\n",
+							"        df = spark.read.csv(self.stage1np_activity + '/*.csv', header='false', schema=spark_schema) \r\n",
+							"        sqlContext.registerDataFrameAsTable(df, 'Activity')\r\n",
+							"        sqlContext.registerDataFrameAsTable(spark.read.format('parquet').load(self.oea.stage2np + '/m365/PersonIdentifier'), 'PersonIdentifier')\r\n",
+							"        sqlContext.registerDataFrameAsTable(spark.read.format('parquet').load(self.oea.stage2np + '/m365/RefDefinition'), 'RefDefinition')\r\n",
+							"\r\n",
+							"        df = spark.sql( \r\n",
+							"            \"select act.SignalType, act.StartTime, act.UserAgent, act.SignalId, act.SISClassId, act.OfficeClassId, act.ChannelId, \\\r\n",
+							"            act.AppName, act.ActorId, act.ActorRole, act.SchemaVersion, act.AssignmentId, act.SubmissionId, act.Action, act.AssginmentDueDate, \\\r\n",
+							"            act.ClassCreationDate, act.Grade, act.SourceFileExtension, act.MeetingDuration, pi.PersonId \\\r\n",
+							"            from PersonIdentifier pi, RefDefinition rd, Activity act \\\r\n",
+							"            where \\\r\n",
+							"                pi.RefIdentifierTypeId = rd.Id \\\r\n",
+							"                and rd.RefType = 'RefIdentifierType' \\\r\n",
+							"                and rd.Code = 'ActiveDirectoryId' \\\r\n",
+							"                and pi.Identifier = act.ActorId\")\r\n",
+							"#pi.RefIdentifierTypeId = '7DAF8820-6691-4D61-A210-CE94EA7D3667' \\\r\n",
+							"\r\n",
+							"\r\n",
+							"        df = df.dropDuplicates(['SignalId'])\r\n",
+							"        df = df.withColumn('year', F.year(F.col('StartTime'))).withColumn('month', F.month(F.col('StartTime')))\r\n",
+							"        df = self.oea.fix_column_names(df)\r\n",
+							"        df.write.format('parquet').mode('overwrite').option(\"mergeSchema\", \"true\").save(self.stage2np + '/TechActivity')\r\n",
+							"\r\n",
+							"    def reset_activity_processing(self):\r\n",
+							"        \"\"\" Resets all TechActivity processing. This is intended for use during initial testing - use with caution. \"\"\"\r\n",
+							"        self.oea.rm_if_exists(self.stage2p + '/TechActivity')\r\n",
+							"        self.oea.rm_if_exists(self.stage2np + '/TechActivity')\r\n",
+							"        logger.info(f\"Deleted TechActivity from stage2\")  \r\n",
+							"\r\n",
+							"    def _process_roster_entity(self, path):\r\n",
+							"        try:\r\n",
+							"            base_path, filename = self.oea.pop_from_path(path)\r\n",
+							"            entity = filename[:-4]\r\n",
+							"            logger.debug(f\"Processing roster entity: path={path}, entity={entity}\")\r\n",
+							"            spark_schema = self.oea.to_spark_schema(self.schemas[entity])\r\n",
+							"            df = spark.read.csv(path, header='false', schema=spark_schema)\r\n",
+							"            df = self.oea.fix_column_names(df)\r\n",
+							"            df.write.format('parquet').mode('overwrite').option(\"mergeSchema\", \"true\").save(self.stage2np + '/' + entity)\r\n",
+							"\r\n",
+							"        except (AnalysisException) as error:\r\n",
+							"            logger.exception(str(error))\r\n",
+							"\r\n",
+							"    def process_roster_data_from_stage1(self):\r\n",
+							"        \"\"\" Processes all roster data in stage1 and writes out to stage2 and stage2p \"\"\"\r\n",
+							"        logger.info(\"Processing ms_insights roster data from: \" + self.stage1np)\r\n",
+							"\r\n",
+							"        items = mssparkutils.fs.ls(self.stage1np_roster)\r\n",
+							"        #print(items)\r\n",
+							"        for item in items:\r\n",
+							"            if item.isFile:\r\n",
+							"                self._process_roster_entity(item.path)\r\n",
+							"\r\n",
+							"    def reset_roster_processing(self):\r\n",
+							"        \"\"\" Resets all stage1 to stage2 processing of roster data. \"\"\"\r\n",
+							"        # cleanup stage2np\r\n",
+							"        if self.oea.path_exists(self.stage2np):\r\n",
+							"            # Delete roster tables (everything other than TechActivity)\r\n",
+							"            items = mssparkutils.fs.ls(self.stage2np)\r\n",
+							"            #print(file.name, file.isDir, file.isFile, file.path, file.size)\r\n",
+							"            for item in items:\r\n",
+							"                if item.name != 'TechActivity':\r\n",
+							"                    mssparkutils.fs.rm(item.path, True)\r\n",
+							"        # cleanup stage2p\r\n",
+							"        if self.oea.path_exists(self.stage2p):\r\n",
+							"            # Delete roster tables (everything other than TechActivity)\r\n",
+							"            items = mssparkutils.fs.ls(self.stage2p)\r\n",
+							"            #print(file.name, file.isDir, file.isFile, file.path, file.size)\r\n",
+							"            for item in items:\r\n",
+							"                if item.name != 'TechActivity':\r\n",
+							"                    mssparkutils.fs.rm(item.path, True)    \r\n",
+							"  \r\n",
+							"\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": null
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/hybrid_engagement')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Insights Module"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "83b1ee98-9c13-476a-b183-5a84ef9a4510"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Hybrid Student Engagement Notebook\r\n",
+							"\r\n",
+							"This notebook creates 4 tables (student, dayactivity, yearactivity and calendar) into a new Spark database called s3_hybrid (stage 3 hybrid). \r\n",
+							""
+						]
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"### Provision storage accounts\r\n",
+							"\r\n",
+							"The storage account variable has to be changed to the name of the storage account associated with your Azure resource group."
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {},
+						"source": [
+							"from pyspark.sql.functions import *\r\n",
+							"from pyspark.sql.window import Window\r\n",
+							"\r\n",
+							"# data lake and container information\r\n",
+							"storage_account = 'stoeahybrid'\r\n",
+							"use_test_env = True\r\n",
+							"\r\n",
+							"if use_test_env:\r\n",
+							"    stage1 = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage1'\r\n",
+							"    stage2 = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2'\r\n",
+							"    stage3 = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage3'\r\n",
+							"else:\r\n",
+							"    stage1 = 'abfss://stage1@' + storage_account + '.dfs.core.windows.net'\r\n",
+							"    stage2 = 'abfss://stage2@' + storage_account + '.dfs.core.windows.net'\r\n",
+							"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
+						],
+						"outputs": [],
+						"execution_count": 1
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"### Load Raw Data from Lake\r\n",
+							"To ensure that that the right tables are loaded, confirm that the file paths match your data lake storage containers."
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# load needed tables from parquet data lake storage\r\n",
+							"dfStudAttendanceRaw = spark.read.format('parquet').load(f'{stage3}/contoso_sis/studentattendance')\r\n",
+							"dfActivityV2Raw = spark.read.format('parquet').load(f'{stage3}/m365/Activity0p2')\r\n",
+							"dfPersonRaw = spark.read.format('parquet').load(f'{stage3}/m365/Person')\r\n",
+							"dfStudOrgRaw = spark.read.format('parquet').load(f'{stage3}/m365/StudentOrgAffiliation')\r\n",
+							"dfOrgRaw = spark.read.format('parquet').load(f'{stage3}/m365/Org')\r\n",
+							"dfSectionRaw = spark.read.format('parquet').load(f'{stage3}/m365/Section')\r\n",
+							"dfCourseRaw = spark.read.format('parquet').load(f'{stage3}/m365/Course')\r\n",
+							"dfRefRaw = spark.read.format('parquet').load(f'{stage3}/m365/RefDefinition')"
+						],
+						"outputs": [],
+						"execution_count": 2
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## 1. Student table\r\n",
+							"Contains students' information at a school level\r\n",
+							"\r\n",
+							"**Databases and tables used:**\r\n",
+							"\r\n",
+							"1. Spark DB: s3_m365 (stage 3 m365 feed)\r\n",
+							"- Table: person (student PersonId and ExternalId relationship)\r\n",
+							"- Table: org\r\n",
+							"- Table: studentorgaffiliation\r\n",
+							"- Table: section\r\n",
+							"- Table: course\r\n",
+							"- Table: refdefinition\r\n",
+							"\r\n",
+							"2. Spark DB: stage 3 SIS data\r\n",
+							"- Table: studentattendance (student attendance by date, school, and course section)\r\n",
+							"\r\n",
+							"**Databases and tables created:**\r\n",
+							"\r\n",
+							"1. Spark DB: s3_hybrid (stage 3 hybrid)\r\n",
+							"- Table: student"
+						]
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Clean and Subset Data"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# take only active students\r\n",
+							"dfPerson = dfPersonRaw.filter(dfPersonRaw.IsActive == 'True')\r\n",
+							"dfStudOrg = dfStudOrgRaw.filter(dfStudOrgRaw.IsActive == 'True')\r\n",
+							"\r\n",
+							"# take needed columns and rename to align with other data sources\r\n",
+							"dfPerson = dfPerson.select('Id','ExternalId')\r\n",
+							"dfPerson = dfPerson.withColumnRenamed('Id', 'PersonId')\r\n",
+							"\r\n",
+							"dfStudOrg = dfStudOrg.select('PersonId', 'IsPrimary', 'IsActive', 'OrgId', 'RefGradeLevelId')\r\n",
+							"\r\n",
+							"dfOrg = dfOrgRaw.select('Identifier', 'name', 'Id')\r\n",
+							"dfOrg = dfOrg.withColumnRenamed('Identifier', 'School_ID')\r\n",
+							"dfOrg = dfOrg.withColumnRenamed('name', 'School_Name')\r\n",
+							"dfOrg = dfOrg.withColumnRenamed('Id', 'OrgId')\r\n",
+							"\r\n",
+							"dfSection = dfSectionRaw.select('ExternalId', 'Name', 'CourseId', 'Id', 'Code', 'SessionId', 'OrgId')\r\n",
+							"dfSection = dfSection.withColumnRenamed('ExternalId', 'section_id')\r\n",
+							"dfSection = dfSection.withColumnRenamed('name', 'section_name')\r\n",
+							"dfSection = dfSection.drop('School_Name')\r\n",
+							"dfSection = dfSection.join(dfOrg, 'OrgId')\r\n",
+							"\r\n",
+							"dfCourse = dfCourseRaw.withColumnRenamed('Id', 'CourseId')\r\n",
+							"dfCourse = dfCourse.withColumnRenamed('Name', 'Course')\r\n",
+							"dfCourse = dfCourse.drop('ExternalId')\r\n",
+							"\r\n",
+							"dfRef = dfRefRaw.select('Id', 'Code', 'Description')\r\n",
+							"dfRef = dfRef.withColumnRenamed('Id', 'RefId')\r\n",
+							"\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 3
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# combine student information and school details with attendance data\r\n",
+							"dfStudAttendance = dfStudAttendanceRaw.select('student_id', 'school_id', 'attendance_date', 'Period', 'section_id', \r\n",
+							"                        'PresenceFlag', 'attendance_status')\r\n",
+							"                  \r\n",
+							"dfStudAttendance = dfStudAttendance.withColumnRenamed('school_id', 'School_ID')\r\n",
+							"dfStudAttendance = dfStudAttendance.withColumnRenamed('student_id','ExternalId')\r\n",
+							"dfStudAttendance = dfStudAttendance.withColumn(\"Date\", to_date(col(\"attendance_date\"), 'yyyy-MM-dd'))\r\n",
+							"dfStudAttendance = dfStudAttendance.drop('attendance_date')\r\n",
+							"\r\n",
+							"dfStudAttendance = dfStudAttendance.join(dfOrg, 'School_ID')\r\n",
+							"dfStudAttendance.show(1,vertical=True)"
+						],
+						"outputs": [],
+						"execution_count": 4
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"### Find Primary School\r\n",
+							""
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# find school which students have highest attendance count\r\n",
+							"df = (dfStudAttendance.groupBy(\"ExternalId\", 'School_ID', 'School_Name')\r\n",
+							"    .agg(sum(\"PresenceFlag\").alias(\"Present_Count\")))\r\n",
+							"\r\n",
+							"\r\n",
+							"w = Window.partitionBy('ExternalId')\r\n",
+							"dfStudSchoolPrimary = df.withColumn('maxPres', max('Present_Count').over(w))\\\r\n",
+							"    .where(col('Present_Count') == col('maxPres'))\\\r\n",
+							"    .drop('maxPres').drop('Present_Count')\r\n",
+							"\r\n",
+							"dfStudSchoolPrimary.show(3, vertical=True)"
+						],
+						"outputs": [],
+						"execution_count": 5
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# rename columns to indicate primary school\r\n",
+							"dfStudSchoolPrimary = dfStudSchoolPrimary.withColumnRenamed('School_Name', 'SchoolNamePrimary')\r\n",
+							"dfStudSchoolPrimary = dfStudSchoolPrimary.withColumnRenamed('School_ID', 'SchoolIdPrimary')"
+						],
+						"outputs": [],
+						"execution_count": 6
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Combine tables"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# join person table to student and ref tables to create student profile \r\n",
+							"dfStudent = dfPerson.join(dfStudOrg, 'PersonId')\r\n",
+							"dfStudent = dfStudent.withColumnRenamed('RefGradeLevelId', 'RefId')\r\n",
+							"dfStudent = dfStudent.join(dfRef, 'RefId')\r\n",
+							"dfStudentFinal = dfStudent.join(dfStudSchoolPrimary, 'ExternalId')\r\n",
+							"dfStudentFinal = dfStudentFinal.withColumnRenamed('Code', 'GradeLevel')\r\n",
+							"dfStudentFinal = dfStudentFinal.withColumnRenamed('Description', 'GradeName')\r\n",
+							"dfStudentFinal = dfStudentFinal.select('ExternalId',  'PersonId', 'IsActive', 'SchoolNamePrimary', 'SchoolIdPrimary', 'OrgId', 'GradeLevel', 'GradeName')\r\n",
+							"dfStudentFinal = dfStudentFinal.drop('OrgId', 'GradeLevel')\r\n",
+							"dfStudentFinal.show(1, vertical=True)\r\n",
+							"print(dfStudentFinal.count())"
+						],
+						"outputs": [],
+						"execution_count": 7
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"### Write Data Back to Lake"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# write back to the lake\r\n",
+							"dfStudentFinal.write.format('parquet').mode('overwrite').save(stage3 + '/test_s3_hybrid/Student')"
+						],
+						"outputs": [],
+						"execution_count": 8
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"### Load to Spark DB"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# Create spark db to allow for access to the data in the delta-lake via SQL on-demand.\r\n",
+							"# This is only creating metadata for SQL on-demand, pointing to the data in the delta-lake.\r\n",
+							"# This also makes it possible to connect in Power BI via the azure sql data source connector.\r\n",
+							"def create_spark_db(db_name, source_path):\r\n",
+							"    spark.sql(f'CREATE DATABASE IF NOT EXISTS {db_name}')\r\n",
+							"    spark.sql(f\"DROP TABLE IF EXISTS {db_name}.Student\")\r\n",
+							"    spark.sql(f\"create table if not exists {db_name}.Student using PARQUET location '{source_path}/Student'\")\r\n",
+							"    \r\n",
+							"create_spark_db('test_s3_hybrid', stage3 + '/test_s3_hybrid')"
+						],
+						"outputs": [],
+						"execution_count": 9
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## 2. Calendar table\r\n",
+							"Contains a basic calendar table to support data analysis in a Power BI dashboard.\r\n",
+							"\r\n",
+							"**Databases and tables used:**\r\n",
+							"- None\r\n",
+							"\r\n",
+							"**Databases and tables created:**\r\n",
+							"\r\n",
+							"1. Spark DB: s3_hybrid (stage 3 hybrid)\r\n",
+							"- Table: calendar"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# date range\r\n",
+							"start = \"2020-01-01\"\r\n",
+							"stop = \"2021-12-30\"\r\n",
+							"\r\n",
+							"# create calendar dataframe\r\n",
+							"temp_df = spark.createDataFrame([(start, stop)], (\"start\", \"stop\"))\r\n",
+							"temp_df = temp_df.select([col(c).cast(\"timestamp\") for c in (\"start\", \"stop\")])\r\n",
+							"temp_df = temp_df.withColumn(\"stop\",date_add(\"stop\",1).cast(\"timestamp\"))\r\n",
+							"temp_df = temp_df.select([col(c).cast(\"long\") for c in (\"start\", \"stop\")])\r\n",
+							"start, stop = temp_df.first()\r\n",
+							"interval=60*60*24\r\n",
+							"\r\n",
+							"df = spark.range(start,stop,interval).select(col(\"id\").cast(\"timestamp\").alias(\"DateTime\"))\r\n",
+							"df = df.withColumn(\"Date\", to_date(col(\"DateTime\")))\r\n",
+							"\r\n",
+							"df = df.drop(\"DateTime\")\r\n",
+							"df = df.withColumn('Year', date_format('Date', 'YYYY'))\r\n",
+							"df = df.withColumn('Month', date_format('Date', 'MMMM'))\r\n",
+							"df = df.withColumn('MonthNum', date_format('Date', 'M'))\r\n",
+							"df = df.withColumn('Week', date_format('Date', 'W'))\r\n",
+							"df = df.withColumn('Day', date_format('Date', 'D'))\r\n",
+							"df.show(2)"
+						],
+						"outputs": [],
+						"execution_count": 10
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Write Data Back to Lake"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# write back to the lake in stage 3 ds3_main directory\r\n",
+							"df.write.format('parquet').mode('overwrite').save(stage3 + '/test_s3_hybrid/Calendar')"
+						],
+						"outputs": [],
+						"execution_count": 11
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"### Load to Spark DB"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# Create spark db to allow for access to the data in the data lake via SQL on-demand.\r\n",
+							"#This is only creating metadata for SQL on-demand, pointing to the data in the delta-lake.\r\n",
+							"# This also makes it possible to connect in Power BI via the azure sql data source connector.\r\n",
+							"def create_spark_db(db_name, source_path):\r\n",
+							"    spark.sql(f'CREATE DATABASE IF NOT EXISTS {db_name}')\r\n",
+							"    spark.sql(f\"DROP TABLE IF EXISTS {db_name}.Calendar\")\r\n",
+							"    spark.sql(f\"create table if not exists {db_name}.Calendar using PARQUET location '{source_path}/Calendar'\")\r\n",
+							"\r\n",
+							"create_spark_db('test_s3_hybrid', stage3 + '/test_s3_hybrid')"
+						],
+						"outputs": [],
+						"execution_count": 12
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## 3. Dayactivity table\r\n",
+							"Contains student daily digital and in-person activity \r\n",
+							"\r\n",
+							"**Databases and tables used:** \r\n",
+							"\r\n",
+							"1. Spark DB: s3_m365 (stage 3 m365 feed)\r\n",
+							"- Table: Activity0p2 (user m365 app activity v2)\r\n",
+							"\r\n",
+							"2. Spark DB: stage 3 SIS data\r\n",
+							"- Table: studentattendance (student attendance by date, school, and course section)"
+						]
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"### Clean and Subset data"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# combine student attendance with section and course data\r\n",
+							"dfStudAttendanceFinal = dfStudAttendance.join(dfStudentFinal, 'ExternalId')\r\n",
+							"dfStudAttendanceFinal = dfStudAttendanceFinal.join(dfSection, ['section_id', 'School_ID'])\r\n",
+							"dfStudAttendanceFinal = dfStudAttendanceFinal.join(dfCourse, 'CourseId')\r\n",
+							"dfStudAttendanceFinal = dfStudAttendanceFinal.select('PersonId', 'ExternalId', 'Date', 'attendance_status', 'PresenceFlag'\r\n",
+							"                                                    ,'Period', 'SchoolNamePrimary', 'SessionId', 'section_id', 'CourseId', 'Course')\r\n",
+							"dfStudAttendanceFinal = dfStudAttendanceFinal.withColumnRenamed('section_id', 'SectionId')\r\n",
+							"dfStudAttendanceFinal.show(1, vertical=True)\r\n",
+							"print(dfStudAttendanceFinal.count())"
+						],
+						"outputs": [],
+						"execution_count": 13
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# isolate in-person school days\r\n",
+							"schoolDays = dfStudAttendanceFinal.select('Date').distinct()\r\n",
+							"print(schoolDays.count())"
+						],
+						"outputs": [],
+						"execution_count": 14
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# take only needed columns and filter for only students\r\n",
+							"dfActivityV2 = dfActivityV2Raw.where(col('ActorRole') == 'Student').select('PersonId','AppName', 'SignalType'\r\n",
+							"                                    ,'StartTime', 'MeetingDuration')\r\n",
+							"\r\n",
+							"# active students only, include external id\r\n",
+							"dfActivityV2 = dfActivityV2.join(dfStudentFinal, 'PersonId')\r\n",
+							"dfActivityV2.show(1, vertical=True)\r\n",
+							"print(dfActivityV2.count())"
+						],
+						"outputs": [],
+						"execution_count": 15
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Aggregate Activity by Date\r\n",
+							""
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# convert MeetingDuration column to time format\r\n",
+							"dfActivityV2 = dfActivityV2.withColumn('MeetingDuration', to_timestamp('MeetingDuration'))\r\n",
+							"dfActivityV2 = dfActivityV2.withColumn('HourToMinutes', hour(col('MeetingDuration'))*60)\r\n",
+							"dfActivityV2 = dfActivityV2.withColumn('Minutes', minute(col('MeetingDuration')))\r\n",
+							"dfActivityV2 = dfActivityV2.withColumn('Duration', col('HourToMinutes') + col('Minutes'))\r\n",
+							"\r\n",
+							"# aggregation of activity\r\n",
+							"dfActivityV2agg = (dfActivityV2.groupBy(\"PersonId\", \"ExternalId\",\r\n",
+							"                    \"AppName\", \"SignalType\",\r\n",
+							"                    to_date(\"StartTime\").alias(\"Date\"))\r\n",
+							"    .agg(sum(\"Duration\").alias(\"DurationSum\")))\r\n",
+							"\r\n",
+							"dfActivityV2agg.show(1,vertical=True)"
+						],
+						"outputs": [],
+						"execution_count": 16
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# count number of presence flags per date\r\n",
+							"dfStudAttendanceAgg = (dfStudAttendanceFinal.groupBy('PersonId', 'ExternalId', 'Date', 'SectionId', 'Course')\r\n",
+							"                    .agg(mean(\"PresenceFlag\").alias(\"Present_Mean\")))\r\n",
+							"\r\n",
+							"dfStudAttendanceAgg = dfStudAttendanceAgg.withColumn('Present', when(col('Present_Mean') > 0, 1).otherwise(0))\r\n",
+							"\r\n",
+							"print(dfStudAttendanceAgg.count())\r\n",
+							"dfStudAttendanceAgg.show(1,vertical=True)"
+						],
+						"outputs": [],
+						"execution_count": 17
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Daily activity: Merge into a single wide table\r\n",
+							""
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# focus on teams meetings, assignments, and communications\r\n",
+							"\r\n",
+							"df1 = dfActivityV2agg.where( ( col(\"AppName\") == \"Teams\" ) &\r\n",
+							"                            ( col(\"SignalType\") == \"CallRecordSummarized\" ))\r\n",
+							"\r\n",
+							"dfDayAct = df1.select(\"PersonId\", \"ExternalId\", \"Date\", \"DurationSum\")\r\n",
+							"dfDayAct = dfDayAct.withColumnRenamed(\"DurationSum\", \"TeamsMeetingsDuration\")\r\n",
+							"\r\n",
+							"df2 = dfActivityV2agg.withColumn('Assignments', when(( col(\"AppName\") == \"Assignments\" ) & \r\n",
+							"                            ( col(\"SignalType\") == \"SubmissionEvent\" ) , 1).otherwise(0))\r\n",
+							"df2 = df2.select(\"PersonId\", \"ExternalId\", \"Date\", \"Assignments\")\r\n",
+							"\r\n",
+							"dfDayAct = dfDayAct.join(df2, [\"PersonId\", \"ExternalId\", \"Date\"], 'outer')\r\n",
+							"\r\n",
+							"df3 = dfActivityV2agg.withColumn('TeamsCommunications', when(( col(\"AppName\") == \"Teams\" ) & \r\n",
+							"                        ( col(\"SignalType\").isin(['AddedToSharedWithMe', 'CommentCreated',\r\n",
+							"                            'CommentDeleted', 'ExpandChannelMessage', 'PostChannelMessage',\r\n",
+							"                            'ReactedWithEmoji', 'ReplyChannelMessage', 'Unlike',\r\n",
+							"                            'UserAtMentioned', 'VisitTeamChannel'])), 1).otherwise(0))\r\n",
+							"df3 = df3.select(\"PersonId\", \"ExternalId\", \"Date\", \"TeamsCommunications\")\r\n",
+							"\r\n",
+							"dfDayAct = dfDayAct.join(df3, [\"PersonId\", \"ExternalId\", \"Date\"], 'outer')\r\n",
+							"\r\n",
+							"\r\n",
+							"dfDayAct.show(5, vertical=True)\r\n",
+							"\r\n",
+							"dfDayAct = dfDayAct.groupBy(\"PersonId\", \"ExternalId\", \"Date\").agg(sum('TeamsMeetingsDuration').alias('TeamsMeetingsDuration'), mean('Assignments').alias('Assignments'), mean('TeamsCommunications').alias('TeamsCommunications'))\r\n",
+							" \r\n",
+							"dfDayAct.show(5, vertical=True)\r\n",
+							"print(dfDayAct.count())"
+						],
+						"outputs": [],
+						"execution_count": 18
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# add in person attendance\r\n",
+							"dfDayAct = dfDayAct.join(dfStudAttendanceAgg, [\"PersonId\", \"ExternalId\", \"Date\"], 'outer')\r\n",
+							"\r\n",
+							"dfDayAct.show(2,vertical=True)\r\n",
+							"dfDayAct.count()"
+						],
+						"outputs": [],
+						"execution_count": 19
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# subset dates to only school dates\r\n",
+							"dfDayAct = dfDayAct.join(schoolDays, [\"Date\"], \"inner\")\r\n",
+							"\r\n",
+							"print(dfDayAct.count())\r\n",
+							"\r\n",
+							"schoolDaysCheck = dfDayAct.select('Date').distinct()\r\n",
+							"\r\n",
+							"print(schoolDaysCheck.count())"
+						],
+						"outputs": [],
+						"execution_count": 20
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"print(dfDayAct.dtypes)"
+						],
+						"outputs": [],
+						"execution_count": 21
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# fill missing with 0\r\n",
+							"dfDayAct = dfDayAct.na.fill(0)\r\n",
+							"\r\n",
+							"print(dfDayAct.count())\r\n",
+							"dfDayAct.show(1, vertical=True)"
+						],
+						"outputs": [],
+						"execution_count": 22
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# add activity indicator columns\r\n",
+							"dfDayAct= dfDayAct.withColumn('ActiveTeamsMeetings', when(col('TeamsMeetingsDuration') > 0, 1).otherwise(0))\r\n",
+							"dfDayAct= dfDayAct.withColumn('ActiveTeamsCommunications', when(col('TeamsCommunications') > 0 , 1).otherwise(0))\r\n",
+							"dfDayAct= dfDayAct.withColumn('ActiveAssignments', when(col('Assignments') > 0 , 1).otherwise(0))\r\n",
+							"dfDayAct= dfDayAct.withColumn('DigitallyActive', when( \\\r\n",
+							"                (col('ActiveTeamsMeetings')+ col('ActiveTeamsCommunications')+ col('ActiveAssignments'))\\\r\n",
+							"                 > 0, 1).otherwise(0))\r\n",
+							"\r\n",
+							"dfDayAct.show(1,vertical=True)"
+						],
+						"outputs": [],
+						"execution_count": 23
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## 3. Dayactivity table\r\n",
+							"Contains student daily digital and in-person activity \r\n",
+							"\r\n",
+							"**Databases and tables used:** \r\n",
+							"\r\n",
+							"1. Spark DB: s3_m365 (stage 3 m365 feed)\r\n",
+							"- Table: Activity0p2 (user m365 app activity v2)\r\n",
+							"\r\n",
+							"2. Spark DB: stage 3 SIS data\r\n",
+							"- Table: studentattendance (student attendance by date, school, and course section)"
+						]
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Yearly Aggregates\r\n",
+							""
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"dfYearAct = dfDayAct.groupBy(\"PersonId\", \"ExternalId\")\\\r\n",
+							"    .agg(sum(\"ActiveTeamsMeetings\").alias(\"DaysActiveTeamsMeetings\")\\\r\n",
+							"    ,sum(\"ActiveTeamsCommunications\").alias(\"DaysActiveTeamsCommunications\")\\\r\n",
+							"    ,sum(\"ActiveAssignments\").alias(\"DaysActiveAssignments\")\\\r\n",
+							"    ,sum(\"DigitallyActive\").alias(\"DaysDigitallyActive\")\\\r\n",
+							"    ,sum(\"Present\").alias(\"DaysPresent\"))\r\n",
+							"\r\n",
+							"\r\n",
+							"dfYearAct = dfYearAct.withColumn('Present_Perc', \r\n",
+							"            col(\"DaysPresent\")/schoolDays.count())\r\n",
+							"\r\n",
+							"dfYearAct = dfYearAct.withColumn('Atten_Threshold_Met', \r\n",
+							"            when(col('Present_Perc') > 0.9, 1).otherwise(0))\r\n",
+							"\r\n",
+							"print(dfYearAct.count())\r\n",
+							"dfYearAct.show(5,vertical=True)\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 24
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Write Back to the Lake"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# write back to the lake\r\n",
+							"dfDayAct.write.format('parquet').mode('overwrite').save(stage3 + '/test_s3_hybrid/dayActivity')\r\n",
+							"dfYearAct.write.format('parquet').mode('overwrite').save(stage3 + '/test_s3_hybrid/yearActivity')"
+						],
+						"outputs": [],
+						"execution_count": 25
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Load to Spark DB"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": true
+						},
+						"source": [
+							"# Create spark db to allow for access to the data in the delta-lake via SQL on-demand.\r\n",
+							"# This is only creating metadata for SQL on-demand, pointing to the data in the delta-lake.\r\n",
+							"# This also makes it possible to connect in Power BI via the azure sql data source connector.\r\n",
+							"def create_spark_db(db_name, source_path):\r\n",
+							"    spark.sql(f'CREATE DATABASE IF NOT EXISTS {db_name}')\r\n",
+							"    spark.sql(f\"DROP TABLE IF EXISTS {db_name}.dayActivity\")\r\n",
+							"    spark.sql(f\"DROP TABLE IF EXISTS {db_name}.yearActivity\")\r\n",
+							"    spark.sql(f\"create table if not exists {db_name}.dayActivity using PARQUET location '{source_path}/dayActivity'\")\r\n",
+							"    spark.sql(f\"create table if not exists {db_name}.yearActivity using PARQUET location '{source_path}/yearActivity'\")\r\n",
+							"    \r\n",
+							"create_spark_db('test_s3_hybrid', stage3 + '/test_s3_hybrid')"
+						],
+						"outputs": [],
+						"execution_count": 26
 					}
 				]
 			},
