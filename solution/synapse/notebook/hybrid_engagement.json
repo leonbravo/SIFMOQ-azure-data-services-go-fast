@@ -1,0 +1,1072 @@
+{
+	"name": "hybrid_engagement",
+	"properties": {
+		"folder": {
+			"name": "Insights Module"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "55de33ca-fdf1-4a6b-b300-f8c9d594b07e"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Hybrid Student Engagement Notebook\r\n",
+					"\r\n",
+					"This notebook creates 4 tables (student, dayactivity, yearactivity and calendar) into a new Spark database called s3_hybrid (stage 3 hybrid). \r\n",
+					""
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### Provision storage accounts\r\n",
+					"\r\n",
+					"The storage account variable has to be changed to the name of the storage account associated with your Azure resource group."
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from pyspark.sql.functions import *\r\n",
+					"from pyspark.sql.window import Window\r\n",
+					"\r\n",
+					"# data lake and container information\r\n",
+					"storage_account = 'stoeahybrid'\r\n",
+					"use_test_env = True\r\n",
+					"\r\n",
+					"if use_test_env:\r\n",
+					"    stage1 = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage1'\r\n",
+					"    stage2 = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2'\r\n",
+					"    stage3 = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage3'\r\n",
+					"else:\r\n",
+					"    stage1 = 'abfss://stage1@' + storage_account + '.dfs.core.windows.net'\r\n",
+					"    stage2 = 'abfss://stage2@' + storage_account + '.dfs.core.windows.net'\r\n",
+					"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### Load Raw Data from Lake\r\n",
+					"To ensure that that the right tables are loaded, confirm that the file paths match your data lake storage containers."
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# load needed tables from parquet data lake storage\r\n",
+					"dfStudAttendanceRaw = spark.read.format('parquet').load(f'{stage3}/contoso_sis/studentattendance')\r\n",
+					"dfActivityV2Raw = spark.read.format('parquet').load(f'{stage3}/m365/Activity0p2')\r\n",
+					"dfPersonRaw = spark.read.format('parquet').load(f'{stage3}/m365/Person')\r\n",
+					"dfStudOrgRaw = spark.read.format('parquet').load(f'{stage3}/m365/StudentOrgAffiliation')\r\n",
+					"dfOrgRaw = spark.read.format('parquet').load(f'{stage3}/m365/Org')\r\n",
+					"dfSectionRaw = spark.read.format('parquet').load(f'{stage3}/m365/Section')\r\n",
+					"dfCourseRaw = spark.read.format('parquet').load(f'{stage3}/m365/Course')\r\n",
+					"dfRefRaw = spark.read.format('parquet').load(f'{stage3}/m365/RefDefinition')"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## 1. Student table\r\n",
+					"Contains students' information at a school level\r\n",
+					"\r\n",
+					"**Databases and tables used:**\r\n",
+					"\r\n",
+					"1. Spark DB: s3_m365 (stage 3 m365 feed)\r\n",
+					"- Table: person (student PersonId and ExternalId relationship)\r\n",
+					"- Table: org\r\n",
+					"- Table: studentorgaffiliation\r\n",
+					"- Table: section\r\n",
+					"- Table: course\r\n",
+					"- Table: refdefinition\r\n",
+					"\r\n",
+					"2. Spark DB: stage 3 SIS data\r\n",
+					"- Table: studentattendance (student attendance by date, school, and course section)\r\n",
+					"\r\n",
+					"**Databases and tables created:**\r\n",
+					"\r\n",
+					"1. Spark DB: s3_hybrid (stage 3 hybrid)\r\n",
+					"- Table: student"
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Clean and Subset Data"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# take only active students\r\n",
+					"dfPerson = dfPersonRaw.filter(dfPersonRaw.IsActive == 'True')\r\n",
+					"dfStudOrg = dfStudOrgRaw.filter(dfStudOrgRaw.IsActive == 'True')\r\n",
+					"\r\n",
+					"# take needed columns and rename to align with other data sources\r\n",
+					"dfPerson = dfPerson.select('Id','ExternalId')\r\n",
+					"dfPerson = dfPerson.withColumnRenamed('Id', 'PersonId')\r\n",
+					"\r\n",
+					"dfStudOrg = dfStudOrg.select('PersonId', 'IsPrimary', 'IsActive', 'OrgId', 'RefGradeLevelId')\r\n",
+					"\r\n",
+					"dfOrg = dfOrgRaw.select('Identifier', 'name', 'Id')\r\n",
+					"dfOrg = dfOrg.withColumnRenamed('Identifier', 'School_ID')\r\n",
+					"dfOrg = dfOrg.withColumnRenamed('name', 'School_Name')\r\n",
+					"dfOrg = dfOrg.withColumnRenamed('Id', 'OrgId')\r\n",
+					"\r\n",
+					"dfSection = dfSectionRaw.select('ExternalId', 'Name', 'CourseId', 'Id', 'Code', 'SessionId', 'OrgId')\r\n",
+					"dfSection = dfSection.withColumnRenamed('ExternalId', 'section_id')\r\n",
+					"dfSection = dfSection.withColumnRenamed('name', 'section_name')\r\n",
+					"dfSection = dfSection.drop('School_Name')\r\n",
+					"dfSection = dfSection.join(dfOrg, 'OrgId')\r\n",
+					"\r\n",
+					"dfCourse = dfCourseRaw.withColumnRenamed('Id', 'CourseId')\r\n",
+					"dfCourse = dfCourse.withColumnRenamed('Name', 'Course')\r\n",
+					"dfCourse = dfCourse.drop('ExternalId')\r\n",
+					"\r\n",
+					"dfRef = dfRefRaw.select('Id', 'Code', 'Description')\r\n",
+					"dfRef = dfRef.withColumnRenamed('Id', 'RefId')\r\n",
+					"\r\n",
+					""
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# combine student information and school details with attendance data\r\n",
+					"dfStudAttendance = dfStudAttendanceRaw.select('student_id', 'school_id', 'attendance_date', 'Period', 'section_id', \r\n",
+					"                        'PresenceFlag', 'attendance_status')\r\n",
+					"                  \r\n",
+					"dfStudAttendance = dfStudAttendance.withColumnRenamed('school_id', 'School_ID')\r\n",
+					"dfStudAttendance = dfStudAttendance.withColumnRenamed('student_id','ExternalId')\r\n",
+					"dfStudAttendance = dfStudAttendance.withColumn(\"Date\", to_date(col(\"attendance_date\"), 'yyyy-MM-dd'))\r\n",
+					"dfStudAttendance = dfStudAttendance.drop('attendance_date')\r\n",
+					"\r\n",
+					"dfStudAttendance = dfStudAttendance.join(dfOrg, 'School_ID')\r\n",
+					"dfStudAttendance.show(1,vertical=True)"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### Find Primary School\r\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# find school which students have highest attendance count\r\n",
+					"df = (dfStudAttendance.groupBy(\"ExternalId\", 'School_ID', 'School_Name')\r\n",
+					"    .agg(sum(\"PresenceFlag\").alias(\"Present_Count\")))\r\n",
+					"\r\n",
+					"\r\n",
+					"w = Window.partitionBy('ExternalId')\r\n",
+					"dfStudSchoolPrimary = df.withColumn('maxPres', max('Present_Count').over(w))\\\r\n",
+					"    .where(col('Present_Count') == col('maxPres'))\\\r\n",
+					"    .drop('maxPres').drop('Present_Count')\r\n",
+					"\r\n",
+					"dfStudSchoolPrimary.show(3, vertical=True)"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# rename columns to indicate primary school\r\n",
+					"dfStudSchoolPrimary = dfStudSchoolPrimary.withColumnRenamed('School_Name', 'SchoolNamePrimary')\r\n",
+					"dfStudSchoolPrimary = dfStudSchoolPrimary.withColumnRenamed('School_ID', 'SchoolIdPrimary')"
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Combine tables"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# join person table to student and ref tables to create student profile \r\n",
+					"dfStudent = dfPerson.join(dfStudOrg, 'PersonId')\r\n",
+					"dfStudent = dfStudent.withColumnRenamed('RefGradeLevelId', 'RefId')\r\n",
+					"dfStudent = dfStudent.join(dfRef, 'RefId')\r\n",
+					"dfStudentFinal = dfStudent.join(dfStudSchoolPrimary, 'ExternalId')\r\n",
+					"dfStudentFinal = dfStudentFinal.withColumnRenamed('Code', 'GradeLevel')\r\n",
+					"dfStudentFinal = dfStudentFinal.withColumnRenamed('Description', 'GradeName')\r\n",
+					"dfStudentFinal = dfStudentFinal.select('ExternalId',  'PersonId', 'IsActive', 'SchoolNamePrimary', 'SchoolIdPrimary', 'OrgId', 'GradeLevel', 'GradeName')\r\n",
+					"dfStudentFinal = dfStudentFinal.drop('OrgId', 'GradeLevel')\r\n",
+					"dfStudentFinal.show(1, vertical=True)\r\n",
+					"print(dfStudentFinal.count())"
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### Write Data Back to Lake"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# write back to the lake\r\n",
+					"dfStudentFinal.write.format('parquet').mode('overwrite').save(stage3 + '/test_s3_hybrid/Student')"
+				],
+				"execution_count": 8
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### Load to Spark DB"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# Create spark db to allow for access to the data in the delta-lake via SQL on-demand.\r\n",
+					"# This is only creating metadata for SQL on-demand, pointing to the data in the delta-lake.\r\n",
+					"# This also makes it possible to connect in Power BI via the azure sql data source connector.\r\n",
+					"def create_spark_db(db_name, source_path):\r\n",
+					"    spark.sql(f'CREATE DATABASE IF NOT EXISTS {db_name}')\r\n",
+					"    spark.sql(f\"DROP TABLE IF EXISTS {db_name}.Student\")\r\n",
+					"    spark.sql(f\"create table if not exists {db_name}.Student using PARQUET location '{source_path}/Student'\")\r\n",
+					"    \r\n",
+					"create_spark_db('test_s3_hybrid', stage3 + '/test_s3_hybrid')"
+				],
+				"execution_count": 9
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## 2. Calendar table\r\n",
+					"Contains a basic calendar table to support data analysis in a Power BI dashboard.\r\n",
+					"\r\n",
+					"**Databases and tables used:**\r\n",
+					"- None\r\n",
+					"\r\n",
+					"**Databases and tables created:**\r\n",
+					"\r\n",
+					"1. Spark DB: s3_hybrid (stage 3 hybrid)\r\n",
+					"- Table: calendar"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# date range\r\n",
+					"start = \"2020-01-01\"\r\n",
+					"stop = \"2021-12-30\"\r\n",
+					"\r\n",
+					"# create calendar dataframe\r\n",
+					"temp_df = spark.createDataFrame([(start, stop)], (\"start\", \"stop\"))\r\n",
+					"temp_df = temp_df.select([col(c).cast(\"timestamp\") for c in (\"start\", \"stop\")])\r\n",
+					"temp_df = temp_df.withColumn(\"stop\",date_add(\"stop\",1).cast(\"timestamp\"))\r\n",
+					"temp_df = temp_df.select([col(c).cast(\"long\") for c in (\"start\", \"stop\")])\r\n",
+					"start, stop = temp_df.first()\r\n",
+					"interval=60*60*24\r\n",
+					"\r\n",
+					"df = spark.range(start,stop,interval).select(col(\"id\").cast(\"timestamp\").alias(\"DateTime\"))\r\n",
+					"df = df.withColumn(\"Date\", to_date(col(\"DateTime\")))\r\n",
+					"\r\n",
+					"df = df.drop(\"DateTime\")\r\n",
+					"df = df.withColumn('Year', date_format('Date', 'YYYY'))\r\n",
+					"df = df.withColumn('Month', date_format('Date', 'MMMM'))\r\n",
+					"df = df.withColumn('MonthNum', date_format('Date', 'M'))\r\n",
+					"df = df.withColumn('Week', date_format('Date', 'W'))\r\n",
+					"df = df.withColumn('Day', date_format('Date', 'D'))\r\n",
+					"df.show(2)"
+				],
+				"execution_count": 10
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Write Data Back to Lake"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# write back to the lake in stage 3 ds3_main directory\r\n",
+					"df.write.format('parquet').mode('overwrite').save(stage3 + '/test_s3_hybrid/Calendar')"
+				],
+				"execution_count": 11
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### Load to Spark DB"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# Create spark db to allow for access to the data in the data lake via SQL on-demand.\r\n",
+					"#This is only creating metadata for SQL on-demand, pointing to the data in the delta-lake.\r\n",
+					"# This also makes it possible to connect in Power BI via the azure sql data source connector.\r\n",
+					"def create_spark_db(db_name, source_path):\r\n",
+					"    spark.sql(f'CREATE DATABASE IF NOT EXISTS {db_name}')\r\n",
+					"    spark.sql(f\"DROP TABLE IF EXISTS {db_name}.Calendar\")\r\n",
+					"    spark.sql(f\"create table if not exists {db_name}.Calendar using PARQUET location '{source_path}/Calendar'\")\r\n",
+					"\r\n",
+					"create_spark_db('test_s3_hybrid', stage3 + '/test_s3_hybrid')"
+				],
+				"execution_count": 12
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## 3. Dayactivity table\r\n",
+					"Contains student daily digital and in-person activity \r\n",
+					"\r\n",
+					"**Databases and tables used:** \r\n",
+					"\r\n",
+					"1. Spark DB: s3_m365 (stage 3 m365 feed)\r\n",
+					"- Table: Activity0p2 (user m365 app activity v2)\r\n",
+					"\r\n",
+					"2. Spark DB: stage 3 SIS data\r\n",
+					"- Table: studentattendance (student attendance by date, school, and course section)"
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### Clean and Subset data"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# combine student attendance with section and course data\r\n",
+					"dfStudAttendanceFinal = dfStudAttendance.join(dfStudentFinal, 'ExternalId')\r\n",
+					"dfStudAttendanceFinal = dfStudAttendanceFinal.join(dfSection, ['section_id', 'School_ID'])\r\n",
+					"dfStudAttendanceFinal = dfStudAttendanceFinal.join(dfCourse, 'CourseId')\r\n",
+					"dfStudAttendanceFinal = dfStudAttendanceFinal.select('PersonId', 'ExternalId', 'Date', 'attendance_status', 'PresenceFlag'\r\n",
+					"                                                    ,'Period', 'SchoolNamePrimary', 'SessionId', 'section_id', 'CourseId', 'Course')\r\n",
+					"dfStudAttendanceFinal = dfStudAttendanceFinal.withColumnRenamed('section_id', 'SectionId')\r\n",
+					"dfStudAttendanceFinal.show(1, vertical=True)\r\n",
+					"print(dfStudAttendanceFinal.count())"
+				],
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# isolate in-person school days\r\n",
+					"schoolDays = dfStudAttendanceFinal.select('Date').distinct()\r\n",
+					"print(schoolDays.count())"
+				],
+				"execution_count": 14
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# take only needed columns and filter for only students\r\n",
+					"dfActivityV2 = dfActivityV2Raw.where(col('ActorRole') == 'Student').select('PersonId','AppName', 'SignalType'\r\n",
+					"                                    ,'StartTime', 'MeetingDuration')\r\n",
+					"\r\n",
+					"# active students only, include external id\r\n",
+					"dfActivityV2 = dfActivityV2.join(dfStudentFinal, 'PersonId')\r\n",
+					"dfActivityV2.show(1, vertical=True)\r\n",
+					"print(dfActivityV2.count())"
+				],
+				"execution_count": 15
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Aggregate Activity by Date\r\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# convert MeetingDuration column to time format\r\n",
+					"dfActivityV2 = dfActivityV2.withColumn('MeetingDuration', to_timestamp('MeetingDuration'))\r\n",
+					"dfActivityV2 = dfActivityV2.withColumn('HourToMinutes', hour(col('MeetingDuration'))*60)\r\n",
+					"dfActivityV2 = dfActivityV2.withColumn('Minutes', minute(col('MeetingDuration')))\r\n",
+					"dfActivityV2 = dfActivityV2.withColumn('Duration', col('HourToMinutes') + col('Minutes'))\r\n",
+					"\r\n",
+					"# aggregation of activity\r\n",
+					"dfActivityV2agg = (dfActivityV2.groupBy(\"PersonId\", \"ExternalId\",\r\n",
+					"                    \"AppName\", \"SignalType\",\r\n",
+					"                    to_date(\"StartTime\").alias(\"Date\"))\r\n",
+					"    .agg(sum(\"Duration\").alias(\"DurationSum\")))\r\n",
+					"\r\n",
+					"dfActivityV2agg.show(1,vertical=True)"
+				],
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# count number of presence flags per date\r\n",
+					"dfStudAttendanceAgg = (dfStudAttendanceFinal.groupBy('PersonId', 'ExternalId', 'Date', 'SectionId', 'Course')\r\n",
+					"                    .agg(mean(\"PresenceFlag\").alias(\"Present_Mean\")))\r\n",
+					"\r\n",
+					"dfStudAttendanceAgg = dfStudAttendanceAgg.withColumn('Present', when(col('Present_Mean') > 0, 1).otherwise(0))\r\n",
+					"\r\n",
+					"print(dfStudAttendanceAgg.count())\r\n",
+					"dfStudAttendanceAgg.show(1,vertical=True)"
+				],
+				"execution_count": 17
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Daily activity: Merge into a single wide table\r\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# focus on teams meetings, assignments, and communications\r\n",
+					"\r\n",
+					"df1 = dfActivityV2agg.where( ( col(\"AppName\") == \"Teams\" ) &\r\n",
+					"                            ( col(\"SignalType\") == \"CallRecordSummarized\" ))\r\n",
+					"\r\n",
+					"dfDayAct = df1.select(\"PersonId\", \"ExternalId\", \"Date\", \"DurationSum\")\r\n",
+					"dfDayAct = dfDayAct.withColumnRenamed(\"DurationSum\", \"TeamsMeetingsDuration\")\r\n",
+					"\r\n",
+					"df2 = dfActivityV2agg.withColumn('Assignments', when(( col(\"AppName\") == \"Assignments\" ) & \r\n",
+					"                            ( col(\"SignalType\") == \"SubmissionEvent\" ) , 1).otherwise(0))\r\n",
+					"df2 = df2.select(\"PersonId\", \"ExternalId\", \"Date\", \"Assignments\")\r\n",
+					"\r\n",
+					"dfDayAct = dfDayAct.join(df2, [\"PersonId\", \"ExternalId\", \"Date\"], 'outer')\r\n",
+					"\r\n",
+					"df3 = dfActivityV2agg.withColumn('TeamsCommunications', when(( col(\"AppName\") == \"Teams\" ) & \r\n",
+					"                        ( col(\"SignalType\").isin(['AddedToSharedWithMe', 'CommentCreated',\r\n",
+					"                            'CommentDeleted', 'ExpandChannelMessage', 'PostChannelMessage',\r\n",
+					"                            'ReactedWithEmoji', 'ReplyChannelMessage', 'Unlike',\r\n",
+					"                            'UserAtMentioned', 'VisitTeamChannel'])), 1).otherwise(0))\r\n",
+					"df3 = df3.select(\"PersonId\", \"ExternalId\", \"Date\", \"TeamsCommunications\")\r\n",
+					"\r\n",
+					"dfDayAct = dfDayAct.join(df3, [\"PersonId\", \"ExternalId\", \"Date\"], 'outer')\r\n",
+					"\r\n",
+					"\r\n",
+					"dfDayAct.show(5, vertical=True)\r\n",
+					"\r\n",
+					"dfDayAct = dfDayAct.groupBy(\"PersonId\", \"ExternalId\", \"Date\").agg(sum('TeamsMeetingsDuration').alias('TeamsMeetingsDuration'), mean('Assignments').alias('Assignments'), mean('TeamsCommunications').alias('TeamsCommunications'))\r\n",
+					" \r\n",
+					"dfDayAct.show(5, vertical=True)\r\n",
+					"print(dfDayAct.count())"
+				],
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# add in person attendance\r\n",
+					"dfDayAct = dfDayAct.join(dfStudAttendanceAgg, [\"PersonId\", \"ExternalId\", \"Date\"], 'outer')\r\n",
+					"\r\n",
+					"dfDayAct.show(2,vertical=True)\r\n",
+					"dfDayAct.count()"
+				],
+				"execution_count": 19
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# subset dates to only school dates\r\n",
+					"dfDayAct = dfDayAct.join(schoolDays, [\"Date\"], \"inner\")\r\n",
+					"\r\n",
+					"print(dfDayAct.count())\r\n",
+					"\r\n",
+					"schoolDaysCheck = dfDayAct.select('Date').distinct()\r\n",
+					"\r\n",
+					"print(schoolDaysCheck.count())"
+				],
+				"execution_count": 20
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"print(dfDayAct.dtypes)"
+				],
+				"execution_count": 21
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# fill missing with 0\r\n",
+					"dfDayAct = dfDayAct.na.fill(0)\r\n",
+					"\r\n",
+					"print(dfDayAct.count())\r\n",
+					"dfDayAct.show(1, vertical=True)"
+				],
+				"execution_count": 22
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# add activity indicator columns\r\n",
+					"dfDayAct= dfDayAct.withColumn('ActiveTeamsMeetings', when(col('TeamsMeetingsDuration') > 0, 1).otherwise(0))\r\n",
+					"dfDayAct= dfDayAct.withColumn('ActiveTeamsCommunications', when(col('TeamsCommunications') > 0 , 1).otherwise(0))\r\n",
+					"dfDayAct= dfDayAct.withColumn('ActiveAssignments', when(col('Assignments') > 0 , 1).otherwise(0))\r\n",
+					"dfDayAct= dfDayAct.withColumn('DigitallyActive', when( \\\r\n",
+					"                (col('ActiveTeamsMeetings')+ col('ActiveTeamsCommunications')+ col('ActiveAssignments'))\\\r\n",
+					"                 > 0, 1).otherwise(0))\r\n",
+					"\r\n",
+					"dfDayAct.show(1,vertical=True)"
+				],
+				"execution_count": 23
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## 3. Dayactivity table\r\n",
+					"Contains student daily digital and in-person activity \r\n",
+					"\r\n",
+					"**Databases and tables used:** \r\n",
+					"\r\n",
+					"1. Spark DB: s3_m365 (stage 3 m365 feed)\r\n",
+					"- Table: Activity0p2 (user m365 app activity v2)\r\n",
+					"\r\n",
+					"2. Spark DB: stage 3 SIS data\r\n",
+					"- Table: studentattendance (student attendance by date, school, and course section)"
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Yearly Aggregates\r\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"dfYearAct = dfDayAct.groupBy(\"PersonId\", \"ExternalId\")\\\r\n",
+					"    .agg(sum(\"ActiveTeamsMeetings\").alias(\"DaysActiveTeamsMeetings\")\\\r\n",
+					"    ,sum(\"ActiveTeamsCommunications\").alias(\"DaysActiveTeamsCommunications\")\\\r\n",
+					"    ,sum(\"ActiveAssignments\").alias(\"DaysActiveAssignments\")\\\r\n",
+					"    ,sum(\"DigitallyActive\").alias(\"DaysDigitallyActive\")\\\r\n",
+					"    ,sum(\"Present\").alias(\"DaysPresent\"))\r\n",
+					"\r\n",
+					"\r\n",
+					"dfYearAct = dfYearAct.withColumn('Present_Perc', \r\n",
+					"            col(\"DaysPresent\")/schoolDays.count())\r\n",
+					"\r\n",
+					"dfYearAct = dfYearAct.withColumn('Atten_Threshold_Met', \r\n",
+					"            when(col('Present_Perc') > 0.9, 1).otherwise(0))\r\n",
+					"\r\n",
+					"print(dfYearAct.count())\r\n",
+					"dfYearAct.show(5,vertical=True)\r\n",
+					""
+				],
+				"execution_count": 24
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Write Back to the Lake"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# write back to the lake\r\n",
+					"dfDayAct.write.format('parquet').mode('overwrite').save(stage3 + '/test_s3_hybrid/dayActivity')\r\n",
+					"dfYearAct.write.format('parquet').mode('overwrite').save(stage3 + '/test_s3_hybrid/yearActivity')"
+				],
+				"execution_count": 25
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Load to Spark DB"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": true
+				},
+				"source": [
+					"# Create spark db to allow for access to the data in the delta-lake via SQL on-demand.\r\n",
+					"# This is only creating metadata for SQL on-demand, pointing to the data in the delta-lake.\r\n",
+					"# This also makes it possible to connect in Power BI via the azure sql data source connector.\r\n",
+					"def create_spark_db(db_name, source_path):\r\n",
+					"    spark.sql(f'CREATE DATABASE IF NOT EXISTS {db_name}')\r\n",
+					"    spark.sql(f\"DROP TABLE IF EXISTS {db_name}.dayActivity\")\r\n",
+					"    spark.sql(f\"DROP TABLE IF EXISTS {db_name}.yearActivity\")\r\n",
+					"    spark.sql(f\"create table if not exists {db_name}.dayActivity using PARQUET location '{source_path}/dayActivity'\")\r\n",
+					"    spark.sql(f\"create table if not exists {db_name}.yearActivity using PARQUET location '{source_path}/yearActivity'\")\r\n",
+					"    \r\n",
+					"create_spark_db('test_s3_hybrid', stage3 + '/test_s3_hybrid')"
+				],
+				"execution_count": 26
+			}
+		]
+	}
+}
