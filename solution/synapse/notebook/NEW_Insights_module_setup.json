@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b06eefac-cdef-4ac4-9309-30f08cee9900"
+				"spark.autotune.trackingId": "a3fd1787-bc88-468b-b731-c62ee06e3714"
 			}
 		},
 		"metadata": {
@@ -372,7 +372,8 @@
 					"# (adds schema details and writes out in parquet format).\r\n",
 					"# NOTE: Does not write out to delta lake. \r\n",
 					"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
-					"#ms_insights._process_roster_date_folder(date_folder_path=date2)"
+					"#ms_insights._process_roster_date_folder(date_folder_path=date2)\r\n",
+					""
 				],
 				"execution_count": null
 			}
