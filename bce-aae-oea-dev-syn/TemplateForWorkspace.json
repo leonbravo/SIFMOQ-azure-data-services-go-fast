@@ -4796,7 +4796,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "a3fd1787-bc88-468b-b731-c62ee06e3714"
+						"spark.autotune.trackingId": "289366e5-9d4f-4147-8b99-895d4f6a9207"
 					}
 				},
 				"metadata": {
@@ -4821,7 +4821,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": true
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -4877,7 +4878,7 @@
 							"use_test_env = False"
 						],
 						"outputs": [],
-						"execution_count": 25
+						"execution_count": 24
 					},
 					{
 						"cell_type": "code",
@@ -4910,7 +4911,7 @@
 							"    stage2p = 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
 						],
 						"outputs": [],
-						"execution_count": 26
+						"execution_count": 25
 					},
 					{
 						"cell_type": "markdown",
@@ -4956,7 +4957,7 @@
 							"date1 = date2"
 						],
 						"outputs": [],
-						"execution_count": 27
+						"execution_count": 26
 					},
 					{
 						"cell_type": "code",
@@ -4974,35 +4975,35 @@
 						"source": [
 							"# load needed activity table(s) from data lake storage\r\n",
 							"dfActivityRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/activity/'+ date1 + '/*.csv')\r\n",
-							"# load needed roster tables from data lake storage\r\n",
-							"dfAADGroupRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadGroup/*.csv')\r\n",
-							"dfAADGroupMembershipRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadGroupMembership/*.csv')\r\n",
-							"dfAADUserRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadUser/*.csv')\r\n",
-							"dfAADUserPersonMappingRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadUserPersonMapping/*.csv')\r\n",
-							"dfCourseRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Course/*.csv')\r\n",
-							"dfCourseGradeLevelRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/CourseGradeLevel/*.csv')\r\n",
-							"dfCourseSubjectRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/CourseSubject/*.csv')\r\n",
-							"dfEnrollmentRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Enrollment/*.csv')\r\n",
-							"dfOrganizationRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Organization/*.csv')\r\n",
-							"dfPersonRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Person/*.csv')\r\n",
-							"dfPersonDemographicRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographic/*.csv')\r\n",
-							"dfPersonDemographicEthnicityRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicEthnicity/*.csv')\r\n",
-							"dfPersonDemographicPersonFlagRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicPersonFlag/*.csv')\r\n",
-							"dfPersonDemographicRaceRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicRace/*.csv')\r\n",
-							"dfPersonEmailAddressRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonEmailAddress/*.csv')\r\n",
-							"dfPersonIdentifierRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonIdentifier/*.csv')\r\n",
-							"dfPersonOrganizationRoleRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonOrganizationRole/*.csv')\r\n",
-							"dfPersonPhoneNumberRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonPhoneNumber/*.csv')\r\n",
-							"dfPersonRelationshipRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonRelationship/*.csv')\r\n",
-							"dfRefDefinitionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/RefDefinition/*.csv')\r\n",
-							"dfSectionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Section/*.csv')\r\n",
-							"dfSectionSessionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SectionSession/*.csv')\r\n",
-							"dfSectionSubjectRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SectionSubject/*.csv')\r\n",
-							"dfSessionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Session/*.csv')\r\n",
-							"dfSourceSystemRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
+							"## load needed roster tables from data lake storage\r\n",
+							"#dfAADGroupRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadGroup/*.csv')\r\n",
+							"#dfAADGroupMembershipRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadGroupMembership/*.csv')\r\n",
+							"#dfAADUserRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadUser/*.csv')\r\n",
+							"#dfAADUserPersonMappingRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadUserPersonMapping/*.csv')\r\n",
+							"#dfCourseRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Course/*.csv')\r\n",
+							"#dfCourseGradeLevelRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/CourseGradeLevel/*.csv')\r\n",
+							"#dfCourseSubjectRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/CourseSubject/*.csv')\r\n",
+							"#dfEnrollmentRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Enrollment/*.csv')\r\n",
+							"#dfOrganizationRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Organization/*.csv')\r\n",
+							"#dfPersonRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Person/*.csv')\r\n",
+							"#dfPersonDemographicRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographic/*.csv')\r\n",
+							"#dfPersonDemographicEthnicityRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicEthnicity/*.csv')\r\n",
+							"#dfPersonDemographicPersonFlagRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicPersonFlag/*.csv')\r\n",
+							"#dfPersonDemographicRaceRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicRace/*.csv')\r\n",
+							"#dfPersonEmailAddressRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonEmailAddress/*.csv')\r\n",
+							"#dfPersonIdentifierRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonIdentifier/*.csv')\r\n",
+							"#dfPersonOrganizationRoleRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonOrganizationRole/*.csv')\r\n",
+							"#dfPersonPhoneNumberRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonPhoneNumber/*.csv')\r\n",
+							"#dfPersonRelationshipRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonRelationship/*.csv')\r\n",
+							"#dfRefDefinitionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/RefDefinition/*.csv')\r\n",
+							"#dfSectionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Section/*.csv')\r\n",
+							"#dfSectionSessionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SectionSession/*.csv')\r\n",
+							"#dfSectionSubjectRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SectionSubject/*.csv')\r\n",
+							"#dfSessionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Session/*.csv')\r\n",
+							"#dfSourceSystemRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
 						],
 						"outputs": [],
-						"execution_count": 28
+						"execution_count": 27
 					},
 					{
 						"cell_type": "markdown",
@@ -5051,7 +5052,7 @@
 							"display(dfActivityRaw.limit(10))"
 						],
 						"outputs": [],
-						"execution_count": 29
+						"execution_count": 28
 					},
 					{
 						"cell_type": "code",
@@ -5070,7 +5071,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 30
+						"execution_count": 29
 					},
 					{
 						"cell_type": "code",
@@ -5089,7 +5090,7 @@
 							"%run /Insights_py"
 						],
 						"outputs": [],
-						"execution_count": 31
+						"execution_count": 30
 					},
 					{
 						"cell_type": "code",
@@ -5111,7 +5112,7 @@
 							"ms_insights = Insights(source_folder)"
 						],
 						"outputs": [],
-						"execution_count": 34
+						"execution_count": 31
 					},
 					{
 						"cell_type": "code",
@@ -5128,12 +5129,35 @@
 						},
 						"source": [
 							"# 1) Process the raw activity data (csv format) from stage1 into stage2 data lake \r\n",
-							"# (adds schema details and writes out in parquet format).\r\n",
+							"# (adds schema details #and writes out in parquet format).\r\n",
 							"# NOTE: Does not write out to delta lake. \r\n",
 							"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
 							"#ms_insights.process_activity()\r\n",
 							"\r\n",
-							"ms_insights.ingest()"
+							"#ms_insights.ingest()"
+						],
+						"outputs": [],
+						"execution_count": 35
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"path = oea.stage2p+'/'+source_folder\r\n",
+							"\r\n",
+							"oea.get_folders( path )\r\n",
+							"\r\n",
+							"#mssparkutils.fs.ls( path )"
 						],
 						"outputs": [],
 						"execution_count": 35
@@ -5157,10 +5181,11 @@
 							"# NOTE: Does not write out to delta lake. \r\n",
 							"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
 							"#ms_insights._process_roster_date_folder(date_folder_path=date2)\r\n",
-							""
+							"\r\n",
+							"oea.create_sql_views(path, 'DELTA')"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 36
 					}
 				]
 			},
@@ -5487,6 +5512,10 @@
 			"properties": {
 				"nbformat": 4,
 				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "spark3p1sm",
+					"type": "BigDataPoolReference"
+				},
 				"sessionProperties": {
 					"driverMemory": "28g",
 					"driverCores": 4,
@@ -5498,7 +5527,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "f82b9fcf-f483-4bcc-9ff3-3506d1596094"
+						"spark.autotune.trackingId": "ddca2a91-cde8-4e2c-a85e-d1e750749f55"
 					}
 				},
 				"metadata": {
@@ -5510,6 +5539,20 @@
 					},
 					"language_info": {
 						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
+						"name": "spark3p1sm",
+						"type": "Spark",
+						"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 8,
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -5570,7 +5613,7 @@
 							"        spark.sql(f\"CREATE TABLE IF NOT EXISTS OEA.watermark (source string not null, entity string not null, watermark timestamp not null) USING DELTA LOCATION '{self.framework_path}/db/watermark'\")\n",
 							"\n",
 							"        logger.debug(\"OEA initialized.\")\n",
-							"    \n",
+							"    #some require full path \n",
 							"    def path(self, container_name, directory_path=None):\n",
 							"        if directory_path:\n",
 							"            return f'abfss://{container_name}@{self.storage_account}.dfs.core.windows.net/{directory_path}'\n",
