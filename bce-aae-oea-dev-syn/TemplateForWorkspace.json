@@ -4796,7 +4796,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "289366e5-9d4f-4147-8b99-895d4f6a9207"
+						"spark.autotune.trackingId": "31561134-869f-48ff-98b2-d42793f36d36"
 					}
 				},
 				"metadata": {
@@ -4878,7 +4878,7 @@
 							"use_test_env = False"
 						],
 						"outputs": [],
-						"execution_count": 24
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
@@ -4911,7 +4911,7 @@
 							"    stage2p = 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
 						],
 						"outputs": [],
-						"execution_count": 25
+						"execution_count": 7
 					},
 					{
 						"cell_type": "markdown",
@@ -5071,7 +5071,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 29
+						"execution_count": 3
 					},
 					{
 						"cell_type": "code",
@@ -5090,7 +5090,7 @@
 							"%run /Insights_py"
 						],
 						"outputs": [],
-						"execution_count": 30
+						"execution_count": 4
 					},
 					{
 						"cell_type": "code",
@@ -5112,7 +5112,7 @@
 							"ms_insights = Insights(source_folder)"
 						],
 						"outputs": [],
-						"execution_count": 31
+						"execution_count": 8
 					},
 					{
 						"cell_type": "code",
@@ -5134,10 +5134,14 @@
 							"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
 							"#ms_insights.process_activity()\r\n",
 							"\r\n",
-							"#ms_insights.ingest()"
+							"#ms_insights.ingest()\r\n",
+							"\r\n",
+							"\r\n",
+							"ms_insights.process_insights_activity_stage1_data()\r\n",
+							"ms_insights.process_roster()"
 						],
 						"outputs": [],
-						"execution_count": 35
+						"execution_count": 10
 					},
 					{
 						"cell_type": "code",
@@ -5527,7 +5531,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "ddca2a91-cde8-4e2c-a85e-d1e750749f55"
+						"spark.autotune.trackingId": "cd88831e-e639-4a90-9725-b7e567c2fdb2"
 					}
 				},
 				"metadata": {
@@ -5596,7 +5600,7 @@
 							"        self.serverless_sql_endpoint = mssparkutils.env.getWorkspaceName() + '-ondemand.sql.azuresynapse.net'\n",
 							"        self._initialize_logger(instrumentation_key, logging_level)\n",
 							"        self.salt = salt\n",
-							"        self.timezone = 'EST'\n",
+							"        self.timezone = 'Australia/EST'\n",
 							"        self.stage1np = 'abfss://stage1np@' + self.storage_account + '.dfs.core.windows.net'\n",
 							"        self.stage2np = 'abfss://stage2np@' + self.storage_account + '.dfs.core.windows.net'\n",
 							"        self.stage2p = 'abfss://stage2p@' + self.storage_account + '.dfs.core.windows.net'\n",
