@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "fe00231c-76a2-4421-b420-118140d2b86b"
+				"spark.autotune.trackingId": "b69c65dc-1baa-467c-aa23-0b00356a172f"
 			}
 		},
 		"metadata": {
@@ -124,16 +124,9 @@
 					"import datetime\r\n",
 					"\r\n",
 					"\r\n",
-					"if use_test_env:\r\n",
-					"    stage1np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage1np'\r\n",
-					"    stage2np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2np'\r\n",
-					"    stage2p = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2p'\r\n",
-					"else:\r\n",
-					"    stage1np = 'abfss://stage1np@' + storage_account + '.dfs.core.windows.net'\r\n",
-					"    stage2np = 'abfss://stage2np@' + storage_account + '.dfs.core.windows.net'\r\n",
-					"    stage2p = 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
+					""
 				],
-				"execution_count": 2
+				"execution_count": 4
 			},
 			{
 				"cell_type": "markdown",
@@ -167,15 +160,15 @@
 				},
 				"source": [
 					"# Set the date to be processed\r\n",
-					"#today = datetime.datetime.now()\r\n",
+					"today = datetime.datetime.now()\r\n",
 					"date1 = today.strftime('%Y-%m-%d')\r\n",
-					"date1.cast('string')\r\n",
+					"#date1.cast('string')\r\n",
 					"date2 = date1\r\n",
 					"#date1 = \"2022-02-02\"\r\n",
 					"#date2 = \"2022-07-12\"\r\n",
 					"#date1 = date2"
 				],
-				"execution_count": 26
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -283,9 +276,9 @@
 					}
 				},
 				"source": [
-					"#%run /OEA_py"
+					"%run /OEA_py"
 				],
-				"execution_count": 28
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -303,7 +296,32 @@
 				"source": [
 					"%run /Insights_py"
 				],
-				"execution_count": 29
+				"execution_count": 15
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"if use_test_env:\r\n",
+					"    stage1np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage1np'\r\n",
+					"    stage2np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2np'\r\n",
+					"    stage2p = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2p'\r\n",
+					"else:\r\n",
+					"    stage1np = 'abfss://stage1np@' + storage_account + '.dfs.core.windows.net'\r\n",
+					"    stage2np = oea.stage2np\r\n",
+					"    stage2p = 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
+				],
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -324,7 +342,7 @@
 					"source_folder='SDS/M365'\r\n",
 					"ms_insights = Insights(source_folder)"
 				],
-				"execution_count": 30
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
@@ -341,12 +359,12 @@
 				},
 				"source": [
 					"\r\n",
-					"db_name= 'oea'\r\n",
+					"db_name= 's2_sds'\r\n",
 					"pathp = ms_insights.stage2p+'/'+source_folder\r\n",
-					"pathnp = ms_insights.stage2p+'/'+source_folder\r\n",
+					"pathnp = ms_insights.stage2np+'/'+source_folder\r\n",
 					"source_format= 'DELTA'"
 				],
-				"execution_count": 31
+				"execution_count": 22
 			},
 			{
 				"cell_type": "code",
@@ -362,9 +380,9 @@
 					}
 				},
 				"source": [
-					"ms_insights.insert_watermark( source_folder, \"Activity\", date2)"
+					"#oea.insert_watermark( source_folder, \"Activity\", date2)"
 				],
-				"execution_count": null
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
@@ -436,9 +454,27 @@
 					"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
 					"#ms_insights._process_roster_date_folder(date_folder_path=date2)\r\n",
 					"#oea.create_lake_views( db_name, path, db_name)\r\n",
-					"oea.create_sql_views(path, source_format)"
+					"oea.create_sql_views(pathp, source_format)"
 				],
 				"execution_count": 32
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"oea.create_sql_views(pathnp, source_format)"
+				],
+				"execution_count": 21
 			}
 		]
 	}
