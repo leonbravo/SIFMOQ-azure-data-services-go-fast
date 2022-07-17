@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b69c65dc-1baa-467c-aa23-0b00356a172f"
+				"spark.autotune.trackingId": "3172ee40-33f4-4c7b-91d1-0cb8dca00f93"
 			}
 		},
 		"metadata": {
@@ -342,7 +342,7 @@
 					"source_folder='SDS/M365'\r\n",
 					"ms_insights = Insights(source_folder)"
 				],
-				"execution_count": 16
+				"execution_count": 27
 			},
 			{
 				"cell_type": "code",
@@ -361,10 +361,10 @@
 					"\r\n",
 					"db_name= 's2_sds'\r\n",
 					"pathp = ms_insights.stage2p+'/'+source_folder\r\n",
-					"pathnp = ms_insights.stage2np+'/'+source_folder\r\n",
+					"pathnp = ms_insights.stage2np\r\n",
 					"source_format= 'DELTA'"
 				],
-				"execution_count": 22
+				"execution_count": 28
 			},
 			{
 				"cell_type": "code",
@@ -428,11 +428,11 @@
 					}
 				},
 				"source": [
-					"oea.get_folders( path )\r\n",
+					"oea.get_folders( pathnp )\r\n",
 					"\r\n",
 					"#mssparkutils.fs.ls( path )"
 				],
-				"execution_count": 35
+				"execution_count": 29
 			},
 			{
 				"cell_type": "code",
@@ -474,7 +474,7 @@
 				"source": [
 					"oea.create_sql_views(pathnp, source_format)"
 				],
-				"execution_count": 21
+				"execution_count": 30
 			}
 		]
 	}
