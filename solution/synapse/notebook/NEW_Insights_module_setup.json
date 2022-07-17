@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "e48ff143-804c-43ff-a445-a9e001619509"
+				"spark.autotune.trackingId": "93c2ca8a-eefd-42aa-b852-53b61f5fd161"
 			}
 		},
 		"metadata": {
@@ -101,7 +101,7 @@
 					"storage_account = 'bceaaeoeadevlrs'\r\n",
 					"use_test_env = False"
 				],
-				"execution_count": 24
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -133,7 +133,7 @@
 					"    stage2np = 'abfss://stage2np@' + storage_account + '.dfs.core.windows.net'\r\n",
 					"    stage2p = 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
 				],
-				"execution_count": 25
+				"execution_count": 7
 			},
 			{
 				"cell_type": "markdown",
@@ -289,7 +289,7 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"execution_count": 29
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -307,7 +307,7 @@
 				"source": [
 					"%run /Insights_py"
 				],
-				"execution_count": 30
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -328,7 +328,7 @@
 					"source_folder='SDS/M365'\r\n",
 					"ms_insights = Insights(source_folder)"
 				],
-				"execution_count": 31
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -350,9 +350,13 @@
 					"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
 					"#ms_insights.process_activity()\r\n",
 					"\r\n",
-					"#ms_insights.ingest()"
+					"#ms_insights.ingest()\r\n",
+					"\r\n",
+					"\r\n",
+					"ms_insights.process_insights_activity_stage1_data()\r\n",
+					"ms_insights.process_roster()"
 				],
-				"execution_count": 35
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",

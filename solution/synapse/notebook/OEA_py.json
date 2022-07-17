@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ddca2a91-cde8-4e2c-a85e-d1e750749f55"
+				"spark.autotune.trackingId": "cd88831e-e639-4a90-9725-b7e567c2fdb2"
 			}
 		},
 		"metadata": {
@@ -88,7 +88,7 @@
 					"        self.serverless_sql_endpoint = mssparkutils.env.getWorkspaceName() + '-ondemand.sql.azuresynapse.net'\n",
 					"        self._initialize_logger(instrumentation_key, logging_level)\n",
 					"        self.salt = salt\n",
-					"        self.timezone = 'EST'\n",
+					"        self.timezone = 'Australia/EST'\n",
 					"        self.stage1np = 'abfss://stage1np@' + self.storage_account + '.dfs.core.windows.net'\n",
 					"        self.stage2np = 'abfss://stage2np@' + self.storage_account + '.dfs.core.windows.net'\n",
 					"        self.stage2p = 'abfss://stage2p@' + self.storage_account + '.dfs.core.windows.net'\n",
