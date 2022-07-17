@@ -4796,7 +4796,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "b06eefac-cdef-4ac4-9309-30f08cee9900"
+						"spark.autotune.trackingId": "a3fd1787-bc88-468b-b731-c62ee06e3714"
 					}
 				},
 				"metadata": {
@@ -5156,7 +5156,8 @@
 							"# (adds schema details and writes out in parquet format).\r\n",
 							"# NOTE: Does not write out to delta lake. \r\n",
 							"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
-							"#ms_insights._process_roster_date_folder(date_folder_path=date2)"
+							"#ms_insights._process_roster_date_folder(date_folder_path=date2)\r\n",
+							""
 						],
 						"outputs": [],
 						"execution_count": null
@@ -5486,10 +5487,6 @@
 			"properties": {
 				"nbformat": 4,
 				"nbformat_minor": 2,
-				"bigDataPool": {
-					"referenceName": "spark3p1sm",
-					"type": "BigDataPoolReference"
-				},
 				"sessionProperties": {
 					"driverMemory": "28g",
 					"driverCores": 4,
@@ -5497,16 +5494,24 @@
 					"executorCores": 4,
 					"numExecutors": 2,
 					"runAsWorkspaceSystemIdentity": false,
-					"conf": {}
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "f82b9fcf-f483-4bcc-9ff3-3506d1596094"
+					}
 				},
 				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
 						"display_name": "python"
 					},
 					"language_info": {
 						"name": "python"
-					}
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -6064,7 +6069,6 @@
 							"\n",
 							"oea = OEA()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -7762,7 +7766,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "83b1ee98-9c13-476a-b183-5a84ef9a4510"
+						"spark.autotune.trackingId": "55de33ca-fdf1-4a6b-b300-f8c9d594b07e"
 					}
 				},
 				"metadata": {
@@ -7811,7 +7815,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"from pyspark.sql.functions import *\r\n",
 							"from pyspark.sql.window import Window\r\n",
