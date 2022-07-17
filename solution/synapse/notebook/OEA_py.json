@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "cd88831e-e639-4a90-9725-b7e567c2fdb2"
+				"spark.autotune.trackingId": "6e84e5c1-69f6-43b8-80c9-d9bc99c6db89"
 			}
 		},
 		"metadata": {
@@ -144,7 +144,8 @@
 					"\n",
 					"    def get_last_watermark(self, source, entity):\n",
 					"        return self.get_value_from_db(f\"select w.watermark from oea.watermark w where w.source='{source}' and w.entity='{entity}' order by w.watermark desc\")\n",
-					"\n",
+					"    \n",
+					"    #watermark for incremental tables\n",
 					"    def insert_watermark(self, source, entity, watermark_datetime):\n",
 					"        spark.sql(f\"insert into oea.watermark values ('{source}', '{entity}', '{watermark_datetime}')\")\n",
 					"\n",
@@ -546,6 +547,7 @@
 					"    \"\"\" Provides data processing methods for Contoso SIS data (the student information system for the fictional Contoso school district).  \"\"\"\n",
 					"    def __init__(self, source_folder, pseudonymize = True):\n",
 					"        self.source_folder = source_folder\n",
+					"        #to be defined externarly on the Insights subclass\n",
 					"        self.pseudonymize = pseudonymize\n",
 					"        self.stage1np = f\"{oea.stage1np}/{source_folder}\"\n",
 					"        self.stage2np = f\"{oea.stage2np}/{source_folder}\"\n",

@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "93c2ca8a-eefd-42aa-b852-53b61f5fd161"
+				"spark.autotune.trackingId": "fe00231c-76a2-4421-b420-118140d2b86b"
 			}
 		},
 		"metadata": {
@@ -48,7 +48,7 @@
 				"memory": 56,
 				"automaticScaleJobs": true
 			},
-			"sessionKeepAliveTimeout": 30
+			"sessionKeepAliveTimeout": 59
 		},
 		"cells": [
 			{
@@ -101,7 +101,7 @@
 					"storage_account = 'bceaaeoeadevlrs'\r\n",
 					"use_test_env = False"
 				],
-				"execution_count": 6
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -133,7 +133,7 @@
 					"    stage2np = 'abfss://stage2np@' + storage_account + '.dfs.core.windows.net'\r\n",
 					"    stage2p = 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
 				],
-				"execution_count": 7
+				"execution_count": 2
 			},
 			{
 				"cell_type": "markdown",
@@ -146,13 +146,10 @@
 				},
 				"source": [
 					"### Load Raw Data from Lake\r\n",
-					"To ensure that that the right tables are loaded, confirm that the file paths match your data lake storage containers. \r\n",
-					"\r\n",
 					"The top cell sets the date of the data to be processed (this is currently set up to process the test data). \r\n",
 					"\r\n",
-					"To process your own data:\r\n",
-					" - Uncomment the top four lines of code (lines 2, 3, 4, and 5)\r\n",
-					" - Comment out the last two line of code (lines 6 and 7)"
+					"Date can be used for watermark, but Insights class process everything in stage1 folder, \r\n",
+					"for effectively control date needs to be used for roster and activity"
 				]
 			},
 			{
@@ -171,12 +168,12 @@
 				"source": [
 					"# Set the date to be processed\r\n",
 					"#today = datetime.datetime.now()\r\n",
-					"#date1 = today.strftime('%Y-%m-%d')\r\n",
-					"#date1.cast('string')\r\n",
-					"#date2 = date1\r\n",
+					"date1 = today.strftime('%Y-%m-%d')\r\n",
+					"date1.cast('string')\r\n",
+					"date2 = date1\r\n",
 					"#date1 = \"2022-02-02\"\r\n",
-					"date2 = \"2022-07-12\"\r\n",
-					"date1 = date2"
+					"#date2 = \"2022-07-12\"\r\n",
+					"#date1 = date2"
 				],
 				"execution_count": 26
 			},
@@ -244,14 +241,13 @@
 					" \r\n",
 					"**CSV files used:**\r\n",
 					"\r\n",
-					"- M365/activity/(whatever the set date is)/*.csv\r\n",
+					"- M365/SDS/activity/(whatever the set date is)/*.csv\r\n",
 					"\r\n",
 					"**Database and table created:**\r\n",
 					"\r\n",
-					"1. Spark DB: s2p_insights\r\n",
+					"1. Spark DB: s2_sds\r\n",
 					"- Table: techactivity\r\n",
-					"2. Spark DB: s2np_insights\r\n",
-					"- Table: techactivity"
+					""
 				]
 			},
 			{
@@ -287,9 +283,9 @@
 					}
 				},
 				"source": [
-					"%run /OEA_py"
+					"#%run /OEA_py"
 				],
-				"execution_count": 3
+				"execution_count": 28
 			},
 			{
 				"cell_type": "code",
@@ -307,7 +303,7 @@
 				"source": [
 					"%run /Insights_py"
 				],
-				"execution_count": 4
+				"execution_count": 29
 			},
 			{
 				"cell_type": "code",
@@ -324,11 +320,51 @@
 				},
 				"source": [
 					"# 0) Initialize the OEA framework and MSInsights module.\r\n",
-					"oea = OEA(storage_account)\r\n",
+					"#oea = OEA(storage_account)\r\n",
 					"source_folder='SDS/M365'\r\n",
 					"ms_insights = Insights(source_folder)"
 				],
-				"execution_count": 8
+				"execution_count": 30
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"\r\n",
+					"db_name= 'oea'\r\n",
+					"pathp = ms_insights.stage2p+'/'+source_folder\r\n",
+					"pathnp = ms_insights.stage2p+'/'+source_folder\r\n",
+					"source_format= 'DELTA'"
+				],
+				"execution_count": 31
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"ms_insights.insert_watermark( source_folder, \"Activity\", date2)"
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -353,7 +389,9 @@
 					"#ms_insights.ingest()\r\n",
 					"\r\n",
 					"\r\n",
+					"oea.insert_watermark( source_folder, \"Activity\", date2)\r\n",
 					"ms_insights.process_insights_activity_stage1_data()\r\n",
+					"oea.insert_watermark( source_folder, \"Roster\", date2)\r\n",
 					"ms_insights.process_roster()"
 				],
 				"execution_count": 10
@@ -372,8 +410,6 @@
 					}
 				},
 				"source": [
-					"path = oea.stage2p+'/'+source_folder\r\n",
-					"\r\n",
 					"oea.get_folders( path )\r\n",
 					"\r\n",
 					"#mssparkutils.fs.ls( path )"
@@ -399,10 +435,10 @@
 					"# NOTE: Does not write out to delta lake. \r\n",
 					"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
 					"#ms_insights._process_roster_date_folder(date_folder_path=date2)\r\n",
-					"\r\n",
-					"oea.create_sql_views(path, 'DELTA')"
+					"#oea.create_lake_views( db_name, path, db_name)\r\n",
+					"oea.create_sql_views(path, source_format)"
 				],
-				"execution_count": 36
+				"execution_count": 32
 			}
 		]
 	}
