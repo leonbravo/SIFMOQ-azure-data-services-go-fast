@@ -16,7 +16,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "55de33ca-fdf1-4a6b-b300-f8c9d594b07e"
+				"spark.autotune.trackingId": "ded12eb6-3516-4fb8-9ac7-8cc1a60aebc1"
 			}
 		},
 		"metadata": {
@@ -115,6 +115,8 @@
 				"source": [
 					"# load needed tables from parquet data lake storage\r\n",
 					"dfStudAttendanceRaw = spark.read.format('parquet').load(f'{stage3}/contoso_sis/studentattendance')\r\n",
+					"\r\n",
+					"#still most are m365 \r\n",
 					"dfActivityV2Raw = spark.read.format('parquet').load(f'{stage3}/m365/Activity0p2')\r\n",
 					"dfPersonRaw = spark.read.format('parquet').load(f'{stage3}/m365/Person')\r\n",
 					"dfStudOrgRaw = spark.read.format('parquet').load(f'{stage3}/m365/StudentOrgAffiliation')\r\n",
