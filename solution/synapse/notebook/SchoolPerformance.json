@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "34f2aaff-0763-4ff2-9c3f-ad870014087a"
+				"spark.autotune.trackingId": "193cb4ee-7a8a-4cc2-bbf2-060e7df403dd"
 			}
 		},
 		"metadata": {
@@ -62,10 +62,9 @@
 					}
 				},
 				"source": [
-					"# Microsoft Insights Module Example Notebook\r\n",
-					"This notebook creates 26 tables into two new Spark databases called s2np_insights and s2p_insights.\r\n",
-					"\r\n",
-					"s2p_insights is utilized for the Graph Reports API PowerBI dashboard provided"
+					"# School Performance Insights Module Example Notebook\r\n",
+					"This notebook creates a table into  Spark database called bceoea.\r\n",
+					""
 				]
 			},
 			{
