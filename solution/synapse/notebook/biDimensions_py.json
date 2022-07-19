@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "2ef55c86-9cdc-486c-80bd-3a9ca997b18b"
+				"spark.autotune.trackingId": "4fb2889e-c7d9-4c45-bbd3-e42a6c84c4db"
 			}
 		},
 		"metadata": {
@@ -114,7 +114,7 @@
 					"                        ['','tion', 'integer', 'no-op'], \r\n",
 					"                        ['','eger', 'partition-by']]\r\n",
 					"\r\n",
-					"            \r\n",
+					"    \r\n",
 					"    def ingest(self):\r\n",
 					"        \"\"\"  Processes insights data from stage1 into stage2 using structured streaming within the defined functions below.\"\"\"\r\n",
 					"        logger.info(\"Processing microsoft_insights data from: \" + self.stage1np)\r\n",

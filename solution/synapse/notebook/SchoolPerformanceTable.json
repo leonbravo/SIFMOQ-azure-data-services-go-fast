@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f7743c6b-972c-41fc-b53c-3caad6d3d59d"
+				"spark.autotune.trackingId": "874961c2-8f56-4cee-ba74-b40c0341c473"
 			}
 		},
 		"metadata": {
@@ -51,7 +51,7 @@
 					]
 				},
 				"source": [
-					"SifDbName = \"sif\""
+					"SifDbName = \"oea\""
 				],
 				"execution_count": null
 			},
