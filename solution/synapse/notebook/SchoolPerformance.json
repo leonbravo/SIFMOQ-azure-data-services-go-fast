@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "193cb4ee-7a8a-4cc2-bbf2-060e7df403dd"
+				"spark.autotune.trackingId": "5c94a38a-5bdb-42c8-a58c-97c185bf2a67"
 			}
 		},
 		"metadata": {
@@ -99,7 +99,8 @@
 					"# data lake and container information\r\n",
 					"# meant to be parameters\r\n",
 					"storage_account = 'bceaaeoeadevlrs'\r\n",
-					"use_test_env = False"
+					"use_test_env = False\r\n",
+					"source_folder='BCE/BI/Dimensions/'"
 				],
 				"execution_count": 1
 			},
@@ -124,7 +125,7 @@
 					"import datetime\r\n",
 					""
 				],
-				"execution_count": 4
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -166,7 +167,7 @@
 					"#date2 = \"2022-07-12\"\r\n",
 					"#date1 = date2"
 				],
-				"execution_count": 12
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -183,10 +184,10 @@
 				},
 				"source": [
 					"# load needed activity table(s) from data lake storage\r\n",
-					"dfSchoolPerformanceRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/activity/'+ date1 + '/*.csv')\r\n",
+					"dfSchoolPerformanceRaw = spark.read.format('csv').load(f'{stage1np}{source_folder}'+ date1 + '/*.csv')\r\n",
 					"#rmat('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
 				],
-				"execution_count": 27
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -246,7 +247,7 @@
 				"source": [
 					"display(dfActivityRaw.limit(10))"
 				],
-				"execution_count": 28
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -325,8 +326,8 @@
 				"source": [
 					"# 0) Initialize the OEA framework and MSInsights module.\r\n",
 					"#oea = OEA(storage_account)\r\n",
-					"source_folder=''\r\n",
-					"ms_insights = Insights(source_folder)"
+					"\r\n",
+					"schoolperf = biDimensions()"
 				],
 				"execution_count": 27
 			},
