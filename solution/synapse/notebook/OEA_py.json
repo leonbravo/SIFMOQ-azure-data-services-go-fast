@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ea60340f-c007-47f4-83b4-3c7eea4112a0"
+				"spark.autotune.trackingId": "4450c38b-7520-4d03-9fa7-d53dd99963eb"
 			}
 		},
 		"metadata": {
@@ -325,7 +325,7 @@
 					"        else:\n",
 					"            self._merge_into_table(df_lookup, np_destination_path, source_path + '/_checkpoints/delta_np', \"current.id_pseudonym = updates.id_pseudonym\")\n",
 					"\n",
-					"    #drops duplicated and overwrite \n",
+					"    #drops duplicated and writes with overwrite option  \n",
 					"    def ingest_snapshot_data(self, source_system, tablename, schema, partition_by, primary_key='id', data_format='csv', has_header=True):\n",
 					"        \"\"\" Processes snapshot batch data from stage1 into stage2 \"\"\"\n",
 					"        source_path = f'{self.stage1np}/{source_system}/{tablename}'\n",
