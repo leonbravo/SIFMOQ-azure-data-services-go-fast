@@ -1,5 +1,5 @@
 {
-	"name": "eminerva_py",
+	"name": "biDimensions_py",
 	"properties": {
 		"description": "WIP meant to contain the schemas for eminerva",
 		"nbformat": 4,
@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d07d5c4e-a7cc-43ce-a1a2-c5aa307551c4"
+				"spark.autotune.trackingId": "99ddc829-d152-4500-88ea-e945c523d7c9"
 			}
 		},
 		"metadata": {
