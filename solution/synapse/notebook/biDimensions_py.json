@@ -1,7 +1,7 @@
 {
 	"name": "biDimensions_py",
 	"properties": {
-		"description": "WIP meant to contain the schemas for eminerva",
+		"description": "WIP meant to contain the schemas for bi dimensions",
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "99ddc829-d152-4500-88ea-e945c523d7c9"
+				"spark.autotune.trackingId": "2ef55c86-9cdc-486c-80bd-3a9ca997b18b"
 			}
 		},
 		"metadata": {
