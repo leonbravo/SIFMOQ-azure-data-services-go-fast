@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "4450c38b-7520-4d03-9fa7-d53dd99963eb"
+				"spark.autotune.trackingId": "24799369-c5c0-4db0-b457-18de05a09b1d"
 			}
 		},
 		"metadata": {
@@ -282,7 +282,7 @@
 					"            query2 = query2.start(np_destination_path)\n",
 					"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\n",
 					"            logger.info(query2.lastProgress)        \n",
-					"\n",
+					"    #updates or append\n",
 					"    def _merge_into_table(self, df, destination_path, checkpoints_path, condition):\n",
 					"        \"\"\" Merges data from the given dataframe into the delta table at the specified destination_path, based on the given condition.\n",
 					"            If not delta table exists at the specified destination_path, a new delta table is created and the data from the given dataframe is inserted.\n",
