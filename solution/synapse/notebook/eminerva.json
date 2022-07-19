@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "54990c25-45a3-4825-a685-11818bfe2070"
+				"spark.autotune.trackingId": "5f82345f-c136-4c97-9fa1-50fb1e874c79"
 			}
 		},
 		"metadata": {
@@ -123,8 +123,6 @@
 					"from pyspark.sql.window import Window\r\n",
 					"from faker import Faker\r\n",
 					"import datetime\r\n",
-					"\r\n",
-					"\r\n",
 					""
 				],
 				"execution_count": 4
@@ -318,9 +316,9 @@
 					"    stage2np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2np'\r\n",
 					"    stage2p = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2p'\r\n",
 					"else:\r\n",
-					"    stage1np = 'abfss://stage1np@' + storage_account + '.dfs.core.windows.net'\r\n",
+					"    stage1np = oea.stage1np\r\n",
 					"    stage2np = oea.stage2np\r\n",
-					"    stage2p = 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
+					"    stage2p = oea.stage3np"
 				],
 				"execution_count": 23
 			},
