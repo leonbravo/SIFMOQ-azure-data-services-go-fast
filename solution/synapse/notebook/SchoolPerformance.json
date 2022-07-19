@@ -1,7 +1,7 @@
 {
-	"name": "eminerva",
+	"name": "SchoolPerformance",
 	"properties": {
-		"description": "eMinerva data including attendance",
+		"description": "School Performance data including attendance",
 		"folder": {
 			"name": "Insights Module"
 		},
@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "5f82345f-c136-4c97-9fa1-50fb1e874c79"
+				"spark.autotune.trackingId": "242eb20c-3da8-4b2d-ab77-cbb91e580c5b"
 			}
 		},
 		"metadata": {
@@ -184,33 +184,8 @@
 				},
 				"source": [
 					"# load needed activity table(s) from data lake storage\r\n",
-					"dfActivityRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/activity/'+ date1 + '/*.csv')\r\n",
-					"## load needed roster tables from data lake storage\r\n",
-					"#dfAADGroupRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadGroup/*.csv')\r\n",
-					"#dfAADGroupMembershipRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadGroupMembership/*.csv')\r\n",
-					"#dfAADUserRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadUser/*.csv')\r\n",
-					"#dfAADUserPersonMappingRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadUserPersonMapping/*.csv')\r\n",
-					"#dfCourseRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Course/*.csv')\r\n",
-					"#dfCourseGradeLevelRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/CourseGradeLevel/*.csv')\r\n",
-					"#dfCourseSubjectRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/CourseSubject/*.csv')\r\n",
-					"#dfEnrollmentRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Enrollment/*.csv')\r\n",
-					"#dfOrganizationRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Organization/*.csv')\r\n",
-					"#dfPersonRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Person/*.csv')\r\n",
-					"#dfPersonDemographicRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographic/*.csv')\r\n",
-					"#dfPersonDemographicEthnicityRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicEthnicity/*.csv')\r\n",
-					"#dfPersonDemographicPersonFlagRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicPersonFlag/*.csv')\r\n",
-					"#dfPersonDemographicRaceRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicRace/*.csv')\r\n",
-					"#dfPersonEmailAddressRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonEmailAddress/*.csv')\r\n",
-					"#dfPersonIdentifierRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonIdentifier/*.csv')\r\n",
-					"#dfPersonOrganizationRoleRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonOrganizationRole/*.csv')\r\n",
-					"#dfPersonPhoneNumberRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonPhoneNumber/*.csv')\r\n",
-					"#dfPersonRelationshipRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonRelationship/*.csv')\r\n",
-					"#dfRefDefinitionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/RefDefinition/*.csv')\r\n",
-					"#dfSectionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Section/*.csv')\r\n",
-					"#dfSectionSessionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SectionSession/*.csv')\r\n",
-					"#dfSectionSubjectRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SectionSubject/*.csv')\r\n",
-					"#dfSessionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Session/*.csv')\r\n",
-					"#dfSourceSystemRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
+					"dfSchoolPerformanceRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/activity/'+ date1 + '/*.csv')\r\n",
+					"#rmat('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
 				],
 				"execution_count": 27
 			},
@@ -224,8 +199,21 @@
 					}
 				},
 				"source": [
-					"## 1. Activity table\r\n",
-					"Contains all activities (students and teachers) at a school-system level\r\n",
+					""
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## 1. School Performance table\r\n",
+					"Contains all School Performance for maths and English\r\n",
 					"\r\n",
 					"** Databases and tables used: **\r\n",
 					"\r\n",
@@ -233,12 +221,12 @@
 					" \r\n",
 					"**CSV files used:**\r\n",
 					"\r\n",
-					"- M365/SDS/activity/(whatever the set date is)/*.csv\r\n",
+					"- BCE/BI/SchoolPerformance (whatever the set date is)/*.csv\r\n",
 					"\r\n",
 					"**Database and table created:**\r\n",
 					"\r\n",
-					"1. Spark DB: s2_sds\r\n",
-					"- Table: techactivity\r\n",
+					"1. Spark DB: \r\n",
+					"- Table: SchoolPerformance\r\n",
 					""
 				]
 			},
@@ -293,7 +281,7 @@
 					}
 				},
 				"source": [
-					"%run /Insights_py"
+					"%run /biDimensions_py"
 				],
 				"execution_count": 15
 			},
