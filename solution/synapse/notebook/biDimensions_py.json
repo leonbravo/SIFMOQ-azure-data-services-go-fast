@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c06a8779-7f39-45b1-a43c-0da6cc0db351"
+				"spark.autotune.trackingId": "c2ce00d9-7b03-496a-8b12-09456efb2f8f"
 			}
 		},
 		"metadata": {
@@ -134,7 +134,7 @@
 					"        items = mssparkutils.fs.ls(self.stage1np)\r\n",
 					"        for item in items:\r\n",
 					"            if item.name == \"Locations\":\r\n",
-					"                ingest_snapshot_data( source_system, tablename=Locations, schema, partition_by, primary_key='CampusID', data_format='csv', has_header=True)\r\n",
+					"                ingest_snapshot_data( source_system=self.source_folder, tablename='Locations', schema=self.schemas['Location'], partition_by='SUB_LOCATION', primary_key='CampusID', data_format='csv', has_header=True)\r\n",
 					"            else:\r\n",
 					"                logger.info(\"No defined function for processing this insights data\")\r\n",
 					"        \r\n",
