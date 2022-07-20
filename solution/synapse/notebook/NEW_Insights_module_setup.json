@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f5ac2040-a4c5-426a-9a74-e875551659fe"
+				"spark.autotune.trackingId": "56fc3881-1160-4616-85d6-1ae9294aa194"
 			}
 		},
 		"metadata": {
@@ -255,7 +255,7 @@
 					"    stage2p = oea.stage2p\r\n",
 					"    # 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
 				],
-				"execution_count": 20
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -271,8 +271,8 @@
 					}
 				},
 				"source": [
-					"# load needed activity table(s) from data lake storage\r\n",
-					"dfActivityRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/activity/'+ date1 + '/*.csv')\r\n",
+					"# no required per date1 as \r\n",
+					"#dfActivityRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/activity/'+ date1 + '/*.csv')\r\n",
 					"## load needed roster tables from data lake storage\r\n",
 					"#dfAADGroupRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadGroup/*.csv')\r\n",
 					"#dfAADGroupMembershipRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadGroupMembership/*.csv')\r\n",
@@ -300,7 +300,7 @@
 					"#dfSessionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Session/*.csv')\r\n",
 					"#dfSourceSystemRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
 				],
-				"execution_count": 21
+				"execution_count": 24
 			},
 			{
 				"cell_type": "code",
@@ -338,7 +338,7 @@
 				},
 				"source": [
 					"\r\n",
-					"db_name= 's2_sds'\r\n",
+					"db_name= 'bceoea'\r\n",
 					"pathp = ms_insights.stage2p+'/'+source_folder\r\n",
 					"pathnp = ms_insights.stage2np\r\n",
 					"source_format= 'DELTA'"
@@ -384,7 +384,6 @@
 					"#ms_insights.process_activity()\r\n",
 					"\r\n",
 					"#ms_insights.ingest()\r\n",
-					"\r\n",
 					"\r\n",
 					"oea.insert_watermark( source_folder, \"Activity\", date2)\r\n",
 					"ms_insights.process_insights_activity_stage1_data()\r\n",
