@@ -3403,6 +3403,10 @@
 			"properties": {
 				"nbformat": 4,
 				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "spark3p1sm",
+					"type": "BigDataPoolReference"
+				},
 				"sessionProperties": {
 					"driverMemory": "28g",
 					"driverCores": 4,
@@ -3410,29 +3414,20 @@
 					"executorCores": 4,
 					"numExecutors": 2,
 					"runAsWorkspaceSystemIdentity": false,
-					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
-						"spark.dynamicAllocation.minExecutors": "2",
-						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "b5c1dae4-f0b8-463e-91a4-aa6d14312ae8"
-					}
+					"conf": {}
 				},
 				"metadata": {
-					"saveOutput": true,
-					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
 						"display_name": "python"
 					},
 					"language_info": {
 						"name": "python"
-					},
-					"sessionKeepAliveTimeout": 30
+					}
 				},
 				"cells": [
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"class ContosoSIS(BaseOEAModule):\n",
 							"    def __init__(self, source_folder='contoso_sis', pseudonymize = True):\n",
@@ -3477,6 +3472,7 @@
 							"\n",
 							"contoso_sis = ContosoSIS()"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -4428,8 +4424,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -4800,7 +4795,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "4a672dae-cc48-4103-957b-ffea913da9f4"
+						"spark.autotune.trackingId": "167224a2-aceb-4a28-be3a-8215de33fa69"
 					}
 				},
 				"metadata": {
@@ -4825,8 +4820,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -5030,6 +5024,52 @@
 							}
 						},
 						"source": [
+							"# no required per date1 as \r\n",
+							"#dfActivityRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/activity/'+ date1 + '/*.csv')\r\n",
+							"## load needed roster tables from data lake storage\r\n",
+							"#dfAADGroupRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadGroup/*.csv')\r\n",
+							"#dfAADGroupMembershipRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadGroupMembership/*.csv')\r\n",
+							"#dfAADUserRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadUser/*.csv')\r\n",
+							"#dfAADUserPersonMappingRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadUserPersonMapping/*.csv')\r\n",
+							"#dfCourseRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Course/*.csv')\r\n",
+							"#dfCourseGradeLevelRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/CourseGradeLevel/*.csv')\r\n",
+							"#dfCourseSubjectRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/CourseSubject/*.csv')\r\n",
+							"#dfEnrollmentRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Enrollment/*.csv')\r\n",
+							"#dfOrganizationRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Organization/*.csv')\r\n",
+							"#dfPersonRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Person/*.csv')\r\n",
+							"#dfPersonDemographicRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographic/*.csv')\r\n",
+							"#dfPersonDemographicEthnicityRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicEthnicity/*.csv')\r\n",
+							"#dfPersonDemographicPersonFlagRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicPersonFlag/*.csv')\r\n",
+							"#dfPersonDemographicRaceRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicRace/*.csv')\r\n",
+							"#dfPersonEmailAddressRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonEmailAddress/*.csv')\r\n",
+							"#dfPersonIdentifierRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonIdentifier/*.csv')\r\n",
+							"#dfPersonOrganizationRoleRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonOrganizationRole/*.csv')\r\n",
+							"#dfPersonPhoneNumberRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonPhoneNumber/*.csv')\r\n",
+							"#dfPersonRelationshipRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonRelationship/*.csv')\r\n",
+							"#dfRefDefinitionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/RefDefinition/*.csv')\r\n",
+							"#dfSectionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Section/*.csv')\r\n",
+							"#dfSectionSessionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SectionSession/*.csv')\r\n",
+							"#dfSectionSubjectRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SectionSubject/*.csv')\r\n",
+							"#dfSessionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Session/*.csv')\r\n",
+							"#dfSourceSystemRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
+						],
+						"outputs": [],
+						"execution_count": 25
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
 							"if use_test_env:\r\n",
 							"    stage1np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage1np'\r\n",
 							"    stage2np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2np'\r\n",
@@ -5065,52 +5105,6 @@
 						],
 						"outputs": [],
 						"execution_count": 28
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"# no required per date1 as \r\n",
-							"#dfActivityRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/activity/'+ date1 + '/*.csv')\r\n",
-							"## load needed roster tables from data lake storage\r\n",
-							"#dfAADGroupRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadGroup/*.csv')\r\n",
-							"#dfAADGroupMembershipRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadGroupMembership/*.csv')\r\n",
-							"#dfAADUserRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadUser/*.csv')\r\n",
-							"#dfAADUserPersonMappingRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadUserPersonMapping/*.csv')\r\n",
-							"#dfCourseRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Course/*.csv')\r\n",
-							"#dfCourseGradeLevelRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/CourseGradeLevel/*.csv')\r\n",
-							"#dfCourseSubjectRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/CourseSubject/*.csv')\r\n",
-							"#dfEnrollmentRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Enrollment/*.csv')\r\n",
-							"#dfOrganizationRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Organization/*.csv')\r\n",
-							"#dfPersonRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Person/*.csv')\r\n",
-							"#dfPersonDemographicRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographic/*.csv')\r\n",
-							"#dfPersonDemographicEthnicityRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicEthnicity/*.csv')\r\n",
-							"#dfPersonDemographicPersonFlagRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicPersonFlag/*.csv')\r\n",
-							"#dfPersonDemographicRaceRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicRace/*.csv')\r\n",
-							"#dfPersonEmailAddressRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonEmailAddress/*.csv')\r\n",
-							"#dfPersonIdentifierRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonIdentifier/*.csv')\r\n",
-							"#dfPersonOrganizationRoleRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonOrganizationRole/*.csv')\r\n",
-							"#dfPersonPhoneNumberRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonPhoneNumber/*.csv')\r\n",
-							"#dfPersonRelationshipRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonRelationship/*.csv')\r\n",
-							"#dfRefDefinitionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/RefDefinition/*.csv')\r\n",
-							"#dfSectionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Section/*.csv')\r\n",
-							"#dfSectionSessionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SectionSession/*.csv')\r\n",
-							"#dfSectionSubjectRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SectionSubject/*.csv')\r\n",
-							"#dfSessionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Session/*.csv')\r\n",
-							"#dfSourceSystemRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
-						],
-						"outputs": [],
-						"execution_count": 25
 					},
 					{
 						"cell_type": "code",
@@ -5588,7 +5582,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "3d28300a-cb3c-42ad-93da-a10dd5314dfa"
+						"spark.autotune.trackingId": "24799369-c5c0-4db0-b457-18de05a09b1d"
 					}
 				},
 				"metadata": {
@@ -5613,8 +5607,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -7535,7 +7528,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "45a23a67-8a63-41ed-bf61-768ebc67e7a5"
+						"spark.autotune.trackingId": "a5c5f2e3-5d6c-42a2-9f19-1d0c3c720609"
 					}
 				},
 				"metadata": {
@@ -7560,8 +7553,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -7636,6 +7628,7 @@
 							"from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType, ArrayType\r\n",
 							"from pyspark.sql.functions import *\r\n",
 							"from pyspark.sql.window import Window\r\n",
+							"import pandas as pd\r\n",
 							"from faker import Faker\r\n",
 							"import datetime\r\n",
 							""
@@ -7732,29 +7725,6 @@
 						"execution_count": 29
 					},
 					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"# load needed activity table(s) from data lake storage\r\n",
-							"print (f'{stage1np}{source_folder}')\r\n",
-							"\r\n",
-							"dfSchoolPerformanceRaw = spark.read.format('csv').load(f'{stage1np}{source_folder}' + '/*.csv')\r\n",
-							""
-						],
-						"outputs": [],
-						"execution_count": 30
-					},
-					{
 						"cell_type": "markdown",
 						"metadata": {
 							"nteract": {
@@ -7806,14 +7776,13 @@
 								"transient": {
 									"deleting": false
 								}
-							},
-							"collapsed": false
+							}
 						},
 						"source": [
-							"display(dfSchoolPerformanceRaw.limit(10))"
+							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": 31
+						"execution_count": 34
 					},
 					{
 						"cell_type": "code",
@@ -7829,10 +7798,10 @@
 							}
 						},
 						"source": [
-							"%run /biDimensions_py"
+							"oea.insert_watermark( source_folder, \"Locations\", date2)"
 						],
 						"outputs": [],
-						"execution_count": 33
+						"execution_count": 20
 					},
 					{
 						"cell_type": "code",
@@ -7854,7 +7823,54 @@
 							"schoolperf = biDimensions()"
 						],
 						"outputs": [],
-						"execution_count": 27
+						"execution_count": 35
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# load needed activity table(s) from data lake storage\r\n",
+							"\r\n",
+							"source_folder='/BCE/BI/SchoolClassification/'\r\n",
+							"print (f'{stage1np}{source_folder}')\r\n",
+							"\r\n",
+							"dfSchoolPerformanceRaw = pd.read_excel(f'{stage1np}{source_folder}' + 'SchoolClassification.xlsx')\r\n",
+							"\r\n",
+							"#spark.read.format(\"com.elastacloud.spark.excel\").load(f'{stage1np}{source_folder}' + 'SchoolClassification.xlsx')\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 48
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": false
+						},
+						"source": [
+							"display(dfSchoolPerformanceRaw.limit(10))"
+						],
+						"outputs": [],
+						"execution_count": 40
 					},
 					{
 						"cell_type": "code",
@@ -7871,63 +7887,33 @@
 						},
 						"source": [
 							"\r\n",
-							"db_name= 's2_sds'\r\n",
-							"pathp = ms_insights.stage2p+'/'+source_folder\r\n",
-							"pathnp = ms_insights.stage2np\r\n",
+							"schoolperf.ingest()\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 37
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"db_name= 'bceoea'\r\n",
+							"pathp = schoolperf.stage2p\r\n",
+							"pathnp = schoolperf.stage2np\r\n",
 							"source_format= 'DELTA'"
 						],
 						"outputs": [],
-						"execution_count": 28
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"#oea.insert_watermark( source_folder, \"Activity\", date2)"
-						],
-						"outputs": [],
-						"execution_count": 20
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"# 1) Process the raw activity data (csv format) from stage1 into stage2 data lake \r\n",
-							"# (adds schema details #and writes out in parquet format).\r\n",
-							"# NOTE: Does not write out to delta lake. \r\n",
-							"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
-							"#ms_insights.process_activity()\r\n",
-							"\r\n",
-							"#ms_insights.ingest()\r\n",
-							"\r\n",
-							"\r\n",
-							"oea.insert_watermark( source_folder, \"Activity\", date2)\r\n",
-							"ms_insights.process_insights_activity_stage1_data()\r\n",
-							"oea.insert_watermark( source_folder, \"Roster\", date2)\r\n",
-							"ms_insights.process_roster()"
-						],
-						"outputs": [],
-						"execution_count": 10
+						"execution_count": 38
 					},
 					{
 						"cell_type": "code",
@@ -7964,12 +7950,7 @@
 							}
 						},
 						"source": [
-							"# 1b) Process the raw roster data (csv format) from stage1 into stage2 data lake\r\n",
-							"# (adds schema details and writes out in parquet format).\r\n",
-							"# NOTE: Does not write out to delta lake. \r\n",
-							"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
-							"#ms_insights._process_roster_date_folder(date_folder_path=date2)\r\n",
-							"#oea.create_lake_views( db_name, path, db_name)\r\n",
+							"\r\n",
 							"oea.create_sql_views(pathp, source_format)"
 						],
 						"outputs": [],
@@ -8184,7 +8165,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "33cb1383-f18a-41cd-805f-654738f87c05"
+						"spark.autotune.trackingId": "32498a08-74b6-4d92-9ea1-e4868a71c098"
 					}
 				},
 				"metadata": {
@@ -8300,11 +8281,28 @@
 							"        for item in items:\r\n",
 							"            if item.name == \"Locations\":\r\n",
 							"                ingest_snapshot_data( source_system=self.source_folder, tablename='Locations', schema=self.schemas['Location'], partition_by='SUB_LOCATION', primary_key='CampusID', data_format='csv', has_header=True)\r\n",
+							"            if item.name ==\"SchoolClassification\"\r\n",
+							"                self.ingest_snapshot( dataframe, tablename='SchoolClassification', schema=self.schemas['SchoolClassification'])\r\n",
 							"            else:\r\n",
 							"                logger.info(\"No defined function for processing this insights data\")\r\n",
 							"        \r\n",
 							"        logger.info(\"Finished ingesting insights data from stage 1 to stage 2\")\r\n",
 							"\r\n",
+							"    def ingest_snapshot(inpdataframe, primary_key):\r\n",
+							"        df = inpdataframe.dropDuplicates([primary_key]) \r\n",
+							"        # More info: https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#streaming-deduplication\r\n",
+							"        \r\n",
+							"        df_pseudo, df_lookup = self.pseudonymize(df, schema)\r\n",
+							"\r\n",
+							"        if len(df_pseudo.columns) == 0:\r\n",
+							"            logger.info('No data to be written to stage2p')\r\n",
+							"        else:\r\n",
+							"            df_pseudo.write.save(p_destination_path, format='delta', mode='overwrite', partitionBy=partition_by) \r\n",
+							"\r\n",
+							"        if len(df_lookup.columns) == 0:\r\n",
+							"            logger.info('No data to be written to stage2np')\r\n",
+							"        else:\r\n",
+							"            df_lookup.write.save(np_destination_path, format='delta', mode='overwrite', partitionBy=partition_by) \r\n",
 							""
 						],
 						"outputs": [],
