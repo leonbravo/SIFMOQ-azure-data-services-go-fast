@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "661e8918-20ec-4c18-8489-06a92650303d"
+				"spark.autotune.trackingId": "77f7c2ce-9333-4889-9508-9ef0407d0f85"
 			}
 		},
 		"metadata": {
@@ -42,9 +42,9 @@
 				},
 				"sparkVersion": "3.1",
 				"nodeCount": 3,
-				"cores": 4,
-				"memory": 28,
-				"automaticScaleJobs": false
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": true
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -77,8 +77,7 @@
 				},
 				"source": [
 					"class Insights(BaseOEAModule):\r\n",
-					"    \"\"\"\r\n",
-					"    Provides data processing methods for MS Insights data.\r\n",
+					"    \"\"\"    Provides data processing methods for MS Insights data.\r\n",
 					"    Data is expected to be received via ADS into stage1np/ms_insights\r\n",
 					"    The structure of the folders in stage1np will then be something like:\r\n",
 					"        -> stage1np/ms_insights/activity/2021-06-02\r\n",

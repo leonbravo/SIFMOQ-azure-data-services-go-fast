@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "3172ee40-33f4-4c7b-91d1-0cb8dca00f93"
+				"spark.autotune.trackingId": "f5ac2040-a4c5-426a-9a74-e875551659fe"
 			}
 		},
 		"metadata": {
@@ -101,7 +101,7 @@
 					"storage_account = 'bceaaeoeadevlrs'\r\n",
 					"use_test_env = False"
 				],
-				"execution_count": 1
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -121,12 +121,9 @@
 					"from pyspark.sql.functions import *\r\n",
 					"from pyspark.sql.window import Window\r\n",
 					"from faker import Faker\r\n",
-					"import datetime\r\n",
-					"\r\n",
-					"\r\n",
-					""
+					"import datetime"
 				],
-				"execution_count": 4
+				"execution_count": 15
 			},
 			{
 				"cell_type": "markdown",
@@ -168,7 +165,97 @@
 					"#date2 = \"2022-07-12\"\r\n",
 					"#date1 = date2"
 				],
-				"execution_count": 12
+				"execution_count": 16
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## 1. Activity table\r\n",
+					"Contains all activities (students and teachers) at a school-system level\r\n",
+					"\r\n",
+					"** Databases and tables used: **\r\n",
+					"\r\n",
+					" - None \r\n",
+					" \r\n",
+					"**CSV files used:**\r\n",
+					"\r\n",
+					"- M365/SDS/activity/(whatever the set date is)/*.csv\r\n",
+					"\r\n",
+					"**Database and table created:**\r\n",
+					"\r\n",
+					"1. Spark DB: s2_sds\r\n",
+					"- Table: techactivity\r\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%run /OEA_py"
+				],
+				"execution_count": 17
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%run /Insights_py"
+				],
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"if use_test_env:\r\n",
+					"    stage1np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage1np'\r\n",
+					"    stage2np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2np'\r\n",
+					"    stage2p = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2p'\r\n",
+					"else:\r\n",
+					"    stage1np = oea.stage1np\r\n",
+					"    stage2np = oea.stage2np\r\n",
+					"    stage2p = oea.stage2p\r\n",
+					"    # 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
+				],
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
@@ -213,115 +300,7 @@
 					"#dfSessionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Session/*.csv')\r\n",
 					"#dfSourceSystemRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
 				],
-				"execution_count": 27
-			},
-			{
-				"cell_type": "markdown",
-				"metadata": {
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"## 1. Activity table\r\n",
-					"Contains all activities (students and teachers) at a school-system level\r\n",
-					"\r\n",
-					"** Databases and tables used: **\r\n",
-					"\r\n",
-					" - None \r\n",
-					" \r\n",
-					"**CSV files used:**\r\n",
-					"\r\n",
-					"- M365/SDS/activity/(whatever the set date is)/*.csv\r\n",
-					"\r\n",
-					"**Database and table created:**\r\n",
-					"\r\n",
-					"1. Spark DB: s2_sds\r\n",
-					"- Table: techactivity\r\n",
-					""
-				]
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"collapsed": false
-				},
-				"source": [
-					"display(dfActivityRaw.limit(10))"
-				],
-				"execution_count": 28
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"%run /OEA_py"
-				],
-				"execution_count": 14
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"%run /Insights_py"
-				],
-				"execution_count": 15
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"if use_test_env:\r\n",
-					"    stage1np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage1np'\r\n",
-					"    stage2np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2np'\r\n",
-					"    stage2p = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2p'\r\n",
-					"else:\r\n",
-					"    stage1np = 'abfss://stage1np@' + storage_account + '.dfs.core.windows.net'\r\n",
-					"    stage2np = oea.stage2np\r\n",
-					"    stage2p = 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
-				],
-				"execution_count": 23
+				"execution_count": 21
 			},
 			{
 				"cell_type": "code",
