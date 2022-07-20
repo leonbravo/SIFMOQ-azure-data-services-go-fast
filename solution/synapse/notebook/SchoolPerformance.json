@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "34c20b4e-2fa8-4b59-8bd7-ff7ccb22a3a4"
+				"spark.autotune.trackingId": "64c9d7ec-5406-4fd1-92ae-08a580174dcd"
 			}
 		},
 		"metadata": {
@@ -310,7 +310,7 @@
 				"source": [
 					"%run /biDimensions_py"
 				],
-				"execution_count": 33
+				"execution_count": 34
 			},
 			{
 				"cell_type": "code",
@@ -331,7 +331,7 @@
 					"\r\n",
 					"schoolperf = biDimensions()"
 				],
-				"execution_count": 27
+				"execution_count": 35
 			},
 			{
 				"cell_type": "code",
@@ -348,7 +348,7 @@
 				},
 				"source": [
 					"\r\n",
-					"db_name= 's2_sds'\r\n",
+					"db_name= 'bceoea'\r\n",
 					"pathp = ms_insights.stage2p+'/'+source_folder\r\n",
 					"pathnp = ms_insights.stage2np\r\n",
 					"source_format= 'DELTA'"
@@ -396,10 +396,9 @@
 					"#ms_insights.ingest()\r\n",
 					"\r\n",
 					"\r\n",
-					"oea.insert_watermark( source_folder, \"Activity\", date2)\r\n",
-					"ms_insights.process_insights_activity_stage1_data()\r\n",
-					"oea.insert_watermark( source_folder, \"Roster\", date2)\r\n",
-					"ms_insights.process_roster()"
+					"oea.insert_watermark( source_folder, \"Locations\", date2)\r\n",
+					"schoolperf.insights()\r\n",
+					""
 				],
 				"execution_count": 10
 			},
