@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "18496cd5-e30a-4b64-8990-31b344563ab2"
+				"spark.autotune.trackingId": "85f954b1-d674-4c17-961b-597902cf0812"
 			}
 		},
 		"metadata": {
@@ -102,7 +102,7 @@
 					"use_test_env = False\r\n",
 					"source_folder='/BCE/BI/Dimensions/'"
 				],
-				"execution_count": 16
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -125,7 +125,7 @@
 					"import datetime\r\n",
 					""
 				],
-				"execution_count": 17
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -158,12 +158,18 @@
 					}
 				},
 				"source": [
-					"# load needed activity table(s) from data lake storage\r\n",
+					"# Set the date to be processed\r\n",
+					"today = datetime.datetime.now()\r\n",
+					"date1 = today.strftime('%Y-%m-%d')\r\n",
+					"#date1.cast('string')\r\n",
+					"date2 = date1\r\n",
+					"#date1 = \"2022-02-02\"\r\n",
+					"#date2 = \"2022-07-12\"\r\n",
+					"#date1 = date2\r\n",
 					"\r\n",
-					"dfSchoolPerformanceRaw = spark.read.format('csv').load(f'{stage1np}{source_folder}' + '/*.csv')\r\n",
 					""
 				],
-				"execution_count": 14
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -179,18 +185,38 @@
 					}
 				},
 				"source": [
-					"# Set the date to be processed\r\n",
-					"today = datetime.datetime.now()\r\n",
-					"date1 = today.strftime('%Y-%m-%d')\r\n",
-					"#date1.cast('string')\r\n",
-					"date2 = date1\r\n",
-					"#date1 = \"2022-02-02\"\r\n",
-					"#date2 = \"2022-07-12\"\r\n",
-					"#date1 = date2\r\n",
-					"\r\n",
-					"print (f'{stage1np}{source_folder}')"
+					"if use_test_env:\r\n",
+					"    stage1np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage1np'\r\n",
+					"    stage2np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2np'\r\n",
+					"    stage2p = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2p'\r\n",
+					"else:\r\n",
+					"    stage1np = oea.stage1np\r\n",
+					"    stage2np = oea.stage2np\r\n",
+					"    stage2p = oea.stage3np"
 				],
-				"execution_count": 21
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# load needed activity table(s) from data lake storage\r\n",
+					"print (f'{stage1np}{source_folder}')\r\n",
+					"\r\n",
+					"dfSchoolPerformanceRaw = spark.read.format('csv').load(f'{stage1np}{source_folder}' + '/*.csv')\r\n",
+					""
+				],
+				"execution_count": 14
 			},
 			{
 				"cell_type": "markdown",
@@ -287,31 +313,6 @@
 					"%run /biDimensions_py"
 				],
 				"execution_count": 15
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"if use_test_env:\r\n",
-					"    stage1np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage1np'\r\n",
-					"    stage2np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2np'\r\n",
-					"    stage2p = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2p'\r\n",
-					"else:\r\n",
-					"    stage1np = oea.stage1np\r\n",
-					"    stage2np = oea.stage2np\r\n",
-					"    stage2p = oea.stage3np"
-				],
-				"execution_count": 23
 			},
 			{
 				"cell_type": "code",

@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "56fc3881-1160-4616-85d6-1ae9294aa194"
+				"spark.autotune.trackingId": "41ec24a2-dc30-419c-8b22-83288de6793c"
 			}
 		},
 		"metadata": {
@@ -316,12 +316,13 @@
 					}
 				},
 				"source": [
-					"# 0) Initialize the OEA framework and MSInsights module.\r\n",
-					"#oea = OEA(storage_account)\r\n",
-					"source_folder='SDS/M365'\r\n",
-					"ms_insights = Insights(source_folder)"
+					"\r\n",
+					"db_name= 'bceoea'\r\n",
+					"pathp = ms_insights.stage2p+'/'+source_folder\r\n",
+					"pathnp = ms_insights.stage2np\r\n",
+					"source_format= 'DELTA'"
 				],
-				"execution_count": 27
+				"execution_count": 28
 			},
 			{
 				"cell_type": "code",
@@ -337,13 +338,12 @@
 					}
 				},
 				"source": [
-					"\r\n",
-					"db_name= 'bceoea'\r\n",
-					"pathp = ms_insights.stage2p+'/'+source_folder\r\n",
-					"pathnp = ms_insights.stage2np\r\n",
-					"source_format= 'DELTA'"
+					"# 0) Initialize the OEA framework and MSInsights module.\r\n",
+					"#oea = OEA(storage_account)\r\n",
+					"source_folder='SDS/M365'\r\n",
+					"ms_insights = Insights(source_folder)"
 				],
-				"execution_count": 28
+				"execution_count": 27
 			},
 			{
 				"cell_type": "code",
