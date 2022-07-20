@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "85f954b1-d674-4c17-961b-597902cf0812"
+				"spark.autotune.trackingId": "34c20b4e-2fa8-4b59-8bd7-ff7ccb22a3a4"
 			}
 		},
 		"metadata": {
@@ -125,7 +125,7 @@
 					"import datetime\r\n",
 					""
 				],
-				"execution_count": null
+				"execution_count": 24
 			},
 			{
 				"cell_type": "markdown",
@@ -165,11 +165,27 @@
 					"date2 = date1\r\n",
 					"#date1 = \"2022-02-02\"\r\n",
 					"#date2 = \"2022-07-12\"\r\n",
-					"#date1 = date2\r\n",
-					"\r\n",
-					""
+					"#date1 = date2"
 				],
-				"execution_count": null
+				"execution_count": 25
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%run /OEA_py"
+				],
+				"execution_count": 28
 			},
 			{
 				"cell_type": "code",
@@ -194,7 +210,7 @@
 					"    stage2np = oea.stage2np\r\n",
 					"    stage2p = oea.stage3np"
 				],
-				"execution_count": null
+				"execution_count": 29
 			},
 			{
 				"cell_type": "code",
@@ -216,7 +232,7 @@
 					"dfSchoolPerformanceRaw = spark.read.format('csv').load(f'{stage1np}{source_folder}' + '/*.csv')\r\n",
 					""
 				],
-				"execution_count": 14
+				"execution_count": 30
 			},
 			{
 				"cell_type": "markdown",
@@ -276,25 +292,7 @@
 				"source": [
 					"display(dfSchoolPerformanceRaw.limit(10))"
 				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"%run /OEA_py"
-				],
-				"execution_count": 14
+				"execution_count": 31
 			},
 			{
 				"cell_type": "code",
@@ -312,7 +310,7 @@
 				"source": [
 					"%run /biDimensions_py"
 				],
-				"execution_count": 15
+				"execution_count": 33
 			},
 			{
 				"cell_type": "code",

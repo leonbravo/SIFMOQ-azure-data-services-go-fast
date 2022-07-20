@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "41ec24a2-dc30-419c-8b22-83288de6793c"
+				"spark.autotune.trackingId": "d5fe606e-db7d-4d05-a54f-f0682753c894"
 			}
 		},
 		"metadata": {
@@ -271,6 +271,28 @@
 					}
 				},
 				"source": [
+					"\r\n",
+					"db_name= 'bceoea'\r\n",
+					"pathp = ms_insights.stage2p+'/'+source_folder\r\n",
+					"pathnp = ms_insights.stage2np\r\n",
+					"source_format= 'DELTA'"
+				],
+				"execution_count": 28
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
 					"# no required per date1 as \r\n",
 					"#dfActivityRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/activity/'+ date1 + '/*.csv')\r\n",
 					"## load needed roster tables from data lake storage\r\n",
@@ -300,29 +322,7 @@
 					"#dfSessionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Session/*.csv')\r\n",
 					"#dfSourceSystemRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
 				],
-				"execution_count": 24
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"\r\n",
-					"db_name= 'bceoea'\r\n",
-					"pathp = ms_insights.stage2p+'/'+source_folder\r\n",
-					"pathnp = ms_insights.stage2np\r\n",
-					"source_format= 'DELTA'"
-				],
-				"execution_count": 28
+				"execution_count": 25
 			},
 			{
 				"cell_type": "code",
