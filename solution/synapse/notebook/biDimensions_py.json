@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c2ce00d9-7b03-496a-8b12-09456efb2f8f"
+				"spark.autotune.trackingId": "b71b3197-7739-451e-a5a4-c8fc5b30d7df"
 			}
 		},
 		"metadata": {
@@ -135,11 +135,28 @@
 					"        for item in items:\r\n",
 					"            if item.name == \"Locations\":\r\n",
 					"                ingest_snapshot_data( source_system=self.source_folder, tablename='Locations', schema=self.schemas['Location'], partition_by='SUB_LOCATION', primary_key='CampusID', data_format='csv', has_header=True)\r\n",
+					"            if item.name ==\"SchoolClassification\"\r\n",
+					"                self.ingest_snapshot( dataframe, tablename='SchoolClassification', schema=self.schemas['SchoolClassification'])\r\n",
 					"            else:\r\n",
 					"                logger.info(\"No defined function for processing this insights data\")\r\n",
 					"        \r\n",
 					"        logger.info(\"Finished ingesting insights data from stage 1 to stage 2\")\r\n",
 					"\r\n",
+					"    def ingest_snapshot(inpdataframe, primary_key):\r\n",
+					"        df = inpdataframe.dropDuplicates([primary_key]) \r\n",
+					"        # More info: https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#streaming-deduplication\r\n",
+					"        \r\n",
+					"        df_pseudo, df_lookup = self.pseudonymize(df, schema)\r\n",
+					"\r\n",
+					"        if len(df_pseudo.columns) == 0:\r\n",
+					"            logger.info('No data to be written to stage2p')\r\n",
+					"        else:\r\n",
+					"            df_pseudo.write.save(p_destination_path, format='delta', mode='overwrite', partitionBy=partition_by) \r\n",
+					"\r\n",
+					"        if len(df_lookup.columns) == 0:\r\n",
+					"            logger.info('No data to be written to stage2np')\r\n",
+					"        else:\r\n",
+					"            df_lookup.write.save(np_destination_path, format='delta', mode='overwrite', partitionBy=partition_by) \r\n",
 					""
 				],
 				"execution_count": 1
