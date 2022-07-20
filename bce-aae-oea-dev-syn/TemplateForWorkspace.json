@@ -7528,7 +7528,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "a5c5f2e3-5d6c-42a2-9f19-1d0c3c720609"
+						"spark.autotune.trackingId": "dd3fc963-04b0-44a3-85c5-0846272a86cc"
 					}
 				},
 				"metadata": {
@@ -7609,7 +7609,7 @@
 							"source_folder='/BCE/BI/Dimensions/'"
 						],
 						"outputs": [],
-						"execution_count": 23
+						"execution_count": 1
 					},
 					{
 						"cell_type": "code",
@@ -7634,7 +7634,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 24
+						"execution_count": 2
 					},
 					{
 						"cell_type": "markdown",
@@ -7677,7 +7677,7 @@
 							"#date1 = date2"
 						],
 						"outputs": [],
-						"execution_count": 25
+						"execution_count": 3
 					},
 					{
 						"cell_type": "code",
@@ -7696,7 +7696,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 28
+						"execution_count": 4
 					},
 					{
 						"cell_type": "code",
@@ -7722,7 +7722,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": 29
+						"execution_count": 5
 					},
 					{
 						"cell_type": "markdown",
@@ -7782,7 +7782,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": 34
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
@@ -7801,7 +7801,7 @@
 							"oea.insert_watermark( source_folder, \"Locations\", date2)"
 						],
 						"outputs": [],
-						"execution_count": 20
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -7823,7 +7823,7 @@
 							"schoolperf = biDimensions()"
 						],
 						"outputs": [],
-						"execution_count": 35
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -8165,7 +8165,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "32498a08-74b6-4d92-9ea1-e4868a71c098"
+						"spark.autotune.trackingId": "6a2dbf2c-656a-4d19-b474-1982ea48bea9"
 					}
 				},
 				"metadata": {
@@ -8225,17 +8225,10 @@
 						"source": [
 							"class biDimensions(BaseOEAModule):\r\n",
 							"    \"\"\"\r\n",
-							"    Provides data processing methods for MS Insights data.\r\n",
-							"    Data is expected to be received via ADS into stage1np/ms_insights\r\n",
+							"    Provides data processing methods for biDimensions data.\r\n",
+							"    Data is expected to be received via ADS into stage1np/BCE/BI\r\n",
 							"    The structure of the folders in stage1np will then be something like:\r\n",
-							"        -> stage1np/ms_insights/activity/2021-06-02\r\n",
-							"            -> stage1np/ms_insights/activity/2021-06-02/ApplicationUsage.csv\r\n",
-							"        -> stage1np/ms_insights/roster/2021-06-02T06-05-11/\r\n",
-							"            -> stage1np/ms_insights/roster/2021-06-02T06-05-11/AadUser\r\n",
-							"            -> stage1np/ms_insights/roster/2021-06-02T06-05-11/Person\r\n",
-							"            etc\r\n",
-							"\r\n",
-							"    In stage2, everything is written to stage2np/ms_insights and stage2p/ms_insights\r\n",
+							"    In stage2, everything is written to stage2np/BCE/BI and stage2p/ms_insights\r\n",
 							"    \"\"\"\r\n",
 							"\r\n",
 							"    def __init__(self, source_folder= 'BCE/BI/Dimensions'):\r\n",
@@ -8272,22 +8265,6 @@
 							"                        ['LeuvenCode','String','no-op']\r\n",
 							"                        ]\r\n",
 							"\r\n",
-							"    \r\n",
-							"    def ingest(self):\r\n",
-							"        \"\"\"  Processes insights data from stage1 into stage2 using structured streaming within the defined functions below.\"\"\"\r\n",
-							"        logger.info(\"Processing microsoft_insights data from: \" + self.stage1np)\r\n",
-							"        \r\n",
-							"        items = mssparkutils.fs.ls(self.stage1np)\r\n",
-							"        for item in items:\r\n",
-							"            if item.name == \"Locations\":\r\n",
-							"                ingest_snapshot_data( source_system=self.source_folder, tablename='Locations', schema=self.schemas['Location'], partition_by='SUB_LOCATION', primary_key='CampusID', data_format='csv', has_header=True)\r\n",
-							"            if item.name ==\"SchoolClassification\"\r\n",
-							"                self.ingest_snapshot( dataframe, tablename='SchoolClassification', schema=self.schemas['SchoolClassification'])\r\n",
-							"            else:\r\n",
-							"                logger.info(\"No defined function for processing this insights data\")\r\n",
-							"        \r\n",
-							"        logger.info(\"Finished ingesting insights data from stage 1 to stage 2\")\r\n",
-							"\r\n",
 							"    def ingest_snapshot(inpdataframe, primary_key):\r\n",
 							"        df = inpdataframe.dropDuplicates([primary_key]) \r\n",
 							"        # More info: https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#streaming-deduplication\r\n",
@@ -8303,6 +8280,21 @@
 							"            logger.info('No data to be written to stage2np')\r\n",
 							"        else:\r\n",
 							"            df_lookup.write.save(np_destination_path, format='delta', mode='overwrite', partitionBy=partition_by) \r\n",
+							"\r\n",
+							"    def ingest(self):\r\n",
+							"        \"\"\"  Processes insights data from stage1 into stage2 using structured streaming within the defined functions below.\"\"\"\r\n",
+							"        logger.info(\"Processing microsoft_insights data from: \" + self.stage1np)\r\n",
+							"        \r\n",
+							"        items = mssparkutils.fs.ls(self.stage1np)\r\n",
+							"        for item in items:\r\n",
+							"            if item.name == \"Locations\":\r\n",
+							"                ingest_snapshot_data( source_system=self.source_folder, tablename='Locations', schema=self.schemas['Location'], partition_by='SUB_LOCATION', primary_key='CampusID', data_format='csv', has_header=True)\r\n",
+							"            else:\r\n",
+							"                logger.info(\"No defined function for processing this insights data\")\r\n",
+							"        \r\n",
+							"        logger.info(\"Finished ingesting insights data from stage 1 to stage 2\")\r\n",
+							"\r\n",
+							"\r\n",
 							""
 						],
 						"outputs": [],
