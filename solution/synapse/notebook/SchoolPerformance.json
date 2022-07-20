@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "64c9d7ec-5406-4fd1-92ae-08a580174dcd"
+				"spark.autotune.trackingId": "a5c5f2e3-5d6c-42a2-9f19-1d0c3c720609"
 			}
 		},
 		"metadata": {
@@ -121,6 +121,7 @@
 					"from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType, ArrayType\r\n",
 					"from pyspark.sql.functions import *\r\n",
 					"from pyspark.sql.window import Window\r\n",
+					"import pandas as pd\r\n",
 					"from faker import Faker\r\n",
 					"import datetime\r\n",
 					""
@@ -213,28 +214,6 @@
 				"execution_count": 29
 			},
 			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"# load needed activity table(s) from data lake storage\r\n",
-					"print (f'{stage1np}{source_folder}')\r\n",
-					"\r\n",
-					"dfSchoolPerformanceRaw = spark.read.format('csv').load(f'{stage1np}{source_folder}' + '/*.csv')\r\n",
-					""
-				],
-				"execution_count": 30
-			},
-			{
 				"cell_type": "markdown",
 				"metadata": {
 					"nteract": {
@@ -286,13 +265,12 @@
 						"transient": {
 							"deleting": false
 						}
-					},
-					"collapsed": false
+					}
 				},
 				"source": [
-					"display(dfSchoolPerformanceRaw.limit(10))"
+					"%run /biDimensions_py"
 				],
-				"execution_count": 31
+				"execution_count": 34
 			},
 			{
 				"cell_type": "code",
@@ -308,9 +286,9 @@
 					}
 				},
 				"source": [
-					"%run /biDimensions_py"
+					"oea.insert_watermark( source_folder, \"Locations\", date2)"
 				],
-				"execution_count": 34
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
@@ -347,60 +325,77 @@
 					}
 				},
 				"source": [
+					"# load needed activity table(s) from data lake storage\r\n",
 					"\r\n",
-					"db_name= 'bceoea'\r\n",
-					"pathp = ms_insights.stage2p+'/'+source_folder\r\n",
-					"pathnp = ms_insights.stage2np\r\n",
-					"source_format= 'DELTA'"
-				],
-				"execution_count": 28
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"#oea.insert_watermark( source_folder, \"Activity\", date2)"
-				],
-				"execution_count": 20
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"# 1) Process the raw activity data (csv format) from stage1 into stage2 data lake \r\n",
-					"# (adds schema details #and writes out in parquet format).\r\n",
-					"# NOTE: Does not write out to delta lake. \r\n",
-					"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
-					"#ms_insights.process_activity()\r\n",
+					"source_folder='/BCE/BI/SchoolClassification/'\r\n",
+					"print (f'{stage1np}{source_folder}')\r\n",
 					"\r\n",
-					"#ms_insights.ingest()\r\n",
+					"dfSchoolPerformanceRaw = pd.read_excel(f'{stage1np}{source_folder}' + 'SchoolClassification.xlsx')\r\n",
 					"\r\n",
-					"\r\n",
-					"oea.insert_watermark( source_folder, \"Locations\", date2)\r\n",
-					"schoolperf.insights()\r\n",
+					"#spark.read.format(\"com.elastacloud.spark.excel\").load(f'{stage1np}{source_folder}' + 'SchoolClassification.xlsx')\r\n",
 					""
 				],
-				"execution_count": 10
+				"execution_count": 48
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"display(dfSchoolPerformanceRaw.limit(10))"
+				],
+				"execution_count": 40
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"\r\n",
+					"schoolperf.ingest()\r\n",
+					""
+				],
+				"execution_count": 37
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"db_name= 'bceoea'\r\n",
+					"pathp = schoolperf.stage2p\r\n",
+					"pathnp = schoolperf.stage2np\r\n",
+					"source_format= 'DELTA'"
+				],
+				"execution_count": 38
 			},
 			{
 				"cell_type": "code",
@@ -436,12 +431,7 @@
 					}
 				},
 				"source": [
-					"# 1b) Process the raw roster data (csv format) from stage1 into stage2 data lake\r\n",
-					"# (adds schema details and writes out in parquet format).\r\n",
-					"# NOTE: Does not write out to delta lake. \r\n",
-					"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
-					"#ms_insights._process_roster_date_folder(date_folder_path=date2)\r\n",
-					"#oea.create_lake_views( db_name, path, db_name)\r\n",
+					"\r\n",
 					"oea.create_sql_views(pathp, source_format)"
 				],
 				"execution_count": 32
