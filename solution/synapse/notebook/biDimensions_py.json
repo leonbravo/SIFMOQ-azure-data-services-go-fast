@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "883538e0-795d-4742-914d-bf09945d48b4"
+				"spark.autotune.trackingId": "05110874-6c5d-4ca3-b994-7424f00c58b4"
 			}
 		},
 		"metadata": {
@@ -159,7 +159,8 @@
 					"        ]\r\n",
 					"\r\n",
 					"    def ingest(self, inpdataframe, primary_key):\r\n",
-					"        df = inpdataframe.dropDuplicates([primary_key]) \r\n",
+					"\r\n",
+					"        df = spark.createDataFrame(inpdataframe).dropDuplicates([primary_key]) \r\n",
 					"        # More info: https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#streaming-deduplication\r\n",
 					"        \r\n",
 					"        df_pseudo, df_lookup = self.pseudonymize(df, schema)\r\n",
