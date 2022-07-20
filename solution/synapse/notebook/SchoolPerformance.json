@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "dd3fc963-04b0-44a3-85c5-0846272a86cc"
+				"spark.autotune.trackingId": "f8ce5cca-b2fd-4dfa-b644-4bb51042c1bb"
 			}
 		},
 		"metadata": {
@@ -102,7 +102,7 @@
 					"use_test_env = False\r\n",
 					"source_folder='/BCE/BI/Dimensions/'"
 				],
-				"execution_count": 1
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -186,7 +186,7 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"execution_count": 4
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -211,7 +211,7 @@
 					"    stage2np = oea.stage2np\r\n",
 					"    stage2p = oea.stage3np"
 				],
-				"execution_count": 5
+				"execution_count": 14
 			},
 			{
 				"cell_type": "markdown",
@@ -270,7 +270,7 @@
 				"source": [
 					"%run /biDimensions_py"
 				],
-				"execution_count": 6
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -309,7 +309,7 @@
 					"\r\n",
 					"schoolperf = biDimensions()"
 				],
-				"execution_count": null
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -335,7 +335,7 @@
 					"#spark.read.format(\"com.elastacloud.spark.excel\").load(f'{stage1np}{source_folder}' + 'SchoolClassification.xlsx')\r\n",
 					""
 				],
-				"execution_count": 48
+				"execution_count": 15
 			},
 			{
 				"cell_type": "code",
@@ -352,9 +352,11 @@
 					"collapsed": false
 				},
 				"source": [
-					"display(dfSchoolPerformanceRaw.limit(10))"
+					"dfSchoolPerformanceRaw.info()\r\n",
+					"\r\n",
+					""
 				],
-				"execution_count": 40
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",
