@@ -7528,7 +7528,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "dd3fc963-04b0-44a3-85c5-0846272a86cc"
+						"spark.autotune.trackingId": "df51ae7e-37a6-4e16-83ce-525e611f2806"
 					}
 				},
 				"metadata": {
@@ -7553,7 +7553,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": true
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -7609,7 +7610,7 @@
 							"source_folder='/BCE/BI/Dimensions/'"
 						],
 						"outputs": [],
-						"execution_count": 1
+						"execution_count": 13
 					},
 					{
 						"cell_type": "code",
@@ -7696,7 +7697,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": 8
 					},
 					{
 						"cell_type": "code",
@@ -7722,7 +7723,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 14
 					},
 					{
 						"cell_type": "markdown",
@@ -7782,7 +7783,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": 6
+						"execution_count": 9
 					},
 					{
 						"cell_type": "code",
@@ -7823,7 +7824,7 @@
 							"schoolperf = biDimensions()"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 10
 					},
 					{
 						"cell_type": "code",
@@ -7850,7 +7851,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 48
+						"execution_count": 15
 					},
 					{
 						"cell_type": "code",
@@ -7867,10 +7868,12 @@
 							"collapsed": false
 						},
 						"source": [
-							"display(dfSchoolPerformanceRaw.limit(10))"
+							"dfSchoolPerformanceRaw.info()\r\n",
+							"\r\n",
+							""
 						],
 						"outputs": [],
-						"execution_count": 40
+						"execution_count": 19
 					},
 					{
 						"cell_type": "code",
@@ -8165,7 +8168,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "6a2dbf2c-656a-4d19-b474-1982ea48bea9"
+						"spark.autotune.trackingId": "7c1fa5aa-6084-4c3f-ab75-f45d4026456c"
 					}
 				},
 				"metadata": {
@@ -8233,7 +8236,6 @@
 							"\r\n",
 							"    def __init__(self, source_folder= 'BCE/BI/Dimensions'):\r\n",
 							"        BaseOEAModule.__init__(self, source_folder)\r\n",
-							"\r\n",
 							"      \r\n",
 							"        self.schemas['Location'] = [\r\n",
 							"                        ['ADMIN_LOCATION','String','no-op'],\r\n",
@@ -8265,22 +8267,7 @@
 							"                        ['LeuvenCode','String','no-op']\r\n",
 							"                        ]\r\n",
 							"\r\n",
-							"    def ingest_snapshot(inpdataframe, primary_key):\r\n",
-							"        df = inpdataframe.dropDuplicates([primary_key]) \r\n",
-							"        # More info: https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#streaming-deduplication\r\n",
-							"        \r\n",
-							"        df_pseudo, df_lookup = self.pseudonymize(df, schema)\r\n",
-							"\r\n",
-							"        if len(df_pseudo.columns) == 0:\r\n",
-							"            logger.info('No data to be written to stage2p')\r\n",
-							"        else:\r\n",
-							"            df_pseudo.write.save(p_destination_path, format='delta', mode='overwrite', partitionBy=partition_by) \r\n",
-							"\r\n",
-							"        if len(df_lookup.columns) == 0:\r\n",
-							"            logger.info('No data to be written to stage2np')\r\n",
-							"        else:\r\n",
-							"            df_lookup.write.save(np_destination_path, format='delta', mode='overwrite', partitionBy=partition_by) \r\n",
-							"\r\n",
+							"    \r\n",
 							"    def ingest(self):\r\n",
 							"        \"\"\"  Processes insights data from stage1 into stage2 using structured streaming within the defined functions below.\"\"\"\r\n",
 							"        logger.info(\"Processing microsoft_insights data from: \" + self.stage1np)\r\n",
@@ -8295,6 +8282,46 @@
 							"        logger.info(\"Finished ingesting insights data from stage 1 to stage 2\")\r\n",
 							"\r\n",
 							"\r\n",
+							"class SchoolPerformance(BaseOEAModule):\r\n",
+							"    \"\"\"\r\n",
+							"    Provides data processing methods for biDimensions data.\r\n",
+							"    Data is expected to be received via ADS into stage1np/BCE/BI\r\n",
+							"    The structure of the folders in stage1np will then be something like:\r\n",
+							"    In stage2, everything is written to stage2np/BCE/BI and stage2p/ms_insights\r\n",
+							"    \"\"\"\r\n",
+							"\r\n",
+							"    def __init__(self, source_folder= 'BCE/BI/SchoolClassification'):\r\n",
+							"        BaseOEAModule.__init__(self, source_folder)\r\n",
+							"      \r\n",
+							"        self.schemas['SchoolClassification'] = [\r\n",
+							"                    ['Year' ,   'int64', 'no-op'],\r\n",
+							"                    ['School' ,   'object', 'no-op'],\r\n",
+							"                    ['Attendance Level %' ,   'float64', 'no-op'],\r\n",
+							"                    ['5Y Enrolment %' ,   'float64', 'no-op'],\r\n",
+							"                    ['Similar Student Difference' ,   'float64', 'no-op'],\r\n",
+							"                    ['SRS English A-C % Semester 1' ,   'float64', 'no-op'],\r\n",
+							"                    ['SRS English A-C % Semester 2' ,   'float64', 'no-op'],\r\n",
+							"                    ['SRS Maths A-C % Semester 1' ,   'float64', 'no-op'],\r\n",
+							"                    ['SRS Maths A-C % Semester 2' ,   'float64', 'no-op'],\r\n",
+							"                    ['Overall' ,   'int64  ', 'no-op']                      ,\r\n",
+							"                    ['Change from PY' ,   'float64', 'no-op']\r\n",
+							"        ]\r\n",
+							"\r\n",
+							"    def ingest(self, inpdataframe, primary_key):\r\n",
+							"        df = inpdataframe.dropDuplicates([primary_key]) \r\n",
+							"        # More info: https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#streaming-deduplication\r\n",
+							"        \r\n",
+							"        df_pseudo, df_lookup = self.pseudonymize(df, schema)\r\n",
+							"\r\n",
+							"        if len(df_pseudo.columns) == 0:\r\n",
+							"            logger.info('No data to be written to stage2p')\r\n",
+							"        else:\r\n",
+							"            df_pseudo.write.save(p_destination_path, format='delta', mode='overwrite') \r\n",
+							"\r\n",
+							"        if len(df_lookup.columns) == 0:\r\n",
+							"            logger.info('No data to be written to stage2np')\r\n",
+							"        else:\r\n",
+							"            df_lookup.write.save(np_destination_path, format='delta', mode='overwrite', partitionBy=partition_by) \r\n",
 							""
 						],
 						"outputs": [],
