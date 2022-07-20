@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f8ce5cca-b2fd-4dfa-b644-4bb51042c1bb"
+				"spark.autotune.trackingId": "9ed935f2-9aa5-4016-bca5-293b0aa31012"
 			}
 		},
 		"metadata": {
@@ -102,7 +102,7 @@
 					"use_test_env = False\r\n",
 					"source_folder='/BCE/BI/Dimensions/'"
 				],
-				"execution_count": 13
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
@@ -126,7 +126,7 @@
 					"import datetime\r\n",
 					""
 				],
-				"execution_count": 2
+				"execution_count": 21
 			},
 			{
 				"cell_type": "markdown",
@@ -168,7 +168,7 @@
 					"#date2 = \"2022-07-12\"\r\n",
 					"#date1 = date2"
 				],
-				"execution_count": 3
+				"execution_count": 22
 			},
 			{
 				"cell_type": "code",
@@ -186,7 +186,7 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"execution_count": 8
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -211,7 +211,7 @@
 					"    stage2np = oea.stage2np\r\n",
 					"    stage2p = oea.stage3np"
 				],
-				"execution_count": 14
+				"execution_count": 24
 			},
 			{
 				"cell_type": "markdown",
@@ -270,7 +270,7 @@
 				"source": [
 					"%run /biDimensions_py"
 				],
-				"execution_count": 9
+				"execution_count": 25
 			},
 			{
 				"cell_type": "code",
@@ -307,9 +307,9 @@
 					"# 0) Initialize the OEA framework and MSInsights module.\r\n",
 					"#oea = OEA(storage_account)\r\n",
 					"\r\n",
-					"schoolperf = biDimensions()"
+					"biDim = biDimensions()"
 				],
-				"execution_count": 10
+				"execution_count": 26
 			},
 			{
 				"cell_type": "code",
@@ -335,7 +335,7 @@
 					"#spark.read.format(\"com.elastacloud.spark.excel\").load(f'{stage1np}{source_folder}' + 'SchoolClassification.xlsx')\r\n",
 					""
 				],
-				"execution_count": 15
+				"execution_count": 27
 			},
 			{
 				"cell_type": "code",
@@ -352,11 +352,17 @@
 					"collapsed": false
 				},
 				"source": [
-					"dfSchoolPerformanceRaw.info()\r\n",
+					"#ideally column names need curation otherwise \r\n",
+					"dfSchoolPerformanceRaw['pk'] = dfSchoolPerformanceRaw['School'] + dfSchoolPerformanceRaw['Year'].astype(str)\r\n",
 					"\r\n",
+					"#dfSchoolPerformanceClear= oea.fix_column_names(df=dfSchoolPerformanceRaw)\r\n",
+					"\r\n",
+					"\r\n",
+					"\r\n",
+					"dfschoolclass= SchoolPerformance()\r\n",
 					""
 				],
-				"execution_count": 19
+				"execution_count": 37
 			},
 			{
 				"cell_type": "code",
@@ -372,11 +378,45 @@
 					}
 				},
 				"source": [
-					"\r\n",
-					"schoolperf.ingest()\r\n",
-					""
+					"dfSchoolPerformanceRaw.info"
+				],
+				"execution_count": 34
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"biDim.ingest()"
 				],
 				"execution_count": 37
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"dfschoolclass.ingest(inpdataframe=dfSchoolPerformanceRaw, primary_key='pk')"
+				],
+				"execution_count": 38
 			},
 			{
 				"cell_type": "code",
