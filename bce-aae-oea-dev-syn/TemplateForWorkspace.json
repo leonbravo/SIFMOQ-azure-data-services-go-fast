@@ -4399,7 +4399,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "1d05d70b-bb62-4ca2-81d3-b4b69099e0fa"
+						"spark.autotune.trackingId": "6d23a47b-1f7a-46d5-aed6-65bb4fbb437c"
 					}
 				},
 				"metadata": {
@@ -5583,7 +5583,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "bc78f9a1-b19b-4f9b-814b-f6ff7b3625c0"
+						"spark.autotune.trackingId": "86809324-0d56-4168-911c-7496e1410cce"
 					}
 				},
 				"metadata": {
@@ -7559,7 +7559,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "3dccac79-2a17-4ad4-92a6-4479a076a0c2"
+						"spark.autotune.trackingId": "0a280028-6a1d-4aef-bd11-3be6bb8fa448"
 					}
 				},
 				"metadata": {
@@ -7637,7 +7637,7 @@
 							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 						],
 						"outputs": [],
-						"execution_count": 143
+						"execution_count": 152
 					},
 					{
 						"cell_type": "code",
@@ -7660,7 +7660,7 @@
 							"source_folder='/BCE/BI/Dimensions/'"
 						],
 						"outputs": [],
-						"execution_count": 144
+						"execution_count": 153
 					},
 					{
 						"cell_type": "code",
@@ -7685,7 +7685,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 145
+						"execution_count": 154
 					},
 					{
 						"cell_type": "markdown",
@@ -7728,7 +7728,7 @@
 							"#date1 = date2"
 						],
 						"outputs": [],
-						"execution_count": 146
+						"execution_count": 155
 					},
 					{
 						"cell_type": "code",
@@ -7747,7 +7747,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 147
+						"execution_count": 156
 					},
 					{
 						"cell_type": "code",
@@ -7773,7 +7773,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": 148
+						"execution_count": 157
 					},
 					{
 						"cell_type": "markdown",
@@ -7833,7 +7833,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": 149
+						"execution_count": 158
 					},
 					{
 						"cell_type": "code",
@@ -7855,7 +7855,7 @@
 							"classBiDim = biDimensions()"
 						],
 						"outputs": [],
-						"execution_count": 150
+						"execution_count": 159
 					},
 					{
 						"cell_type": "code",
@@ -7874,7 +7874,7 @@
 							"classBiDim.ingest()"
 						],
 						"outputs": [],
-						"execution_count": 151
+						"execution_count": 160
 					},
 					{
 						"cell_type": "code",
@@ -8330,7 +8330,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "240555d5-6bb0-4b21-acfb-b92b5546213d"
+						"spark.autotune.trackingId": "e69c66a4-dcdc-4ba0-916f-66087a62529e"
 					}
 				},
 				"metadata": {
@@ -8420,8 +8420,8 @@
 							"                        ['School_Code','Integer','no-op'],\r\n",
 							"                        ['Campus_Code','Integer','no-op'],\r\n",
 							"                        ['Campus Name','String','no-op'],\r\n",
-							"                        ['latitude','float','no-op'],\r\n",
-							"                        ['longitude','float','no-op'],\r\n",
+							"                        ['latitude','float64','no-op'],\r\n",
+							"                        ['longitude','float64','no-op'],\r\n",
 							"                        ['LatLong','String','no-op'],\r\n",
 							"                        ['OfficeName','String','no-op'],\r\n",
 							"                        ['Suburb - School','String','no-op'],\r\n",
@@ -8458,15 +8458,15 @@
 							"        self.schemas['SchoolClassification'] = [\r\n",
 							"                    ['Year' ,   'int64', 'no-op'],\r\n",
 							"                    ['School' ,   'object', 'no-op'],\r\n",
-							"                    ['Attendance Level %' ,   'float64', 'no-op'],\r\n",
-							"                    ['5Y Enrolment %' ,   'float64', 'no-op'],\r\n",
-							"                    ['Similar Student Difference' ,   'float64', 'no-op'],\r\n",
-							"                    ['SRS English A-C % Semester 1' ,   'float64', 'no-op'],\r\n",
-							"                    ['SRS English A-C % Semester 2' ,   'float64', 'no-op'],\r\n",
-							"                    ['SRS Maths A-C % Semester 1' ,   'float64', 'no-op'],\r\n",
-							"                    ['SRS Maths A-C % Semester 2' ,   'float64', 'no-op'],\r\n",
+							"                    ['Attendance_Level_%' ,   'float64', 'no-op'],\r\n",
+							"                    ['5Y_Enrolment_%' ,   'float64', 'no-op'],\r\n",
+							"                    ['Similar_Student_Difference' ,   'float64', 'no-op'],\r\n",
+							"                    ['SRS_English_A-C_%_Semester_1' ,   'float64', 'no-op'],\r\n",
+							"                    ['SRS_English_A-C_%_Semester_2' ,   'float64', 'no-op'],\r\n",
+							"                    ['SRS_Maths_A-C_%_Semester_1' ,   'float64', 'no-op'],\r\n",
+							"                    ['SRS_Maths_A-C_%_Semester_2' ,   'float64', 'no-op'],\r\n",
 							"                    ['Overall' ,   'int64  ', 'no-op']                      ,\r\n",
-							"                    ['Change from PY' ,   'float64', 'no-op']\r\n",
+							"                    ['Change_from_PY' ,   'int64', 'no-op']\r\n",
 							"        ]\r\n",
 							"\r\n",
 							"    def ingest(self, inpdataframe, primary_key):\r\n",
