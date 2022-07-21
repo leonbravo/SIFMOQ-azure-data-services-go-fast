@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "183b5fc7-51f4-4322-80f6-0ff26b8ab127"
+				"spark.autotune.trackingId": "cc2b8305-2219-4556-b025-05aa9f4b66f9"
 			}
 		},
 		"metadata": {
@@ -125,10 +125,10 @@
 					"        \r\n",
 					"        items = mssparkutils.fs.ls(self.stage1np)\r\n",
 					"        for item in items:\r\n",
-					"            if item.name == \"Locations\":\r\n",
+					"            if item.name == \"Locations.csv\":\r\n",
 					"                ingest_snapshot_data( source_system=self.source_folder, tablename='Locations', schema=self.schemas['Location'], partition_by='SUB_LOCATION', primary_key='CampusID', data_format='csv', has_header=True)\r\n",
 					"            else:\r\n",
-					"                logger.info(\"No defined function for processing this insights data\")\r\n",
+					"                logger.info(f\"No defined function for processing this insights data\"{item.name})\r\n",
 					"        \r\n",
 					"        logger.info(\"Finished ingesting insights data from stage 1 to stage 2\")\r\n",
 					"\r\n",
