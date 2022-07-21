@@ -5582,7 +5582,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "5b9acab9-a023-42f5-bb94-a1e1ea1d4dc2"
+						"spark.autotune.trackingId": "21183c4a-c35c-4f0c-bd53-47422d3ab3cb"
 					}
 				},
 				"metadata": {
@@ -7555,7 +7555,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "4a22dc53-bd44-4e2b-a906-d13bb463d1ee"
+						"spark.autotune.trackingId": "ffab23d2-ef10-4689-81bf-aa216fb087b1"
 					}
 				},
 				"metadata": {
@@ -7633,7 +7633,7 @@
 							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 						],
 						"outputs": [],
-						"execution_count": 55
+						"execution_count": 100
 					},
 					{
 						"cell_type": "code",
@@ -7656,7 +7656,7 @@
 							"source_folder='/BCE/BI/Dimensions/'"
 						],
 						"outputs": [],
-						"execution_count": 56
+						"execution_count": 101
 					},
 					{
 						"cell_type": "code",
@@ -7681,7 +7681,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 57
+						"execution_count": 102
 					},
 					{
 						"cell_type": "markdown",
@@ -7724,7 +7724,7 @@
 							"#date1 = date2"
 						],
 						"outputs": [],
-						"execution_count": 58
+						"execution_count": 103
 					},
 					{
 						"cell_type": "code",
@@ -7743,7 +7743,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 74
+						"execution_count": 104
 					},
 					{
 						"cell_type": "code",
@@ -7769,7 +7769,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": 75
+						"execution_count": 105
 					},
 					{
 						"cell_type": "markdown",
@@ -7829,7 +7829,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": 76
+						"execution_count": 106
 					},
 					{
 						"cell_type": "code",
@@ -7848,7 +7848,7 @@
 							"oea.insert_watermark( source_folder, \"Locations\", date2)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 107
 					},
 					{
 						"cell_type": "code",
@@ -7867,10 +7867,29 @@
 							"# 0) Initialize the OEA framework and MSInsights module.\r\n",
 							"#oea = OEA(storage_account)\r\n",
 							"\r\n",
-							"biDim = biDimensions()"
+							"classBiDim = biDimensions()"
 						],
 						"outputs": [],
-						"execution_count": 77
+						"execution_count": 132
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"classBiDim.ingest()"
+						],
+						"outputs": [],
+						"execution_count": 133
 					},
 					{
 						"cell_type": "markdown",
@@ -7914,7 +7933,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 78
+						"execution_count": 109
 					},
 					{
 						"cell_type": "code",
@@ -7936,10 +7955,10 @@
 							"\r\n",
 							"#dfSchoolPerformanceClear= oea.fix_column_names(df=dfSchoolPerformanceRaw)\r\n",
 							"\r\n",
-							"schoolclass= SchoolPerformance()"
+							"classSchool= SchoolPerformance()"
 						],
 						"outputs": [],
-						"execution_count": 79
+						"execution_count": 120
 					},
 					{
 						"cell_type": "code",
@@ -7955,10 +7974,11 @@
 							}
 						},
 						"source": [
-							"dfSchoolPerformanceRaw.info"
+							"#For %debug\r\n",
+							"#dfSchoolPerformanceRaw.info"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 121
 					},
 					{
 						"cell_type": "code",
@@ -7974,30 +7994,11 @@
 							}
 						},
 						"source": [
-							"biDim.ingest()"
-						],
-						"outputs": [],
-						"execution_count": null
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"dfschool=spark.createDataFrame(dfSchoolPerformanceRaw)\r\n",
+							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')\r\n",
 							"dfschool=spark.createDataFrame(dfSchoolPerformanceRaw)"
 						],
 						"outputs": [],
-						"execution_count": 80
+						"execution_count": 122
 					},
 					{
 						"cell_type": "code",
@@ -8017,7 +8018,7 @@
 							"display( dfschool.limit(10))"
 						],
 						"outputs": [],
-						"execution_count": 83
+						"execution_count": 114
 					},
 					{
 						"cell_type": "code",
@@ -8033,18 +8034,14 @@
 							}
 						},
 						"source": [
-							"oea.ingest_snapshot_data_frame(inpdataframe=dfschool, source_path= f'{source_folder}{table_name}', primary_key='pk', schema=schoolclass.schemas['SchoolClassification'])"
+							"oea.ingest_snapshot_data_frame(inpdataframe=dfschool, source_path= f'{source_folder}{table_name}', primary_key='pk', schema=classSchool.schemas['SchoolClassification'])"
 						],
 						"outputs": [],
-						"execution_count": 85
+						"execution_count": 115
 					},
 					{
-						"cell_type": "code",
+						"cell_type": "markdown",
 						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
 							"nteract": {
 								"transient": {
 									"deleting": false
@@ -8052,38 +8049,8 @@
 							}
 						},
 						"source": [
-							"schema=schoolclass.schemas['SchoolClassification']\r\n",
-							"df_pseudo, df_lookup = schoolclass.pseudonymize(df=dfschool,schema=schema )"
-						],
-						"outputs": [],
-						"execution_count": 49
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"if len(df_pseudo.columns) == 0:\r\n",
-							"    logger.info('No data to be written to stage2p')\r\n",
-							"else:\r\n",
-							"    df_pseudo.write.save(p_destination_path, format='delta', mode='overwrite') \r\n",
-							"\r\n",
-							"if len(df_lookup.columns) == 0:\r\n",
-							"    logger.info('No data to be written to stage2np')\r\n",
-							"else:\r\n",
-							"    df_lookup.write.save(np_destination_path, format='delta', mode='overwrite') "
-						],
-						"outputs": [],
-						"execution_count": 39
+							"Below this line was meant for testing purposes"
+						]
 					},
 					{
 						"cell_type": "code",
@@ -8100,12 +8067,14 @@
 						},
 						"source": [
 							"db_name= 'bceoea'\r\n",
-							"pathp = schoolperf.stage2p\r\n",
-							"pathnp = schoolperf.stage2np\r\n",
+							"#pathp = classSchool.stage2p\r\n",
+							"#pathnp = classSchool.stage2np\r\n",
+							"pathp  = classBiDim.stage2p\r\n",
+							"pathnp = classBiDim.stage2np\r\n",
 							"source_format= 'DELTA'"
 						],
 						"outputs": [],
-						"execution_count": 38
+						"execution_count": 129
 					},
 					{
 						"cell_type": "code",
@@ -8126,7 +8095,7 @@
 							"#mssparkutils.fs.ls( path )"
 						],
 						"outputs": [],
-						"execution_count": 29
+						"execution_count": 124
 					},
 					{
 						"cell_type": "code",
@@ -8142,30 +8111,11 @@
 							}
 						},
 						"source": [
-							"\r\n",
-							"oea.create_sql_views(pathp, source_format)"
-						],
-						"outputs": [],
-						"execution_count": 32
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
+							"oea.create_sql_views(pathp, source_format)\r\n",
 							"oea.create_sql_views(pathnp, source_format)"
 						],
 						"outputs": [],
-						"execution_count": 30
+						"execution_count": 130
 					}
 				]
 			},
@@ -8357,7 +8307,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "183b5fc7-51f4-4322-80f6-0ff26b8ab127"
+						"spark.autotune.trackingId": "c03832b1-a20f-4174-a14d-c30f91a7ab45"
 					}
 				},
 				"metadata": {
@@ -8462,10 +8412,10 @@
 							"        \r\n",
 							"        items = mssparkutils.fs.ls(self.stage1np)\r\n",
 							"        for item in items:\r\n",
-							"            if item.name == \"Locations\":\r\n",
+							"            if item.name == \"Locations.csv\":\r\n",
 							"                ingest_snapshot_data( source_system=self.source_folder, tablename='Locations', schema=self.schemas['Location'], partition_by='SUB_LOCATION', primary_key='CampusID', data_format='csv', has_header=True)\r\n",
 							"            else:\r\n",
-							"                logger.info(\"No defined function for processing this insights data\")\r\n",
+							"                logger.info(\"No defined function for processing this insights data\"+item.name)\r\n",
 							"        \r\n",
 							"        logger.info(\"Finished ingesting insights data from stage 1 to stage 2\")\r\n",
 							"\r\n",
@@ -8512,7 +8462,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 1
+						"execution_count": 2
 					}
 				]
 			},
