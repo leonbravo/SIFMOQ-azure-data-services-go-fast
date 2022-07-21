@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ac35970e-dc03-4ab0-8915-354ad62db350"
+				"spark.autotune.trackingId": "815eed05-14df-4020-8557-466b9114cef1"
 			}
 		},
 		"metadata": {
@@ -163,7 +163,7 @@
 					"        df = inpdataframe.dropDuplicates([primary_key]) \r\n",
 					"        # More info: https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#streaming-deduplication\r\n",
 					"        \r\n",
-					"        df_pseudo, df_lookup = self.pseudonymize(df, self.schemas['SchoolClassification']) \r\n",
+					"        df_pseudo, df_lookup = self.pseudonymize(df=df, schema=self.schemas['SchoolClassification']) \r\n",
 					"\r\n",
 					"        if len(df_pseudo.columns) == 0:\r\n",
 					"            logger.info('No data to be written to stage2p')\r\n",
@@ -173,7 +173,7 @@
 					"        if len(df_lookup.columns) == 0:\r\n",
 					"            logger.info('No data to be written to stage2np')\r\n",
 					"        else:\r\n",
-					"            df_lookup.write.save(np_destination_path, format='delta', mode='overwrite', partitionBy=partition_by) \r\n",
+					"            df_lookup.write.save(np_destination_path, format='delta', mode='overwrite') \r\n",
 					""
 				],
 				"execution_count": 1

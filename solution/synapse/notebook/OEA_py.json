@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "24799369-c5c0-4db0-b457-18de05a09b1d"
+				"spark.autotune.trackingId": "80670c51-1db8-46ae-8828-b69988c7263e"
 			}
 		},
 		"metadata": {
@@ -353,6 +353,7 @@
 					"        else:\n",
 					"            df_lookup.write.save(np_destination_path, format='delta', mode='overwrite', partitionBy=partition_by) \n",
 					"\n",
+					"#importantly the treatment to the label of the columns in the schema\n",
 					"    def pseudonymize(self, df, schema): #: list[list[str]]):\n",
 					"        \"\"\" Performs pseudonymization of the given dataframe based on the provided schema.\n",
 					"            For example, if the given df is for an entity called person, \n",

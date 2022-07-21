@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f8c5f917-259f-4a2f-87a7-eb89764c0167"
+				"spark.autotune.trackingId": "eb722aaa-b2ef-4676-aa6b-73ece8a34893"
 			}
 		},
 		"metadata": {
@@ -102,7 +102,7 @@
 					"use_test_env = False\r\n",
 					"source_folder='/BCE/BI/Dimensions/'"
 				],
-				"execution_count": 8
+				"execution_count": 24
 			},
 			{
 				"cell_type": "code",
@@ -126,7 +126,7 @@
 					"import datetime\r\n",
 					""
 				],
-				"execution_count": 9
+				"execution_count": 25
 			},
 			{
 				"cell_type": "markdown",
@@ -168,7 +168,7 @@
 					"#date2 = \"2022-07-12\"\r\n",
 					"#date1 = date2"
 				],
-				"execution_count": 10
+				"execution_count": 26
 			},
 			{
 				"cell_type": "code",
@@ -186,7 +186,7 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"execution_count": 11
+				"execution_count": 27
 			},
 			{
 				"cell_type": "code",
@@ -211,7 +211,7 @@
 					"    stage2np = oea.stage2np\r\n",
 					"    stage2p = oea.stage3np"
 				],
-				"execution_count": 12
+				"execution_count": 28
 			},
 			{
 				"cell_type": "markdown",
@@ -270,7 +270,7 @@
 				"source": [
 					"%run /biDimensions_py"
 				],
-				"execution_count": 13
+				"execution_count": 29
 			},
 			{
 				"cell_type": "code",
@@ -288,7 +288,7 @@
 				"source": [
 					"oea.insert_watermark( source_folder, \"Locations\", date2)"
 				],
-				"execution_count": 7
+				"execution_count": 30
 			},
 			{
 				"cell_type": "code",
@@ -309,7 +309,7 @@
 					"\r\n",
 					"biDim = biDimensions()"
 				],
-				"execution_count": 14
+				"execution_count": 31
 			},
 			{
 				"cell_type": "code",
@@ -335,7 +335,7 @@
 					"#spark.read.format(\"com.elastacloud.spark.excel\").load(f'{stage1np}{source_folder}' + 'SchoolClassification.xlsx')\r\n",
 					""
 				],
-				"execution_count": 15
+				"execution_count": 32
 			},
 			{
 				"cell_type": "code",
@@ -362,7 +362,7 @@
 					"schoolclass= SchoolPerformance()\r\n",
 					""
 				],
-				"execution_count": 18
+				"execution_count": 33
 			},
 			{
 				"cell_type": "code",
@@ -414,11 +414,27 @@
 					}
 				},
 				"source": [
-					"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')\r\n",
-					"\r\n",
+					"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
+				],
+				"execution_count": 35
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
 					"dfschool=spark.createDataFrame(dfSchoolPerformanceRaw)"
 				],
-				"execution_count": 22
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -436,7 +452,53 @@
 				"source": [
 					"schoolclass.ingest(inpdataframe=dfschool, primary_key='pk')"
 				],
-				"execution_count": 23
+				"execution_count": 36
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df_pseudo, df_lookup = schoolclass.pseudonymize(df=dfschool, schema=schoolclass.schemas['SchoolClassification'])"
+				],
+				"execution_count": 42
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"\r\n",
+					"\r\n",
+					"if len(df_pseudo.columns) == 0:\r\n",
+					"    logger.info('No data to be written to stage2p')\r\n",
+					"else:\r\n",
+					"    df_pseudo.write.save(p_destination_path, format='delta', mode='overwrite') \r\n",
+					"\r\n",
+					"if len(df_lookup.columns) == 0:\r\n",
+					"    logger.info('No data to be written to stage2np')\r\n",
+					"else:\r\n",
+					"    df_lookup.write.save(np_destination_path, format='delta', mode='overwrite') "
+				],
+				"execution_count": 39
 			},
 			{
 				"cell_type": "code",
