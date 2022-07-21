@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c03832b1-a20f-4174-a14d-c30f91a7ab45"
+				"spark.autotune.trackingId": "8d5d4a53-1aea-4a4a-b945-c300157d65f1"
 			}
 		},
 		"metadata": {
@@ -167,7 +167,7 @@
 					"        items = mssparkutils.fs.ls(self.stage1np)\r\n",
 					"        for item in items:\r\n",
 					"            if item.name == \"SchoolClassification\":\r\n",
-					"                ingest_snapshot_data_frame(inpdataframe, schema=self.schemas['SchoolClassification'], primary_key=primary_key, source_folder= self.source_folder)\r\n",
+					"                oea.ingest_snapshot_data_frame(inpdataframe, schema=self.schemas['SchoolClassification'], primary_key=primary_key, source_folder= self.source_folder)\r\n",
 					"            else:\r\n",
 					"                logger.info(\"No defined function for processing this insights data\")\r\n",
 					"        \r\n",
