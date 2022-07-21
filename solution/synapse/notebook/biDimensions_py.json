@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "05110874-6c5d-4ca3-b994-7424f00c58b4"
+				"spark.autotune.trackingId": "100a77e6-ad8a-40f3-98b1-06198a3e1154"
 			}
 		},
 		"metadata": {
@@ -60,7 +60,7 @@
 					}
 				},
 				"source": [
-					"# Microsoft Insights Class"
+					"# BCE BI Dimensions Class"
 				]
 			},
 			{
@@ -160,7 +160,7 @@
 					"\r\n",
 					"    def ingest(self, inpdataframe, primary_key):\r\n",
 					"\r\n",
-					"        df = spark.createDataFrame(inpdataframe).dropDuplicates([primary_key]) \r\n",
+					"        df = inpdataframe.dropDuplicates([primary_key]) \r\n",
 					"        # More info: https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#streaming-deduplication\r\n",
 					"        \r\n",
 					"        df_pseudo, df_lookup = self.pseudonymize(df, schema)\r\n",
