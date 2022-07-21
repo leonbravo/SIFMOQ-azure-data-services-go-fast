@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "eb722aaa-b2ef-4676-aa6b-73ece8a34893"
+				"spark.autotune.trackingId": "86991a5f-df26-44fa-a163-16afcbd8f5b2"
 			}
 		},
 		"metadata": {
@@ -96,13 +96,31 @@
 					}
 				},
 				"source": [
+					"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
+				],
+				"execution_count": 50
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
 					"# data lake and container information\r\n",
 					"# meant to be parameters\r\n",
 					"storage_account = 'bceaaeoeadevlrs'\r\n",
 					"use_test_env = False\r\n",
 					"source_folder='/BCE/BI/Dimensions/'"
 				],
-				"execution_count": 24
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -126,7 +144,7 @@
 					"import datetime\r\n",
 					""
 				],
-				"execution_count": 25
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -168,7 +186,7 @@
 					"#date2 = \"2022-07-12\"\r\n",
 					"#date1 = date2"
 				],
-				"execution_count": 26
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -186,7 +204,7 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"execution_count": 27
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -211,7 +229,7 @@
 					"    stage2np = oea.stage2np\r\n",
 					"    stage2p = oea.stage3np"
 				],
-				"execution_count": 28
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -270,7 +288,7 @@
 				"source": [
 					"%run /biDimensions_py"
 				],
-				"execution_count": 29
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -288,7 +306,7 @@
 				"source": [
 					"oea.insert_watermark( source_folder, \"Locations\", date2)"
 				],
-				"execution_count": 30
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -309,7 +327,7 @@
 					"\r\n",
 					"biDim = biDimensions()"
 				],
-				"execution_count": 31
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -335,7 +353,7 @@
 					"#spark.read.format(\"com.elastacloud.spark.excel\").load(f'{stage1np}{source_folder}' + 'SchoolClassification.xlsx')\r\n",
 					""
 				],
-				"execution_count": 32
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -362,7 +380,7 @@
 					"schoolclass= SchoolPerformance()\r\n",
 					""
 				],
-				"execution_count": 33
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -380,7 +398,7 @@
 				"source": [
 					"dfSchoolPerformanceRaw.info"
 				],
-				"execution_count": 17
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -398,7 +416,7 @@
 				"source": [
 					"biDim.ingest()"
 				],
-				"execution_count": 37
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -414,9 +432,9 @@
 					}
 				},
 				"source": [
-					"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
+					""
 				],
-				"execution_count": 35
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -450,9 +468,9 @@
 					}
 				},
 				"source": [
-					"schoolclass.ingest(inpdataframe=dfschool, primary_key='pk')"
+					"schoolclass.ingest(inpdataframe=dfschool, source_path= source_folder, primary_key='pk')"
 				],
-				"execution_count": 36
+				"execution_count": 47
 			},
 			{
 				"cell_type": "code",
@@ -468,9 +486,10 @@
 					}
 				},
 				"source": [
-					"df_pseudo, df_lookup = schoolclass.pseudonymize(df=dfschool, schema=schoolclass.schemas['SchoolClassification'])"
+					"schema=schoolclass.schemas['SchoolClassification']\r\n",
+					"df_pseudo, df_lookup = schoolclass.pseudonymize(df=dfschool,schema=schema )"
 				],
-				"execution_count": 42
+				"execution_count": 49
 			},
 			{
 				"cell_type": "code",
