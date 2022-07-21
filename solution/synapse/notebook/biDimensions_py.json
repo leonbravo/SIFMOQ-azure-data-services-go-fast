@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "e4a2d07b-3f58-42ca-8268-d71ce92134ad"
+				"spark.autotune.trackingId": "bc9c1ccd-f018-4c04-bbc6-254e6038c999"
 			}
 		},
 		"metadata": {
@@ -147,15 +147,15 @@
 					"        self.schemas['SchoolClassification'] = [\r\n",
 					"                    ['Year' ,   'int64', 'no-op'],\r\n",
 					"                    ['School' ,   'object', 'no-op'],\r\n",
-					"                    ['Attendance Level %' ,   'float64', 'no-op'],\r\n",
-					"                    ['5Y Enrolment %' ,   'float64', 'no-op'],\r\n",
-					"                    ['Similar Student Difference' ,   'float64', 'no-op'],\r\n",
-					"                    ['SRS English A-C % Semester 1' ,   'float64', 'no-op'],\r\n",
-					"                    ['SRS English A-C % Semester 2' ,   'float64', 'no-op'],\r\n",
-					"                    ['SRS Maths A-C % Semester 1' ,   'float64', 'no-op'],\r\n",
-					"                    ['SRS Maths A-C % Semester 2' ,   'float64', 'no-op'],\r\n",
+					"                    ['Attendance_Level_%' ,   'float64', 'no-op'],\r\n",
+					"                    ['5Y_Enrolment_%' ,   'float64', 'no-op'],\r\n",
+					"                    ['Similar_Student_Difference' ,   'float64', 'no-op'],\r\n",
+					"                    ['SRS_English_A-C_%_Semester_1' ,   'float64', 'no-op'],\r\n",
+					"                    ['SRS_English_A-C_%_Semester_2' ,   'float64', 'no-op'],\r\n",
+					"                    ['SRS_Maths_A-C_%_Semester_1' ,   'float64', 'no-op'],\r\n",
+					"                    ['SRS_Maths_A-C_%_Semester_2' ,   'float64', 'no-op'],\r\n",
 					"                    ['Overall' ,   'int64  ', 'no-op']                      ,\r\n",
-					"                    ['Change from PY' ,   'float64', 'no-op']\r\n",
+					"                    ['Change_from_PY' ,   'int64', 'no-op']\r\n",
 					"        ]\r\n",
 					"\r\n",
 					"    def ingest(self, inpdataframe, primary_key):\r\n",
