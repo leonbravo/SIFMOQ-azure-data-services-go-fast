@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "100a77e6-ad8a-40f3-98b1-06198a3e1154"
+				"spark.autotune.trackingId": "ac35970e-dc03-4ab0-8915-354ad62db350"
 			}
 		},
 		"metadata": {
@@ -163,7 +163,7 @@
 					"        df = inpdataframe.dropDuplicates([primary_key]) \r\n",
 					"        # More info: https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#streaming-deduplication\r\n",
 					"        \r\n",
-					"        df_pseudo, df_lookup = self.pseudonymize(df, schema)\r\n",
+					"        df_pseudo, df_lookup = self.pseudonymize(df, self.schemas['SchoolClassification']) \r\n",
 					"\r\n",
 					"        if len(df_pseudo.columns) == 0:\r\n",
 					"            logger.info('No data to be written to stage2p')\r\n",

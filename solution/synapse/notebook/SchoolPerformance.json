@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "2c466857-eb06-4279-a38b-ca8f55b213ae"
+				"spark.autotune.trackingId": "f8c5f917-259f-4a2f-87a7-eb89764c0167"
 			}
 		},
 		"metadata": {
@@ -418,7 +418,7 @@
 					"\r\n",
 					"dfschool=spark.createDataFrame(dfSchoolPerformanceRaw)"
 				],
-				"execution_count": 21
+				"execution_count": 22
 			},
 			{
 				"cell_type": "code",
@@ -436,7 +436,7 @@
 				"source": [
 					"schoolclass.ingest(inpdataframe=dfschool, primary_key='pk')"
 				],
-				"execution_count": 19
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
