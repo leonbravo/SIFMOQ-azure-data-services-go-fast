@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "4e686964-4205-4147-ab2b-77451630673b"
+				"spark.autotune.trackingId": "f3647844-cba7-410c-8167-990aa776c0ca"
 			}
 		},
 		"metadata": {
@@ -98,7 +98,7 @@
 				"source": [
 					"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 				],
-				"execution_count": 134
+				"execution_count": 143
 			},
 			{
 				"cell_type": "code",
@@ -120,7 +120,7 @@
 					"use_test_env = False\r\n",
 					"source_folder='/BCE/BI/Dimensions/'"
 				],
-				"execution_count": 135
+				"execution_count": 144
 			},
 			{
 				"cell_type": "code",
@@ -144,7 +144,7 @@
 					"import datetime\r\n",
 					""
 				],
-				"execution_count": 136
+				"execution_count": 145
 			},
 			{
 				"cell_type": "markdown",
@@ -186,7 +186,7 @@
 					"#date2 = \"2022-07-12\"\r\n",
 					"#date1 = date2"
 				],
-				"execution_count": 137
+				"execution_count": 146
 			},
 			{
 				"cell_type": "code",
@@ -204,7 +204,7 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"execution_count": 138
+				"execution_count": 147
 			},
 			{
 				"cell_type": "code",
@@ -229,7 +229,7 @@
 					"    stage2np = oea.stage2np\r\n",
 					"    stage2p = oea.stage3np"
 				],
-				"execution_count": 139
+				"execution_count": 148
 			},
 			{
 				"cell_type": "markdown",
@@ -288,25 +288,7 @@
 				"source": [
 					"%run /biDimensions_py"
 				],
-				"execution_count": 140
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"oea.insert_watermark( source_folder, \"Locations\", date2)"
-				],
-				"execution_count": 107
+				"execution_count": 149
 			},
 			{
 				"cell_type": "code",
@@ -327,7 +309,7 @@
 					"\r\n",
 					"classBiDim = biDimensions()"
 				],
-				"execution_count": 141
+				"execution_count": 150
 			},
 			{
 				"cell_type": "code",
@@ -345,7 +327,25 @@
 				"source": [
 					"classBiDim.ingest()"
 				],
-				"execution_count": 142
+				"execution_count": 151
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"oea.insert_watermark( source_folder, \"Locations\", date2)"
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -488,6 +488,24 @@
 					"oea.ingest_snapshot_data_frame(inpdataframe=dfschool, source_path= f'{source_folder}{table_name}', primary_key='pk', schema=classSchool.schemas['SchoolClassification'])"
 				],
 				"execution_count": 115
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"oea.insert_watermark( source_folder, \"SchoolClassification\", date2)"
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",

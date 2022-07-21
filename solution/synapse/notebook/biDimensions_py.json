@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "3533de38-78ab-4a74-8ad4-6060c0a29ea3"
+				"spark.autotune.trackingId": "bee2f335-d221-4ab1-9047-09ba45d74a10"
 			}
 		},
 		"metadata": {
@@ -126,7 +126,7 @@
 					"        items = mssparkutils.fs.ls(self.stage1np)\r\n",
 					"        for item in items:\r\n",
 					"            if item.name == \"Locations.csv\":\r\n",
-					"                oea.ingest_snapshot_data( source_system=self.source_folder, tablename='Locations', schema=self.schemas['Location'], partition_by='SUB_LOCATION', primary_key='CampusID', data_format='csv', has_header=True)\r\n",
+					"                oea.ingest_delta_data( source_system=self.source_folder, tablename='Locations', schema=self.schemas['Location'], partition_by='SUB_LOCATION', primary_key='CampusID', data_format='csv', has_header=True)\r\n",
 					"            else:\r\n",
 					"                logger.info(\"No defined function for processing this insights data\"+item.name)\r\n",
 					"        \r\n",
