@@ -5582,7 +5582,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "d01d8ef9-1cff-46c9-b930-2631ac3842e7"
+						"spark.autotune.trackingId": "5b9acab9-a023-42f5-bb94-a1e1ea1d4dc2"
 					}
 				},
 				"metadata": {
@@ -5590,7 +5590,7 @@
 					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
-						"display_name": "python"
+						"display_name": "Synapse PySpark"
 					},
 					"language_info": {
 						"name": "python"
@@ -5607,8 +5607,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -5791,8 +5790,9 @@
 							"        for folder_name in folders:\n",
 							"            entities = self.get_folders(path + '/' + folder_name)\n",
 							"            msg += f\"{folder_name}: {entities}\\n\"\n",
-							"        print(msg)            \n",
+							"        print(msg)           \n",
 							"\n",
+							"    #fix column names by replacing unwanted characters with _ to satisfy the Parquet naming requirements\n",
 							"    def fix_column_names(self, df):\n",
 							"        \"\"\" Fix column names to satisfy the Parquet naming requirements by substituting invalid characters with an underscore. \"\"\"\n",
 							"        df_with_valid_column_names = df.select([F.col(col).alias(re.sub(\"[ ,;{}()\\n\\t=]+\", \"_\", col)) for col in df.columns])\n",
@@ -5845,7 +5845,8 @@
 							"            query2 = df_lookup.writeStream.format(\"delta\").outputMode(\"append\").trigger(once=True).option(\"checkpointLocation\", source_path + '/_checkpoints/incremental_np').partitionBy(partition_by)\n",
 							"            query2 = query2.start(np_destination_path)\n",
 							"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\n",
-							"            logger.info(query2.lastProgress)        \n",
+							"            logger.info(query2.lastProgress) \n",
+							"\n",
 							"    #updates or append\n",
 							"    def _merge_into_table(self, df, destination_path, checkpoints_path, condition):\n",
 							"        \"\"\" Merges data from the given dataframe into the delta table at the specified destination_path, based on the given condition.\n",
@@ -5927,19 +5928,19 @@
 							"        logger.info(f'Processing snapshot data from: {source_path} and writing out to: {p_destination_path}')\n",
 							"\n",
 							" \n",
-							"        df = df.dropDuplicates([primary_key]) # More info: https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#streaming-deduplication\n",
+							"        df = inpdataframe.dropDuplicates([primary_key]) # More info: https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#streaming-deduplication\n",
 							"        \n",
 							"        df_pseudo, df_lookup = self.pseudonymize(df, schema)\n",
 							"\n",
 							"        if len(df_pseudo.columns) == 0:\n",
 							"            logger.info('No data to be written to stage2p')\n",
 							"        else:\n",
-							"            df_pseudo.write.save(p_destination_path, format='delta', mode='overwrite', partitionBy=partition_by) \n",
+							"            df_pseudo.write.save(p_destination_path, format='delta', mode='overwrite') \n",
 							"\n",
 							"        if len(df_lookup.columns) == 0:\n",
 							"            logger.info('No data to be written to stage2np')\n",
 							"        else:\n",
-							"            df_lookup.write.save(np_destination_path, format='delta', mode='overwrite', partitionBy=partition_by) \n",
+							"            df_lookup.write.save(np_destination_path, format='delta', mode='overwrite') \n",
 							"\n",
 							"#importantly the treatment to the label of the columns in the schema\n",
 							"    def pseudonymize(self, df, schema): #: list[list[str]]):\n",
@@ -7554,7 +7555,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "86991a5f-df26-44fa-a163-16afcbd8f5b2"
+						"spark.autotune.trackingId": "4a22dc53-bd44-4e2b-a906-d13bb463d1ee"
 					}
 				},
 				"metadata": {
@@ -7579,7 +7580,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": true
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -7631,7 +7633,7 @@
 							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 						],
 						"outputs": [],
-						"execution_count": 50
+						"execution_count": 55
 					},
 					{
 						"cell_type": "code",
@@ -7654,7 +7656,7 @@
 							"source_folder='/BCE/BI/Dimensions/'"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 56
 					},
 					{
 						"cell_type": "code",
@@ -7679,7 +7681,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 57
 					},
 					{
 						"cell_type": "markdown",
@@ -7722,7 +7724,7 @@
 							"#date1 = date2"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 58
 					},
 					{
 						"cell_type": "code",
@@ -7741,7 +7743,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 74
 					},
 					{
 						"cell_type": "code",
@@ -7767,7 +7769,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 75
 					},
 					{
 						"cell_type": "markdown",
@@ -7827,7 +7829,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 76
 					},
 					{
 						"cell_type": "code",
@@ -7868,7 +7870,22 @@
 							"biDim = biDimensions()"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 77
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## School Classification\r\n",
+							"\r\n",
+							"reassign some variables and init related classes"
+						]
 					},
 					{
 						"cell_type": "code",
@@ -7889,13 +7906,15 @@
 							"source_folder='/BCE/BI/SchoolClassification/'\r\n",
 							"print (f'{stage1np}{source_folder}')\r\n",
 							"\r\n",
-							"dfSchoolPerformanceRaw = pd.read_excel(f'{stage1np}{source_folder}' + 'SchoolClassification.xlsx')\r\n",
+							"table_name='SchoolClassification'\r\n",
+							"\r\n",
+							"dfSchoolPerformanceRaw = pd.read_excel(f'{stage1np}{source_folder}{table_name}' + '.xlsx')\r\n",
 							"\r\n",
 							"#spark.read.format(\"com.elastacloud.spark.excel\").load(f'{stage1np}{source_folder}' + 'SchoolClassification.xlsx')\r\n",
 							""
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 78
 					},
 					{
 						"cell_type": "code",
@@ -7917,13 +7936,10 @@
 							"\r\n",
 							"#dfSchoolPerformanceClear= oea.fix_column_names(df=dfSchoolPerformanceRaw)\r\n",
 							"\r\n",
-							"\r\n",
-							"\r\n",
-							"schoolclass= SchoolPerformance()\r\n",
-							""
+							"schoolclass= SchoolPerformance()"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 79
 					},
 					{
 						"cell_type": "code",
@@ -7977,29 +7993,31 @@
 							}
 						},
 						"source": [
-							""
-						],
-						"outputs": [],
-						"execution_count": null
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
+							"dfschool=spark.createDataFrame(dfSchoolPerformanceRaw)\r\n",
 							"dfschool=spark.createDataFrame(dfSchoolPerformanceRaw)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 80
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": false
+						},
+						"source": [
+							"display( dfschool.limit(10))"
+						],
+						"outputs": [],
+						"execution_count": 83
 					},
 					{
 						"cell_type": "code",
@@ -8015,10 +8033,10 @@
 							}
 						},
 						"source": [
-							"schoolclass.ingest(inpdataframe=dfschool, source_path= source_folder, primary_key='pk')"
+							"oea.ingest_snapshot_data_frame(inpdataframe=dfschool, source_path= f'{source_folder}{table_name}', primary_key='pk', schema=schoolclass.schemas['SchoolClassification'])"
 						],
 						"outputs": [],
-						"execution_count": 47
+						"execution_count": 85
 					},
 					{
 						"cell_type": "code",
@@ -8054,8 +8072,6 @@
 							}
 						},
 						"source": [
-							"\r\n",
-							"\r\n",
 							"if len(df_pseudo.columns) == 0:\r\n",
 							"    logger.info('No data to be written to stage2p')\r\n",
 							"else:\r\n",
@@ -8341,7 +8357,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "1523b735-411f-41e5-a9c2-b4aa2485d28d"
+						"spark.autotune.trackingId": "183b5fc7-51f4-4322-80f6-0ff26b8ab127"
 					}
 				},
 				"metadata": {
@@ -8366,8 +8382,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -8482,20 +8497,18 @@
 							"\r\n",
 							"    def ingest(self, inpdataframe, primary_key):\r\n",
 							"\r\n",
-							"        df = inpdataframe.dropDuplicates([primary_key]) \r\n",
-							"        # More info: https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#streaming-deduplication\r\n",
 							"        \r\n",
-							"        df_pseudo, df_lookup = self.pseudonymize(df=df, schema=self.schemas['SchoolClassification']) \r\n",
-							"\r\n",
-							"        if len(df_pseudo.columns) == 0:\r\n",
-							"            logger.info('No data to be written to stage2p')\r\n",
-							"        else:\r\n",
-							"            df_pseudo.write.save(p_destination_path, format='delta', mode='overwrite') \r\n",
-							"\r\n",
-							"        if len(df_lookup.columns) == 0:\r\n",
-							"            logger.info('No data to be written to stage2np')\r\n",
-							"        else:\r\n",
-							"            df_lookup.write.save(np_destination_path, format='delta', mode='overwrite') \r\n",
+							"        \"\"\"  Processes insights data from stage1 into stage2 using structured streaming within the defined functions below.\"\"\"\r\n",
+							"        logger.info(\"Processing microsoft_insights data from: \" + self.stage1np)\r\n",
+							"        \r\n",
+							"        items = mssparkutils.fs.ls(self.stage1np)\r\n",
+							"        for item in items:\r\n",
+							"            if item.name == \"SchoolClassification\":\r\n",
+							"                ingest_snapshot_data_frame(inpdataframe, schema=self.schemas['SchoolClassification'], primary_key=primary_key, source_folder= self.source_folder)\r\n",
+							"            else:\r\n",
+							"                logger.info(\"No defined function for processing this insights data\")\r\n",
+							"        \r\n",
+							"        logger.info(\"Finished ingesting insights data from stage 1 to stage 2\")\r\n",
 							""
 						],
 						"outputs": [],
