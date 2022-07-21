@@ -4399,7 +4399,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "77f7c2ce-9333-4889-9508-9ef0407d0f85"
+						"spark.autotune.trackingId": "1d05d70b-bb62-4ca2-81d3-b4b69099e0fa"
 					}
 				},
 				"metadata": {
@@ -4424,7 +4424,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": true
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -5582,7 +5583,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "21183c4a-c35c-4f0c-bd53-47422d3ab3cb"
+						"spark.autotune.trackingId": "bc78f9a1-b19b-4f9b-814b-f6ff7b3625c0"
 					}
 				},
 				"metadata": {
@@ -5607,7 +5608,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": true
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -5891,11 +5893,13 @@
 							"            self._merge_into_table(df_lookup, np_destination_path, source_path + '/_checkpoints/delta_np', \"current.id_pseudonym = updates.id_pseudonym\")\n",
 							"\n",
 							"    #drops duplicated and writes with overwrite option  \n",
-							"    def ingest_snapshot_data(self, source_system, tablename, schema, partition_by, primary_key='id', data_format='csv', has_header=True):\n",
+							"    def ingest_snapshot_data(self, source_system, tablename, schema, partition_by, primary_key='id', data_format='csv', has_header=True, has_snap=True):\n",
 							"        \"\"\" Processes snapshot batch data from stage1 into stage2 \"\"\"\n",
 							"        source_path = f'{self.stage1np}/{source_system}/{tablename}'\n",
-							"        latest_batch = self.get_latest_folder(source_path)\n",
-							"        source_path = source_path + '/' + latest_batch\n",
+							"        if has_snap:\n",
+							"            latest_batch = self.get_latest_folder(source_path)\n",
+							"            source_path = source_path + '/' + latest_batch\n",
+							"        \n",
 							"        p_destination_path = f'{self.stage2p}/{source_system}/{tablename}_pseudo'\n",
 							"        np_destination_path = f'{self.stage2np}/{source_system}/{tablename}_lookup'\n",
 							"        logger.info(f'Processing snapshot data from: {source_path} and writing out to: {p_destination_path}')\n",
@@ -7555,7 +7559,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "4e686964-4205-4147-ab2b-77451630673b"
+						"spark.autotune.trackingId": "3dccac79-2a17-4ad4-92a6-4479a076a0c2"
 					}
 				},
 				"metadata": {
@@ -7580,7 +7584,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": true
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -7632,7 +7637,7 @@
 							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 						],
 						"outputs": [],
-						"execution_count": 134
+						"execution_count": 143
 					},
 					{
 						"cell_type": "code",
@@ -7655,7 +7660,7 @@
 							"source_folder='/BCE/BI/Dimensions/'"
 						],
 						"outputs": [],
-						"execution_count": 135
+						"execution_count": 144
 					},
 					{
 						"cell_type": "code",
@@ -7680,7 +7685,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 136
+						"execution_count": 145
 					},
 					{
 						"cell_type": "markdown",
@@ -7723,7 +7728,7 @@
 							"#date1 = date2"
 						],
 						"outputs": [],
-						"execution_count": 137
+						"execution_count": 146
 					},
 					{
 						"cell_type": "code",
@@ -7742,7 +7747,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 138
+						"execution_count": 147
 					},
 					{
 						"cell_type": "code",
@@ -7768,7 +7773,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": 139
+						"execution_count": 148
 					},
 					{
 						"cell_type": "markdown",
@@ -7828,26 +7833,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": 140
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"oea.insert_watermark( source_folder, \"Locations\", date2)"
-						],
-						"outputs": [],
-						"execution_count": 107
+						"execution_count": 149
 					},
 					{
 						"cell_type": "code",
@@ -7869,7 +7855,7 @@
 							"classBiDim = biDimensions()"
 						],
 						"outputs": [],
-						"execution_count": 141
+						"execution_count": 150
 					},
 					{
 						"cell_type": "code",
@@ -7888,7 +7874,26 @@
 							"classBiDim.ingest()"
 						],
 						"outputs": [],
-						"execution_count": 142
+						"execution_count": 151
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"oea.insert_watermark( source_folder, \"Locations\", date2)"
+						],
+						"outputs": [],
+						"execution_count": null
 					},
 					{
 						"cell_type": "markdown",
@@ -8037,6 +8042,25 @@
 						],
 						"outputs": [],
 						"execution_count": 115
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"oea.insert_watermark( source_folder, \"SchoolClassification\", date2)"
+						],
+						"outputs": [],
+						"execution_count": null
 					},
 					{
 						"cell_type": "markdown",
@@ -8306,7 +8330,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "64923531-dc04-447f-93bb-f1ec64c805c4"
+						"spark.autotune.trackingId": "240555d5-6bb0-4b21-acfb-b92b5546213d"
 					}
 				},
 				"metadata": {
@@ -8413,7 +8437,7 @@
 							"        items = mssparkutils.fs.ls(self.stage1np)\r\n",
 							"        for item in items:\r\n",
 							"            if item.name == \"Locations.csv\":\r\n",
-							"                oea.ingest_snapshot_data( source_system=self.source_folder, tablename='Locations', schema=self.schemas['Location'], partition_by='SUB_LOCATION', primary_key='CampusID', data_format='csv', has_header=True)\r\n",
+							"                oea.ingest_delta_data( source_system=self.source_folder, tablename='Locations', schema=self.schemas['Location'], partition_by='SUB_LOCATION', primary_key='CampusID', data_format='csv', has_header=True)\r\n",
 							"            else:\r\n",
 							"                logger.info(\"No defined function for processing this insights data\"+item.name)\r\n",
 							"        \r\n",
