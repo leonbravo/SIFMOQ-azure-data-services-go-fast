@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "5788b977-0113-40ed-abeb-3660536aed16"
+				"spark.autotune.trackingId": "7e032a0e-7ce2-4e41-9b69-577f21648835"
 			}
 		},
 		"metadata": {
@@ -327,7 +327,25 @@
 					"\r\n",
 					"classBiDim = biDimensions()"
 				],
-				"execution_count": 128
+				"execution_count": 132
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"classBiDim.ingest()"
+				],
+				"execution_count": 133
 			},
 			{
 				"cell_type": "markdown",
@@ -414,24 +432,6 @@
 					"#dfSchoolPerformanceRaw.info"
 				],
 				"execution_count": 121
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"classBiDim.ingest()"
-				],
-				"execution_count": 131
 			},
 			{
 				"cell_type": "code",
