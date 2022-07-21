@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "21183c4a-c35c-4f0c-bd53-47422d3ab3cb"
+				"spark.autotune.trackingId": "c56bd187-17c4-4a53-9500-48599dae1e7a"
 			}
 		},
 		"metadata": {
@@ -328,11 +328,13 @@
 					"            self._merge_into_table(df_lookup, np_destination_path, source_path + '/_checkpoints/delta_np', \"current.id_pseudonym = updates.id_pseudonym\")\n",
 					"\n",
 					"    #drops duplicated and writes with overwrite option  \n",
-					"    def ingest_snapshot_data(self, source_system, tablename, schema, partition_by, primary_key='id', data_format='csv', has_header=True):\n",
+					"    def ingest_snapshot_data(self, source_system, tablename, schema, partition_by, primary_key='id', data_format='csv', has_header=True, has_snap=True):\n",
 					"        \"\"\" Processes snapshot batch data from stage1 into stage2 \"\"\"\n",
 					"        source_path = f'{self.stage1np}/{source_system}/{tablename}'\n",
-					"        latest_batch = self.get_latest_folder(source_path)\n",
-					"        source_path = source_path + '/' + latest_batch\n",
+					"        if has_snap:\n",
+					"            latest_batch = self.get_latest_folder(source_path)\n",
+					"            source_path = source_path + '/' + latest_batch\n",
+					"        \n",
 					"        p_destination_path = f'{self.stage2p}/{source_system}/{tablename}_pseudo'\n",
 					"        np_destination_path = f'{self.stage2np}/{source_system}/{tablename}_lookup'\n",
 					"        logger.info(f'Processing snapshot data from: {source_path} and writing out to: {p_destination_path}')\n",
