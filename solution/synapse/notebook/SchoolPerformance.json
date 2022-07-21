@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f3647844-cba7-410c-8167-990aa776c0ca"
+				"spark.autotune.trackingId": "9c7052f8-83b8-4cae-a297-93a178c03938"
 			}
 		},
 		"metadata": {
@@ -98,7 +98,7 @@
 				"source": [
 					"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 				],
-				"execution_count": 143
+				"execution_count": 152
 			},
 			{
 				"cell_type": "code",
@@ -120,7 +120,7 @@
 					"use_test_env = False\r\n",
 					"source_folder='/BCE/BI/Dimensions/'"
 				],
-				"execution_count": 144
+				"execution_count": 153
 			},
 			{
 				"cell_type": "code",
@@ -144,7 +144,7 @@
 					"import datetime\r\n",
 					""
 				],
-				"execution_count": 145
+				"execution_count": 154
 			},
 			{
 				"cell_type": "markdown",
@@ -186,7 +186,7 @@
 					"#date2 = \"2022-07-12\"\r\n",
 					"#date1 = date2"
 				],
-				"execution_count": 146
+				"execution_count": 155
 			},
 			{
 				"cell_type": "code",
@@ -204,7 +204,7 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"execution_count": 147
+				"execution_count": 156
 			},
 			{
 				"cell_type": "code",
@@ -229,7 +229,7 @@
 					"    stage2np = oea.stage2np\r\n",
 					"    stage2p = oea.stage3np"
 				],
-				"execution_count": 148
+				"execution_count": 157
 			},
 			{
 				"cell_type": "markdown",
@@ -288,7 +288,7 @@
 				"source": [
 					"%run /biDimensions_py"
 				],
-				"execution_count": 149
+				"execution_count": 158
 			},
 			{
 				"cell_type": "code",
@@ -309,7 +309,7 @@
 					"\r\n",
 					"classBiDim = biDimensions()"
 				],
-				"execution_count": 150
+				"execution_count": 159
 			},
 			{
 				"cell_type": "code",
@@ -327,7 +327,7 @@
 				"source": [
 					"classBiDim.ingest()"
 				],
-				"execution_count": 151
+				"execution_count": 160
 			},
 			{
 				"cell_type": "code",
