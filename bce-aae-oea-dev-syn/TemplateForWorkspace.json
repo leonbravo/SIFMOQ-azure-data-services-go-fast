@@ -4795,7 +4795,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "1d90691e-6ffa-4f8f-b8db-4766b13cf532"
+						"spark.autotune.trackingId": "167224a2-aceb-4a28-be3a-8215de33fa69"
 					}
 				},
 				"metadata": {
@@ -4820,8 +4820,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -7529,7 +7528,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "f85faa3e-96be-4d67-a4b6-38616621fe22"
+						"spark.autotune.trackingId": "f8c5f917-259f-4a2f-87a7-eb89764c0167"
 					}
 				},
 				"metadata": {
@@ -7554,8 +7553,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -7939,7 +7937,7 @@
 							"dfschool=spark.createDataFrame(dfSchoolPerformanceRaw)"
 						],
 						"outputs": [],
-						"execution_count": 21
+						"execution_count": 22
 					},
 					{
 						"cell_type": "code",
@@ -7958,7 +7956,7 @@
 							"schoolclass.ingest(inpdataframe=dfschool, primary_key='pk')"
 						],
 						"outputs": [],
-						"execution_count": 19
+						"execution_count": 23
 					},
 					{
 						"cell_type": "code",
@@ -8232,7 +8230,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "1d55d9e7-50b3-4acd-ba61-a8325b28471d"
+						"spark.autotune.trackingId": "704a1f93-56b0-4e0f-8451-be5632a4e43d"
 					}
 				},
 				"metadata": {
@@ -8376,7 +8374,7 @@
 							"        df = inpdataframe.dropDuplicates([primary_key]) \r\n",
 							"        # More info: https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#streaming-deduplication\r\n",
 							"        \r\n",
-							"        df_pseudo, df_lookup = self.pseudonymize(df, schema)\r\n",
+							"        df_pseudo, df_lookup = self.pseudonymize(df, self.schemas['SchoolClassification']) \r\n",
 							"\r\n",
 							"        if len(df_pseudo.columns) == 0:\r\n",
 							"            logger.info('No data to be written to stage2p')\r\n",
