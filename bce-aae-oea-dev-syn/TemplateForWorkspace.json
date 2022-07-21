@@ -4795,7 +4795,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "48050519-8209-49d5-beba-20330de9f196"
+						"spark.autotune.trackingId": "167224a2-aceb-4a28-be3a-8215de33fa69"
 					}
 				},
 				"metadata": {
@@ -4820,8 +4820,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -5583,7 +5582,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "b4f89992-dffa-4494-a9e3-c7faa22179f6"
+						"spark.autotune.trackingId": "d01d8ef9-1cff-46c9-b930-2631ac3842e7"
 					}
 				},
 				"metadata": {
@@ -5904,6 +5903,30 @@
 							"        else: header_flag = 'false'\n",
 							"        spark_schema = self.to_spark_schema(schema)\n",
 							"        df = spark.read.load(source_path, format=data_format, header=header_flag, schema=spark_schema)\n",
+							"        df = df.dropDuplicates([primary_key]) # More info: https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#streaming-deduplication\n",
+							"        \n",
+							"        df_pseudo, df_lookup = self.pseudonymize(df, schema)\n",
+							"\n",
+							"        if len(df_pseudo.columns) == 0:\n",
+							"            logger.info('No data to be written to stage2p')\n",
+							"        else:\n",
+							"            df_pseudo.write.save(p_destination_path, format='delta', mode='overwrite', partitionBy=partition_by) \n",
+							"\n",
+							"        if len(df_lookup.columns) == 0:\n",
+							"            logger.info('No data to be written to stage2np')\n",
+							"        else:\n",
+							"            df_lookup.write.save(np_destination_path, format='delta', mode='overwrite', partitionBy=partition_by) \n",
+							"\n",
+							"\n",
+							"\n",
+							"    def ingest_snapshot_data_frame(self, inpdataframe, source_path, schema,  primary_key='id'):\n",
+							"        \"\"\" Processes snapshot batch data from stage1 into stage2 \"\"\"\n",
+							"\n",
+							"        p_destination_path = f'{self.stage2p}/{source_path}_pseudo'\n",
+							"        np_destination_path = f'{self.stage2np}/{source_path}_lookup'\n",
+							"        logger.info(f'Processing snapshot data from: {source_path} and writing out to: {p_destination_path}')\n",
+							"\n",
+							" \n",
 							"        df = df.dropDuplicates([primary_key]) # More info: https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#streaming-deduplication\n",
 							"        \n",
 							"        df_pseudo, df_lookup = self.pseudonymize(df, schema)\n",
@@ -7531,7 +7554,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "08694832-790a-4ff9-a2cd-1dfb59b09daf"
+						"spark.autotune.trackingId": "86991a5f-df26-44fa-a163-16afcbd8f5b2"
 					}
 				},
 				"metadata": {
@@ -7556,8 +7579,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -7606,6 +7628,25 @@
 							}
 						},
 						"source": [
+							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
+						],
+						"outputs": [],
+						"execution_count": 50
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
 							"# data lake and container information\r\n",
 							"# meant to be parameters\r\n",
 							"storage_account = 'bceaaeoeadevlrs'\r\n",
@@ -7613,7 +7654,7 @@
 							"source_folder='/BCE/BI/Dimensions/'"
 						],
 						"outputs": [],
-						"execution_count": 24
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -7638,7 +7679,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 25
+						"execution_count": null
 					},
 					{
 						"cell_type": "markdown",
@@ -7681,7 +7722,7 @@
 							"#date1 = date2"
 						],
 						"outputs": [],
-						"execution_count": 26
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -7700,7 +7741,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 27
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -7726,7 +7767,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": 28
+						"execution_count": null
 					},
 					{
 						"cell_type": "markdown",
@@ -7786,7 +7827,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": 29
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -7805,7 +7846,7 @@
 							"oea.insert_watermark( source_folder, \"Locations\", date2)"
 						],
 						"outputs": [],
-						"execution_count": 30
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -7827,7 +7868,7 @@
 							"biDim = biDimensions()"
 						],
 						"outputs": [],
-						"execution_count": 31
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -7854,7 +7895,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 32
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -7882,7 +7923,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 33
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -7901,7 +7942,7 @@
 							"dfSchoolPerformanceRaw.info"
 						],
 						"outputs": [],
-						"execution_count": 17
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -7920,7 +7961,7 @@
 							"biDim.ingest()"
 						],
 						"outputs": [],
-						"execution_count": 37
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -7936,10 +7977,10 @@
 							}
 						},
 						"source": [
-							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
+							""
 						],
 						"outputs": [],
-						"execution_count": 35
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -7974,10 +8015,10 @@
 							}
 						},
 						"source": [
-							"schoolclass.ingest(inpdataframe=dfschool, primary_key='pk')"
+							"schoolclass.ingest(inpdataframe=dfschool, source_path= source_folder, primary_key='pk')"
 						],
 						"outputs": [],
-						"execution_count": 36
+						"execution_count": 47
 					},
 					{
 						"cell_type": "code",
@@ -7993,10 +8034,11 @@
 							}
 						},
 						"source": [
-							"df_pseudo, df_lookup = schoolclass.pseudonymize(df=dfschool, schema=schoolclass.schemas['SchoolClassification'])"
+							"schema=schoolclass.schemas['SchoolClassification']\r\n",
+							"df_pseudo, df_lookup = schoolclass.pseudonymize(df=dfschool,schema=schema )"
 						],
 						"outputs": [],
-						"execution_count": 42
+						"execution_count": 49
 					},
 					{
 						"cell_type": "code",
@@ -8299,7 +8341,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "52b51714-2dcf-4a84-bbf7-c29e71e4d1f9"
+						"spark.autotune.trackingId": "1523b735-411f-41e5-a9c2-b4aa2485d28d"
 					}
 				},
 				"metadata": {
