@@ -1,6 +1,9 @@
 {
 	"name": "OEA_connector",
 	"properties": {
+		"folder": {
+			"name": "examples"
+		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
@@ -18,14 +21,11 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a83089ad-2ecb-4ff0-b93d-774ec1090568"
+				"spark.autotune.trackingId": "532a9c72-d161-423a-8e50-02a3beda9b6f"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
@@ -45,9 +45,9 @@
 				},
 				"sparkVersion": "3.1",
 				"nodeCount": 3,
-				"cores": 4,
-				"memory": 28,
-				"extraHeader": null
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": true
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -66,8 +66,7 @@
 					"This notebook provides a way for invoking methods on the OEA framework or supporting modules from a pipeline.\n",
 					"\n",
 					"When setting up a new module, be sure to include a new cell below that imports that module, so that its methods can be invoked by pipelines."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -93,7 +92,6 @@
 					"method_name = ''\r\n",
 					"kwargs = '{}'"
 				],
-				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -113,7 +111,6 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -133,7 +130,6 @@
 				"source": [
 					"%run /ContosoSIS_py"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -156,7 +152,6 @@
 					"result = m(**kwargs)\r\n",
 					"mssparkutils.notebook.exit(result)"
 				],
-				"attachments": null,
 				"execution_count": null
 			}
 		]

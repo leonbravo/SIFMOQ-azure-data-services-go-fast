@@ -1,6 +1,9 @@
 {
 	"name": "OEA_connector1",
 	"properties": {
+		"folder": {
+			"name": "examples"
+		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
@@ -12,16 +15,40 @@
 			"driverCores": 4,
 			"executorMemory": "28g",
 			"executorCores": 4,
-			"numExecutors": 2
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "30f9c5e4-7e9a-49e1-829a-46fe2fa1e698"
+			}
 		},
 		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
 				"display_name": "Synapse PySpark"
 			},
 			"language_info": {
 				"name": "python"
-			}
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
+				"name": "spark3p1sm",
+				"type": "Spark",
+				"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 3,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": true
+			},
+			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
 			{
@@ -38,8 +65,7 @@
 					"This notebook provides a way for invoking methods on the OEA framework or supporting modules from a pipeline.\n",
 					"\n",
 					"When setting up a new module, be sure to include a new cell below that imports that module, so that its methods can be invoked by pipelines."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -65,7 +91,6 @@
 					"method_name = ''\r\n",
 					"kwargs = '{}'"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -85,7 +110,6 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -105,7 +129,6 @@
 				"source": [
 					"%run /ContosoSIS_py"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -127,7 +150,6 @@
 					"m = getattr(obj, method_name)\r\n",
 					"m(**kwargs)"
 				],
-				"attachments": null,
 				"execution_count": null
 			}
 		]
