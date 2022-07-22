@@ -3084,7 +3084,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "cfa5c373-0361-47c1-bb5d-bddf8ab70597"
+						"spark.autotune.trackingId": "0606871a-187f-497d-b35c-f1e99d9de4ed"
 					}
 				},
 				"metadata": {
@@ -4284,7 +4284,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "ed53cc2c-1daa-475a-badf-edefba242d72"
+						"spark.autotune.trackingId": "9cb9732c-451a-481a-8eff-84641858c6bd"
 					}
 				},
 				"metadata": {
@@ -4417,7 +4417,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "6c6dd8ba-5843-479f-bbc5-e99ea2e06b4e"
+						"spark.autotune.trackingId": "da7d65ec-4258-4111-8b10-1acaecb6b3b7"
 					}
 				},
 				"metadata": {
@@ -5270,6 +5270,9 @@
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"folder": {
+					"name": "examples"
+				},
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
@@ -5287,14 +5290,11 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "a83089ad-2ecb-4ff0-b93d-774ec1090568"
+						"spark.autotune.trackingId": "ca35dd9c-8b87-4953-b707-45771f75f611"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
-					"synapse_widget": {
-						"version": "0.1"
-					},
 					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
@@ -5314,9 +5314,9 @@
 						},
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
-						"cores": 4,
-						"memory": 28,
-						"extraHeader": null
+						"cores": 8,
+						"memory": 56,
+						"automaticScaleJobs": true
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -5335,8 +5335,7 @@
 							"This notebook provides a way for invoking methods on the OEA framework or supporting modules from a pipeline.\n",
 							"\n",
 							"When setting up a new module, be sure to include a new cell below that imports that module, so that its methods can be invoked by pipelines."
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -5362,7 +5361,6 @@
 							"method_name = ''\r\n",
 							"kwargs = '{}'"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					},
@@ -5383,7 +5381,6 @@
 						"source": [
 							"%run /OEA_py"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -5404,7 +5401,6 @@
 						"source": [
 							"%run /ContosoSIS_py"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -5428,7 +5424,6 @@
 							"result = m(**kwargs)\r\n",
 							"mssparkutils.notebook.exit(result)"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -5441,6 +5436,9 @@
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"folder": {
+					"name": "examples"
+				},
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
@@ -5453,16 +5451,39 @@
 					"executorMemory": "28g",
 					"executorCores": 4,
 					"numExecutors": 2,
-					"conf": {}
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "50c06b5e-00bc-4cbb-84e6-c6287d718517"
+					}
 				},
 				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
 						"display_name": "Synapse PySpark"
 					},
 					"language_info": {
 						"name": "python"
-					}
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
+						"name": "spark3p1sm",
+						"type": "Spark",
+						"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 8,
+						"memory": 56,
+						"automaticScaleJobs": true
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -5479,8 +5500,7 @@
 							"This notebook provides a way for invoking methods on the OEA framework or supporting modules from a pipeline.\n",
 							"\n",
 							"When setting up a new module, be sure to include a new cell below that imports that module, so that its methods can be invoked by pipelines."
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -5506,7 +5526,6 @@
 							"method_name = ''\r\n",
 							"kwargs = '{}'"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -5527,7 +5546,6 @@
 						"source": [
 							"%run /OEA_py"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -5548,7 +5566,6 @@
 						"source": [
 							"%run /ContosoSIS_py"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -5571,7 +5588,6 @@
 							"m = getattr(obj, method_name)\r\n",
 							"m(**kwargs)"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -6705,7 +6721,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "be663ae7-9dbf-4788-be08-e083fa066fa8"
+						"spark.autotune.trackingId": "3f6d7ef0-17cb-4ec1-84ba-7115f1f18a4f"
 					}
 				},
 				"metadata": {
