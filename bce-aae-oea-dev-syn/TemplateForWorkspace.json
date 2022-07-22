@@ -3084,7 +3084,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "ae4a5a35-e27f-442d-bcd6-1536d9fd9925"
+						"spark.autotune.trackingId": "cfa5c373-0361-47c1-bb5d-bddf8ab70597"
 					}
 				},
 				"metadata": {
@@ -3401,6 +3401,9 @@
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"folder": {
+					"name": "examples"
+				},
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
@@ -3414,20 +3417,44 @@
 					"executorCores": 4,
 					"numExecutors": 2,
 					"runAsWorkspaceSystemIdentity": false,
-					"conf": {}
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "e03b836b-d74d-4928-9d16-7208f2568881"
+					}
 				},
 				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
 						"display_name": "python"
 					},
 					"language_info": {
 						"name": "python"
-					}
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
+						"name": "spark3p1sm",
+						"type": "Spark",
+						"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 8,
+						"memory": 56,
+						"automaticScaleJobs": true
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"class ContosoSIS(BaseOEAModule):\n",
 							"    def __init__(self, source_folder='contoso_sis', pseudonymize = True):\n",
@@ -3472,7 +3499,6 @@
 							"\n",
 							"contoso_sis = ContosoSIS()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -4258,14 +4284,11 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "401f714e-b2c3-4d82-acd5-2024a85e8a00"
+						"spark.autotune.trackingId": "ed53cc2c-1daa-475a-badf-edefba242d72"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
-					"synapse_widget": {
-						"version": "0.1"
-					},
 					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
@@ -4288,8 +4311,7 @@
 						},
 						"source": [
 							"# Microsoft Insights Module Example Notebook"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -4307,7 +4329,6 @@
 						"source": [
 							"%run /OEA_py"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 20
 					},
@@ -4327,7 +4348,6 @@
 						"source": [
 							"%run /NEW_Insights_py"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 21
 					},
@@ -4349,7 +4369,6 @@
 							"oea = OEA()\r\n",
 							"insights = Insights()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 22
 					},
@@ -4369,7 +4388,6 @@
 						"source": [
 							"insights.ingest()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 23
 					}
@@ -4399,7 +4417,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "6d23a47b-1f7a-46d5-aed6-65bb4fbb437c"
+						"spark.autotune.trackingId": "6c6dd8ba-5843-479f-bbc5-e99ea2e06b4e"
 					}
 				},
 				"metadata": {
@@ -5583,7 +5601,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "86809324-0d56-4168-911c-7496e1410cce"
+						"spark.autotune.trackingId": "c56bd187-17c4-4a53-9500-48599dae1e7a"
 					}
 				},
 				"metadata": {
@@ -5608,8 +5626,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -6688,7 +6705,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "339c5203-5898-44ca-ae88-6e1ec1abebc0"
+						"spark.autotune.trackingId": "be663ae7-9dbf-4788-be08-e083fa066fa8"
 					}
 				},
 				"metadata": {
@@ -6723,7 +6740,6 @@
 						"source": [
 							"SifDbName = \"sif\""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -6743,7 +6759,6 @@
 						"source": [
 							"spark.catalog.setCurrentDatabase(SifDbName)"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -6840,7 +6855,6 @@
 							"\r\n",
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -6860,7 +6874,6 @@
 						"source": [
 							"df_Out.write.mode(\"overwrite\").saveAsTable(\"dm_studentpersonal\")"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -6881,7 +6894,6 @@
 						"source": [
 							"display(spark.sql(\"select * from dm_studentpersonal\"))"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -7559,7 +7571,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "0a280028-6a1d-4aef-bd11-3be6bb8fa448"
+						"spark.autotune.trackingId": "9c7052f8-83b8-4cae-a297-93a178c03938"
 					}
 				},
 				"metadata": {
@@ -7584,8 +7596,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -8330,7 +8341,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "e69c66a4-dcdc-4ba0-916f-66087a62529e"
+						"spark.autotune.trackingId": "80405646-4f85-4d32-a3a8-8dc0d8eec49c"
 					}
 				},
 				"metadata": {
@@ -8355,8 +8366,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
