@@ -41,6 +41,15 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('workspaceName'), '/spark8pmd')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/Copy_all_from_Azure_SQL_DB')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -3084,7 +3093,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "0606871a-187f-497d-b35c-f1e99d9de4ed"
+						"spark.autotune.trackingId": "ae4a5a35-e27f-442d-bcd6-1536d9fd9925"
 					}
 				},
 				"metadata": {
@@ -3421,7 +3430,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "e03b836b-d74d-4928-9d16-7208f2568881"
+						"spark.autotune.trackingId": "1bb0437c-6a56-42cf-b550-ca293b1e22ab"
 					}
 				},
 				"metadata": {
@@ -3446,15 +3455,13 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"class ContosoSIS(BaseOEAModule):\n",
 							"    def __init__(self, source_folder='contoso_sis', pseudonymize = True):\n",
@@ -4271,6 +4278,9 @@
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"folder": {
+					"name": "examples"
+				},
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"sessionProperties": {
@@ -4284,7 +4294,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "9cb9732c-451a-481a-8eff-84641858c6bd"
+						"spark.autotune.trackingId": "a3c32cab-51c3-4e5b-bbef-712b55b7db3c"
 					}
 				},
 				"metadata": {
@@ -4417,7 +4427,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "da7d65ec-4258-4111-8b10-1acaecb6b3b7"
+						"spark.autotune.trackingId": "1ccd68c4-b6b6-44f2-9917-71ffc60aa975"
 					}
 				},
 				"metadata": {
@@ -4442,8 +4452,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -4743,7 +4752,19 @@
 							"            query2 = df_lookup.writeStream.format(\"delta\").outputMode(\"append\").trigger(once=True).option(\"checkpointLocation\", self.stage1np_activity + '/_checkpoints_np').partitionBy('year')\r\n",
 							"            query2 = query2.start(self.stage2np + '/TechActivity_lookup')\r\n",
 							"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
-							"            logger.info(query2.lastProgress)   \r\n",
+							"            logger.info(query2.lastProgress)  \r\n",
+							"\r\n",
+							"      def returnDataFrameBeforeProcessing(self, tableName='TechActivity'):\r\n",
+							"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
+							"        logger.info(\"Processing ms_insights activity data from: \" + self.stage1np_activity)\r\n",
+							"\r\n",
+							"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
+							"        activity_spark_schema = oea.to_spark_schema(self.schemas['{tableName}'])\r\n",
+							"        df = spark.readStream.csv(self.stage1np_activity + '/*/*.csv', header='false', schema=activity_spark_schema)\r\n",
+							"        df = df.dropDuplicates(['SignalId'])\r\n",
+							"        df = df.withColumn('year', F.year(F.col('StartTime'))).withColumn('month', F.month(F.col('StartTime')))\r\n",
+							" \r\n",
+							"        return df\r\n",
 							"\r\n",
 							"    def _process_roster_entity(self, path, entity):\r\n",
 							"        try:\r\n",
@@ -4814,7 +4835,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "167224a2-aceb-4a28-be3a-8215de33fa69"
+						"spark.autotune.trackingId": "76d4e351-a51a-4d58-93ee-890f4f7e4180"
 					}
 				},
 				"metadata": {
@@ -5190,11 +5211,30 @@
 							"\r\n",
 							"oea.insert_watermark( source_folder, \"Activity\", date2)\r\n",
 							"ms_insights.process_insights_activity_stage1_data()\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 10
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
 							"oea.insert_watermark( source_folder, \"Roster\", date2)\r\n",
 							"ms_insights.process_roster()"
 						],
 						"outputs": [],
-						"execution_count": 10
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -5290,7 +5330,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "ca35dd9c-8b87-4953-b707-45771f75f611"
+						"spark.autotune.trackingId": "532a9c72-d161-423a-8e50-02a3beda9b6f"
 					}
 				},
 				"metadata": {
@@ -5315,8 +5355,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -5455,7 +5494,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "50c06b5e-00bc-4cbb-84e6-c6287d718517"
+						"spark.autotune.trackingId": "30f9c5e4-7e9a-49e1-829a-46fe2fa1e698"
 					}
 				},
 				"metadata": {
@@ -5480,8 +5519,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -5617,7 +5655,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "c56bd187-17c4-4a53-9500-48599dae1e7a"
+						"spark.autotune.trackingId": "4232c5a3-6681-4705-beec-681163de497b"
 					}
 				},
 				"metadata": {
@@ -5979,7 +6017,7 @@
 							"        else:\n",
 							"            df_lookup.write.save(np_destination_path, format='delta', mode='overwrite') \n",
 							"\n",
-							"#importantly the treatment to the label of the columns in the schema\n",
+							"#important here the treatment is specified following the label giving in the schema definition for the columns \n",
 							"    def pseudonymize(self, df, schema): #: list[list[str]]):\n",
 							"        \"\"\" Performs pseudonymization of the given dataframe based on the provided schema.\n",
 							"            For example, if the given df is for an entity called person, \n",
@@ -6721,7 +6759,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "3f6d7ef0-17cb-4ec1-84ba-7115f1f18a4f"
+						"spark.autotune.trackingId": "339c5203-5898-44ca-ae88-6e1ec1abebc0"
 					}
 				},
 				"metadata": {
@@ -6756,6 +6794,7 @@
 						"source": [
 							"SifDbName = \"sif\""
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -6775,6 +6814,7 @@
 						"source": [
 							"spark.catalog.setCurrentDatabase(SifDbName)"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -6871,6 +6911,7 @@
 							"\r\n",
 							""
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -6890,6 +6931,7 @@
 						"source": [
 							"df_Out.write.mode(\"overwrite\").saveAsTable(\"dm_studentpersonal\")"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -6910,6 +6952,7 @@
 						"source": [
 							"display(spark.sql(\"select * from dm_studentpersonal\"))"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -7587,7 +7630,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "9c7052f8-83b8-4cae-a297-93a178c03938"
+						"spark.autotune.trackingId": "af26a24e-8d1e-4dd9-877a-cd1338e63155"
 					}
 				},
 				"metadata": {
@@ -8121,7 +8164,9 @@
 							"#pathnp = classSchool.stage2np\r\n",
 							"pathp  = classBiDim.stage2p\r\n",
 							"pathnp = classBiDim.stage2np\r\n",
-							"source_format= 'DELTA'"
+							"source_format= 'DELTA'\r\n",
+							"oea.create_sql_views(pathp, source_format)\r\n",
+							"oea.create_sql_views(pathnp, source_format)"
 						],
 						"outputs": [],
 						"execution_count": 129
@@ -8161,8 +8206,7 @@
 							}
 						},
 						"source": [
-							"oea.create_sql_views(pathp, source_format)\r\n",
-							"oea.create_sql_views(pathnp, source_format)"
+							""
 						],
 						"outputs": [],
 						"execution_count": 130
@@ -8357,7 +8401,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "80405646-4f85-4d32-a3a8-8dc0d8eec49c"
+						"spark.autotune.trackingId": "a653efed-685f-4a50-9000-da5ab4aac894"
 					}
 				},
 				"metadata": {
@@ -8491,8 +8535,8 @@
 							"                    ['SRS_English_A-C_%_Semester_2' ,   'float64', 'no-op'],\r\n",
 							"                    ['SRS_Maths_A-C_%_Semester_1' ,   'float64', 'no-op'],\r\n",
 							"                    ['SRS_Maths_A-C_%_Semester_2' ,   'float64', 'no-op'],\r\n",
-							"                    ['Overall' ,   'int64  ', 'no-op']                      ,\r\n",
-							"                    ['Change_from_PY' ,   'int64', 'no-op']\r\n",
+							"                    ['Overall' ,   'Integer  ', 'no-op']                      ,\r\n",
+							"                    ['Change_from_PY' ,   'Integer', 'no-op']\r\n",
 							"        ]\r\n",
 							"\r\n",
 							"    def ingest(self, inpdataframe, primary_key):\r\n",
@@ -9968,6 +10012,345 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/test')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "spark3p1sm",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"runAsWorkspaceSystemIdentity": false,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "5c36c340-3ed1-41ab-97d8-564e88d9a6a1"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
+						"name": "spark3p1sm",
+						"type": "Spark",
+						"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 8,
+						"memory": 56,
+						"automaticScaleJobs": true
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Microsoft Insights Class"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"%run OEA_py"
+						],
+						"outputs": [],
+						"execution_count": 7
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"class test(BaseOEAModule):\r\n",
+							"    \"\"\"    Provides data processing methods for MS Insights data.\r\n",
+							"    Data is expected to be received via ADS into stage1np/ms_insights\r\n",
+							"    The structure of the folders in stage1np will then be something like:\r\n",
+							"        -> stage1np/example/test/*\r\n",
+							"\r\n",
+							"    In stage2, everything is written to stage2np/test and stage2p/test\r\n",
+							"    \"\"\"\r\n",
+							"\r\n",
+							"    def __init__(self, source_folder= 'example/test'):\r\n",
+							"        BaseOEAModule.__init__(self, source_folder)\r\n",
+							"\r\n",
+							"        self.stage1np_activity = self.stage1np + '/'\r\n",
+							"        self.schemas['test'] = [['col', 'Integer', 'no-op']\r\n",
+							"                    ]\r\n",
+							"\r\n",
+							"       \r\n",
+							"    \r\n",
+							"    def ingest(self):\r\n",
+							"        \"\"\"  Processes insights data from stage1 into stage2 using structured streaming within the defined functions below.\"\"\"\r\n",
+							"        logger.info(\"Processing data from: \" + self.stage1np)\r\n",
+							"        \r\n",
+							"        items = mssparkutils.fs.ls(self.stage1np)\r\n",
+							"        for item in items:\r\n",
+							"            if item.name.__contains__(\"csv\"):\r\n",
+							"                self.process_insights_activity_stage1_data()\r\n",
+							"\r\n",
+							"            else:\r\n",
+							"                logger.info(\"No defined function for processing this insights data\")\r\n",
+							"        \r\n",
+							"        logger.info(\"Finished ingesting data from stage 1 to stage 2\")\r\n",
+							"\r\n",
+							"    def process_insights_activity_stage1_data(self):\r\n",
+							"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
+							"        logger.info(\"Processing test data from: \" + self.stage1np_activity)\r\n",
+							"\r\n",
+							"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
+							"        activity_spark_schema = oea.to_spark_schema(self.schemas['test'])\r\n",
+							"        df = spark.readStream.csv(self.stage1np_activity + '*.csv', header='false', schema=activity_spark_schema)\r\n",
+							"        df = df.dropDuplicates(['col'])\r\n",
+							"        \r\n",
+							"       \r\n",
+							"        df_pseudo, df_lookup = oea.pseudonymize(df, self.schemas['test'])\r\n",
+							"\r\n",
+							"        if len(df_pseudo.columns) == 0:\r\n",
+							"            logger.info('No data to be written to stage2p')\r\n",
+							"        else:\r\n",
+							"            query = df_pseudo.writeStream.format(\"delta\").outputMode(\"append\").trigger(once=True).option(\"checkpointLocation\", self.stage1np_activity + '/_checkpoints_p')\r\n",
+							"            query = query.start(self.stage2p + '')\r\n",
+							"            query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
+							"            logger.info(query.lastProgress)\r\n",
+							"        \r\n",
+							"        if len(df_lookup.columns) == 0:\r\n",
+							"            logger.info('No data to be written to stage2np')\r\n",
+							"        else:\r\n",
+							"            query2 = df_lookup.writeStream.format(\"delta\").outputMode(\"append\").trigger(once=True).option(\"checkpointLocation\", self.stage1np_activity + '/_checkpoints_np')\r\n",
+							"            query2 = query2.start(self.stage2np + '')\r\n",
+							"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
+							"            logger.info(query2.lastProgress)   \r\n",
+							"\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"oea= OEA()"
+						],
+						"outputs": [],
+						"execution_count": 8
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"%run /Insights_py"
+						],
+						"outputs": [],
+						"execution_count": 9
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"\r\n",
+							"#test= test()\r\n",
+							"\r\n",
+							"test= Insights()"
+						],
+						"outputs": [],
+						"execution_count": 10
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"df= test.returnDataFrameBeforeProcessing()"
+						],
+						"outputs": [],
+						"execution_count": 11
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#test.ingest()\r\n",
+							"\r\n",
+							"test.process_insights_activity_stage1_data()"
+						],
+						"outputs": [],
+						"execution_count": 5
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"db_name= 'bceoea'\r\n",
+							"\r\n",
+							"\r\n",
+							"pathp  = test.stage2p\r\n",
+							"pathnp = test.stage2np\r\n",
+							"source_format= 'DELTA'\r\n",
+							"\r\n",
+							"print(pathp, pathnp)\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 69
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"oea.create_sql_views(pathp, source_format)\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 71
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"print (test.stage1np_activity)\r\n",
+							"\r\n",
+							"oea.get_folders(test.stage1np_activity)\r\n",
+							"\r\n",
+							"mssparkutils.fs.ls(test.stage1np)\r\n",
+							"#pathnp = classSchool.stage2n"
+						],
+						"outputs": [],
+						"execution_count": 20
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/spark3p1sm')]",
 			"type": "Microsoft.Synapse/workspaces/bigDataPools",
 			"apiVersion": "2019-06-01-preview",
@@ -9990,6 +10373,31 @@
 					"filename": "/usr/csuser/clouddrive/OpenEduAnalytics/framework/requirements.txt",
 					"time": "2022-07-14T06:54:48.8041552Z"
 				},
+				"isComputeIsolationEnabled": false,
+				"sessionLevelPackagesEnabled": false,
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "australiaeast"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/spark8pmd')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"autoPause": {
+					"enabled": true,
+					"delayInMinutes": 15
+				},
+				"autoScale": {
+					"enabled": true,
+					"maxNodeCount": 10,
+					"minNodeCount": 3
+				},
+				"nodeCount": 10,
+				"nodeSize": "Medium",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "3.2",
 				"isComputeIsolationEnabled": false,
 				"sessionLevelPackagesEnabled": false,
 				"annotations": []
