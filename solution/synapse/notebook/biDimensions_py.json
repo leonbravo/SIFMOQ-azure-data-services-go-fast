@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "80405646-4f85-4d32-a3a8-8dc0d8eec49c"
+				"spark.autotune.trackingId": "a653efed-685f-4a50-9000-da5ab4aac894"
 			}
 		},
 		"metadata": {
@@ -154,8 +154,8 @@
 					"                    ['SRS_English_A-C_%_Semester_2' ,   'float64', 'no-op'],\r\n",
 					"                    ['SRS_Maths_A-C_%_Semester_1' ,   'float64', 'no-op'],\r\n",
 					"                    ['SRS_Maths_A-C_%_Semester_2' ,   'float64', 'no-op'],\r\n",
-					"                    ['Overall' ,   'int64  ', 'no-op']                      ,\r\n",
-					"                    ['Change_from_PY' ,   'int64', 'no-op']\r\n",
+					"                    ['Overall' ,   'Integer  ', 'no-op']                      ,\r\n",
+					"                    ['Change_from_PY' ,   'Integer', 'no-op']\r\n",
 					"        ]\r\n",
 					"\r\n",
 					"    def ingest(self, inpdataframe, primary_key):\r\n",

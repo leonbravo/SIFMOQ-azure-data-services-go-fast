@@ -1,6 +1,9 @@
 {
 	"name": "Insights_module_ingestion",
 	"properties": {
+		"folder": {
+			"name": "examples"
+		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"sessionProperties": {
@@ -14,14 +17,11 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "401f714e-b2c3-4d82-acd5-2024a85e8a00"
+				"spark.autotune.trackingId": "a3c32cab-51c3-4e5b-bbef-712b55b7db3c"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
@@ -44,8 +44,7 @@
 				},
 				"source": [
 					"# Microsoft Insights Module Example Notebook"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -63,7 +62,6 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"attachments": null,
 				"execution_count": 20
 			},
 			{
@@ -82,7 +80,6 @@
 				"source": [
 					"%run /NEW_Insights_py"
 				],
-				"attachments": null,
 				"execution_count": 21
 			},
 			{
@@ -103,7 +100,6 @@
 					"oea = OEA()\r\n",
 					"insights = Insights()"
 				],
-				"attachments": null,
 				"execution_count": 22
 			},
 			{
@@ -122,7 +118,6 @@
 				"source": [
 					"insights.ingest()"
 				],
-				"attachments": null,
 				"execution_count": 23
 			}
 		]

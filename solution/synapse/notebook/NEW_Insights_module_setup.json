@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "167224a2-aceb-4a28-be3a-8215de33fa69"
+				"spark.autotune.trackingId": "76d4e351-a51a-4d58-93ee-890f4f7e4180"
 			}
 		},
 		"metadata": {
@@ -387,10 +387,28 @@
 					"\r\n",
 					"oea.insert_watermark( source_folder, \"Activity\", date2)\r\n",
 					"ms_insights.process_insights_activity_stage1_data()\r\n",
+					""
+				],
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
 					"oea.insert_watermark( source_folder, \"Roster\", date2)\r\n",
 					"ms_insights.process_roster()"
 				],
-				"execution_count": 10
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",

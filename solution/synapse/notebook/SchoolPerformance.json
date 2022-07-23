@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "9c7052f8-83b8-4cae-a297-93a178c03938"
+				"spark.autotune.trackingId": "af26a24e-8d1e-4dd9-877a-cd1338e63155"
 			}
 		},
 		"metadata": {
@@ -539,7 +539,9 @@
 					"#pathnp = classSchool.stage2np\r\n",
 					"pathp  = classBiDim.stage2p\r\n",
 					"pathnp = classBiDim.stage2np\r\n",
-					"source_format= 'DELTA'"
+					"source_format= 'DELTA'\r\n",
+					"oea.create_sql_views(pathp, source_format)\r\n",
+					"oea.create_sql_views(pathnp, source_format)"
 				],
 				"execution_count": 129
 			},
@@ -577,8 +579,7 @@
 					}
 				},
 				"source": [
-					"oea.create_sql_views(pathp, source_format)\r\n",
-					"oea.create_sql_views(pathnp, source_format)"
+					""
 				],
 				"execution_count": 130
 			}

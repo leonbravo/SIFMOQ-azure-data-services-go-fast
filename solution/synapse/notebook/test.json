@@ -1,0 +1,286 @@
+{
+	"name": "test",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "spark3p1sm",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "081a73c4-c86c-430f-a62b-eb284e023cb6"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
+				"name": "spark3p1sm",
+				"type": "Spark",
+				"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 3,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": true
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Microsoft Insights Class"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%run OEA_py"
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"class test(BaseOEAModule):\r\n",
+					"    \"\"\"    Provides data processing methods for MS Insights data.\r\n",
+					"    Data is expected to be received via ADS into stage1np/ms_insights\r\n",
+					"    The structure of the folders in stage1np will then be something like:\r\n",
+					"        -> stage1np/example/test/*\r\n",
+					"\r\n",
+					"    In stage2, everything is written to stage2np/test and stage2p/test\r\n",
+					"    \"\"\"\r\n",
+					"\r\n",
+					"    def __init__(self, source_folder= 'example/test'):\r\n",
+					"        BaseOEAModule.__init__(self, source_folder)\r\n",
+					"\r\n",
+					"        self.stage1np_activity = self.stage1np + '/'\r\n",
+					"        self.schemas['test'] = [['col', 'Integer', 'no-op']\r\n",
+					"                    ]\r\n",
+					"\r\n",
+					"       \r\n",
+					"    \r\n",
+					"    def ingest(self):\r\n",
+					"        \"\"\"  Processes insights data from stage1 into stage2 using structured streaming within the defined functions below.\"\"\"\r\n",
+					"        logger.info(\"Processing data from: \" + self.stage1np)\r\n",
+					"        \r\n",
+					"        items = mssparkutils.fs.ls(self.stage1np)\r\n",
+					"        for item in items:\r\n",
+					"            if item.name.__contains__(\"csv\"):\r\n",
+					"                self.process_insights_activity_stage1_data()\r\n",
+					"\r\n",
+					"            else:\r\n",
+					"                logger.info(\"No defined function for processing this insights data\")\r\n",
+					"        \r\n",
+					"        logger.info(\"Finished ingesting data from stage 1 to stage 2\")\r\n",
+					"\r\n",
+					"    def process_insights_activity_stage1_data(self):\r\n",
+					"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
+					"        logger.info(\"Processing test data from: \" + self.stage1np_activity)\r\n",
+					"\r\n",
+					"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
+					"        activity_spark_schema = oea.to_spark_schema(self.schemas['test'])\r\n",
+					"        df = spark.readStream.csv(self.stage1np_activity + '*.csv', header='false', schema=activity_spark_schema)\r\n",
+					"        df = df.dropDuplicates(['col'])\r\n",
+					"        \r\n",
+					"       \r\n",
+					"        df_pseudo, df_lookup = oea.pseudonymize(df, self.schemas['test'])\r\n",
+					"\r\n",
+					"        if len(df_pseudo.columns) == 0:\r\n",
+					"            logger.info('No data to be written to stage2p')\r\n",
+					"        else:\r\n",
+					"            query = df_pseudo.writeStream.format(\"delta\").outputMode(\"append\").trigger(once=True).option(\"checkpointLocation\", self.stage1np_activity + '/_checkpoints_p')\r\n",
+					"            query = query.start(self.stage2p + '')\r\n",
+					"            query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
+					"            logger.info(query.lastProgress)\r\n",
+					"        \r\n",
+					"        if len(df_lookup.columns) == 0:\r\n",
+					"            logger.info('No data to be written to stage2np')\r\n",
+					"        else:\r\n",
+					"            query2 = df_lookup.writeStream.format(\"delta\").outputMode(\"append\").trigger(once=True).option(\"checkpointLocation\", self.stage1np_activity + '/_checkpoints_np')\r\n",
+					"            query2 = query2.start(self.stage2np + '')\r\n",
+					"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
+					"            logger.info(query2.lastProgress)   \r\n",
+					"\r\n",
+					""
+				],
+				"execution_count": 63
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"oea= OEA()"
+				],
+				"execution_count": 59
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"\r\n",
+					"test= test()"
+				],
+				"execution_count": 64
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"test.ingest()"
+				],
+				"execution_count": 65
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"db_name= 'bceoea'\r\n",
+					"\r\n",
+					"\r\n",
+					"pathp  = test.stage2p\r\n",
+					"pathnp = test.stage2np\r\n",
+					"source_format= 'DELTA'\r\n",
+					"\r\n",
+					"print(pathp, pathnp)\r\n",
+					""
+				],
+				"execution_count": 69
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"oea.create_sql_views(pathp, source_format)\r\n",
+					""
+				],
+				"execution_count": 71
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"print (test.stage1np_activity)\r\n",
+					"\r\n",
+					"oea.get_folders(test.stage1np_activity)\r\n",
+					"\r\n",
+					"mssparkutils.fs.ls(test.stage1np)\r\n",
+					"#pathnp = classSchool.stage2n"
+				],
+				"execution_count": 20
+			}
+		]
+	}
+}
