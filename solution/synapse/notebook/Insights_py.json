@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "77f7c2ce-9333-4889-9508-9ef0407d0f85"
+				"spark.autotune.trackingId": "cf1ddcf0-e806-475d-8a6c-643b35bceeed"
 			}
 		},
 		"metadata": {
@@ -345,6 +345,7 @@
 					"            query2 = query2.start(self.stage2np + '/TechActivity_lookup')\r\n",
 					"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
 					"            logger.info(query2.lastProgress)   \r\n",
+					"        return df\r\n",
 					"\r\n",
 					"    def _process_roster_entity(self, path, entity):\r\n",
 					"        try:\r\n",

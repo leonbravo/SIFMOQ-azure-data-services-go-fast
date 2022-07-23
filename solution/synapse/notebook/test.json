@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "081a73c4-c86c-430f-a62b-eb284e023cb6"
+				"spark.autotune.trackingId": "208dea97-3fb8-4be3-a005-d93c4cda37fb"
 			}
 		},
 		"metadata": {
@@ -174,7 +174,25 @@
 				"source": [
 					"oea= OEA()"
 				],
-				"execution_count": 59
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%run /Insights_py"
+				],
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -191,9 +209,11 @@
 				},
 				"source": [
 					"\r\n",
-					"test= test()"
+					"#test= test()\r\n",
+					"\r\n",
+					"test= Insights()"
 				],
-				"execution_count": 64
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -209,9 +229,11 @@
 					}
 				},
 				"source": [
-					"test.ingest()"
+					"#test.ingest()\r\n",
+					"\r\n",
+					"df =test.process_insights_activity_stage1_data()"
 				],
-				"execution_count": 65
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
