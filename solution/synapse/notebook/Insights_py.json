@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "cf1ddcf0-e806-475d-8a6c-643b35bceeed"
+				"spark.autotune.trackingId": "1ccd68c4-b6b6-44f2-9917-71ffc60aa975"
 			}
 		},
 		"metadata": {
@@ -344,7 +344,18 @@
 					"            query2 = df_lookup.writeStream.format(\"delta\").outputMode(\"append\").trigger(once=True).option(\"checkpointLocation\", self.stage1np_activity + '/_checkpoints_np').partitionBy('year')\r\n",
 					"            query2 = query2.start(self.stage2np + '/TechActivity_lookup')\r\n",
 					"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
-					"            logger.info(query2.lastProgress)   \r\n",
+					"            logger.info(query2.lastProgress)  \r\n",
+					"\r\n",
+					"      def returnDataFrameBeforeProcessing(self, tableName='TechActivity'):\r\n",
+					"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
+					"        logger.info(\"Processing ms_insights activity data from: \" + self.stage1np_activity)\r\n",
+					"\r\n",
+					"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
+					"        activity_spark_schema = oea.to_spark_schema(self.schemas['{tableName}'])\r\n",
+					"        df = spark.readStream.csv(self.stage1np_activity + '/*/*.csv', header='false', schema=activity_spark_schema)\r\n",
+					"        df = df.dropDuplicates(['SignalId'])\r\n",
+					"        df = df.withColumn('year', F.year(F.col('StartTime'))).withColumn('month', F.month(F.col('StartTime')))\r\n",
+					" \r\n",
 					"        return df\r\n",
 					"\r\n",
 					"    def _process_roster_entity(self, path, entity):\r\n",
