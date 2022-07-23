@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "208dea97-3fb8-4be3-a005-d93c4cda37fb"
+				"spark.autotune.trackingId": "f1a185b5-36ff-426c-9e22-3575e87dcf74"
 			}
 		},
 		"metadata": {
@@ -78,7 +78,7 @@
 				"source": [
 					"%run OEA_py"
 				],
-				"execution_count": 1
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -156,7 +156,7 @@
 					"\r\n",
 					""
 				],
-				"execution_count": 63
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -174,7 +174,7 @@
 				"source": [
 					"oea= OEA()"
 				],
-				"execution_count": 2
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -192,7 +192,7 @@
 				"source": [
 					"%run /Insights_py"
 				],
-				"execution_count": 3
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -213,7 +213,25 @@
 					"\r\n",
 					"test= Insights()"
 				],
-				"execution_count": 4
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df= test.returnDataFrameBeforeProcessing()"
+				],
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -231,7 +249,7 @@
 				"source": [
 					"#test.ingest()\r\n",
 					"\r\n",
-					"df =test.process_insights_activity_stage1_data()"
+					"test.process_insights_activity_stage1_data()"
 				],
 				"execution_count": 5
 			},
