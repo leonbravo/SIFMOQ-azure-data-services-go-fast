@@ -4427,7 +4427,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "3445c254-895b-4b9d-b1de-a8f75df4e51e"
+						"spark.autotune.trackingId": "fcda0fa2-ed7f-432b-93a5-795b4aaa6fbb"
 					}
 				},
 				"metadata": {
@@ -4760,7 +4760,7 @@
 							"        logger.info(\"Processing ms_insights activity data from: \" + self.stage1np_activity)\r\n",
 							"\r\n",
 							"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
-							"        activity_spark_schema = oea.to_spark_schema(self.schemas['{tableName}'])\r\n",
+							"        activity_spark_schema = oea.to_spark_schema(self.schemas[f'{tableName}'])\r\n",
 							"        df = spark.readStream.csv(self.stage1np_activity + '/*/*.csv', header='false', schema=activity_spark_schema)\r\n",
 							"        df = df.dropDuplicates(['SignalId'])\r\n",
 							"        df = df.withColumn('year', F.year(F.col('StartTime'))).withColumn('month', F.month(F.col('StartTime')))\r\n",
@@ -10034,7 +10034,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "6dc33817-cdaa-41e3-8e14-316065b5ffc9"
+						"spark.autotune.trackingId": "7b5be1e9-52b9-4aa9-b485-5cdffc83e2ac"
 					}
 				},
 				"metadata": {
@@ -10211,7 +10211,7 @@
 							"%run /Insights_py"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 4
 					},
 					{
 						"cell_type": "code",
@@ -10233,7 +10233,7 @@
 							"test= Insights()"
 						],
 						"outputs": [],
-						"execution_count": 10
+						"execution_count": 5
 					},
 					{
 						"cell_type": "code",
@@ -10249,10 +10249,10 @@
 							}
 						},
 						"source": [
-							"df= test.returnDataFrameBeforeProcessing()"
+							"df= test.returnDataFrameBeforeProcessing('TechActivity')"
 						],
 						"outputs": [],
-						"execution_count": 11
+						"execution_count": 7
 					},
 					{
 						"cell_type": "code",
