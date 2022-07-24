@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "7a92ce75-f07d-4d8c-9ef4-a1d2c2460e92"
+				"spark.autotune.trackingId": "00473e47-a1f0-4ec3-9b97-6b1cce698726"
 			}
 		},
 		"metadata": {
@@ -351,7 +351,7 @@
 					"        logger.info(\"Processing ms_insights activity data from: \" + self.stage1np_activity)\r\n",
 					"\r\n",
 					"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
-					"        activity_spark_schema = oea.to_spark_schema(self.schemas['{tableName}'])\r\n",
+					"        activity_spark_schema = oea.to_spark_schema(self.schemas[f'{tableName}'])\r\n",
 					"        df = spark.readStream.csv(self.stage1np_activity + '/*/*.csv', header='false', schema=activity_spark_schema)\r\n",
 					"        df = df.dropDuplicates(['SignalId'])\r\n",
 					"        df = df.withColumn('year', F.year(F.col('StartTime'))).withColumn('month', F.month(F.col('StartTime')))\r\n",
