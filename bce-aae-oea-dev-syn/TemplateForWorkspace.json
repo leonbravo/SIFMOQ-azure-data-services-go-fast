@@ -4427,7 +4427,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "1ccd68c4-b6b6-44f2-9917-71ffc60aa975"
+						"spark.autotune.trackingId": "3445c254-895b-4b9d-b1de-a8f75df4e51e"
 					}
 				},
 				"metadata": {
@@ -4452,7 +4452,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": true
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -4754,7 +4755,7 @@
 							"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
 							"            logger.info(query2.lastProgress)  \r\n",
 							"\r\n",
-							"      def returnDataFrameBeforeProcessing(self, tableName='TechActivity'):\r\n",
+							"    def returnDataFrameBeforeProcessing(self, tableName='TechActivity'):\r\n",
 							"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
 							"        logger.info(\"Processing ms_insights activity data from: \" + self.stage1np_activity)\r\n",
 							"\r\n",
@@ -10033,7 +10034,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "5c36c340-3ed1-41ab-97d8-564e88d9a6a1"
+						"spark.autotune.trackingId": "6dc33817-cdaa-41e3-8e14-316065b5ffc9"
 					}
 				},
 				"metadata": {
@@ -10058,8 +10059,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -10074,7 +10074,7 @@
 							}
 						},
 						"source": [
-							"# Microsoft Insights Class"
+							"# Test Class"
 						]
 					},
 					{
@@ -10094,7 +10094,7 @@
 							"%run OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 7
+						"execution_count": 1
 					},
 					{
 						"cell_type": "code",
@@ -10192,7 +10192,7 @@
 							"oea= OEA()"
 						],
 						"outputs": [],
-						"execution_count": 8
+						"execution_count": 2
 					},
 					{
 						"cell_type": "code",
@@ -10211,7 +10211,7 @@
 							"%run /Insights_py"
 						],
 						"outputs": [],
-						"execution_count": 9
+						"execution_count": 3
 					},
 					{
 						"cell_type": "code",
