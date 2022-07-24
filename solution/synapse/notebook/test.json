@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f1a185b5-36ff-426c-9e22-3575e87dcf74"
+				"spark.autotune.trackingId": "6dc33817-cdaa-41e3-8e14-316065b5ffc9"
 			}
 		},
 		"metadata": {
@@ -59,7 +59,7 @@
 					}
 				},
 				"source": [
-					"# Microsoft Insights Class"
+					"# Test Class"
 				]
 			},
 			{
@@ -78,7 +78,7 @@
 				"source": [
 					"%run OEA_py"
 				],
-				"execution_count": 7
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -174,7 +174,7 @@
 				"source": [
 					"oea= OEA()"
 				],
-				"execution_count": 8
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -192,7 +192,7 @@
 				"source": [
 					"%run /Insights_py"
 				],
-				"execution_count": 9
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
