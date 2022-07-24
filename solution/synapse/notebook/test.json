@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "6dc33817-cdaa-41e3-8e14-316065b5ffc9"
+				"spark.autotune.trackingId": "7b5be1e9-52b9-4aa9-b485-5cdffc83e2ac"
 			}
 		},
 		"metadata": {
@@ -192,7 +192,7 @@
 				"source": [
 					"%run /Insights_py"
 				],
-				"execution_count": 3
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -213,7 +213,7 @@
 					"\r\n",
 					"test= Insights()"
 				],
-				"execution_count": 10
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -229,9 +229,9 @@
 					}
 				},
 				"source": [
-					"df= test.returnDataFrameBeforeProcessing()"
+					"df= test.returnDataFrameBeforeProcessing('TechActivity')"
 				],
-				"execution_count": 11
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
