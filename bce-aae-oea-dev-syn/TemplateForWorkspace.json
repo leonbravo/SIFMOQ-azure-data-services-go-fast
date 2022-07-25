@@ -4427,7 +4427,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "fcda0fa2-ed7f-432b-93a5-795b4aaa6fbb"
+						"spark.autotune.trackingId": "7d0fd4a5-9ebd-48ec-8b21-cd36809103df"
 					}
 				},
 				"metadata": {
@@ -4452,8 +4452,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -4742,7 +4741,11 @@
 							"        if len(df_pseudo.columns) == 0:\r\n",
 							"            logger.info('No data to be written to stage2p')\r\n",
 							"        else:\r\n",
-							"            query = df_pseudo.writeStream.format(\"delta\").outputMode(\"append\").trigger(once=True).option(\"checkpointLocation\", self.stage1np_activity + '/_checkpoints_p').partitionBy('year')\r\n",
+							"            query = df_pseudo.writeStream.format(\"delta\")\r\n",
+							"                                         .outputMode(\"append\")\r\n",
+							"                                         .trigger(once=True)\r\n",
+							"                                         .option(\"checkpointLocation\", self.stage1np_activity + '/_checkpoints_p')\r\n",
+							"                                         .partitionBy('year')\r\n",
 							"            query = query.start(self.stage2p + '/TechActivity_pseudo')\r\n",
 							"            query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
 							"            logger.info(query.lastProgress)\r\n",
@@ -5656,7 +5659,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "4232c5a3-6681-4705-beec-681163de497b"
+						"spark.autotune.trackingId": "8e436029-1431-4a40-bb60-a9d16f8e9772"
 					}
 				},
 				"metadata": {
@@ -5908,7 +5911,11 @@
 							"        if len(df_pseudo.columns) == 0:\n",
 							"            logger.info('No data to be written to stage2p')\n",
 							"        else:        \n",
-							"            query = df_pseudo.writeStream.format(\"delta\").outputMode(\"append\").trigger(once=True).option(\"checkpointLocation\", source_path + '/_checkpoints/incremental_p').partitionBy(partition_by)\n",
+							"            query = df_pseudo.writeStream.format(\"delta\")\n",
+							"                        .outputMode(\"append\")\n",
+							"                        .trigger(once=True)\n",
+							"                        .option(\"checkpointLocation\", source_path + '/_checkpoints/incremental_p')\n",
+							"                        .partitionBy(partition_by)\n",
 							"            query = query.start(p_destination_path)\n",
 							"            query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\n",
 							"            logger.info(query.lastProgress)\n",
@@ -10034,7 +10041,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "7b5be1e9-52b9-4aa9-b485-5cdffc83e2ac"
+						"spark.autotune.trackingId": "0f2ee79f-37b5-4df8-85d3-427d77ddc344"
 					}
 				},
 				"metadata": {
@@ -10059,7 +10066,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": true
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -10091,10 +10099,63 @@
 							}
 						},
 						"source": [
+							"source_folder= 'SDS/M365'\r\n",
+							"storage_account = 'bceaaeoeadevlrs' "
+						],
+						"outputs": [],
+						"execution_count": 76
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"from pyspark.sql.functions import *\r\n",
+							"from pyspark.sql.window import Window\r\n",
+							"\r\n",
+							"# data lake and container information\r\n",
+							"\r\n",
+							"use_test_env = True\r\n",
+							"\r\n",
+							"if use_test_env:\r\n",
+							"    stage1 = 'abfss://stage1@' + storage_account + '.dfs.core.windows.net/stage1'\r\n",
+							"    stage2 = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/'\r\n",
+							"    stage3 = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/'\r\n",
+							"else:\r\n",
+							"    stage1 = 'abfss://stage1@' + storage_account + '.dfs.core.windows.net'\r\n",
+							"    stage2 = 'abfss://stage2@' + storage_account + '.dfs.core.windows.net'\r\n",
+							"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
+						],
+						"outputs": [],
+						"execution_count": 79
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
 							"%run OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 1
+						"execution_count": 36
 					},
 					{
 						"cell_type": "code",
@@ -10173,7 +10234,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 37
 					},
 					{
 						"cell_type": "code",
@@ -10192,7 +10253,7 @@
 							"oea= OEA()"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": 38
 					},
 					{
 						"cell_type": "code",
@@ -10211,7 +10272,7 @@
 							"%run /Insights_py"
 						],
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": 39
 					},
 					{
 						"cell_type": "code",
@@ -10228,12 +10289,12 @@
 						},
 						"source": [
 							"\r\n",
-							"#test= test()\r\n",
+							"test0= test()\r\n",
 							"\r\n",
 							"test= Insights()"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 40
 					},
 					{
 						"cell_type": "code",
@@ -10249,10 +10310,210 @@
 							}
 						},
 						"source": [
-							"df= test.returnDataFrameBeforeProcessing('TechActivity')"
+							"df= test.returnDataFrameBeforeProcessing('TechActivity')\r\n",
+							"\r\n",
+							""
 						],
 						"outputs": [],
-						"execution_count": 7
+						"execution_count": 66
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"df.select('signalType', 'year', 'month')\r\n",
+							"\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 42
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"dffeb= df.where(df.month== 2)"
+						],
+						"outputs": [],
+						"execution_count": 43
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"\r\n",
+							"source_path=   oea.stage1np +'/'+ source_folder +'/activity'\r\n",
+							"\r\n",
+							"\r\n",
+							"source_path"
+						],
+						"outputs": [],
+						"execution_count": 81
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"spark_schema = oea.to_spark_schema(test.schemas['TechActivity'])\r\n",
+							"df1 = spark.readStream.csv(source_path + '/*', header=False, schema=spark_schema)\r\n",
+							"        #display(df)\r\n",
+							"#df1 = df1.withColumn()"
+						],
+						"outputs": [],
+						"execution_count": 57
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Queries with streaming sources must be executed with writeStream.start();\r\n",
+							"#display(df1)\r\n",
+							"#df1.show()\r\n",
+							"\r\n",
+							"\r\n",
+							"sqlContext.registerDataFrameAsTable(df1, 'Activity')\r\n",
+							"\r\n",
+							"sqlContext.registerDataFrameAsTable(df, 'Activity')"
+						],
+						"outputs": [],
+						"execution_count": 62
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"test.stage2np = stage2\r\n",
+							"test.stage2p = stage2\r\n",
+							"\r\n",
+							"oea.stage2np = stage2\r\n",
+							"oea.stage2p = stage2\r\n",
+							"\r\n",
+							"oea.stage2p \r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 82
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"oea.ingest_incremental_data( source_system=source_folder, tablename='Activity', schema=spark_schema, partition_by='year', primary_key='SignalId', data_format='csv', has_header=False)\r\n",
+							"        "
+						],
+						"outputs": [],
+						"execution_count": 83
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"dfquery = spark.sql(\"select * \\\r\n",
+							"from Activity \\\r\n",
+							"where year = 2022 \\\r\n",
+							"and month = 2\")"
+						],
+						"outputs": [],
+						"execution_count": 68
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"dfquery.show()"
+						],
+						"outputs": [],
+						"execution_count": 69
 					},
 					{
 						"cell_type": "code",
