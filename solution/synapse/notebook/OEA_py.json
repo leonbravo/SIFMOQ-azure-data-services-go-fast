@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "4232c5a3-6681-4705-beec-681163de497b"
+				"spark.autotune.trackingId": "8e436029-1431-4a40-bb60-a9d16f8e9772"
 			}
 		},
 		"metadata": {
@@ -271,7 +271,11 @@
 					"        if len(df_pseudo.columns) == 0:\n",
 					"            logger.info('No data to be written to stage2p')\n",
 					"        else:        \n",
-					"            query = df_pseudo.writeStream.format(\"delta\").outputMode(\"append\").trigger(once=True).option(\"checkpointLocation\", source_path + '/_checkpoints/incremental_p').partitionBy(partition_by)\n",
+					"            query = df_pseudo.writeStream.format(\"delta\")\n",
+					"                        .outputMode(\"append\")\n",
+					"                        .trigger(once=True)\n",
+					"                        .option(\"checkpointLocation\", source_path + '/_checkpoints/incremental_p')\n",
+					"                        .partitionBy(partition_by)\n",
 					"            query = query.start(p_destination_path)\n",
 					"            query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\n",
 					"            logger.info(query.lastProgress)\n",
