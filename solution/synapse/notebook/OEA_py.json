@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b943f98b-c28d-4c19-ba49-13361b46f9af"
+				"spark.autotune.trackingId": "c90a62b5-fcb9-4ea1-bccb-c0836f185b71"
 			}
 		},
 		"metadata": {
@@ -471,6 +471,7 @@
 					"    def rm_if_exists(self, path, recursive_remove=True):\n",
 					"        try:\n",
 					"            mssparkutils.fs.rm(path, recursive_remove)\n",
+					"            print(\"deleting files in\")\n",
 					"        except Exception as e:\n",
 					"            pass\n",
 					"\n",
