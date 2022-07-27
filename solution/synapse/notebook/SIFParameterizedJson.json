@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "922375de-fb1c-4134-8205-97e4fd5e561a"
+				"spark.autotune.trackingId": "fce14def-d2a6-4a53-9bf1-274f2ec193a5"
 			}
 		},
 		"metadata": {
@@ -43,7 +43,6 @@
 				"source": [
 					"TaskObject = \"{\\\"TaskInstanceId\\\":53,\\\"TaskMasterId\\\":1,\\\"TaskStatus\\\":\\\"InProgress\\\",\\\"TaskType\\\":\\\"Execute Synapse Notebook\\\",\\\"Enabled\\\":1,\\\"ExecutionUid\\\":\\\"dc872650-b992-4cae-9ae2-c714c95563ee\\\",\\\"NumberOfRetries\\\":2,\\\"DegreeOfCopyParallelism\\\":1,\\\"KeyVaultBaseUrl\\\":\\\"https://ads-dev-kv-ads-tad5.vault.azure.net/\\\",\\\"ScheduleMasterId\\\":\\\"-4\\\",\\\"TaskGroupConcurrency\\\":\\\"10\\\",\\\"TaskGroupPriority\\\":0,\\\"TaskExecutionType\\\":\\\"ADF\\\",\\\"Source\\\":{\\\"System\\\":{\\\"SystemId\\\":-4,\\\"SystemServer\\\":\\\"https://adsdevdlsadstad5adsl.dfs.core.windows.net\\\",\\\"AuthenticationType\\\":\\\"MSI\\\",\\\"Type\\\":\\\"ADLS\\\",\\\"Username\\\":null,\\\"Container\\\":\\\"datalakeraw\\\"},\\\"Instance\\\":{\\\"SourceRelativePath\\\":\\\"/samples/sif/\\\",\\\"TargetRelativePath\\\":\\\"/samples/sif/StudentPersonal/\\\"},\\\"DataFileName\\\":\\\"StudentPersonal.json\\\",\\\"RelativePath\\\":\\\"/samples/sif/\\\",\\\"SchemaFileName\\\":\\\"\\\",\\\"Type\\\":\\\"Notebook-Optional\\\",\\\"WriteSchemaToPurview\\\":\\\"Disabled\\\"},\\\"Target\\\":{\\\"System\\\":{\\\"SystemId\\\":-4,\\\"SystemServer\\\":\\\"https://adsdevdlsadstad5adsl.dfs.core.windows.net\\\",\\\"AuthenticationType\\\":\\\"MSI\\\",\\\"Type\\\":\\\"ADLS\\\",\\\"Username\\\":null,\\\"Container\\\":\\\"datalakeraw\\\"},\\\"Instance\\\":{\\\"SourceRelativePath\\\":\\\"/samples/sif/\\\",\\\"TargetRelativePath\\\":\\\"/samples/sif/StudentPersonal/\\\"},\\\"DataFileName\\\":\\\"StudentPersonal.parquet\\\",\\\"RelativePath\\\":\\\"/samples/sif/StudentPersonal/\\\",\\\"SchemaFileName\\\":\\\"\\\",\\\"Type\\\":\\\"Notebook-Optional\\\",\\\"WriteSchemaToPurview\\\":\\\"Disabled\\\"},\\\"TMOptionals\\\":{\\\"CustomDefinitions\\\":\\\"\\\",\\\"ExecuteNotebook\\\":\\\"SIFParameterizedJson\\\",\\\"Purview\\\":\\\"Disabled\\\",\\\"QualifiedIDAssociation\\\":\\\"TaskMasterId\\\",\\\"UseNotebookActivity\\\":\\\"Enabled\\\"}}\""
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -62,7 +61,6 @@
 				"source": [
 					"TaskObject"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -116,7 +114,6 @@
 					"Source = \"abfss://\" + Source \r\n",
 					"print(Source)"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -146,7 +143,6 @@
 					"Target = \"abfss://\" + Target \r\n",
 					"print(Target)"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -176,7 +172,6 @@
 					"\r\n",
 					""
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -199,8 +194,6 @@
 					"\r\n",
 					"#SIF model uses RefId as Unique identifier in all the structures\r\n",
 					"mergeCondition = \"oldData.RefId = newData.RefId\"\r\n",
-					"\r\n",
-					"\r\n",
 					"\r\n",
 					"\r\n",
 					"print(\"SourceDT = \" + TaskObjectJson['Source']['Type']  + \", TargetDT = \" + TaskObjectJson['Target']['Type'] )\r\n",
@@ -227,7 +220,6 @@
 					"    df.write.format(\"Delta\").save(Target)\r\n",
 					""
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -290,7 +282,6 @@
 					"    spark.catalog.setCurrentDatabase(targetDB)\r\n",
 					"    spark.catalog.createExternalTable(targetTable, path=SnapshotTarget, source='parquet')"
 				],
-				"attachments": null,
 				"execution_count": null
 			}
 		]

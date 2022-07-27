@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "be04b60c-63dd-4669-8bd0-e8df21ef204c"
+				"spark.autotune.trackingId": "b3289b45-9577-4b26-88f6-87939b5c145a"
 			}
 		},
 		"metadata": {
@@ -79,7 +79,7 @@
 					"source_folder= 'SDS/M365'\r\n",
 					"storage_account = 'bceaaeoeadevlrs' "
 				],
-				"execution_count": 20
+				"execution_count": 42
 			},
 			{
 				"cell_type": "code",
@@ -111,7 +111,7 @@
 					"    stage2 = 'abfss://stage2@' + storage_account + '.dfs.core.windows.net'\r\n",
 					"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 				],
-				"execution_count": 21
+				"execution_count": 43
 			},
 			{
 				"cell_type": "code",
@@ -129,7 +129,7 @@
 				"source": [
 					"%run OEA_py"
 				],
-				"execution_count": 22
+				"execution_count": 44
 			},
 			{
 				"cell_type": "code",
@@ -207,7 +207,7 @@
 					"\r\n",
 					""
 				],
-				"execution_count": 23
+				"execution_count": 45
 			},
 			{
 				"cell_type": "code",
@@ -225,7 +225,7 @@
 				"source": [
 					"oea= OEA()"
 				],
-				"execution_count": 24
+				"execution_count": 46
 			},
 			{
 				"cell_type": "code",
@@ -243,7 +243,7 @@
 				"source": [
 					"%run /Insights_py"
 				],
-				"execution_count": 25
+				"execution_count": 47
 			},
 			{
 				"cell_type": "code",
@@ -263,7 +263,7 @@
 					"\r\n",
 					"test= Insights()"
 				],
-				"execution_count": 26
+				"execution_count": 48
 			},
 			{
 				"cell_type": "code",
@@ -360,7 +360,7 @@
 				},
 				"source": [
 					"spark_schema = oea.to_spark_schema(test.schemas['TechActivity'])\r\n",
-					"df1 = spark.readStream.csv(source_path + '/*', header=False, schema=spark_schema)\r\n",
+					"df1 = spark.readStream.csv(source_path + '/*/*', header=False, schema=spark_schema)\r\n",
 					"        #display(df)\r\n",
 					"#df1 = df1.withColumn()"
 				],
@@ -414,25 +414,7 @@
 					"oea.stage2p \r\n",
 					""
 				],
-				"execution_count": 27
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					""
-				],
-				"execution_count": null
+				"execution_count": 49
 			},
 			{
 				"cell_type": "code",
@@ -526,7 +508,7 @@
 				"source": [
 					"#test.ingest()\r\n",
 					"\r\n",
-					"test.process_insights_activity_stage1_data()"
+					"#test.process_insights_activity_stage1_data()"
 				],
 				"execution_count": 30
 			},
@@ -564,7 +546,7 @@
 				"source": [
 					"test.process_activity()"
 				],
-				"execution_count": 34
+				"execution_count": 50
 			},
 			{
 				"cell_type": "code",
