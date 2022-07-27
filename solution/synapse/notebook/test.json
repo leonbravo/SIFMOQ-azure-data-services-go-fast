@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "9e2a1cd1-a0b2-4aef-9dae-39ea881274e9"
+				"spark.autotune.trackingId": "0302fe97-9467-4750-8cac-1ab71206b81d"
 			}
 		},
 		"metadata": {
@@ -79,7 +79,7 @@
 					"source_folder= 'SDS/M365'\r\n",
 					"storage_account = 'bceaaeoeadevlrs' "
 				],
-				"execution_count": 12
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",
@@ -111,7 +111,7 @@
 					"    stage2 = 'abfss://stage2@' + storage_account + '.dfs.core.windows.net'\r\n",
 					"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 				],
-				"execution_count": 13
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
@@ -129,7 +129,7 @@
 				"source": [
 					"%run OEA_py"
 				],
-				"execution_count": 14
+				"execution_count": 21
 			},
 			{
 				"cell_type": "code",
@@ -207,7 +207,7 @@
 					"\r\n",
 					""
 				],
-				"execution_count": 15
+				"execution_count": 22
 			},
 			{
 				"cell_type": "code",
@@ -225,7 +225,7 @@
 				"source": [
 					"oea= OEA()"
 				],
-				"execution_count": 16
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -243,7 +243,7 @@
 				"source": [
 					"%run /Insights_py"
 				],
-				"execution_count": 18
+				"execution_count": 24
 			},
 			{
 				"cell_type": "code",
