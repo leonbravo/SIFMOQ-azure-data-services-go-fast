@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "faeb19d4-2ad6-406b-9855-a45f226600bd"
+				"spark.autotune.trackingId": "fba83a9e-75b8-47e0-85a2-dc1125fda127"
 			}
 		},
 		"metadata": {
@@ -318,13 +318,15 @@
 					"        \r\n",
 					"        logger.info(\"Finished ingesting insights data from stage 1 to stage 2\")\r\n",
 					"\r\n",
-					"    def process_insights_activity_stage1_data(self):\r\n",
+					"    def process_insights_activity_stage1_data(self, date_folder_files):\r\n",
 					"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
 					"        logger.info(\"Processing ms_insights activity data from: \" + self.stage1np_activity)\r\n",
 					"\r\n",
 					"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
 					"        activity_spark_schema = oea.to_spark_schema(self.schemas['TechActivity'])\r\n",
-					"        df = spark.readStream.csv(self.stage1np_activity + '/*/*.csv', header='false', schema=activity_spark_schema)\r\n",
+					"\r\n",
+					"        if date_folder_files is None: date_folder_files = '/*/*.csv' else date_folder_files= date_folder_files+'*.csv'\r\n",
+					"        df = spark.readStream.csv(self.stage1np_activity + date_folder_files , header='false', schema=activity_spark_schema)\r\n",
 					"        df = df.dropDuplicates(['SignalId'])\r\n",
 					"        df = df.withColumn('year', F.year(F.col('StartTime'))).withColumn('month', F.month(F.col('StartTime')))\r\n",
 					"\r\n",
