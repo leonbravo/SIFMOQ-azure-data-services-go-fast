@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a00809e9-eb04-4288-b5b1-43be41248ce4"
+				"spark.autotune.trackingId": "6568da16-ce45-4d3d-a6e9-b2b494502854"
 			}
 		},
 		"metadata": {
@@ -356,10 +356,10 @@
 					"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
 					"            logger.info(query2.lastProgress)  \r\n",
 					"\r\n",
-					"    def returnDataFrameBeforeProcessing(self, tableName='TechActivity', sourcepath=self.stage1np_activity):\r\n",
+					"    def returnDataFrameBeforeProcessing(self, tableName='TechActivity', sourcepath):\r\n",
 					"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
 					"        logger.info(\"Processing ms_insights activity data from: \" + sourcepath)\r\n",
-					"\r\n",
+					"        if sourcepath is none: sourcepath=self.stage1np_activity\r\n",
 					"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
 					"        spark_schema = oea.to_spark_schema(self.schemas[f'{tableName}'])\r\n",
 					"        df = spark.readStream.csv(sourcepath + '/*/*.csv', header='false', schema=spark_schema)\r\n",
