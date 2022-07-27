@@ -4418,7 +4418,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "12b3894c-23eb-47f3-b4fc-5e8c3f4d70df"
+						"spark.autotune.trackingId": "a3be7e8a-3e7f-4725-971e-218a96d382c5"
 					}
 				},
 				"metadata": {
@@ -4756,10 +4756,10 @@
 							"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
 							"            logger.info(query2.lastProgress)  \r\n",
 							"\r\n",
-							"    def returnDataFrameBeforeProcessing(self, tableName='TechActivity', sourcepath=self.stage1np_activity):\r\n",
+							"    def returnDataFrameBeforeProcessing(self, tableName='TechActivity', sourcepath=None):\r\n",
 							"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
 							"        logger.info(\"Processing ms_insights activity data from: \" + sourcepath)\r\n",
-							"\r\n",
+							"        if sourcepath is None: sourcepath=self.stage1np_activity\r\n",
 							"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
 							"        spark_schema = oea.to_spark_schema(self.schemas[f'{tableName}'])\r\n",
 							"        df = spark.readStream.csv(sourcepath + '/*/*.csv', header='false', schema=spark_schema)\r\n",
@@ -10047,7 +10047,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "9dbcc6eb-ea4f-4af7-b8d0-20aee5b340b3"
+						"spark.autotune.trackingId": "a2adaaa3-58e8-4fc1-9b65-9c22d465b99c"
 					}
 				},
 				"metadata": {
@@ -10072,8 +10072,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -10109,7 +10108,7 @@
 							"storage_account = 'bceaaeoeadevlrs' "
 						],
 						"outputs": [],
-						"execution_count": 25
+						"execution_count": 31
 					},
 					{
 						"cell_type": "code",
@@ -10142,7 +10141,7 @@
 							"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 						],
 						"outputs": [],
-						"execution_count": 26
+						"execution_count": 32
 					},
 					{
 						"cell_type": "code",
@@ -10161,7 +10160,7 @@
 							"%run OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 27
+						"execution_count": 33
 					},
 					{
 						"cell_type": "code",
@@ -10240,7 +10239,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 28
+						"execution_count": 34
 					},
 					{
 						"cell_type": "code",
@@ -10259,7 +10258,7 @@
 							"oea= OEA()"
 						],
 						"outputs": [],
-						"execution_count": 29
+						"execution_count": 35
 					},
 					{
 						"cell_type": "code",
@@ -10278,7 +10277,7 @@
 							"%run /Insights_py"
 						],
 						"outputs": [],
-						"execution_count": 30
+						"execution_count": 36
 					},
 					{
 						"cell_type": "code",
