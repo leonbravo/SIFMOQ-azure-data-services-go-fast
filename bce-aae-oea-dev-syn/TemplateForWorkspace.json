@@ -4418,7 +4418,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "02ae6d5c-b481-41d5-b04a-d3466dbaf440"
+						"spark.autotune.trackingId": "8355a49e-0f74-46d7-a18f-3ebe24fb17d3"
 					}
 				},
 				"metadata": {
@@ -4443,8 +4443,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -4740,7 +4739,7 @@
 							"            logger.info('No data to be written to stage2p')\r\n",
 							"        else:\r\n",
 							"            query = df_pseudo.writeStream.format(\"delta\") \\\r\n",
-							"                                         .outputMode(\"append\") \\\r\n",
+							"                                         .outputMode(\"complete\") \\\r\n",
 							"                                         .trigger(once=True)  \\\r\n",
 							"                                         .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
 							"                                         .partitionBy('year')  \r\n",
@@ -4752,7 +4751,7 @@
 							"            logger.info('No data to be written to stage2np')\r\n",
 							"        else:\r\n",
 							"            query2 = df_lookup.writeStream.format(\"delta\") \\\r\n",
-							"                              .outputMode(\"append\") \\\r\n",
+							"                              .outputMode(\"complete\") \\\r\n",
 							"                              .trigger(once=True) \\\r\n",
 							"                              .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_lookup/') \\\r\n",
 							"                              .partitionBy('year')\r\n",
@@ -4802,10 +4801,11 @@
 							"            df.write.format(\"Delta\").save(Target)\r\n",
 							"\r\n",
 							"\r\n",
-							"    def returnDataFrameBeforeProcessing(self, tableName='TechActivity', sourcepath=None):\r\n",
+							"    def returnDataFrameBeforeProcessing(self, tableName='TechActivity', sourcepath=''):\r\n",
 							"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
 							"        logger.info(\"Processing ms_insights activity data from: \" + sourcepath)\r\n",
-							"        if sourcepath is None: sourcepath=self.stage1np_activity\r\n",
+							"        if sourcepath == '': \r\n",
+							"            sourcepath=self.stage1np_activity\r\n",
 							"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
 							"        spark_schema = oea.to_spark_schema(self.schemas[f'{tableName}'])\r\n",
 							"        df = spark.readStream.csv(sourcepath + '/*/*.csv', header='false', schema=spark_schema)\r\n",
@@ -10085,7 +10085,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "b3289b45-9577-4b26-88f6-87939b5c145a"
+						"spark.autotune.trackingId": "5ffb1e84-0dee-41f2-aaea-d5624d0452d5"
 					}
 				},
 				"metadata": {
@@ -10110,7 +10110,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": true
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -10146,7 +10147,7 @@
 							"storage_account = 'bceaaeoeadevlrs' "
 						],
 						"outputs": [],
-						"execution_count": 42
+						"execution_count": 51
 					},
 					{
 						"cell_type": "code",
@@ -10179,7 +10180,7 @@
 							"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 						],
 						"outputs": [],
-						"execution_count": 43
+						"execution_count": 52
 					},
 					{
 						"cell_type": "code",
@@ -10198,7 +10199,7 @@
 							"%run OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 44
+						"execution_count": 53
 					},
 					{
 						"cell_type": "code",
@@ -10239,14 +10240,14 @@
 							"        items = mssparkutils.fs.ls(self.stage1np)\r\n",
 							"        for item in items:\r\n",
 							"            if item.name.__contains__(\"csv\"):\r\n",
-							"                self.process_insights_activity_stage1_data()\r\n",
+							"                self.process_stage1_data()\r\n",
 							"\r\n",
 							"            else:\r\n",
 							"                logger.info(\"No defined function for processing this insights data\")\r\n",
 							"        \r\n",
 							"        logger.info(\"Finished ingesting data from stage 1 to stage 2\")\r\n",
 							"\r\n",
-							"    def process_insights_activity_stage1_data(self):\r\n",
+							"    def process_stage1_data(self):\r\n",
 							"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
 							"        logger.info(\"Processing test data from: \" + self.stage1np_activity)\r\n",
 							"\r\n",
@@ -10277,7 +10278,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 45
+						"execution_count": 54
 					},
 					{
 						"cell_type": "code",
@@ -10296,7 +10297,7 @@
 							"oea= OEA()"
 						],
 						"outputs": [],
-						"execution_count": 46
+						"execution_count": 55
 					},
 					{
 						"cell_type": "code",
@@ -10315,7 +10316,7 @@
 							"%run /Insights_py"
 						],
 						"outputs": [],
-						"execution_count": 47
+						"execution_count": 62
 					},
 					{
 						"cell_type": "code",
@@ -10336,7 +10337,7 @@
 							"test= Insights()"
 						],
 						"outputs": [],
-						"execution_count": 48
+						"execution_count": 63
 					},
 					{
 						"cell_type": "code",
@@ -10357,7 +10358,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 8
+						"execution_count": 58
 					},
 					{
 						"cell_type": "code",
@@ -10592,7 +10593,7 @@
 						"source": [
 							"#test.ingest()\r\n",
 							"\r\n",
-							"#test.process_insights_activity_stage1_data()"
+							"test.process_insights_activity_stage1_data()"
 						],
 						"outputs": [],
 						"execution_count": 30
@@ -10611,7 +10612,7 @@
 							}
 						},
 						"source": [
-							"test.delete_stage2()"
+							"#test.delete_stage2()"
 						],
 						"outputs": [],
 						"execution_count": 32
@@ -10630,7 +10631,7 @@
 							}
 						},
 						"source": [
-							"test.process_activity()"
+							"#test.process_activity()"
 						],
 						"outputs": [],
 						"execution_count": 50
