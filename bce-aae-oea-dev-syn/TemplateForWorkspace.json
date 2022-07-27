@@ -41,15 +41,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('workspaceName'), '/spark8pmd')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/Copy_all_from_Azure_SQL_DB')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -4427,7 +4418,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "7d0fd4a5-9ebd-48ec-8b21-cd36809103df"
+						"spark.autotune.trackingId": "fba83a9e-75b8-47e0-85a2-dc1125fda127"
 					}
 				},
 				"metadata": {
@@ -4726,13 +4717,15 @@
 							"        \r\n",
 							"        logger.info(\"Finished ingesting insights data from stage 1 to stage 2\")\r\n",
 							"\r\n",
-							"    def process_insights_activity_stage1_data(self):\r\n",
+							"    def process_insights_activity_stage1_data(self, date_folder_files):\r\n",
 							"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
 							"        logger.info(\"Processing ms_insights activity data from: \" + self.stage1np_activity)\r\n",
 							"\r\n",
 							"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
 							"        activity_spark_schema = oea.to_spark_schema(self.schemas['TechActivity'])\r\n",
-							"        df = spark.readStream.csv(self.stage1np_activity + '/*/*.csv', header='false', schema=activity_spark_schema)\r\n",
+							"\r\n",
+							"        if date_folder_files is None: date_folder_files = '/*/*.csv' else date_folder_files= date_folder_files+'*.csv'\r\n",
+							"        df = spark.readStream.csv(self.stage1np_activity + date_folder_files , header='false', schema=activity_spark_schema)\r\n",
 							"        df = df.dropDuplicates(['SignalId'])\r\n",
 							"        df = df.withColumn('year', F.year(F.col('StartTime'))).withColumn('month', F.month(F.col('StartTime')))\r\n",
 							"\r\n",
@@ -4741,11 +4734,11 @@
 							"        if len(df_pseudo.columns) == 0:\r\n",
 							"            logger.info('No data to be written to stage2p')\r\n",
 							"        else:\r\n",
-							"            query = df_pseudo.writeStream.format(\"delta\")\r\n",
-							"                                         .outputMode(\"append\")\r\n",
-							"                                         .trigger(once=True)\r\n",
-							"                                         .option(\"checkpointLocation\", self.stage1np_activity + '/_checkpoints_p')\r\n",
-							"                                         .partitionBy('year')\r\n",
+							"            query = df_pseudo.writeStream.format(\"delta\") \\\r\n",
+							"                                         .outputMode(\"append\") \\\r\n",
+							"                                         .trigger(once=True)  \\\r\n",
+							"                                         .option(\"checkpointLocation\", self.stage1np_activity + '/_checkpoints_p') \\\r\n",
+							"                                         .partitionBy('year')  \r\n",
 							"            query = query.start(self.stage2p + '/TechActivity_pseudo')\r\n",
 							"            query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
 							"            logger.info(query.lastProgress)\r\n",
@@ -4758,16 +4751,14 @@
 							"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
 							"            logger.info(query2.lastProgress)  \r\n",
 							"\r\n",
-							"    def returnDataFrameBeforeProcessing(self, tableName='TechActivity'):\r\n",
+							"    def returnDataFrameBeforeProcessing(self, tableName='TechActivity', sourcepath=self.stage1np_activity):\r\n",
 							"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
-							"        logger.info(\"Processing ms_insights activity data from: \" + self.stage1np_activity)\r\n",
+							"        logger.info(\"Processing ms_insights activity data from: \" + sourcepath)\r\n",
 							"\r\n",
 							"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
-							"        activity_spark_schema = oea.to_spark_schema(self.schemas[f'{tableName}'])\r\n",
-							"        df = spark.readStream.csv(self.stage1np_activity + '/*/*.csv', header='false', schema=activity_spark_schema)\r\n",
-							"        df = df.dropDuplicates(['SignalId'])\r\n",
-							"        df = df.withColumn('year', F.year(F.col('StartTime'))).withColumn('month', F.month(F.col('StartTime')))\r\n",
-							" \r\n",
+							"        spark_schema = oea.to_spark_schema(self.schemas[f'{tableName}'])\r\n",
+							"        df = spark.readStream.csv(sourcepath + '/*/*.csv', header='false', schema=spark_schema)\r\n",
+							"\r\n",
 							"        return df\r\n",
 							"\r\n",
 							"    def _process_roster_entity(self, path, entity):\r\n",
@@ -4806,7 +4797,17 @@
 							"        source_path = self.stage1np_roster + '/' + latest_batch\r\n",
 							"        self._process_roster_date_folder(source_path)\r\n",
 							"  \r\n",
-							""
+							"   def process_activity(self):\r\n",
+							"        \"\"\" Processes all roster data in stage1 and writes out to stage2 and stage2p \"\"\"\r\n",
+							"        logger.info(\"Processing ms_insights activity snapshot data from: \" + self.stage1np_activity)\r\n",
+							"\r\n",
+							"        latest_batch = oea.get_latest_folder(self.stage1np_activity)\r\n",
+							"        source_path = self.stage1np_activity \r\n",
+							"\r\n",
+							"        folders = oea.get_folders(source_path)\r\n",
+							"        for table_name in folders:\r\n",
+							"            self.process_insights_activity_stage1_data(date_folder_path)\r\n",
+							"      "
 						],
 						"outputs": [],
 						"execution_count": 1
@@ -5659,7 +5660,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "8e436029-1431-4a40-bb60-a9d16f8e9772"
+						"spark.autotune.trackingId": "481a6cdd-f472-474e-8d5b-395c50593285"
 					}
 				},
 				"metadata": {
@@ -5684,7 +5685,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": true
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -5911,10 +5913,10 @@
 							"        if len(df_pseudo.columns) == 0:\n",
 							"            logger.info('No data to be written to stage2p')\n",
 							"        else:        \n",
-							"            query = df_pseudo.writeStream.format(\"delta\")\n",
-							"                        .outputMode(\"append\")\n",
-							"                        .trigger(once=True)\n",
-							"                        .option(\"checkpointLocation\", source_path + '/_checkpoints/incremental_p')\n",
+							"            query = df_pseudo.writeStream.format(\"delta\") \\\n",
+							"                        .outputMode(\"append\") \\\n",
+							"                        .trigger(once=True) \\\n",
+							"                        .option(\"checkpointLocation\", source_path + '/_checkpoints/incremental_p') \\\n",
 							"                        .partitionBy(partition_by)\n",
 							"            query = query.start(p_destination_path)\n",
 							"            query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\n",
@@ -10041,7 +10043,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "0f2ee79f-37b5-4df8-85d3-427d77ddc344"
+						"spark.autotune.trackingId": "7af50ea2-7f34-4ee4-b00b-aa595b1a772d"
 					}
 				},
 				"metadata": {
@@ -10066,8 +10068,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
