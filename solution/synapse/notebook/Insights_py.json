@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f1013698-24e6-4e30-b48a-2bd774379e49"
+				"spark.autotune.trackingId": "a00809e9-eb04-4288-b5b1-43be41248ce4"
 			}
 		},
 		"metadata": {
@@ -327,7 +327,8 @@
 					"\r\n",
 					"        if date_folder_files is None: \r\n",
 					"            date_folder_files = '/*/*.csv' \r\n",
-					"        else date_folder_files= date_folder_files+'*.csv'\r\n",
+					"        else:\r\n",
+					"             date_folder_files= date_folder_files+'/*.csv'\r\n",
 					"        \r\n",
 					"        df = spark.readStream.csv(self.stage1np_activity + date_folder_files , header='false', schema=activity_spark_schema)\r\n",
 					"        df = df.dropDuplicates(['SignalId'])\r\n",
