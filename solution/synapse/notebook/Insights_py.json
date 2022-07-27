@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "7d0fd4a5-9ebd-48ec-8b21-cd36809103df"
+				"spark.autotune.trackingId": "7e21e7a4-d6d8-4a55-a02f-6a1f2339d544"
 			}
 		},
 		"metadata": {
@@ -333,11 +333,11 @@
 					"        if len(df_pseudo.columns) == 0:\r\n",
 					"            logger.info('No data to be written to stage2p')\r\n",
 					"        else:\r\n",
-					"            query = df_pseudo.writeStream.format(\"delta\")\r\n",
-					"                                         .outputMode(\"append\")\r\n",
-					"                                         .trigger(once=True)\r\n",
-					"                                         .option(\"checkpointLocation\", self.stage1np_activity + '/_checkpoints_p')\r\n",
-					"                                         .partitionBy('year')\r\n",
+					"            query = df_pseudo.writeStream.format(\"delta\") \\\r\n",
+					"                                         .outputMode(\"append\") \\\r\n",
+					"                                         .trigger(once=True)  \\\r\n",
+					"                                         .option(\"checkpointLocation\", self.stage1np_activity + '/_checkpoints_p') \\\r\n",
+					"                                         .partitionBy('year')  \r\n",
 					"            query = query.start(self.stage2p + '/TechActivity_pseudo')\r\n",
 					"            query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
 					"            logger.info(query.lastProgress)\r\n",
@@ -398,7 +398,13 @@
 					"        source_path = self.stage1np_roster + '/' + latest_batch\r\n",
 					"        self._process_roster_date_folder(source_path)\r\n",
 					"  \r\n",
-					""
+					"   def process_activity(self):\r\n",
+					"        \"\"\" Processes all roster data in stage1 and writes out to stage2 and stage2p \"\"\"\r\n",
+					"        logger.info(\"Processing ms_insights activity snapshot data from: \" + self.stage1np_activity)\r\n",
+					"\r\n",
+					"        latest_batch = oea.get_latest_folder(self.stage1np_activity)\r\n",
+					"        source_path = self.stage1np_activity \r\n",
+					"        self._process_roster_date_folder(source_path)"
 				],
 				"execution_count": 1
 			}
