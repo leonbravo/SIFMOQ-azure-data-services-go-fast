@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a8128158-4fb1-4c19-92fa-37eadc952fd6"
+				"spark.autotune.trackingId": "f1013698-24e6-4e30-b48a-2bd774379e49"
 			}
 		},
 		"metadata": {
@@ -325,7 +325,10 @@
 					"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
 					"        activity_spark_schema = oea.to_spark_schema(self.schemas['TechActivity'])\r\n",
 					"\r\n",
-					"        if date_folder_files is None: date_folder_files = '/*/*.csv' else date_folder_files= date_folder_files+'*.csv'\r\n",
+					"        if date_folder_files is None: \r\n",
+					"            date_folder_files = '/*/*.csv' \r\n",
+					"        else date_folder_files= date_folder_files+'*.csv'\r\n",
+					"        \r\n",
 					"        df = spark.readStream.csv(self.stage1np_activity + date_folder_files , header='false', schema=activity_spark_schema)\r\n",
 					"        df = df.dropDuplicates(['SignalId'])\r\n",
 					"        df = df.withColumn('year', F.year(F.col('StartTime'))).withColumn('month', F.month(F.col('StartTime')))\r\n",
