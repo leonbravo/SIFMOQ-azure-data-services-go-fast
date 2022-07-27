@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "cd4b30f6-14f1-4a33-9ad8-34d5f5046b65"
+				"spark.autotune.trackingId": "be04b60c-63dd-4669-8bd0-e8df21ef204c"
 			}
 		},
 		"metadata": {
@@ -79,7 +79,7 @@
 					"source_folder= 'SDS/M365'\r\n",
 					"storage_account = 'bceaaeoeadevlrs' "
 				],
-				"execution_count": 1
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
@@ -111,7 +111,7 @@
 					"    stage2 = 'abfss://stage2@' + storage_account + '.dfs.core.windows.net'\r\n",
 					"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 				],
-				"execution_count": 2
+				"execution_count": 21
 			},
 			{
 				"cell_type": "code",
@@ -129,7 +129,7 @@
 				"source": [
 					"%run OEA_py"
 				],
-				"execution_count": 3
+				"execution_count": 22
 			},
 			{
 				"cell_type": "code",
@@ -207,7 +207,7 @@
 					"\r\n",
 					""
 				],
-				"execution_count": 4
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -225,7 +225,7 @@
 				"source": [
 					"oea= OEA()"
 				],
-				"execution_count": 5
+				"execution_count": 24
 			},
 			{
 				"cell_type": "code",
@@ -243,7 +243,7 @@
 				"source": [
 					"%run /Insights_py"
 				],
-				"execution_count": 6
+				"execution_count": 25
 			},
 			{
 				"cell_type": "code",
@@ -263,7 +263,7 @@
 					"\r\n",
 					"test= Insights()"
 				],
-				"execution_count": 7
+				"execution_count": 26
 			},
 			{
 				"cell_type": "code",
@@ -414,7 +414,7 @@
 					"oea.stage2p \r\n",
 					""
 				],
-				"execution_count": 11
+				"execution_count": 27
 			},
 			{
 				"cell_type": "code",
@@ -451,7 +451,7 @@
 					"oea.ingest_incremental_data( source_system=source_folder, tablename='Activity', schema=spark_schema, partition_by='year', primary_key='SignalId', data_format='csv', has_header=False)\r\n",
 					"        "
 				],
-				"execution_count": 12
+				"execution_count": 28
 			},
 			{
 				"cell_type": "code",
@@ -472,7 +472,7 @@
 					"where year = 2022 \\\r\n",
 					"and SignalType = 'Call'\")"
 				],
-				"execution_count": 16
+				"execution_count": 29
 			},
 			{
 				"cell_type": "code",
@@ -528,7 +528,43 @@
 					"\r\n",
 					"test.process_insights_activity_stage1_data()"
 				],
-				"execution_count": 19
+				"execution_count": 30
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"test.delete_stage2()"
+				],
+				"execution_count": 32
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"test.process_activity()"
+				],
+				"execution_count": 34
 			},
 			{
 				"cell_type": "code",
