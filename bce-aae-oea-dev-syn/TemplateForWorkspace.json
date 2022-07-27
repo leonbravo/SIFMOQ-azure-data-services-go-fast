@@ -4418,7 +4418,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "06103c89-8b68-46b5-91a4-44421a8cde90"
+						"spark.autotune.trackingId": "02ae6d5c-b481-41d5-b04a-d3466dbaf440"
 					}
 				},
 				"metadata": {
@@ -4759,6 +4759,48 @@
 							"            query2 = query2.start(self.stage2np + '/TechActivity_lookup')\r\n",
 							"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
 							"            logger.info(query2.lastProgress)  \r\n",
+							"\r\n",
+							"    def full_load_insights_activity_stage1_data(self, date_folder_files=None):\r\n",
+							"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
+							"        logger.info(\"Processing ms_insights activity data from: \" + self.stage1np_activity)\r\n",
+							"\r\n",
+							"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
+							"        activity_spark_schema = oea.to_spark_schema(self.schemas['TechActivity'])\r\n",
+							"\r\n",
+							"     \r\n",
+							"        if date_folder_files is None: \r\n",
+							"            date_folder_files = '/*/*.csv' \r\n",
+							"        else:\r\n",
+							"            date_folder_files= date_folder_files+'/*.csv'\r\n",
+							"        \r\n",
+							"        df = spark.read.csv(self.stage1np_activity + date_folder_files , header='false', schema=activity_spark_schema)\r\n",
+							"        df = df.dropDuplicates(['SignalId'])\r\n",
+							"        df = df.withColumn('year', F.year(F.col('StartTime'))).withColumn('month', F.month(F.col('StartTime')))\r\n",
+							"\r\n",
+							"        df_pseudo, df_lookup = oea.pseudonymize(df, self.schemas['TechActivity'])\r\n",
+							"        #SignalId as Unique identifier for the Activities\r\n",
+							"        mergeCondition = \"oldData.SignalId = newData.SignalId\"\r\n",
+							"        Target= self.stage2np + '/TechActivity'\r\n",
+							"        var_check = DeltaTable.isDeltaTable(spark,  Target)\r\n",
+							"        try:\r\n",
+							"            if (var_check):\r\n",
+							"                print(\"Performing Merge... on Existing table\")\r\n",
+							"\r\n",
+							"                olddt = DeltaTable.forPath(spark, Target) \r\n",
+							"\r\n",
+							"                olddt.alias(\"oldData\").merge(\r\n",
+							"                    df.alias(\"newData\"),\r\n",
+							"                    mergeCondition) \\\r\n",
+							"                .whenMatchedUpdateAll() \\\r\n",
+							"                .whenNotMatchedInsertAll() \\\r\n",
+							"                .execute()\r\n",
+							"            else:\r\n",
+							"                print(\"Creating new Delta Table.\")    \r\n",
+							"                df.write.format(\"Delta\").save(Target)\r\n",
+							"        except:\r\n",
+							"            print(\"Table does not exist. Creating new Delta Table.\")    \r\n",
+							"            df.write.format(\"Delta\").save(Target)\r\n",
+							"\r\n",
 							"\r\n",
 							"    def returnDataFrameBeforeProcessing(self, tableName='TechActivity', sourcepath=None):\r\n",
 							"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
@@ -7337,7 +7379,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "922375de-fb1c-4134-8205-97e4fd5e561a"
+						"spark.autotune.trackingId": "fce14def-d2a6-4a53-9bf1-274f2ec193a5"
 					}
 				},
 				"metadata": {
@@ -7363,7 +7405,6 @@
 						"source": [
 							"TaskObject = \"{\\\"TaskInstanceId\\\":53,\\\"TaskMasterId\\\":1,\\\"TaskStatus\\\":\\\"InProgress\\\",\\\"TaskType\\\":\\\"Execute Synapse Notebook\\\",\\\"Enabled\\\":1,\\\"ExecutionUid\\\":\\\"dc872650-b992-4cae-9ae2-c714c95563ee\\\",\\\"NumberOfRetries\\\":2,\\\"DegreeOfCopyParallelism\\\":1,\\\"KeyVaultBaseUrl\\\":\\\"https://ads-dev-kv-ads-tad5.vault.azure.net/\\\",\\\"ScheduleMasterId\\\":\\\"-4\\\",\\\"TaskGroupConcurrency\\\":\\\"10\\\",\\\"TaskGroupPriority\\\":0,\\\"TaskExecutionType\\\":\\\"ADF\\\",\\\"Source\\\":{\\\"System\\\":{\\\"SystemId\\\":-4,\\\"SystemServer\\\":\\\"https://adsdevdlsadstad5adsl.dfs.core.windows.net\\\",\\\"AuthenticationType\\\":\\\"MSI\\\",\\\"Type\\\":\\\"ADLS\\\",\\\"Username\\\":null,\\\"Container\\\":\\\"datalakeraw\\\"},\\\"Instance\\\":{\\\"SourceRelativePath\\\":\\\"/samples/sif/\\\",\\\"TargetRelativePath\\\":\\\"/samples/sif/StudentPersonal/\\\"},\\\"DataFileName\\\":\\\"StudentPersonal.json\\\",\\\"RelativePath\\\":\\\"/samples/sif/\\\",\\\"SchemaFileName\\\":\\\"\\\",\\\"Type\\\":\\\"Notebook-Optional\\\",\\\"WriteSchemaToPurview\\\":\\\"Disabled\\\"},\\\"Target\\\":{\\\"System\\\":{\\\"SystemId\\\":-4,\\\"SystemServer\\\":\\\"https://adsdevdlsadstad5adsl.dfs.core.windows.net\\\",\\\"AuthenticationType\\\":\\\"MSI\\\",\\\"Type\\\":\\\"ADLS\\\",\\\"Username\\\":null,\\\"Container\\\":\\\"datalakeraw\\\"},\\\"Instance\\\":{\\\"SourceRelativePath\\\":\\\"/samples/sif/\\\",\\\"TargetRelativePath\\\":\\\"/samples/sif/StudentPersonal/\\\"},\\\"DataFileName\\\":\\\"StudentPersonal.parquet\\\",\\\"RelativePath\\\":\\\"/samples/sif/StudentPersonal/\\\",\\\"SchemaFileName\\\":\\\"\\\",\\\"Type\\\":\\\"Notebook-Optional\\\",\\\"WriteSchemaToPurview\\\":\\\"Disabled\\\"},\\\"TMOptionals\\\":{\\\"CustomDefinitions\\\":\\\"\\\",\\\"ExecuteNotebook\\\":\\\"SIFParameterizedJson\\\",\\\"Purview\\\":\\\"Disabled\\\",\\\"QualifiedIDAssociation\\\":\\\"TaskMasterId\\\",\\\"UseNotebookActivity\\\":\\\"Enabled\\\"}}\""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -7383,7 +7424,6 @@
 						"source": [
 							"TaskObject"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -7438,7 +7478,6 @@
 							"Source = \"abfss://\" + Source \r\n",
 							"print(Source)"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -7469,7 +7508,6 @@
 							"Target = \"abfss://\" + Target \r\n",
 							"print(Target)"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -7500,7 +7538,6 @@
 							"\r\n",
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -7524,8 +7561,6 @@
 							"\r\n",
 							"#SIF model uses RefId as Unique identifier in all the structures\r\n",
 							"mergeCondition = \"oldData.RefId = newData.RefId\"\r\n",
-							"\r\n",
-							"\r\n",
 							"\r\n",
 							"\r\n",
 							"print(\"SourceDT = \" + TaskObjectJson['Source']['Type']  + \", TargetDT = \" + TaskObjectJson['Target']['Type'] )\r\n",
@@ -7552,7 +7587,6 @@
 							"    df.write.format(\"Delta\").save(Target)\r\n",
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -7616,7 +7650,6 @@
 							"    spark.catalog.setCurrentDatabase(targetDB)\r\n",
 							"    spark.catalog.createExternalTable(targetTable, path=SnapshotTarget, source='parquet')"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -10052,7 +10085,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "be04b60c-63dd-4669-8bd0-e8df21ef204c"
+						"spark.autotune.trackingId": "b3289b45-9577-4b26-88f6-87939b5c145a"
 					}
 				},
 				"metadata": {
@@ -10113,7 +10146,7 @@
 							"storage_account = 'bceaaeoeadevlrs' "
 						],
 						"outputs": [],
-						"execution_count": 20
+						"execution_count": 42
 					},
 					{
 						"cell_type": "code",
@@ -10146,7 +10179,7 @@
 							"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 						],
 						"outputs": [],
-						"execution_count": 21
+						"execution_count": 43
 					},
 					{
 						"cell_type": "code",
@@ -10165,7 +10198,7 @@
 							"%run OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 22
+						"execution_count": 44
 					},
 					{
 						"cell_type": "code",
@@ -10244,7 +10277,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 23
+						"execution_count": 45
 					},
 					{
 						"cell_type": "code",
@@ -10263,7 +10296,7 @@
 							"oea= OEA()"
 						],
 						"outputs": [],
-						"execution_count": 24
+						"execution_count": 46
 					},
 					{
 						"cell_type": "code",
@@ -10282,7 +10315,7 @@
 							"%run /Insights_py"
 						],
 						"outputs": [],
-						"execution_count": 25
+						"execution_count": 47
 					},
 					{
 						"cell_type": "code",
@@ -10303,7 +10336,7 @@
 							"test= Insights()"
 						],
 						"outputs": [],
-						"execution_count": 26
+						"execution_count": 48
 					},
 					{
 						"cell_type": "code",
@@ -10404,7 +10437,7 @@
 						},
 						"source": [
 							"spark_schema = oea.to_spark_schema(test.schemas['TechActivity'])\r\n",
-							"df1 = spark.readStream.csv(source_path + '/*', header=False, schema=spark_schema)\r\n",
+							"df1 = spark.readStream.csv(source_path + '/*/*', header=False, schema=spark_schema)\r\n",
 							"        #display(df)\r\n",
 							"#df1 = df1.withColumn()"
 						],
@@ -10461,26 +10494,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 27
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							""
-						],
-						"outputs": [],
-						"execution_count": null
+						"execution_count": 49
 					},
 					{
 						"cell_type": "code",
@@ -10578,7 +10592,7 @@
 						"source": [
 							"#test.ingest()\r\n",
 							"\r\n",
-							"test.process_insights_activity_stage1_data()"
+							"#test.process_insights_activity_stage1_data()"
 						],
 						"outputs": [],
 						"execution_count": 30
@@ -10619,7 +10633,7 @@
 							"test.process_activity()"
 						],
 						"outputs": [],
-						"execution_count": 34
+						"execution_count": 50
 					},
 					{
 						"cell_type": "code",
