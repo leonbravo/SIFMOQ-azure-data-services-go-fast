@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "7af50ea2-7f34-4ee4-b00b-aa595b1a772d"
+				"spark.autotune.trackingId": "9e2a1cd1-a0b2-4aef-9dae-39ea881274e9"
 			}
 		},
 		"metadata": {
@@ -79,7 +79,7 @@
 					"source_folder= 'SDS/M365'\r\n",
 					"storage_account = 'bceaaeoeadevlrs' "
 				],
-				"execution_count": 76
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -111,7 +111,7 @@
 					"    stage2 = 'abfss://stage2@' + storage_account + '.dfs.core.windows.net'\r\n",
 					"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 				],
-				"execution_count": 79
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -129,7 +129,7 @@
 				"source": [
 					"%run OEA_py"
 				],
-				"execution_count": 36
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -207,7 +207,7 @@
 					"\r\n",
 					""
 				],
-				"execution_count": 37
+				"execution_count": 15
 			},
 			{
 				"cell_type": "code",
@@ -225,7 +225,7 @@
 				"source": [
 					"oea= OEA()"
 				],
-				"execution_count": 38
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
@@ -243,7 +243,7 @@
 				"source": [
 					"%run /Insights_py"
 				],
-				"execution_count": 39
+				"execution_count": 18
 			},
 			{
 				"cell_type": "code",
@@ -264,7 +264,7 @@
 					"\r\n",
 					"test= Insights()"
 				],
-				"execution_count": 40
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -284,7 +284,7 @@
 					"\r\n",
 					""
 				],
-				"execution_count": 66
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -304,7 +304,7 @@
 					"\r\n",
 					""
 				],
-				"execution_count": 42
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -322,7 +322,7 @@
 				"source": [
 					"dffeb= df.where(df.month== 2)"
 				],
-				"execution_count": 43
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -344,7 +344,7 @@
 					"\r\n",
 					"source_path"
 				],
-				"execution_count": 81
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -365,7 +365,7 @@
 					"        #display(df)\r\n",
 					"#df1 = df1.withColumn()"
 				],
-				"execution_count": 57
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -390,7 +390,7 @@
 					"\r\n",
 					"sqlContext.registerDataFrameAsTable(df, 'Activity')"
 				],
-				"execution_count": 62
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
