@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ca4e2141-9464-4fb3-b724-221ca001f3c6"
+				"spark.autotune.trackingId": "b943f98b-c28d-4c19-ba49-13361b46f9af"
 			}
 		},
 		"metadata": {
@@ -272,8 +272,8 @@
 					"            logger.info('No data to be written to stage2p')\n",
 					"        else:        \n",
 					"            query = df_pseudo.writeStream.format(\"delta\") \\\n",
-					"                        .outputMode(\"append\")   \\\n",
-					"                        .trigger(once=True)    \\\n",
+					"                        .outputMode(\"append\") \\\n",
+					"                        .trigger(once=True) \\\n",
 					"                        .option(\"checkpointLocation\", source_path + '/_checkpoints/incremental_p') \\\n",
 					"                        .partitionBy(partition_by)\n",
 					"            query = query.start(p_destination_path)\n",
