@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b3289b45-9577-4b26-88f6-87939b5c145a"
+				"spark.autotune.trackingId": "57c34559-bea5-406b-9903-1e45aa5b4662"
 			}
 		},
 		"metadata": {
@@ -79,7 +79,7 @@
 					"source_folder= 'SDS/M365'\r\n",
 					"storage_account = 'bceaaeoeadevlrs' "
 				],
-				"execution_count": 42
+				"execution_count": 51
 			},
 			{
 				"cell_type": "code",
@@ -111,7 +111,7 @@
 					"    stage2 = 'abfss://stage2@' + storage_account + '.dfs.core.windows.net'\r\n",
 					"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 				],
-				"execution_count": 43
+				"execution_count": 52
 			},
 			{
 				"cell_type": "code",
@@ -129,7 +129,7 @@
 				"source": [
 					"%run OEA_py"
 				],
-				"execution_count": 44
+				"execution_count": 53
 			},
 			{
 				"cell_type": "code",
@@ -170,14 +170,14 @@
 					"        items = mssparkutils.fs.ls(self.stage1np)\r\n",
 					"        for item in items:\r\n",
 					"            if item.name.__contains__(\"csv\"):\r\n",
-					"                self.process_insights_activity_stage1_data()\r\n",
+					"                self.process_stage1_data()\r\n",
 					"\r\n",
 					"            else:\r\n",
 					"                logger.info(\"No defined function for processing this insights data\")\r\n",
 					"        \r\n",
 					"        logger.info(\"Finished ingesting data from stage 1 to stage 2\")\r\n",
 					"\r\n",
-					"    def process_insights_activity_stage1_data(self):\r\n",
+					"    def process_stage1_data(self):\r\n",
 					"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
 					"        logger.info(\"Processing test data from: \" + self.stage1np_activity)\r\n",
 					"\r\n",
@@ -207,7 +207,7 @@
 					"\r\n",
 					""
 				],
-				"execution_count": 45
+				"execution_count": 54
 			},
 			{
 				"cell_type": "code",
@@ -225,7 +225,7 @@
 				"source": [
 					"oea= OEA()"
 				],
-				"execution_count": 46
+				"execution_count": 55
 			},
 			{
 				"cell_type": "code",
@@ -243,7 +243,7 @@
 				"source": [
 					"%run /Insights_py"
 				],
-				"execution_count": 47
+				"execution_count": 62
 			},
 			{
 				"cell_type": "code",
@@ -263,7 +263,7 @@
 					"\r\n",
 					"test= Insights()"
 				],
-				"execution_count": 48
+				"execution_count": 63
 			},
 			{
 				"cell_type": "code",
@@ -283,7 +283,7 @@
 					"\r\n",
 					""
 				],
-				"execution_count": 8
+				"execution_count": 58
 			},
 			{
 				"cell_type": "code",
@@ -508,7 +508,7 @@
 				"source": [
 					"#test.ingest()\r\n",
 					"\r\n",
-					"#test.process_insights_activity_stage1_data()"
+					"test.process_insights_activity_stage1_data()"
 				],
 				"execution_count": 30
 			},
@@ -526,7 +526,7 @@
 					}
 				},
 				"source": [
-					"test.delete_stage2()"
+					"#test.delete_stage2()"
 				],
 				"execution_count": 32
 			},
@@ -544,7 +544,7 @@
 					}
 				},
 				"source": [
-					"test.process_activity()"
+					"#test.process_activity()"
 				],
 				"execution_count": 50
 			},
