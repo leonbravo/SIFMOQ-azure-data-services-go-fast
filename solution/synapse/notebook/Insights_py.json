@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "386588fb-df60-4070-bdc9-0a9c51e3b03a"
+				"spark.autotune.trackingId": "f5bf5ffd-5442-467a-98dd-2c8fce4c73ff"
 			}
 		},
 		"metadata": {
@@ -340,7 +340,7 @@
 					"            logger.info('No data to be written to stage2p')\r\n",
 					"        else:\r\n",
 					"            query = df_pseudo.writeStream.format(\"delta\") \\\r\n",
-					"                                         .outputMode(\"append\") \\\r\n",
+					"                                         .outputMode(\"complete\") \\\r\n",
 					"                                         .trigger(once=True)  \\\r\n",
 					"                                         .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
 					"                                         .partitionBy('year')  \r\n",
@@ -352,7 +352,7 @@
 					"            logger.info('No data to be written to stage2np')\r\n",
 					"        else:\r\n",
 					"            query2 = df_lookup.writeStream.format(\"delta\") \\\r\n",
-					"                              .outputMode(\"append\") \\\r\n",
+					"                              .outputMode(\"complete\") \\\r\n",
 					"                              .trigger(once=True) \\\r\n",
 					"                              .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_lookup/') \\\r\n",
 					"                              .partitionBy('year')\r\n",
