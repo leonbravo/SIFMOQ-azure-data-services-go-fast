@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "7e21e7a4-d6d8-4a55-a02f-6a1f2339d544"
+				"spark.autotune.trackingId": "faeb19d4-2ad6-406b-9855-a45f226600bd"
 			}
 		},
 		"metadata": {
@@ -350,16 +350,14 @@
 					"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
 					"            logger.info(query2.lastProgress)  \r\n",
 					"\r\n",
-					"    def returnDataFrameBeforeProcessing(self, tableName='TechActivity'):\r\n",
+					"    def returnDataFrameBeforeProcessing(self, tableName='TechActivity', sourcepath=self.stage1np_activity):\r\n",
 					"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
-					"        logger.info(\"Processing ms_insights activity data from: \" + self.stage1np_activity)\r\n",
+					"        logger.info(\"Processing ms_insights activity data from: \" + sourcepath)\r\n",
 					"\r\n",
 					"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
-					"        activity_spark_schema = oea.to_spark_schema(self.schemas[f'{tableName}'])\r\n",
-					"        df = spark.readStream.csv(self.stage1np_activity + '/*/*.csv', header='false', schema=activity_spark_schema)\r\n",
-					"        df = df.dropDuplicates(['SignalId'])\r\n",
-					"        df = df.withColumn('year', F.year(F.col('StartTime'))).withColumn('month', F.month(F.col('StartTime')))\r\n",
-					" \r\n",
+					"        spark_schema = oea.to_spark_schema(self.schemas[f'{tableName}'])\r\n",
+					"        df = spark.readStream.csv(sourcepath + '/*/*.csv', header='false', schema=spark_schema)\r\n",
+					"\r\n",
 					"        return df\r\n",
 					"\r\n",
 					"    def _process_roster_entity(self, path, entity):\r\n",
@@ -404,7 +402,11 @@
 					"\r\n",
 					"        latest_batch = oea.get_latest_folder(self.stage1np_activity)\r\n",
 					"        source_path = self.stage1np_activity \r\n",
-					"        self._process_roster_date_folder(source_path)"
+					"\r\n",
+					"        folders = oea.get_folders(source_path)\r\n",
+					"        for table_name in folders:\r\n",
+					"            self.process_insights_activity_stage1_data(date_folder_path)\r\n",
+					"      "
 				],
 				"execution_count": 1
 			}
