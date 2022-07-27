@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a2adaaa3-58e8-4fc1-9b65-9c22d465b99c"
+				"spark.autotune.trackingId": "cd4b30f6-14f1-4a33-9ad8-34d5f5046b65"
 			}
 		},
 		"metadata": {
@@ -79,7 +79,7 @@
 					"source_folder= 'SDS/M365'\r\n",
 					"storage_account = 'bceaaeoeadevlrs' "
 				],
-				"execution_count": 31
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -111,7 +111,7 @@
 					"    stage2 = 'abfss://stage2@' + storage_account + '.dfs.core.windows.net'\r\n",
 					"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 				],
-				"execution_count": 32
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -129,7 +129,7 @@
 				"source": [
 					"%run OEA_py"
 				],
-				"execution_count": 33
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -207,7 +207,7 @@
 					"\r\n",
 					""
 				],
-				"execution_count": 34
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -225,7 +225,7 @@
 				"source": [
 					"oea= OEA()"
 				],
-				"execution_count": 35
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -243,7 +243,7 @@
 				"source": [
 					"%run /Insights_py"
 				],
-				"execution_count": 36
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -259,12 +259,11 @@
 					}
 				},
 				"source": [
-					"\r\n",
 					"test0= test()\r\n",
 					"\r\n",
 					"test= Insights()"
 				],
-				"execution_count": null
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -284,7 +283,7 @@
 					"\r\n",
 					""
 				],
-				"execution_count": null
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -344,7 +343,7 @@
 					"\r\n",
 					"source_path"
 				],
-				"execution_count": null
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -365,7 +364,7 @@
 					"        #display(df)\r\n",
 					"#df1 = df1.withColumn()"
 				],
-				"execution_count": null
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -388,9 +387,9 @@
 					"\r\n",
 					"sqlContext.registerDataFrameAsTable(df1, 'Activity')\r\n",
 					"\r\n",
-					"sqlContext.registerDataFrameAsTable(df, 'Activity')"
+					"#sqlContext.registerDataFrameAsTable(df, 'Activity')"
 				],
-				"execution_count": null
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -415,7 +414,25 @@
 					"oea.stage2p \r\n",
 					""
 				],
-				"execution_count": 82
+				"execution_count": 11
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -434,7 +451,7 @@
 					"oea.ingest_incremental_data( source_system=source_folder, tablename='Activity', schema=spark_schema, partition_by='year', primary_key='SignalId', data_format='csv', has_header=False)\r\n",
 					"        "
 				],
-				"execution_count": 83
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -453,9 +470,9 @@
 					"dfquery = spark.sql(\"select * \\\r\n",
 					"from Activity \\\r\n",
 					"where year = 2022 \\\r\n",
-					"and month = 2\")"
+					"and SignalType = 'Call'\")"
 				],
-				"execution_count": 68
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
@@ -473,7 +490,25 @@
 				"source": [
 					"dfquery.show()"
 				],
-				"execution_count": 69
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -493,7 +528,7 @@
 					"\r\n",
 					"test.process_insights_activity_stage1_data()"
 				],
-				"execution_count": 5
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",

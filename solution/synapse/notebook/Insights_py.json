@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "00c5cc5f-c76c-4db1-b95d-2f926a98e0c4"
+				"spark.autotune.trackingId": "915ff55b-f2c5-4eae-85e2-85b0373b63a2"
 			}
 		},
 		"metadata": {
@@ -318,7 +318,7 @@
 					"        \r\n",
 					"        logger.info(\"Finished ingesting insights data from stage 1 to stage 2\")\r\n",
 					"\r\n",
-					"    def process_insights_activity_stage1_data(self, date_folder_files):\r\n",
+					"    def process_insights_activity_stage1_data(self, date_folder_files=None):\r\n",
 					"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
 					"        logger.info(\"Processing ms_insights activity data from: \" + self.stage1np_activity)\r\n",
 					"\r\n",
