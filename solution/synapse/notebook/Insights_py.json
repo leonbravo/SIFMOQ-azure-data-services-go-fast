@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "bf1b58d6-2bf4-4945-a752-eaa17b06dd80"
+				"spark.autotune.trackingId": "8355a49e-0f74-46d7-a18f-3ebe24fb17d3"
 			}
 		},
 		"metadata": {
@@ -402,11 +402,11 @@
 					"            df.write.format(\"Delta\").save(Target)\r\n",
 					"\r\n",
 					"\r\n",
-					"    def returnDataFrameBeforeProcessing(self, tableName='TechActivity', sourcepath=stage1np_activity):\r\n",
+					"    def returnDataFrameBeforeProcessing(self, tableName='TechActivity', sourcepath=''):\r\n",
 					"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
 					"        logger.info(\"Processing ms_insights activity data from: \" + sourcepath)\r\n",
-					"        if sourcepath is None: \r\n",
-					"            sourcepath=''+self.stage1np_activity\r\n",
+					"        if sourcepath == '': \r\n",
+					"            sourcepath=self.stage1np_activity\r\n",
 					"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
 					"        spark_schema = oea.to_spark_schema(self.schemas[f'{tableName}'])\r\n",
 					"        df = spark.readStream.csv(sourcepath + '/*/*.csv', header='false', schema=spark_schema)\r\n",
