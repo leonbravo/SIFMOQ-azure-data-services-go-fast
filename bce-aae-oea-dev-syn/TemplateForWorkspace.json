@@ -4418,7 +4418,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "a3be7e8a-3e7f-4725-971e-218a96d382c5"
+						"spark.autotune.trackingId": "d9fe7127-7c6c-4f51-bd77-4e0c921c92d8"
 					}
 				},
 				"metadata": {
@@ -4718,7 +4718,7 @@
 							"        \r\n",
 							"        logger.info(\"Finished ingesting insights data from stage 1 to stage 2\")\r\n",
 							"\r\n",
-							"    def process_insights_activity_stage1_data(self, date_folder_files):\r\n",
+							"    def process_insights_activity_stage1_data(self, date_folder_files=None):\r\n",
 							"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
 							"        logger.info(\"Processing ms_insights activity data from: \" + self.stage1np_activity)\r\n",
 							"\r\n",
@@ -10047,7 +10047,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "a2adaaa3-58e8-4fc1-9b65-9c22d465b99c"
+						"spark.autotune.trackingId": "603e99d9-aea8-4b24-8ec8-a7da3dc13df9"
 					}
 				},
 				"metadata": {
@@ -10072,7 +10072,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": true
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -10108,7 +10109,7 @@
 							"storage_account = 'bceaaeoeadevlrs' "
 						],
 						"outputs": [],
-						"execution_count": 31
+						"execution_count": 1
 					},
 					{
 						"cell_type": "code",
@@ -10141,7 +10142,7 @@
 							"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 						],
 						"outputs": [],
-						"execution_count": 32
+						"execution_count": 2
 					},
 					{
 						"cell_type": "code",
@@ -10160,7 +10161,7 @@
 							"%run OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 33
+						"execution_count": 3
 					},
 					{
 						"cell_type": "code",
@@ -10239,7 +10240,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 34
+						"execution_count": 4
 					},
 					{
 						"cell_type": "code",
@@ -10258,7 +10259,7 @@
 							"oea= OEA()"
 						],
 						"outputs": [],
-						"execution_count": 35
+						"execution_count": 5
 					},
 					{
 						"cell_type": "code",
@@ -10277,7 +10278,7 @@
 							"%run /Insights_py"
 						],
 						"outputs": [],
-						"execution_count": 36
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
@@ -10293,13 +10294,12 @@
 							}
 						},
 						"source": [
-							"\r\n",
 							"test0= test()\r\n",
 							"\r\n",
 							"test= Insights()"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 7
 					},
 					{
 						"cell_type": "code",
@@ -10320,7 +10320,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 8
 					},
 					{
 						"cell_type": "code",
@@ -10383,7 +10383,7 @@
 							"source_path"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 9
 					},
 					{
 						"cell_type": "code",
@@ -10405,7 +10405,7 @@
 							"#df1 = df1.withColumn()"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 10
 					},
 					{
 						"cell_type": "code",
@@ -10428,10 +10428,10 @@
 							"\r\n",
 							"sqlContext.registerDataFrameAsTable(df1, 'Activity')\r\n",
 							"\r\n",
-							"sqlContext.registerDataFrameAsTable(df, 'Activity')"
+							"#sqlContext.registerDataFrameAsTable(df, 'Activity')"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 14
 					},
 					{
 						"cell_type": "code",
@@ -10457,7 +10457,26 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 82
+						"execution_count": 11
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							""
+						],
+						"outputs": [],
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -10477,7 +10496,7 @@
 							"        "
 						],
 						"outputs": [],
-						"execution_count": 83
+						"execution_count": 12
 					},
 					{
 						"cell_type": "code",
@@ -10496,10 +10515,10 @@
 							"dfquery = spark.sql(\"select * \\\r\n",
 							"from Activity \\\r\n",
 							"where year = 2022 \\\r\n",
-							"and month = 2\")"
+							"and SignalType = 'Call'\")"
 						],
 						"outputs": [],
-						"execution_count": 68
+						"execution_count": 16
 					},
 					{
 						"cell_type": "code",
@@ -10518,7 +10537,26 @@
 							"dfquery.show()"
 						],
 						"outputs": [],
-						"execution_count": 69
+						"execution_count": 18
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							""
+						],
+						"outputs": [],
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -10539,7 +10577,7 @@
 							"test.process_insights_activity_stage1_data()"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 19
 					},
 					{
 						"cell_type": "code",
