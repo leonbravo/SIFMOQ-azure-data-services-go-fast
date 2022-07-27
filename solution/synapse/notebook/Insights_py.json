@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "915ff55b-f2c5-4eae-85e2-85b0373b63a2"
+				"spark.autotune.trackingId": "84e07a90-3134-47f5-9ba5-bef421a639a0"
 			}
 		},
 		"metadata": {
@@ -335,14 +335,14 @@
 					"        df = df.withColumn('year', F.year(F.col('StartTime'))).withColumn('month', F.month(F.col('StartTime')))\r\n",
 					"\r\n",
 					"        df_pseudo, df_lookup = oea.pseudonymize(df, self.schemas['TechActivity'])\r\n",
-					"\r\n",
+					"        \r\n",
 					"        if len(df_pseudo.columns) == 0:\r\n",
 					"            logger.info('No data to be written to stage2p')\r\n",
 					"        else:\r\n",
 					"            query = df_pseudo.writeStream.format(\"delta\") \\\r\n",
 					"                                         .outputMode(\"append\") \\\r\n",
 					"                                         .trigger(once=True)  \\\r\n",
-					"                                         .option(\"checkpointLocation\", self.stage1np_activity + '/_checkpoints_p') \\\r\n",
+					"                                         .option(\"checkpointLocation\", self.stage2p + '/TechActivity_pseudo/_checkpoints_p/') \\\r\n",
 					"                                         .partitionBy('year')  \r\n",
 					"            query = query.start(self.stage2p + '/TechActivity_pseudo')\r\n",
 					"            query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
@@ -351,7 +351,11 @@
 					"        if len(df_lookup.columns) == 0:\r\n",
 					"            logger.info('No data to be written to stage2np')\r\n",
 					"        else:\r\n",
-					"            query2 = df_lookup.writeStream.format(\"delta\").outputMode(\"append\").trigger(once=True).option(\"checkpointLocation\", self.stage1np_activity + '/_checkpoints_np').partitionBy('year')\r\n",
+					"            query2 = df_lookup.writeStream.format(\"delta\") \\\r\n",
+					"                              .outputMode(\"append\") \\\r\n",
+					"                              .trigger(once=True) \\\r\n",
+					"                              .option(\"checkpointLocation\", self.stage2p + '/TechActivity_lookup/_checkpoints_np') \\\r\n",
+					"                              .partitionBy('year')\r\n",
 					"            query2 = query2.start(self.stage2np + '/TechActivity_lookup')\r\n",
 					"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
 					"            logger.info(query2.lastProgress)  \r\n",
