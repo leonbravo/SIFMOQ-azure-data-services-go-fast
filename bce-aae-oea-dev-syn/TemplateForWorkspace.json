@@ -4418,7 +4418,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "d9fe7127-7c6c-4f51-bd77-4e0c921c92d8"
+						"spark.autotune.trackingId": "06103c89-8b68-46b5-91a4-44421a8cde90"
 					}
 				},
 				"metadata": {
@@ -4728,21 +4728,21 @@
 							"        if date_folder_files is None: \r\n",
 							"            date_folder_files = '/*/*.csv' \r\n",
 							"        else:\r\n",
-							"             date_folder_files= date_folder_files+'/*.csv'\r\n",
+							"            date_folder_files= date_folder_files+'/*.csv'\r\n",
 							"        \r\n",
 							"        df = spark.readStream.csv(self.stage1np_activity + date_folder_files , header='false', schema=activity_spark_schema)\r\n",
 							"        df = df.dropDuplicates(['SignalId'])\r\n",
 							"        df = df.withColumn('year', F.year(F.col('StartTime'))).withColumn('month', F.month(F.col('StartTime')))\r\n",
 							"\r\n",
 							"        df_pseudo, df_lookup = oea.pseudonymize(df, self.schemas['TechActivity'])\r\n",
-							"\r\n",
+							"        \r\n",
 							"        if len(df_pseudo.columns) == 0:\r\n",
 							"            logger.info('No data to be written to stage2p')\r\n",
 							"        else:\r\n",
 							"            query = df_pseudo.writeStream.format(\"delta\") \\\r\n",
 							"                                         .outputMode(\"append\") \\\r\n",
 							"                                         .trigger(once=True)  \\\r\n",
-							"                                         .option(\"checkpointLocation\", self.stage1np_activity + '/_checkpoints_p') \\\r\n",
+							"                                         .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
 							"                                         .partitionBy('year')  \r\n",
 							"            query = query.start(self.stage2p + '/TechActivity_pseudo')\r\n",
 							"            query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
@@ -4751,7 +4751,11 @@
 							"        if len(df_lookup.columns) == 0:\r\n",
 							"            logger.info('No data to be written to stage2np')\r\n",
 							"        else:\r\n",
-							"            query2 = df_lookup.writeStream.format(\"delta\").outputMode(\"append\").trigger(once=True).option(\"checkpointLocation\", self.stage1np_activity + '/_checkpoints_np').partitionBy('year')\r\n",
+							"            query2 = df_lookup.writeStream.format(\"delta\") \\\r\n",
+							"                              .outputMode(\"append\") \\\r\n",
+							"                              .trigger(once=True) \\\r\n",
+							"                              .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_lookup/') \\\r\n",
+							"                              .partitionBy('year')\r\n",
 							"            query2 = query2.start(self.stage2np + '/TechActivity_lookup')\r\n",
 							"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
 							"            logger.info(query2.lastProgress)  \r\n",
@@ -5665,7 +5669,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "b943f98b-c28d-4c19-ba49-13361b46f9af"
+						"spark.autotune.trackingId": "c90a62b5-fcb9-4ea1-bccb-c0836f185b71"
 					}
 				},
 				"metadata": {
@@ -6117,6 +6121,7 @@
 							"    def rm_if_exists(self, path, recursive_remove=True):\n",
 							"        try:\n",
 							"            mssparkutils.fs.rm(path, recursive_remove)\n",
+							"            print(\"deleting files in\")\n",
 							"        except Exception as e:\n",
 							"            pass\n",
 							"\n",
@@ -10047,7 +10052,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "603e99d9-aea8-4b24-8ec8-a7da3dc13df9"
+						"spark.autotune.trackingId": "be04b60c-63dd-4669-8bd0-e8df21ef204c"
 					}
 				},
 				"metadata": {
@@ -10072,8 +10077,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -10109,7 +10113,7 @@
 							"storage_account = 'bceaaeoeadevlrs' "
 						],
 						"outputs": [],
-						"execution_count": 1
+						"execution_count": 20
 					},
 					{
 						"cell_type": "code",
@@ -10142,7 +10146,7 @@
 							"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": 21
 					},
 					{
 						"cell_type": "code",
@@ -10161,7 +10165,7 @@
 							"%run OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 22
 					},
 					{
 						"cell_type": "code",
@@ -10240,7 +10244,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": 23
 					},
 					{
 						"cell_type": "code",
@@ -10259,7 +10263,7 @@
 							"oea= OEA()"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 24
 					},
 					{
 						"cell_type": "code",
@@ -10278,7 +10282,7 @@
 							"%run /Insights_py"
 						],
 						"outputs": [],
-						"execution_count": 6
+						"execution_count": 25
 					},
 					{
 						"cell_type": "code",
@@ -10299,7 +10303,7 @@
 							"test= Insights()"
 						],
 						"outputs": [],
-						"execution_count": 7
+						"execution_count": 26
 					},
 					{
 						"cell_type": "code",
@@ -10457,7 +10461,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 11
+						"execution_count": 27
 					},
 					{
 						"cell_type": "code",
@@ -10496,7 +10500,7 @@
 							"        "
 						],
 						"outputs": [],
-						"execution_count": 12
+						"execution_count": 28
 					},
 					{
 						"cell_type": "code",
@@ -10518,7 +10522,7 @@
 							"and SignalType = 'Call'\")"
 						],
 						"outputs": [],
-						"execution_count": 16
+						"execution_count": 29
 					},
 					{
 						"cell_type": "code",
@@ -10577,7 +10581,45 @@
 							"test.process_insights_activity_stage1_data()"
 						],
 						"outputs": [],
-						"execution_count": 19
+						"execution_count": 30
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"test.delete_stage2()"
+						],
+						"outputs": [],
+						"execution_count": 32
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"test.process_activity()"
+						],
+						"outputs": [],
+						"execution_count": 34
 					},
 					{
 						"cell_type": "code",
