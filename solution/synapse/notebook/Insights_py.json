@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "fba83a9e-75b8-47e0-85a2-dc1125fda127"
+				"spark.autotune.trackingId": "a8128158-4fb1-4c19-92fa-37eadc952fd6"
 			}
 		},
 		"metadata": {
@@ -398,7 +398,7 @@
 					"        source_path = self.stage1np_roster + '/' + latest_batch\r\n",
 					"        self._process_roster_date_folder(source_path)\r\n",
 					"  \r\n",
-					"   def process_activity(self):\r\n",
+					"    def process_activity(self):\r\n",
 					"        \"\"\" Processes all roster data in stage1 and writes out to stage2 and stage2p \"\"\"\r\n",
 					"        logger.info(\"Processing ms_insights activity snapshot data from: \" + self.stage1np_activity)\r\n",
 					"\r\n",
@@ -406,8 +406,8 @@
 					"        source_path = self.stage1np_activity \r\n",
 					"\r\n",
 					"        folders = oea.get_folders(source_path)\r\n",
-					"        for table_name in folders:\r\n",
-					"            self.process_insights_activity_stage1_data(date_folder_path)\r\n",
+					"        for folder in folders:\r\n",
+					"            self.process_insights_activity_stage1_data(folder)\r\n",
 					"      "
 				],
 				"execution_count": 1
