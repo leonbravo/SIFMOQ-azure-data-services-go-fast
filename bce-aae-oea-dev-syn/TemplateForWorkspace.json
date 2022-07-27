@@ -4418,7 +4418,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "e83f7249-bb8d-4189-8b4a-9fd433f617d0"
+						"spark.autotune.trackingId": "12b3894c-23eb-47f3-b4fc-5e8c3f4d70df"
 					}
 				},
 				"metadata": {
@@ -4727,7 +4727,8 @@
 							"\r\n",
 							"        if date_folder_files is None: \r\n",
 							"            date_folder_files = '/*/*.csv' \r\n",
-							"        else date_folder_files= date_folder_files+'*.csv'\r\n",
+							"        else:\r\n",
+							"             date_folder_files= date_folder_files+'/*.csv'\r\n",
 							"        \r\n",
 							"        df = spark.readStream.csv(self.stage1np_activity + date_folder_files , header='false', schema=activity_spark_schema)\r\n",
 							"        df = df.dropDuplicates(['SignalId'])\r\n",
@@ -10046,7 +10047,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "6480d3c4-77b7-4eb0-bdce-1f930ef0c33e"
+						"spark.autotune.trackingId": "9dbcc6eb-ea4f-4af7-b8d0-20aee5b340b3"
 					}
 				},
 				"metadata": {
@@ -10108,7 +10109,7 @@
 							"storage_account = 'bceaaeoeadevlrs' "
 						],
 						"outputs": [],
-						"execution_count": 19
+						"execution_count": 25
 					},
 					{
 						"cell_type": "code",
@@ -10141,7 +10142,7 @@
 							"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 						],
 						"outputs": [],
-						"execution_count": 20
+						"execution_count": 26
 					},
 					{
 						"cell_type": "code",
@@ -10160,7 +10161,7 @@
 							"%run OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 21
+						"execution_count": 27
 					},
 					{
 						"cell_type": "code",
@@ -10239,7 +10240,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 22
+						"execution_count": 28
 					},
 					{
 						"cell_type": "code",
@@ -10258,7 +10259,7 @@
 							"oea= OEA()"
 						],
 						"outputs": [],
-						"execution_count": 23
+						"execution_count": 29
 					},
 					{
 						"cell_type": "code",
@@ -10277,7 +10278,7 @@
 							"%run /Insights_py"
 						],
 						"outputs": [],
-						"execution_count": 24
+						"execution_count": 30
 					},
 					{
 						"cell_type": "code",
