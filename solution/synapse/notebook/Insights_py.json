@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "84e07a90-3134-47f5-9ba5-bef421a639a0"
+				"spark.autotune.trackingId": "fa830bc1-39fc-4d42-830b-4e89cf4748df"
 			}
 		},
 		"metadata": {
@@ -328,7 +328,7 @@
 					"        if date_folder_files is None: \r\n",
 					"            date_folder_files = '/*/*.csv' \r\n",
 					"        else:\r\n",
-					"             date_folder_files= date_folder_files+'/*.csv'\r\n",
+					"            date_folder_files= date_folder_files+'/*.csv'\r\n",
 					"        \r\n",
 					"        df = spark.readStream.csv(self.stage1np_activity + date_folder_files , header='false', schema=activity_spark_schema)\r\n",
 					"        df = df.dropDuplicates(['SignalId'])\r\n",
@@ -342,7 +342,7 @@
 					"            query = df_pseudo.writeStream.format(\"delta\") \\\r\n",
 					"                                         .outputMode(\"append\") \\\r\n",
 					"                                         .trigger(once=True)  \\\r\n",
-					"                                         .option(\"checkpointLocation\", self.stage2p + '/TechActivity_pseudo/_checkpoints_p/') \\\r\n",
+					"                                         .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
 					"                                         .partitionBy('year')  \r\n",
 					"            query = query.start(self.stage2p + '/TechActivity_pseudo')\r\n",
 					"            query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
@@ -354,7 +354,7 @@
 					"            query2 = df_lookup.writeStream.format(\"delta\") \\\r\n",
 					"                              .outputMode(\"append\") \\\r\n",
 					"                              .trigger(once=True) \\\r\n",
-					"                              .option(\"checkpointLocation\", self.stage2p + '/TechActivity_lookup/_checkpoints_np') \\\r\n",
+					"                              .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_lookup/') \\\r\n",
 					"                              .partitionBy('year')\r\n",
 					"            query2 = query2.start(self.stage2np + '/TechActivity_lookup')\r\n",
 					"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
