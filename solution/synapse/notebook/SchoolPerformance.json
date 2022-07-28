@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "41f89012-0aa3-43eb-9f20-d6f9a029958e"
+				"spark.autotune.trackingId": "78bf33d1-e8d2-4962-bec4-ea8d31041420"
 			}
 		},
 		"metadata": {
@@ -144,7 +144,7 @@
 					"import datetime\r\n",
 					""
 				],
-				"execution_count": 6
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
@@ -179,7 +179,7 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"execution_count": 7
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -204,7 +204,7 @@
 					"    stage2np = oea.stage2np\r\n",
 					"    stage2p = oea.stage3np"
 				],
-				"execution_count": null
+				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
@@ -263,7 +263,7 @@
 				"source": [
 					"%run /biDimensions_py"
 				],
-				"execution_count": null
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -284,7 +284,7 @@
 					"\r\n",
 					"classBiDim = biDimensions()"
 				],
-				"execution_count": 159
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -363,7 +363,7 @@
 					"#spark.read.format(\"com.elastacloud.spark.excel\").load(f'{stage1np}{source_folder}' + 'SchoolClassification.xlsx')\r\n",
 					""
 				],
-				"execution_count": 109
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -384,10 +384,49 @@
 					"dfSchoolPerformanceRaw['pk'] = dfSchoolPerformanceRaw['School'] + dfSchoolPerformanceRaw['Year'].astype(str)\r\n",
 					"\r\n",
 					"#dfSchoolPerformanceClear= oea.fix_column_names(df=dfSchoolPerformanceRaw)\r\n",
-					"\r\n",
+					"#only used for now only for the schema definition\r\n",
 					"classSchool= SchoolPerformance()"
 				],
-				"execution_count": 120
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"dfSchoolPNaN=dfSchoolPerformanceRaw.fillna(0)"
+				],
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#for item in classSchool.schemas['SchoolClassification']:\r\n",
+					"#    print(item[0] + item[1])\r\n",
+					"#    if item[1] == 'Integer' or item[1] == 'float64':\r\n",
+					"#        dfSchoolPerformanceRaw.fillna(item[0], 0)"
+				],
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
@@ -404,9 +443,11 @@
 				},
 				"source": [
 					"#For %debug\r\n",
-					"#dfSchoolPerformanceRaw.info"
+					"#NaN\r\n",
+					"dfSchoolPerformanceRaw.info\r\n",
+					"dfSchoolPNaN.info"
 				],
-				"execution_count": 121
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
@@ -423,9 +464,9 @@
 				},
 				"source": [
 					"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')\r\n",
-					"dfschool=spark.createDataFrame(dfSchoolPerformanceRaw)"
+					"dfschool=spark.createDataFrame(dfSchoolPNaN)"
 				],
-				"execution_count": 122
+				"execution_count": 21
 			},
 			{
 				"cell_type": "code",
@@ -462,7 +503,7 @@
 				"source": [
 					"oea.ingest_snapshot_data_frame(inpdataframe=dfschool, source_path= f'{source_folder}{table_name}', primary_key='pk', schema=classSchool.schemas['SchoolClassification'])"
 				],
-				"execution_count": 115
+				"execution_count": 22
 			},
 			{
 				"cell_type": "code",

@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "9729457c-13d3-4ec0-9d97-4139c979ec39"
+				"spark.autotune.trackingId": "c794ead4-00d8-4211-9e20-d926991faff1"
 			}
 		},
 		"metadata": {
@@ -353,7 +353,6 @@
 					"        else:\r\n",
 					"            query = df_pseudo.writeStream.format(\"delta\") \\\r\n",
 					"                                         .outputMode(\"append\") \\\r\n",
-					"                                         .trigger(once=True)  \\\r\n",
 					"                                         .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
 					"                                         .option(\"startingOffsets\", \"earliest\") \\\r\n",
 					"                                         .option(\"truncate\", False) \\\r\n",
@@ -367,7 +366,6 @@
 					"        else:\r\n",
 					"            query2 = df_lookup.writeStream.format(\"delta\") \\\r\n",
 					"                              .outputMode(\"append\") \\\r\n",
-					"                              .trigger(once=True) \\\r\n",
 					"                              .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_lookup/') \\\r\n",
 					"                              .option(\"startingOffsets\", \"earliest\") \\\r\n",
 					"                              .option(\"truncate\", False) \\\r\n",

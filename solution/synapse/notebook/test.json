@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "1ec2acfc-b960-4e3e-98eb-2b2bd65620b7"
+				"spark.autotune.trackingId": "88296238-71b2-4f39-976e-8685d4af5f20"
 			}
 		},
 		"metadata": {
@@ -79,7 +79,7 @@
 					"source_folder= 'SDS/M365'\r\n",
 					"storage_account = 'bceaaeoeadevlrs' "
 				],
-				"execution_count": 139
+				"execution_count": 155
 			},
 			{
 				"cell_type": "code",
@@ -111,7 +111,7 @@
 					"    stage2 = 'abfss://stage2@' + storage_account + '.dfs.core.windows.net'\r\n",
 					"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 				],
-				"execution_count": 140
+				"execution_count": 156
 			},
 			{
 				"cell_type": "code",
@@ -129,7 +129,7 @@
 				"source": [
 					"%run OEA_py"
 				],
-				"execution_count": 141
+				"execution_count": 157
 			},
 			{
 				"cell_type": "code",
@@ -202,7 +202,7 @@
 					"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
 					"            logger.info(query2.lastProgress)   "
 				],
-				"execution_count": 142
+				"execution_count": 158
 			},
 			{
 				"cell_type": "code",
@@ -220,7 +220,7 @@
 				"source": [
 					"oea= OEA()"
 				],
-				"execution_count": 143
+				"execution_count": 159
 			},
 			{
 				"cell_type": "code",
@@ -238,7 +238,7 @@
 				"source": [
 					"%run /Insights_py"
 				],
-				"execution_count": 144
+				"execution_count": 160
 			},
 			{
 				"cell_type": "code",
@@ -258,7 +258,7 @@
 					"\r\n",
 					"test= Insights()"
 				],
-				"execution_count": 145
+				"execution_count": 161
 			},
 			{
 				"cell_type": "code",
@@ -277,7 +277,7 @@
 					"df= test.returnDataFrameBeforeProcessing('TechActivity')\r\n",
 					""
 				],
-				"execution_count": 146
+				"execution_count": 162
 			},
 			{
 				"cell_type": "code",
@@ -295,7 +295,7 @@
 				"source": [
 					"#df.select('signalType', 'year', 'month')"
 				],
-				"execution_count": null
+				"execution_count": 163
 			},
 			{
 				"cell_type": "code",
@@ -313,7 +313,7 @@
 				"source": [
 					"test.stage2p"
 				],
-				"execution_count": 148
+				"execution_count": 164
 			},
 			{
 				"cell_type": "code",
@@ -334,10 +334,27 @@
 					"#oea.stage2np = stage2\r\n",
 					"#oea.stage2p = stage2\r\n",
 					"\r\n",
-					"oea.stage2p \r\n",
+					"oea.stage2p "
+				],
+				"execution_count": 165
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
 					"test.stage2p"
 				],
-				"execution_count": 149
+				"execution_count": 166
 			},
 			{
 				"cell_type": "code",
@@ -608,7 +625,7 @@
 					"\r\n",
 					"test.process_insights_activity_stage1_data()"
 				],
-				"execution_count": 154
+				"execution_count": 167
 			},
 			{
 				"cell_type": "code",
