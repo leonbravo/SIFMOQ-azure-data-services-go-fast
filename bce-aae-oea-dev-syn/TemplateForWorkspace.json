@@ -4418,7 +4418,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "e28f1243-3f06-4ee2-a7cf-82b8c291240b"
+						"spark.autotune.trackingId": "3a79bf4a-970d-4e29-8974-60c7636cbc16"
 					}
 				},
 				"metadata": {
@@ -4753,7 +4753,6 @@
 							"        else:\r\n",
 							"            query = df_pseudo.writeStream.format(\"delta\") \\\r\n",
 							"                                         .outputMode(\"append\") \\\r\n",
-							"                                         .trigger(once=True)  \\\r\n",
 							"                                         .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
 							"                                         .option(\"startingOffsets\", \"earliest\") \\\r\n",
 							"                                         .option(\"truncate\", False) \\\r\n",
@@ -4767,7 +4766,6 @@
 							"        else:\r\n",
 							"            query2 = df_lookup.writeStream.format(\"delta\") \\\r\n",
 							"                              .outputMode(\"append\") \\\r\n",
-							"                              .trigger(once=True) \\\r\n",
 							"                              .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_lookup/') \\\r\n",
 							"                              .option(\"startingOffsets\", \"earliest\") \\\r\n",
 							"                              .option(\"truncate\", False) \\\r\n",
@@ -5728,7 +5726,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "c90a62b5-fcb9-4ea1-bccb-c0836f185b71"
+						"spark.autotune.trackingId": "64de4e59-2159-49fd-aae1-c79a890dc15f"
 					}
 				},
 				"metadata": {
@@ -5985,6 +5983,7 @@
 							"                        .trigger(once=True) \\\n",
 							"                        .option(\"checkpointLocation\", source_path + '/_checkpoints/incremental_p') \\\n",
 							"                        .partitionBy(partition_by)\n",
+							"                        .option(\"mergeSchema\", \"true\")\n",
 							"            query = query.start(p_destination_path)\n",
 							"            query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\n",
 							"            logger.info(query.lastProgress)\n",
@@ -7699,7 +7698,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "41f89012-0aa3-43eb-9f20-d6f9a029958e"
+						"spark.autotune.trackingId": "78bf33d1-e8d2-4962-bec4-ea8d31041420"
 					}
 				},
 				"metadata": {
@@ -7824,7 +7823,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 6
+						"execution_count": 3
 					},
 					{
 						"cell_type": "markdown",
@@ -7860,7 +7859,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 7
+						"execution_count": 4
 					},
 					{
 						"cell_type": "code",
@@ -7886,7 +7885,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 5
 					},
 					{
 						"cell_type": "markdown",
@@ -7946,7 +7945,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
@@ -7968,7 +7967,7 @@
 							"classBiDim = biDimensions()"
 						],
 						"outputs": [],
-						"execution_count": 159
+						"execution_count": 7
 					},
 					{
 						"cell_type": "code",
@@ -8050,7 +8049,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 109
+						"execution_count": 8
 					},
 					{
 						"cell_type": "code",
@@ -8071,11 +8070,52 @@
 							"dfSchoolPerformanceRaw['pk'] = dfSchoolPerformanceRaw['School'] + dfSchoolPerformanceRaw['Year'].astype(str)\r\n",
 							"\r\n",
 							"#dfSchoolPerformanceClear= oea.fix_column_names(df=dfSchoolPerformanceRaw)\r\n",
-							"\r\n",
+							"#only used for now only for the schema definition\r\n",
 							"classSchool= SchoolPerformance()"
 						],
 						"outputs": [],
-						"execution_count": 120
+						"execution_count": 9
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"dfSchoolPNaN=dfSchoolPerformanceRaw.fillna(0)"
+						],
+						"outputs": [],
+						"execution_count": 18
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#for item in classSchool.schemas['SchoolClassification']:\r\n",
+							"#    print(item[0] + item[1])\r\n",
+							"#    if item[1] == 'Integer' or item[1] == 'float64':\r\n",
+							"#        dfSchoolPerformanceRaw.fillna(item[0], 0)"
+						],
+						"outputs": [],
+						"execution_count": 17
 					},
 					{
 						"cell_type": "code",
@@ -8092,10 +8132,12 @@
 						},
 						"source": [
 							"#For %debug\r\n",
-							"#dfSchoolPerformanceRaw.info"
+							"#NaN\r\n",
+							"dfSchoolPerformanceRaw.info\r\n",
+							"dfSchoolPNaN.info"
 						],
 						"outputs": [],
-						"execution_count": 121
+						"execution_count": 20
 					},
 					{
 						"cell_type": "code",
@@ -8112,10 +8154,10 @@
 						},
 						"source": [
 							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')\r\n",
-							"dfschool=spark.createDataFrame(dfSchoolPerformanceRaw)"
+							"dfschool=spark.createDataFrame(dfSchoolPNaN)"
 						],
 						"outputs": [],
-						"execution_count": 122
+						"execution_count": 21
 					},
 					{
 						"cell_type": "code",
@@ -8154,7 +8196,7 @@
 							"oea.ingest_snapshot_data_frame(inpdataframe=dfschool, source_path= f'{source_folder}{table_name}', primary_key='pk', schema=classSchool.schemas['SchoolClassification'])"
 						],
 						"outputs": [],
-						"execution_count": 115
+						"execution_count": 22
 					},
 					{
 						"cell_type": "code",
@@ -8444,7 +8486,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "a653efed-685f-4a50-9000-da5ab4aac894"
+						"spark.autotune.trackingId": "1ae2fdaf-b7dc-433d-8a41-2cb892e767ea"
 					}
 				},
 				"metadata": {
@@ -8569,8 +8611,8 @@
 							"        BaseOEAModule.__init__(self, source_folder)\r\n",
 							"      \r\n",
 							"        self.schemas['SchoolClassification'] = [\r\n",
-							"                    ['Year' ,   'int64', 'no-op'],\r\n",
-							"                    ['School' ,   'object', 'no-op'],\r\n",
+							"                    ['Year' ,   'Integer', 'no-op'],\r\n",
+							"                    ['School' ,   'string', 'no-op'],\r\n",
 							"                    ['Attendance_Level_%' ,   'float64', 'no-op'],\r\n",
 							"                    ['5Y_Enrolment_%' ,   'float64', 'no-op'],\r\n",
 							"                    ['Similar_Student_Difference' ,   'float64', 'no-op'],\r\n",
@@ -10076,7 +10118,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "1ec2acfc-b960-4e3e-98eb-2b2bd65620b7"
+						"spark.autotune.trackingId": "88296238-71b2-4f39-976e-8685d4af5f20"
 					}
 				},
 				"metadata": {
@@ -10137,7 +10179,7 @@
 							"storage_account = 'bceaaeoeadevlrs' "
 						],
 						"outputs": [],
-						"execution_count": 139
+						"execution_count": 155
 					},
 					{
 						"cell_type": "code",
@@ -10170,7 +10212,7 @@
 							"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 						],
 						"outputs": [],
-						"execution_count": 140
+						"execution_count": 156
 					},
 					{
 						"cell_type": "code",
@@ -10189,7 +10231,7 @@
 							"%run OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 141
+						"execution_count": 157
 					},
 					{
 						"cell_type": "code",
@@ -10263,7 +10305,7 @@
 							"            logger.info(query2.lastProgress)   "
 						],
 						"outputs": [],
-						"execution_count": 142
+						"execution_count": 158
 					},
 					{
 						"cell_type": "code",
@@ -10282,7 +10324,7 @@
 							"oea= OEA()"
 						],
 						"outputs": [],
-						"execution_count": 143
+						"execution_count": 159
 					},
 					{
 						"cell_type": "code",
@@ -10301,7 +10343,7 @@
 							"%run /Insights_py"
 						],
 						"outputs": [],
-						"execution_count": 144
+						"execution_count": 160
 					},
 					{
 						"cell_type": "code",
@@ -10322,7 +10364,7 @@
 							"test= Insights()"
 						],
 						"outputs": [],
-						"execution_count": 145
+						"execution_count": 161
 					},
 					{
 						"cell_type": "code",
@@ -10342,7 +10384,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 146
+						"execution_count": 162
 					},
 					{
 						"cell_type": "code",
@@ -10361,7 +10403,7 @@
 							"#df.select('signalType', 'year', 'month')"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 163
 					},
 					{
 						"cell_type": "code",
@@ -10380,7 +10422,7 @@
 							"test.stage2p"
 						],
 						"outputs": [],
-						"execution_count": 148
+						"execution_count": 164
 					},
 					{
 						"cell_type": "code",
@@ -10401,11 +10443,29 @@
 							"#oea.stage2np = stage2\r\n",
 							"#oea.stage2p = stage2\r\n",
 							"\r\n",
-							"oea.stage2p \r\n",
+							"oea.stage2p "
+						],
+						"outputs": [],
+						"execution_count": 165
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
 							"test.stage2p"
 						],
 						"outputs": [],
-						"execution_count": 149
+						"execution_count": 166
 					},
 					{
 						"cell_type": "code",
@@ -10690,7 +10750,7 @@
 							"test.process_insights_activity_stage1_data()"
 						],
 						"outputs": [],
-						"execution_count": 154
+						"execution_count": 167
 					},
 					{
 						"cell_type": "code",
