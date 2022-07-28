@@ -4418,7 +4418,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "3a79bf4a-970d-4e29-8974-60c7636cbc16"
+						"spark.autotune.trackingId": "c794ead4-00d8-4211-9e20-d926991faff1"
 					}
 				},
 				"metadata": {
@@ -4443,8 +4443,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -5726,7 +5725,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "64de4e59-2159-49fd-aae1-c79a890dc15f"
+						"spark.autotune.trackingId": "8b42a6f9-c6ca-4492-a006-53e3fcf3f9fb"
 					}
 				},
 				"metadata": {
@@ -5751,7 +5750,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": true
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -5983,7 +5983,7 @@
 							"                        .trigger(once=True) \\\n",
 							"                        .option(\"checkpointLocation\", source_path + '/_checkpoints/incremental_p') \\\n",
 							"                        .partitionBy(partition_by)\n",
-							"                        .option(\"mergeSchema\", \"true\")\n",
+							"                        \n",
 							"            query = query.start(p_destination_path)\n",
 							"            query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\n",
 							"            logger.info(query.lastProgress)\n",
@@ -6086,12 +6086,12 @@
 							"        if len(df_pseudo.columns) == 0:\n",
 							"            logger.info('No data to be written to stage2p')\n",
 							"        else:\n",
-							"            df_pseudo.write.save(p_destination_path, format='delta', mode='overwrite') \n",
+							"            df_pseudo.write.save(p_destination_path, format='delta', mode='overwrite', mergeSchema= True)) \n",
 							"\n",
 							"        if len(df_lookup.columns) == 0:\n",
 							"            logger.info('No data to be written to stage2np')\n",
 							"        else:\n",
-							"            df_lookup.write.save(np_destination_path, format='delta', mode='overwrite') \n",
+							"            df_lookup.write.save(np_destination_path, format='delta', mode='overwrite', mergeSchema= True) \n",
 							"\n",
 							"#important here the treatment is specified following the label giving in the schema definition for the columns \n",
 							"    def pseudonymize(self, df, schema): #: list[list[str]]):\n",
@@ -7698,7 +7698,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "78bf33d1-e8d2-4962-bec4-ea8d31041420"
+						"spark.autotune.trackingId": "c32d00dd-3aff-4bce-affb-797c949e31b7"
 					}
 				},
 				"metadata": {
@@ -7775,7 +7775,7 @@
 							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 						],
 						"outputs": [],
-						"execution_count": 1
+						"execution_count": 23
 					},
 					{
 						"cell_type": "code",
@@ -7798,7 +7798,7 @@
 							"source_folder='/BCE/BI/Dimensions/'"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": 24
 					},
 					{
 						"cell_type": "code",
@@ -7823,7 +7823,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 25
 					},
 					{
 						"cell_type": "markdown",
@@ -7859,7 +7859,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": 26
 					},
 					{
 						"cell_type": "code",
@@ -7885,7 +7885,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": null
 					},
 					{
 						"cell_type": "markdown",
@@ -7945,7 +7945,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": 6
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
