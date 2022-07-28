@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "1ae2fdaf-b7dc-433d-8a41-2cb892e767ea"
+				"spark.autotune.trackingId": "1e9091aa-f1c5-4f39-b720-6fc305499dac"
 			}
 		},
 		"metadata": {
@@ -88,7 +88,7 @@
 					"    def __init__(self, source_folder= 'BCE/BI/Dimensions'):\r\n",
 					"        BaseOEAModule.__init__(self, source_folder)\r\n",
 					"      \r\n",
-					"        self.schemas['Location'] = [\r\n",
+					"        self.schemas['Locations'] = [\r\n",
 					"                        ['ADMIN_LOCATION','String','no-op'],\r\n",
 					"                        ['SUB_LOCATION','String','no-op'],\r\n",
 					"                        ['ADMIN_DESC','String','no-op'],\r\n",
@@ -131,6 +131,18 @@
 					"                logger.info(\"No defined function for processing this insights data\"+item.name)\r\n",
 					"        \r\n",
 					"        logger.info(\"Finished ingesting insights data from stage 1 to stage 2\")\r\n",
+					"    \r\n",
+					"    def returnDataFrameBeforeProcessing(self, tableName='Locations', sourcepath=''):\r\n",
+					"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
+					"        logger.info(\"Processing ms_insights activity data from: \" + sourcepath)\r\n",
+					"        if sourcepath == '': \r\n",
+					"            sourcepath=self.stage1np + '/'+ tableName\r\n",
+					"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
+					"        spark_schema = oea.to_spark_schema(self.schemas[f'{tableName}'])\r\n",
+					"        df = spark.readStream.csv(sourcepath + '/*/*.csv', header='false', schema=spark_schema)\r\n",
+					"\r\n",
+					"        return df\r\n",
+					"\r\n",
 					"\r\n",
 					"\r\n",
 					"class SchoolPerformance(BaseOEAModule):\r\n",
@@ -172,6 +184,7 @@
 					"                logger.info(\"No defined function for processing this insights data\")\r\n",
 					"        \r\n",
 					"        logger.info(\"Finished ingesting insights data from stage 1 to stage 2\")\r\n",
+					"\r\n",
 					""
 				],
 				"execution_count": 2

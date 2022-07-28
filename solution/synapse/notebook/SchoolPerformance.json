@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a58749a6-9629-4cec-8061-b35debebc8d9"
+				"spark.autotune.trackingId": "018cba82-33fb-4706-a5b2-60f505d0dece"
 			}
 		},
 		"metadata": {
@@ -98,7 +98,7 @@
 				"source": [
 					"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 				],
-				"execution_count": 30
+				"execution_count": 34
 			},
 			{
 				"cell_type": "code",
@@ -118,9 +118,9 @@
 					"# meant to be parameters\r\n",
 					"storage_account = 'bceaaeoeadevlrs'\r\n",
 					"use_test_env = False\r\n",
-					"source_folder='/BCE/BI/Dimensions/'"
+					"source_folder='/BCE/BI/Dimensions'"
 				],
-				"execution_count": 31
+				"execution_count": 54
 			},
 			{
 				"cell_type": "code",
@@ -144,7 +144,7 @@
 					"import datetime\r\n",
 					""
 				],
-				"execution_count": 32
+				"execution_count": 36
 			},
 			{
 				"cell_type": "markdown",
@@ -179,7 +179,7 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"execution_count": 33
+				"execution_count": 37
 			},
 			{
 				"cell_type": "code",
@@ -204,7 +204,7 @@
 					"    stage2np = oea.stage2np\r\n",
 					"    stage2p = oea.stage3np"
 				],
-				"execution_count": null
+				"execution_count": 38
 			},
 			{
 				"cell_type": "markdown",
@@ -263,7 +263,7 @@
 				"source": [
 					"%run /biDimensions_py"
 				],
-				"execution_count": null
+				"execution_count": 39
 			},
 			{
 				"cell_type": "code",
@@ -282,9 +282,9 @@
 					"# 0) Initialize the OEA framework and MSInsights module.\r\n",
 					"#oea = OEA(storage_account)\r\n",
 					"\r\n",
-					"classBiDim = biDimensions()"
+					"classBiDim = biDimensions(source_folder)"
 				],
-				"execution_count": 7
+				"execution_count": 49
 			},
 			{
 				"cell_type": "code",
@@ -300,9 +300,38 @@
 					}
 				},
 				"source": [
-					"classBiDim.ingest()"
+					"table_name='Locations'\r\n",
+					"\r\n",
+					"\r\n",
+					"classBiDim.ingest()\r\n",
+					"#oea.ingest_snapshot_data(source_system=source_folder, tablename= table_name, primary_key='CampusID'\r\n",
+					"                       , schema=classBiDim.schemas[table_name],  partition_by='SUB_LOCATION')\r\n",
+					"\r\n",
+					""
 				],
-				"execution_count": 160
+				"execution_count": 56
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Set the date to be processed\r\n",
+					"today = datetime.datetime.now()\r\n",
+					"date1 = today.strftime('%Y-%m-%d')\r\n",
+					"#date1.cast('string')\r\n",
+					"date2 = date1"
+				],
+				"execution_count": 47
 			},
 			{
 				"cell_type": "code",
@@ -363,7 +392,7 @@
 					"#spark.read.format(\"com.elastacloud.spark.excel\").load(f'{stage1np}{source_folder}' + 'SchoolClassification.xlsx')\r\n",
 					""
 				],
-				"execution_count": 8
+				"execution_count": 40
 			},
 			{
 				"cell_type": "code",
@@ -387,7 +416,7 @@
 					"#only used for now only for the schema definition\r\n",
 					"classSchool= SchoolPerformance()"
 				],
-				"execution_count": 9
+				"execution_count": 41
 			},
 			{
 				"cell_type": "code",
@@ -405,7 +434,7 @@
 				"source": [
 					"dfSchoolPNaN=dfSchoolPerformanceRaw.fillna(0)"
 				],
-				"execution_count": 18
+				"execution_count": 42
 			},
 			{
 				"cell_type": "code",
@@ -447,7 +476,7 @@
 					"dfSchoolPerformanceRaw.info\r\n",
 					"dfSchoolPNaN.info"
 				],
-				"execution_count": 20
+				"execution_count": 43
 			},
 			{
 				"cell_type": "code",
@@ -466,7 +495,7 @@
 					"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')\r\n",
 					"dfschool=spark.createDataFrame(dfSchoolPNaN)"
 				],
-				"execution_count": 21
+				"execution_count": 44
 			},
 			{
 				"cell_type": "code",
@@ -503,7 +532,7 @@
 				"source": [
 					"oea.ingest_snapshot_data_frame(inpdataframe=dfschool, source_path= f'{source_folder}{table_name}', primary_key='pk', schema=classSchool.schemas['SchoolClassification'])"
 				],
-				"execution_count": 22
+				"execution_count": 45
 			},
 			{
 				"cell_type": "code",
@@ -521,7 +550,7 @@
 				"source": [
 					"oea.insert_watermark( source_folder, \"SchoolClassification\", date2)"
 				],
-				"execution_count": null
+				"execution_count": 48
 			},
 			{
 				"cell_type": "markdown",
