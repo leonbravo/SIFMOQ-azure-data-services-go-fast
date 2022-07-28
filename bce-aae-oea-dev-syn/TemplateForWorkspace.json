@@ -4418,7 +4418,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "94846ea0-81fe-44f3-934c-cba0b4aec617"
+						"spark.autotune.trackingId": "e28f1243-3f06-4ee2-a7cf-82b8c291240b"
 					}
 				},
 				"metadata": {
@@ -4757,8 +4757,7 @@
 							"                                         .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
 							"                                         .option(\"startingOffsets\", \"earliest\") \\\r\n",
 							"                                         .option(\"truncate\", False) \\\r\n",
-							"                                         .partitionBy('year')  \\\r\n",
-							"                                         .option(\"mergeSchema\", \"true\")\r\n",
+							"                                         .partitionBy('year')  \r\n",
 							"            query = query.start(self.stage2p + '/TechActivity_pseudo')\r\n",
 							"            query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
 							"            logger.info(query.lastProgress)\r\n",
@@ -4772,8 +4771,7 @@
 							"                              .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_lookup/') \\\r\n",
 							"                              .option(\"startingOffsets\", \"earliest\") \\\r\n",
 							"                              .option(\"truncate\", False) \\\r\n",
-							"                              .partitionBy('year')\\\r\n",
-							"                              .option(\"mergeSchema\", \"true\")\r\n",
+							"                              .partitionBy('year')\r\n",
 							"            query2 = query2.start(self.stage2np + '/TechActivity_lookup')\r\n",
 							"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
 							"            logger.info(query2.lastProgress)  \r\n",
@@ -7688,20 +7686,20 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "spark3p1sm",
+					"referenceName": "spark8pmd",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
-					"driverMemory": "28g",
-					"driverCores": 4,
-					"executorMemory": "28g",
-					"executorCores": 4,
+					"driverMemory": "56g",
+					"driverCores": 8,
+					"executorMemory": "56g",
+					"executorCores": 8,
 					"numExecutors": 2,
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "af26a24e-8d1e-4dd9-877a-cd1338e63155"
+						"spark.autotune.trackingId": "41f89012-0aa3-43eb-9f20-d6f9a029958e"
 					}
 				},
 				"metadata": {
@@ -7715,16 +7713,16 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
-						"name": "spark3p1sm",
+						"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark8pmd",
+						"name": "spark8pmd",
 						"type": "Spark",
-						"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
+						"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark8pmd",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
-						"sparkVersion": "3.1",
-						"nodeCount": 3,
+						"sparkVersion": "3.2",
+						"nodeCount": 10,
 						"cores": 8,
 						"memory": 56
 					},
@@ -7778,7 +7776,7 @@
 							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 						],
 						"outputs": [],
-						"execution_count": 152
+						"execution_count": 1
 					},
 					{
 						"cell_type": "code",
@@ -7801,7 +7799,7 @@
 							"source_folder='/BCE/BI/Dimensions/'"
 						],
 						"outputs": [],
-						"execution_count": 153
+						"execution_count": 2
 					},
 					{
 						"cell_type": "code",
@@ -7826,7 +7824,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 154
+						"execution_count": 6
 					},
 					{
 						"cell_type": "markdown",
@@ -7859,36 +7857,10 @@
 							}
 						},
 						"source": [
-							"# Set the date to be processed\r\n",
-							"today = datetime.datetime.now()\r\n",
-							"date1 = today.strftime('%Y-%m-%d')\r\n",
-							"#date1.cast('string')\r\n",
-							"date2 = date1\r\n",
-							"#date1 = \"2022-02-02\"\r\n",
-							"#date2 = \"2022-07-12\"\r\n",
-							"#date1 = date2"
-						],
-						"outputs": [],
-						"execution_count": 155
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 156
+						"execution_count": 7
 					},
 					{
 						"cell_type": "code",
@@ -7914,7 +7886,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": 157
+						"execution_count": null
 					},
 					{
 						"cell_type": "markdown",
@@ -7974,7 +7946,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": 158
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -10104,7 +10076,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "53a9030d-2deb-4dda-bd1a-fbf803e36053"
+						"spark.autotune.trackingId": "1ec2acfc-b960-4e3e-98eb-2b2bd65620b7"
 					}
 				},
 				"metadata": {
@@ -10165,7 +10137,7 @@
 							"storage_account = 'bceaaeoeadevlrs' "
 						],
 						"outputs": [],
-						"execution_count": 112
+						"execution_count": 139
 					},
 					{
 						"cell_type": "code",
@@ -10198,7 +10170,7 @@
 							"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 						],
 						"outputs": [],
-						"execution_count": 113
+						"execution_count": 140
 					},
 					{
 						"cell_type": "code",
@@ -10217,7 +10189,7 @@
 							"%run OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 114
+						"execution_count": 141
 					},
 					{
 						"cell_type": "code",
@@ -10244,12 +10216,9 @@
 							"\r\n",
 							"    def __init__(self, source_folder= 'example/test'):\r\n",
 							"        BaseOEAModule.__init__(self, source_folder)\r\n",
-							"\r\n",
 							"        self.stage1np_activity = self.stage1np + '/'\r\n",
 							"        self.schemas['test'] = [['col', 'Integer', 'no-op']\r\n",
 							"                    ]\r\n",
-							"\r\n",
-							"       \r\n",
 							"    \r\n",
 							"    def ingest(self):\r\n",
 							"        \"\"\"  Processes insights data from stage1 into stage2 using structured streaming within the defined functions below.\"\"\"\r\n",
@@ -10291,12 +10260,10 @@
 							"            query2 = df_lookup.writeStream.format(\"delta\").outputMode(\"append\").trigger(once=True).option(\"checkpointLocation\", self.stage1np_activity + '/_checkpoints_np')\r\n",
 							"            query2 = query2.start(self.stage2np + '')\r\n",
 							"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
-							"            logger.info(query2.lastProgress)   \r\n",
-							"\r\n",
-							""
+							"            logger.info(query2.lastProgress)   "
 						],
 						"outputs": [],
-						"execution_count": 115
+						"execution_count": 142
 					},
 					{
 						"cell_type": "code",
@@ -10315,7 +10282,7 @@
 							"oea= OEA()"
 						],
 						"outputs": [],
-						"execution_count": 116
+						"execution_count": 143
 					},
 					{
 						"cell_type": "code",
@@ -10334,7 +10301,7 @@
 							"%run /Insights_py"
 						],
 						"outputs": [],
-						"execution_count": 117
+						"execution_count": 144
 					},
 					{
 						"cell_type": "code",
@@ -10355,7 +10322,7 @@
 							"test= Insights()"
 						],
 						"outputs": [],
-						"execution_count": 118
+						"execution_count": 145
 					},
 					{
 						"cell_type": "code",
@@ -10372,8 +10339,26 @@
 						},
 						"source": [
 							"df= test.returnDataFrameBeforeProcessing('TechActivity')\r\n",
-							"\r\n",
 							""
+						],
+						"outputs": [],
+						"execution_count": 146
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#df.select('signalType', 'year', 'month')"
 						],
 						"outputs": [],
 						"execution_count": null
@@ -10392,12 +10377,10 @@
 							}
 						},
 						"source": [
-							"df.select('signalType', 'year', 'month')\r\n",
-							"\r\n",
-							""
+							"test.stage2p"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 148
 					},
 					{
 						"cell_type": "code",
@@ -10413,37 +10396,16 @@
 							}
 						},
 						"source": [
-							"test.stage2p\r\n",
-							""
-						],
-						"outputs": [],
-						"execution_count": 119
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"test.stage2np = stage2\r\n",
-							"test.stage2p = stage2\r\n",
-							"\r\n",
-							"oea.stage2np = stage2\r\n",
-							"oea.stage2p = stage2\r\n",
+							"#test.stage2np = stage2\r\n",
+							"#test.stage2p = stage2\r\n",
+							"#oea.stage2np = stage2\r\n",
+							"#oea.stage2p = stage2\r\n",
 							"\r\n",
 							"oea.stage2p \r\n",
-							""
+							"test.stage2p"
 						],
 						"outputs": [],
-						"execution_count": 80
+						"execution_count": 149
 					},
 					{
 						"cell_type": "code",
@@ -10459,13 +10421,30 @@
 							}
 						},
 						"source": [
-							"\r\n",
 							"source_path=   oea.stage1np +'/'+ source_folder +'/activity'\r\n",
-							"\r\n",
 							"\r\n",
 							"source_path"
 						],
 						"outputs": [],
+						"execution_count": 150
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"spark_schema = oea.to_spark_schema(test.schemas['TechActivity'])"
+						],
+						"outputs": [],
 						"execution_count": null
 					},
 					{
@@ -10482,36 +10461,13 @@
 							}
 						},
 						"source": [
-							"spark_schema = oea.to_spark_schema(test.schemas['TechActivity'])\r\n",
-							"\r\n",
-							""
-						],
-						"outputs": [],
-						"execution_count": 89
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"query = df.writeStream.format(\"delta\") \\\r\n",
-							"                                .outputMode(\"append\") \\\r\n",
-							"                                .option(\"checkpointLocation\", test.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
-							"                                .option(\"startingOffsets\", \"earliest\") \\\r\n",
-							"                                .option(\"truncate\", False) \\\r\n",
-							"                                .partitionBy('year')  \r\n",
-							"query = query.start(test.stage2p + '/TechActivity')\r\n",
-							"query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
-							"logger.info(query.lastProgress)"
+							"#query = df.writeStream.format(\"delta\").outputMode(\"append\") \\\r\n",
+							"#                                .option(\"checkpointLocation\", test.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
+							"#                                .option(\"startingOffsets\", \"earliest\") \\\r\n",
+							"#                                .option(\"truncate\", False).partitionBy('year')  \r\n",
+							"#query = query.start(test.stage2p + '/TechActivity')\r\n",
+							"#query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
+							"#logger.info(query.lastProgress)"
 						],
 						"outputs": [],
 						"execution_count": null
@@ -10533,7 +10489,7 @@
 							"source= test.stage1np_activity +'/*/*.csv'"
 						],
 						"outputs": [],
-						"execution_count": 95
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -10549,10 +10505,10 @@
 							}
 						},
 						"source": [
-							"df1 = spark.readStream.format(\"cloudFiles\").option(\"cloudFiles.format\", \"csv\").option(\"header\", \"false\").option( \"schema\",spark_schema).load(source)"
+							"#df1 = spark.readStream.format(\"cloudFiles\").option(\"cloudFiles.format\", \"csv\").option(\"header\", \"false\").option( \"schema\",spark_schema).load(source)"
 						],
 						"outputs": [],
-						"execution_count": 96
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -10568,11 +10524,9 @@
 							}
 						},
 						"source": [
-							"spark.readStream.format(\"cloudFiles\") \\\r\n",
-							"  .option(\"cloudFiles.format\", \"csv\") \\\r\n",
+							"#spark.readStream.format(\"cloudFiles\").option(\"cloudFiles.format\", \"csv\") \\\r\n",
 							"  # The schema location directory keeps track of your data schema over time\r\n",
-							"  .option(\"cloudFiles.schemaLocation\", \"<path-to-checkpoint>\") \\\r\n",
-							"  .load(\"<path-to-source-data>\") \\\r\n",
+							" # .option(\"cloudFiles.schemaLocation\", \"<path-to-checkpoint>\").load(\"<path-to-source-data>\") \\\r\n",
 							""
 						],
 						"outputs": [],
@@ -10597,12 +10551,10 @@
 							"#df1.show()\r\n",
 							"spark.catalog.listDatabases()\r\n",
 							"\r\n",
-							"\r\n",
-							"\r\n",
 							"#sqlContext.registerDataFrameAsTable(df, 'Activity')"
 						],
 						"outputs": [],
-						"execution_count": 76
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -10621,7 +10573,7 @@
 							"spark.catalog.setCurrentDatabase('oea')"
 						],
 						"outputs": [],
-						"execution_count": 77
+						"execution_count": 151
 					},
 					{
 						"cell_type": "code",
@@ -10640,7 +10592,7 @@
 							"sqlContext.registerDataFrameAsTable(df, 'Activity')"
 						],
 						"outputs": [],
-						"execution_count": 79
+						"execution_count": 134
 					},
 					{
 						"cell_type": "code",
@@ -10656,11 +10608,11 @@
 							}
 						},
 						"source": [
-							"oea.ingest_incremental_data( source_system=source_folder, tablename='Activity', schema=spark_schema, partition_by='year', primary_key='SignalId', data_format='csv', has_header=False)\r\n",
+							"#oea.ingest_incremental_data( source_system=source_folder, tablename='Activity', schema=spark_schema, partition_by='year', primary_key='SignalId', data_format='csv', has_header=False)\r\n",
 							"        "
 						],
 						"outputs": [],
-						"execution_count": 28
+						"execution_count": 135
 					},
 					{
 						"cell_type": "code",
@@ -10676,13 +10628,10 @@
 							}
 						},
 						"source": [
-							"dfquery = spark.sql(\"select * \\\r\n",
-							"from Activity \\\r\n",
-							"where year = 2022 \\\r\n",
-							"and SignalType = 'Call'\")"
+							"dfquery = spark.sql(\"select * from Activity where year = 2022 and SignalType = 'Call'\")"
 						],
 						"outputs": [],
-						"execution_count": 29
+						"execution_count": 136
 					},
 					{
 						"cell_type": "code",
@@ -10698,10 +10647,10 @@
 							}
 						},
 						"source": [
-							"dfquery.show()"
+							"#dfquery.show()"
 						],
 						"outputs": [],
-						"execution_count": 18
+						"execution_count": 137
 					},
 					{
 						"cell_type": "code",
@@ -10717,10 +10666,10 @@
 							}
 						},
 						"source": [
-							""
+							"test.delete_stage2()"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 152
 					},
 					{
 						"cell_type": "code",
@@ -10741,7 +10690,7 @@
 							"test.process_insights_activity_stage1_data()"
 						],
 						"outputs": [],
-						"execution_count": 120
+						"execution_count": 154
 					},
 					{
 						"cell_type": "code",
@@ -10904,8 +10853,13 @@
 				"nodeSize": "Medium",
 				"nodeSizeFamily": "MemoryOptimized",
 				"sparkVersion": "3.2",
+				"libraryRequirements": {
+					"content": "opencensus-ext-azure >= 1.0.8\r\nFaker >= 8.0",
+					"filename": "_usr_csuser_clouddrive_OpenEduAnalytics_framework_requirements.txt",
+					"time": "2022-07-28T08:51:10.1620213Z"
+				},
 				"isComputeIsolationEnabled": false,
-				"sessionLevelPackagesEnabled": false,
+				"sessionLevelPackagesEnabled": true,
 				"annotations": []
 			},
 			"dependsOn": [],
