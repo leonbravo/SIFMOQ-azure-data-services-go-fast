@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "57c34559-bea5-406b-9903-1e45aa5b4662"
+				"spark.autotune.trackingId": "c61d97a2-9d78-45d1-850b-d9a5cf6666f9"
 			}
 		},
 		"metadata": {
@@ -79,7 +79,7 @@
 					"source_folder= 'SDS/M365'\r\n",
 					"storage_account = 'bceaaeoeadevlrs' "
 				],
-				"execution_count": 51
+				"execution_count": 64
 			},
 			{
 				"cell_type": "code",
@@ -111,7 +111,7 @@
 					"    stage2 = 'abfss://stage2@' + storage_account + '.dfs.core.windows.net'\r\n",
 					"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 				],
-				"execution_count": 52
+				"execution_count": 65
 			},
 			{
 				"cell_type": "code",
@@ -129,7 +129,7 @@
 				"source": [
 					"%run OEA_py"
 				],
-				"execution_count": 53
+				"execution_count": 66
 			},
 			{
 				"cell_type": "code",
@@ -207,7 +207,7 @@
 					"\r\n",
 					""
 				],
-				"execution_count": 54
+				"execution_count": 67
 			},
 			{
 				"cell_type": "code",
@@ -225,7 +225,7 @@
 				"source": [
 					"oea= OEA()"
 				],
-				"execution_count": 55
+				"execution_count": 68
 			},
 			{
 				"cell_type": "code",
@@ -243,7 +243,7 @@
 				"source": [
 					"%run /Insights_py"
 				],
-				"execution_count": 62
+				"execution_count": 69
 			},
 			{
 				"cell_type": "code",
@@ -263,7 +263,7 @@
 					"\r\n",
 					"test= Insights()"
 				],
-				"execution_count": 63
+				"execution_count": 70
 			},
 			{
 				"cell_type": "code",
@@ -283,7 +283,7 @@
 					"\r\n",
 					""
 				],
-				"execution_count": 58
+				"execution_count": 71
 			},
 			{
 				"cell_type": "code",
@@ -319,77 +319,13 @@
 					}
 				},
 				"source": [
-					"dffeb= df.where(df.month== 2)"
-				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
 					"\r\n",
 					"source_path=   oea.stage1np +'/'+ source_folder +'/activity'\r\n",
 					"\r\n",
 					"\r\n",
 					"source_path"
 				],
-				"execution_count": 9
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"spark_schema = oea.to_spark_schema(test.schemas['TechActivity'])\r\n",
-					"df1 = spark.readStream.csv(source_path + '/*/*', header=False, schema=spark_schema)\r\n",
-					"        #display(df)\r\n",
-					"#df1 = df1.withColumn()"
-				],
-				"execution_count": 10
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"# Queries with streaming sources must be executed with writeStream.start();\r\n",
-					"#display(df1)\r\n",
-					"#df1.show()\r\n",
-					"\r\n",
-					"\r\n",
-					"sqlContext.registerDataFrameAsTable(df1, 'Activity')\r\n",
-					"\r\n",
-					"#sqlContext.registerDataFrameAsTable(df, 'Activity')"
-				],
-				"execution_count": 14
+				"execution_count": 81
 			},
 			{
 				"cell_type": "code",
@@ -414,7 +350,173 @@
 					"oea.stage2p \r\n",
 					""
 				],
-				"execution_count": 49
+				"execution_count": 80
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"spark_schema = oea.to_spark_schema(test.schemas['TechActivity'])\r\n",
+					"\r\n",
+					""
+				],
+				"execution_count": 89
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"query = df.writeStream.format(\"delta\") \\\r\n",
+					"                                .outputMode(\"append\") \\\r\n",
+					"                                .option(\"checkpointLocation\", test.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
+					"                                .option(\"startingOffsets\", \"earliest\") \\\r\n",
+					"                                .option(\"truncate\", False) \\\r\n",
+					"                                .partitionBy('year')  \r\n",
+					"query = query.start(test.stage2p + '/TechActivity')\r\n",
+					"query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
+					"logger.info(query.lastProgress)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"source= test.stage1np_activity +'/*/*.csv'"
+				],
+				"execution_count": 95
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df1 = spark.readStream.format(\"cloudFiles\").option(\"cloudFiles.format\", \"csv\").option(\"header\", \"false\").option( \"schema\",spark_schema).load(source)"
+				],
+				"execution_count": 96
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"spark.readStream.format(\"cloudFiles\") \\\r\n",
+					"  .option(\"cloudFiles.format\", \"csv\") \\\r\n",
+					"  # The schema location directory keeps track of your data schema over time\r\n",
+					"  .option(\"cloudFiles.schemaLocation\", \"<path-to-checkpoint>\") \\\r\n",
+					"  .load(\"<path-to-source-data>\") \\\r\n",
+					""
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Queries with streaming sources must be executed with writeStream.start();\r\n",
+					"#display(df1)\r\n",
+					"#df1.show()\r\n",
+					"spark.catalog.listDatabases()\r\n",
+					"\r\n",
+					"\r\n",
+					"\r\n",
+					"#sqlContext.registerDataFrameAsTable(df, 'Activity')"
+				],
+				"execution_count": 76
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"spark.catalog.setCurrentDatabase('oea')"
+				],
+				"execution_count": 77
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sqlContext.registerDataFrameAsTable(df, 'Activity')"
+				],
+				"execution_count": 79
 			},
 			{
 				"cell_type": "code",
