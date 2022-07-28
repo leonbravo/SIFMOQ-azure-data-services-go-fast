@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a653efed-685f-4a50-9000-da5ab4aac894"
+				"spark.autotune.trackingId": "1ae2fdaf-b7dc-433d-8a41-2cb892e767ea"
 			}
 		},
 		"metadata": {
@@ -145,8 +145,8 @@
 					"        BaseOEAModule.__init__(self, source_folder)\r\n",
 					"      \r\n",
 					"        self.schemas['SchoolClassification'] = [\r\n",
-					"                    ['Year' ,   'int64', 'no-op'],\r\n",
-					"                    ['School' ,   'object', 'no-op'],\r\n",
+					"                    ['Year' ,   'Integer', 'no-op'],\r\n",
+					"                    ['School' ,   'string', 'no-op'],\r\n",
 					"                    ['Attendance_Level_%' ,   'float64', 'no-op'],\r\n",
 					"                    ['5Y_Enrolment_%' ,   'float64', 'no-op'],\r\n",
 					"                    ['Similar_Student_Difference' ,   'float64', 'no-op'],\r\n",
