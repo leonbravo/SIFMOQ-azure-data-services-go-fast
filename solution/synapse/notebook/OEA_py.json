@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "3bd56d4f-4902-493c-a6fd-fd0a09cb2ce6"
+				"spark.autotune.trackingId": "b9677165-3c8c-4667-8f49-76810e4cde5e"
 			}
 		},
 		"metadata": {
@@ -379,7 +379,7 @@
 					"        if len(df_pseudo.columns) == 0:\n",
 					"            logger.info('No data to be written to stage2p')\n",
 					"        else:\n",
-					"            df_pseudo.write.save(p_destination_path, format='delta', mode='overwrite', mergeSchema= True)) \n",
+					"            df_pseudo.write.save(p_destination_path, format='delta', mode='overwrite', mergeSchema= True) \n",
 					"\n",
 					"        if len(df_lookup.columns) == 0:\n",
 					"            logger.info('No data to be written to stage2np')\n",
