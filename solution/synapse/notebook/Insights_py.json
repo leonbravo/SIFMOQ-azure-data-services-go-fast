@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "aab46c5c-615c-46f0-9d09-3e5648357043"
+				"spark.autotune.trackingId": "9729457c-13d3-4ec0-9d97-4139c979ec39"
 			}
 		},
 		"metadata": {
@@ -357,8 +357,7 @@
 					"                                         .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
 					"                                         .option(\"startingOffsets\", \"earliest\") \\\r\n",
 					"                                         .option(\"truncate\", False) \\\r\n",
-					"                                         .partitionBy('year')  \\\r\n",
-					"                                         .option(\"mergeSchema\", \"true\")\r\n",
+					"                                         .partitionBy('year')  \r\n",
 					"            query = query.start(self.stage2p + '/TechActivity_pseudo')\r\n",
 					"            query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
 					"            logger.info(query.lastProgress)\r\n",
@@ -372,8 +371,7 @@
 					"                              .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_lookup/') \\\r\n",
 					"                              .option(\"startingOffsets\", \"earliest\") \\\r\n",
 					"                              .option(\"truncate\", False) \\\r\n",
-					"                              .partitionBy('year')\\\r\n",
-					"                              .option(\"mergeSchema\", \"true\")\r\n",
+					"                              .partitionBy('year')\r\n",
 					"            query2 = query2.start(self.stage2np + '/TechActivity_lookup')\r\n",
 					"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
 					"            logger.info(query2.lastProgress)  \r\n",
