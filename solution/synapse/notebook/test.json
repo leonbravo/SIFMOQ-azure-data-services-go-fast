@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "53a9030d-2deb-4dda-bd1a-fbf803e36053"
+				"spark.autotune.trackingId": "f8a67bf8-8a0f-4679-aeae-3b7c70d8d298"
 			}
 		},
 		"metadata": {
@@ -79,7 +79,7 @@
 					"source_folder= 'SDS/M365'\r\n",
 					"storage_account = 'bceaaeoeadevlrs' "
 				],
-				"execution_count": 112
+				"execution_count": 121
 			},
 			{
 				"cell_type": "code",
@@ -111,7 +111,7 @@
 					"    stage2 = 'abfss://stage2@' + storage_account + '.dfs.core.windows.net'\r\n",
 					"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 				],
-				"execution_count": 113
+				"execution_count": 122
 			},
 			{
 				"cell_type": "code",
@@ -129,7 +129,7 @@
 				"source": [
 					"%run OEA_py"
 				],
-				"execution_count": 114
+				"execution_count": 123
 			},
 			{
 				"cell_type": "code",
@@ -207,7 +207,7 @@
 					"\r\n",
 					""
 				],
-				"execution_count": 115
+				"execution_count": 124
 			},
 			{
 				"cell_type": "code",
@@ -225,7 +225,7 @@
 				"source": [
 					"oea= OEA()"
 				],
-				"execution_count": 116
+				"execution_count": 125
 			},
 			{
 				"cell_type": "code",
@@ -243,7 +243,7 @@
 				"source": [
 					"%run /Insights_py"
 				],
-				"execution_count": 117
+				"execution_count": 126
 			},
 			{
 				"cell_type": "code",
@@ -263,7 +263,7 @@
 					"\r\n",
 					"test= Insights()"
 				],
-				"execution_count": 118
+				"execution_count": 127
 			},
 			{
 				"cell_type": "code",
@@ -322,7 +322,7 @@
 					"test.stage2p\r\n",
 					""
 				],
-				"execution_count": 119
+				"execution_count": 128
 			},
 			{
 				"cell_type": "code",
@@ -433,7 +433,7 @@
 				"source": [
 					"source= test.stage1np_activity +'/*/*.csv'"
 				],
-				"execution_count": 95
+				"execution_count": 129
 			},
 			{
 				"cell_type": "code",
@@ -451,7 +451,7 @@
 				"source": [
 					"df1 = spark.readStream.format(\"cloudFiles\").option(\"cloudFiles.format\", \"csv\").option(\"header\", \"false\").option( \"schema\",spark_schema).load(source)"
 				],
-				"execution_count": 96
+				"execution_count": 130
 			},
 			{
 				"cell_type": "code",
@@ -474,7 +474,7 @@
 					"  .load(\"<path-to-source-data>\") \\\r\n",
 					""
 				],
-				"execution_count": null
+				"execution_count": 131
 			},
 			{
 				"cell_type": "code",
@@ -499,7 +499,7 @@
 					"\r\n",
 					"#sqlContext.registerDataFrameAsTable(df, 'Activity')"
 				],
-				"execution_count": 76
+				"execution_count": 132
 			},
 			{
 				"cell_type": "code",
@@ -517,7 +517,7 @@
 				"source": [
 					"spark.catalog.setCurrentDatabase('oea')"
 				],
-				"execution_count": 77
+				"execution_count": 133
 			},
 			{
 				"cell_type": "code",
@@ -535,7 +535,7 @@
 				"source": [
 					"sqlContext.registerDataFrameAsTable(df, 'Activity')"
 				],
-				"execution_count": 79
+				"execution_count": 134
 			},
 			{
 				"cell_type": "code",
@@ -554,7 +554,7 @@
 					"oea.ingest_incremental_data( source_system=source_folder, tablename='Activity', schema=spark_schema, partition_by='year', primary_key='SignalId', data_format='csv', has_header=False)\r\n",
 					"        "
 				],
-				"execution_count": 28
+				"execution_count": 135
 			},
 			{
 				"cell_type": "code",
@@ -575,7 +575,7 @@
 					"where year = 2022 \\\r\n",
 					"and SignalType = 'Call'\")"
 				],
-				"execution_count": 29
+				"execution_count": 136
 			},
 			{
 				"cell_type": "code",
@@ -593,7 +593,7 @@
 				"source": [
 					"dfquery.show()"
 				],
-				"execution_count": 18
+				"execution_count": 137
 			},
 			{
 				"cell_type": "code",
@@ -631,7 +631,7 @@
 					"\r\n",
 					"test.process_insights_activity_stage1_data()"
 				],
-				"execution_count": 120
+				"execution_count": 138
 			},
 			{
 				"cell_type": "code",
