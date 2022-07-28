@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "1e9091aa-f1c5-4f39-b720-6fc305499dac"
+				"spark.autotune.trackingId": "82e009b8-4962-4e62-9f25-00a67893fbe3"
 			}
 		},
 		"metadata": {
@@ -139,7 +139,7 @@
 					"            sourcepath=self.stage1np + '/'+ tableName\r\n",
 					"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
 					"        spark_schema = oea.to_spark_schema(self.schemas[f'{tableName}'])\r\n",
-					"        df = spark.readStream.csv(sourcepath + '/*/*.csv', header='false', schema=spark_schema)\r\n",
+					"        df = spark.readStream.csv(sourcepath + '.csv', header='True', schema=spark_schema)\r\n",
 					"\r\n",
 					"        return df\r\n",
 					"\r\n",
