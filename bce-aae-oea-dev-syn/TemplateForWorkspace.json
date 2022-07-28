@@ -5725,7 +5725,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "8b42a6f9-c6ca-4492-a006-53e3fcf3f9fb"
+						"spark.autotune.trackingId": "bf749998-fb1f-407e-9d15-3612c57a8628"
 					}
 				},
 				"metadata": {
@@ -6086,7 +6086,7 @@
 							"        if len(df_pseudo.columns) == 0:\n",
 							"            logger.info('No data to be written to stage2p')\n",
 							"        else:\n",
-							"            df_pseudo.write.save(p_destination_path, format='delta', mode='overwrite', mergeSchema= True)) \n",
+							"            df_pseudo.write.save(p_destination_path, format='delta', mode='overwrite', mergeSchema= True) \n",
 							"\n",
 							"        if len(df_lookup.columns) == 0:\n",
 							"            logger.info('No data to be written to stage2np')\n",
@@ -7698,7 +7698,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "c32d00dd-3aff-4bce-affb-797c949e31b7"
+						"spark.autotune.trackingId": "a58749a6-9629-4cec-8061-b35debebc8d9"
 					}
 				},
 				"metadata": {
@@ -7775,7 +7775,7 @@
 							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 						],
 						"outputs": [],
-						"execution_count": 23
+						"execution_count": 30
 					},
 					{
 						"cell_type": "code",
@@ -7798,7 +7798,7 @@
 							"source_folder='/BCE/BI/Dimensions/'"
 						],
 						"outputs": [],
-						"execution_count": 24
+						"execution_count": 31
 					},
 					{
 						"cell_type": "code",
@@ -7823,7 +7823,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 25
+						"execution_count": 32
 					},
 					{
 						"cell_type": "markdown",
@@ -7859,7 +7859,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 26
+						"execution_count": 33
 					},
 					{
 						"cell_type": "code",
