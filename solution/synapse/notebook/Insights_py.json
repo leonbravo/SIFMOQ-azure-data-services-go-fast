@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f74d0658-e0c2-4a33-a78f-7b70a71e91b7"
+				"spark.autotune.trackingId": "10421754-6378-45db-8124-9ea3bbdbcdd7"
 			}
 		},
 		"metadata": {
@@ -115,7 +115,7 @@
 					"                        ['ClassCreationDate', 'timestamp', 'no-op'],\r\n",
 					"                        ['Grade', 'string', 'no-op'],\r\n",
 					"                        ['SourceFileExtension', 'string', 'no-op'],\r\n",
-					"                        ['MeetingDuration', 'time', 'no-op'], \r\n",
+					"                        ['MeetingDuration', 'timestamp', 'no-op'], \r\n",
 					"                        ['MeetingSessionId', 'string', 'no-op'],\r\n",
 					"                        ['MeetingType', 'string','no-op' ],\r\n",
 					"                        ['ReadingSubmissionWordsPerMinute','integer'          , 'no-op'        ],      \r\n",
