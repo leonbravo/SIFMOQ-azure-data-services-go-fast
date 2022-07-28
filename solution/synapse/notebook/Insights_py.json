@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c794ead4-00d8-4211-9e20-d926991faff1"
+				"spark.autotune.trackingId": "800265cf-e83b-4f0d-99a9-f61dcf36bdec"
 			}
 		},
 		"metadata": {
@@ -454,13 +454,15 @@
 					"        folders = oea.get_folders(date_folder_path)\r\n",
 					"        for table_name in folders:\r\n",
 					"            self._process_roster_entity(date_folder_path, table_name)\r\n",
+					"            logger.info(\"Processing ms_insights roster snapshot data from: \" + source_path +'/'+table_name)\r\n",
+					"\r\n",
 					"\r\n",
 					"    def process_roster(self):\r\n",
 					"        \"\"\" Processes all roster data in stage1 and writes out to stage2 and stage2p \"\"\"\r\n",
-					"        logger.info(\"Processing ms_insights roster snapshot data from: \" + self.stage1np_roster)\r\n",
-					"\r\n",
+					"  \r\n",
 					"        latest_batch = oea.get_latest_folder(self.stage1np_roster)\r\n",
 					"        source_path = self.stage1np_roster + '/' + latest_batch\r\n",
+					"\r\n",
 					"        self._process_roster_date_folder(source_path)\r\n",
 					"  \r\n",
 					"    def process_activity(self):\r\n",
