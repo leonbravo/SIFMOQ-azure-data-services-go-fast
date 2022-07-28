@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "64de4e59-2159-49fd-aae1-c79a890dc15f"
+				"spark.autotune.trackingId": "3bd56d4f-4902-493c-a6fd-fd0a09cb2ce6"
 			}
 		},
 		"metadata": {
@@ -276,7 +276,7 @@
 					"                        .trigger(once=True) \\\n",
 					"                        .option(\"checkpointLocation\", source_path + '/_checkpoints/incremental_p') \\\n",
 					"                        .partitionBy(partition_by)\n",
-					"                        .option(\"mergeSchema\", \"true\")\n",
+					"                        \n",
 					"            query = query.start(p_destination_path)\n",
 					"            query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\n",
 					"            logger.info(query.lastProgress)\n",
@@ -379,12 +379,12 @@
 					"        if len(df_pseudo.columns) == 0:\n",
 					"            logger.info('No data to be written to stage2p')\n",
 					"        else:\n",
-					"            df_pseudo.write.save(p_destination_path, format='delta', mode='overwrite') \n",
+					"            df_pseudo.write.save(p_destination_path, format='delta', mode='overwrite', mergeSchema= True)) \n",
 					"\n",
 					"        if len(df_lookup.columns) == 0:\n",
 					"            logger.info('No data to be written to stage2np')\n",
 					"        else:\n",
-					"            df_lookup.write.save(np_destination_path, format='delta', mode='overwrite') \n",
+					"            df_lookup.write.save(np_destination_path, format='delta', mode='overwrite', mergeSchema= True) \n",
 					"\n",
 					"#important here the treatment is specified following the label giving in the schema definition for the columns \n",
 					"    def pseudonymize(self, df, schema): #: list[list[str]]):\n",
