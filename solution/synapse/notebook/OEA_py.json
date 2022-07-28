@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c90a62b5-fcb9-4ea1-bccb-c0836f185b71"
+				"spark.autotune.trackingId": "64de4e59-2159-49fd-aae1-c79a890dc15f"
 			}
 		},
 		"metadata": {
@@ -276,6 +276,7 @@
 					"                        .trigger(once=True) \\\n",
 					"                        .option(\"checkpointLocation\", source_path + '/_checkpoints/incremental_p') \\\n",
 					"                        .partitionBy(partition_by)\n",
+					"                        .option(\"mergeSchema\", \"true\")\n",
 					"            query = query.start(p_destination_path)\n",
 					"            query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\n",
 					"            logger.info(query.lastProgress)\n",
