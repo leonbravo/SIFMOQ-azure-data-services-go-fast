@@ -4418,7 +4418,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "c794ead4-00d8-4211-9e20-d926991faff1"
+						"spark.autotune.trackingId": "30ea7307-4b7a-4d0b-b9cb-715fdb5aff7d"
 					}
 				},
 				"metadata": {
@@ -4514,19 +4514,20 @@
 							"                        ['ClassCreationDate', 'timestamp', 'no-op'],\r\n",
 							"                        ['Grade', 'string', 'no-op'],\r\n",
 							"                        ['SourceFileExtension', 'string', 'no-op'],\r\n",
-							"                        ['MeetingDuration', 'timestamp', 'no-op'], \r\n",
+							"                        ['MeetingDuration', 'string', 'no-op'], \r\n",
 							"                        ['MeetingSessionId', 'string', 'no-op'],\r\n",
 							"                        ['MeetingType', 'string','no-op' ],\r\n",
-							"                        ['ReadingSubmissionWordsPerMinute','integer'          , 'no-op'        ],      \r\n",
-							"                        ['ReadingSubmissionAccuracyScore',          'integer'          , 'no-op'],     \r\n",
-							"                        ['ReadingSubmissionMispronunciationsCount','integer'          , 'no-op' ],      \r\n",
-							"                        ['ReadingSubmissionRepetitionsCount','integer'          , 'no-op'        ],      \r\n",
-							"                        ['ReadingSubmissionInsertionsCount','integer'          , 'no-op'        ],    \r\n",
-							"                        ['ReadingSubmissionOmissionsCount','integer'          , 'no-op'        ],     \r\n",
-							"                        ['ReadingSubmissionAttemptNumber','integer'          , 'no-op'        ],       \r\n",
-							"                        ['ReadingAssignmentWordCount','integer'          , 'no-op'        ],      \r\n",
-							"                        ['ReadingAssignmentFleschKincaidGradeLevel','integer'          , 'no-op'        ],  \r\n",
-							"                        ['ReadingAssignmentLanguage',           'string'        , 'no-op'      ] ]\r\n",
+							"                        ['ReadingSubmissionWordsPerMinute','integer'      , 'no-op'],      \r\n",
+							"                        ['ReadingSubmissionAccuracyScore',          'integer' , 'no-op'],     \r\n",
+							"                        ['ReadingSubmissionMispronunciationsCount','integer' , 'no-op' ],      \r\n",
+							"                        ['ReadingSubmissionRepetitionsCount','integer'       , 'no-op'   ],      \r\n",
+							"                        ['ReadingSubmissionInsertionsCount','integer'       , 'no-op'   ],    \r\n",
+							"                        ['ReadingSubmissionOmissionsCount','integer'       , 'no-op'   ],     \r\n",
+							"                        ['ReadingSubmissionAttemptNumber','integer'       , 'no-op'   ],       \r\n",
+							"                        ['ReadingAssignmentWordCount','integer'       , 'no-op'        ],      \r\n",
+							"                        ['ReadingAssignmentFleschKincaidGradeLevel','integer'          , 'no-op' ],  \r\n",
+							"                        ['ReadingAssignmentLanguage',           'string'        , 'no-op'  ],\r\n",
+							"                        ['year', 'integer', 'no-op'] ]\r\n",
 							"\r\n",
 							"        self.schemas['AadGroup'] = [['ObjectId', 'string', 'hash'],\r\n",
 							"                        ['DisplayName', 'string', 'mask'],\r\n",
@@ -4853,13 +4854,15 @@
 							"        folders = oea.get_folders(date_folder_path)\r\n",
 							"        for table_name in folders:\r\n",
 							"            self._process_roster_entity(date_folder_path, table_name)\r\n",
+							"            logger.info(\"Processing ms_insights roster snapshot data from: \" + source_path +'/'+table_name)\r\n",
+							"\r\n",
 							"\r\n",
 							"    def process_roster(self):\r\n",
 							"        \"\"\" Processes all roster data in stage1 and writes out to stage2 and stage2p \"\"\"\r\n",
-							"        logger.info(\"Processing ms_insights roster snapshot data from: \" + self.stage1np_roster)\r\n",
-							"\r\n",
+							"  \r\n",
 							"        latest_batch = oea.get_latest_folder(self.stage1np_roster)\r\n",
 							"        source_path = self.stage1np_roster + '/' + latest_batch\r\n",
+							"\r\n",
 							"        self._process_roster_date_folder(source_path)\r\n",
 							"  \r\n",
 							"    def process_activity(self):\r\n",
@@ -4905,7 +4908,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "76d4e351-a51a-4d58-93ee-890f4f7e4180"
+						"spark.autotune.trackingId": "6d821ca4-1533-4c70-8b7e-8c14b795f3da"
 					}
 				},
 				"metadata": {
@@ -4986,7 +4989,7 @@
 							"use_test_env = False"
 						],
 						"outputs": [],
-						"execution_count": 14
+						"execution_count": 1
 					},
 					{
 						"cell_type": "code",
@@ -5009,7 +5012,7 @@
 							"import datetime"
 						],
 						"outputs": [],
-						"execution_count": 15
+						"execution_count": 2
 					},
 					{
 						"cell_type": "markdown",
@@ -5052,7 +5055,7 @@
 							"#date1 = date2"
 						],
 						"outputs": [],
-						"execution_count": 16
+						"execution_count": 3
 					},
 					{
 						"cell_type": "markdown",
@@ -5099,7 +5102,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 17
+						"execution_count": 4
 					},
 					{
 						"cell_type": "code",
@@ -5118,7 +5121,7 @@
 							"%run /Insights_py"
 						],
 						"outputs": [],
-						"execution_count": 18
+						"execution_count": 5
 					},
 					{
 						"cell_type": "code",
@@ -5164,7 +5167,7 @@
 							"#dfSourceSystemRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
 						],
 						"outputs": [],
-						"execution_count": 25
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
@@ -5191,7 +5194,7 @@
 							"    # 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
 						],
 						"outputs": [],
-						"execution_count": 23
+						"execution_count": 7
 					},
 					{
 						"cell_type": "code",
@@ -5214,7 +5217,7 @@
 							"source_format= 'DELTA'"
 						],
 						"outputs": [],
-						"execution_count": 28
+						"execution_count": 8
 					},
 					{
 						"cell_type": "code",
@@ -5236,7 +5239,7 @@
 							"ms_insights = Insights(source_folder)"
 						],
 						"outputs": [],
-						"execution_count": 27
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -5252,10 +5255,11 @@
 							}
 						},
 						"source": [
-							"#oea.insert_watermark( source_folder, \"Activity\", date2)"
+							"oea.insert_watermark( source_folder, \"Roster\", date2)\r\n",
+							"ms_insights.process_roster()"
 						],
 						"outputs": [],
-						"execution_count": 20
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -5285,26 +5289,6 @@
 						],
 						"outputs": [],
 						"execution_count": 10
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"oea.insert_watermark( source_folder, \"Roster\", date2)\r\n",
-							"ms_insights.process_roster()"
-						],
-						"outputs": [],
-						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -5725,7 +5709,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "bf749998-fb1f-407e-9d15-3612c57a8628"
+						"spark.autotune.trackingId": "b9677165-3c8c-4667-8f49-76810e4cde5e"
 					}
 				},
 				"metadata": {
@@ -5750,8 +5734,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -7698,7 +7681,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "a58749a6-9629-4cec-8061-b35debebc8d9"
+						"spark.autotune.trackingId": "018cba82-33fb-4706-a5b2-60f505d0dece"
 					}
 				},
 				"metadata": {
@@ -7775,7 +7758,7 @@
 							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 						],
 						"outputs": [],
-						"execution_count": 30
+						"execution_count": 34
 					},
 					{
 						"cell_type": "code",
@@ -7795,10 +7778,10 @@
 							"# meant to be parameters\r\n",
 							"storage_account = 'bceaaeoeadevlrs'\r\n",
 							"use_test_env = False\r\n",
-							"source_folder='/BCE/BI/Dimensions/'"
+							"source_folder='/BCE/BI/Dimensions'"
 						],
 						"outputs": [],
-						"execution_count": 31
+						"execution_count": 54
 					},
 					{
 						"cell_type": "code",
@@ -7823,7 +7806,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 32
+						"execution_count": 36
 					},
 					{
 						"cell_type": "markdown",
@@ -7859,7 +7842,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 33
+						"execution_count": 37
 					},
 					{
 						"cell_type": "code",
@@ -7885,7 +7868,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 38
 					},
 					{
 						"cell_type": "markdown",
@@ -7945,7 +7928,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 39
 					},
 					{
 						"cell_type": "code",
@@ -7964,10 +7947,10 @@
 							"# 0) Initialize the OEA framework and MSInsights module.\r\n",
 							"#oea = OEA(storage_account)\r\n",
 							"\r\n",
-							"classBiDim = biDimensions()"
+							"classBiDim = biDimensions(source_folder)"
 						],
 						"outputs": [],
-						"execution_count": 7
+						"execution_count": 49
 					},
 					{
 						"cell_type": "code",
@@ -7983,10 +7966,40 @@
 							}
 						},
 						"source": [
-							"classBiDim.ingest()"
+							"table_name='Locations'\r\n",
+							"\r\n",
+							"\r\n",
+							"classBiDim.ingest()\r\n",
+							"#oea.ingest_snapshot_data(source_system=source_folder, tablename= table_name, primary_key='CampusID'\r\n",
+							"                       , schema=classBiDim.schemas[table_name],  partition_by='SUB_LOCATION')\r\n",
+							"\r\n",
+							""
 						],
 						"outputs": [],
-						"execution_count": 160
+						"execution_count": 56
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Set the date to be processed\r\n",
+							"today = datetime.datetime.now()\r\n",
+							"date1 = today.strftime('%Y-%m-%d')\r\n",
+							"#date1.cast('string')\r\n",
+							"date2 = date1"
+						],
+						"outputs": [],
+						"execution_count": 47
 					},
 					{
 						"cell_type": "code",
@@ -8049,7 +8062,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 8
+						"execution_count": 40
 					},
 					{
 						"cell_type": "code",
@@ -8074,7 +8087,7 @@
 							"classSchool= SchoolPerformance()"
 						],
 						"outputs": [],
-						"execution_count": 9
+						"execution_count": 41
 					},
 					{
 						"cell_type": "code",
@@ -8093,7 +8106,7 @@
 							"dfSchoolPNaN=dfSchoolPerformanceRaw.fillna(0)"
 						],
 						"outputs": [],
-						"execution_count": 18
+						"execution_count": 42
 					},
 					{
 						"cell_type": "code",
@@ -8137,7 +8150,7 @@
 							"dfSchoolPNaN.info"
 						],
 						"outputs": [],
-						"execution_count": 20
+						"execution_count": 43
 					},
 					{
 						"cell_type": "code",
@@ -8157,7 +8170,7 @@
 							"dfschool=spark.createDataFrame(dfSchoolPNaN)"
 						],
 						"outputs": [],
-						"execution_count": 21
+						"execution_count": 44
 					},
 					{
 						"cell_type": "code",
@@ -8196,7 +8209,7 @@
 							"oea.ingest_snapshot_data_frame(inpdataframe=dfschool, source_path= f'{source_folder}{table_name}', primary_key='pk', schema=classSchool.schemas['SchoolClassification'])"
 						],
 						"outputs": [],
-						"execution_count": 22
+						"execution_count": 45
 					},
 					{
 						"cell_type": "code",
@@ -8215,7 +8228,7 @@
 							"oea.insert_watermark( source_folder, \"SchoolClassification\", date2)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 48
 					},
 					{
 						"cell_type": "markdown",
@@ -8486,7 +8499,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "1ae2fdaf-b7dc-433d-8a41-2cb892e767ea"
+						"spark.autotune.trackingId": "f15526a3-d80e-4810-ac6e-2df14bef19c3"
 					}
 				},
 				"metadata": {
@@ -8554,7 +8567,7 @@
 							"    def __init__(self, source_folder= 'BCE/BI/Dimensions'):\r\n",
 							"        BaseOEAModule.__init__(self, source_folder)\r\n",
 							"      \r\n",
-							"        self.schemas['Location'] = [\r\n",
+							"        self.schemas['Locations'] = [\r\n",
 							"                        ['ADMIN_LOCATION','String','no-op'],\r\n",
 							"                        ['SUB_LOCATION','String','no-op'],\r\n",
 							"                        ['ADMIN_DESC','String','no-op'],\r\n",
@@ -8592,11 +8605,24 @@
 							"        items = mssparkutils.fs.ls(self.stage1np)\r\n",
 							"        for item in items:\r\n",
 							"            if item.name == \"Locations.csv\":\r\n",
-							"                oea.ingest_delta_data( source_system=self.source_folder, tablename='Locations', schema=self.schemas['Location'], partition_by='SUB_LOCATION', primary_key='CampusID', data_format='csv', has_header=True)\r\n",
+							"                df= returnDataFrameBeforeProcessing()\r\n",
+							"                oea.ingest_delta_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['Locations'], partition_by='SUB_LOCATION', primary_key='CampusID')\r\n",
 							"            else:\r\n",
 							"                logger.info(\"No defined function for processing this insights data\"+item.name)\r\n",
 							"        \r\n",
 							"        logger.info(\"Finished ingesting insights data from stage 1 to stage 2\")\r\n",
+							"    \r\n",
+							"    def returnDataFrameBeforeProcessing(self, tableName='Locations', sourcepath=''):\r\n",
+							"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
+							"        logger.info(\"Processing ms_insights activity data from: \" + sourcepath)\r\n",
+							"        if sourcepath == '': \r\n",
+							"            sourcepath=self.stage1np + '/'+ tableName\r\n",
+							"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
+							"        spark_schema = oea.to_spark_schema(self.schemas[f'{tableName}'])\r\n",
+							"        df = spark.readStream.csv(sourcepath + '.csv', header='True', schema=spark_schema)\r\n",
+							"\r\n",
+							"        return df\r\n",
+							"\r\n",
 							"\r\n",
 							"\r\n",
 							"class SchoolPerformance(BaseOEAModule):\r\n",
@@ -8638,6 +8664,7 @@
 							"                logger.info(\"No defined function for processing this insights data\")\r\n",
 							"        \r\n",
 							"        logger.info(\"Finished ingesting insights data from stage 1 to stage 2\")\r\n",
+							"\r\n",
 							""
 						],
 						"outputs": [],
@@ -10118,7 +10145,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "88296238-71b2-4f39-976e-8685d4af5f20"
+						"spark.autotune.trackingId": "3f920a37-d84c-486a-883c-f09a2ae88b6d"
 					}
 				},
 				"metadata": {
@@ -10143,7 +10170,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": true
 					},
 					"sessionKeepAliveTimeout": 30
 				},
