@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "3e28e405-4bff-40e9-a0b4-53f8172a6f74"
+				"spark.autotune.trackingId": "30ea7307-4b7a-4d0b-b9cb-715fdb5aff7d"
 			}
 		},
 		"metadata": {
@@ -128,7 +128,7 @@
 					"                        ['ReadingAssignmentWordCount','integer'       , 'no-op'        ],      \r\n",
 					"                        ['ReadingAssignmentFleschKincaidGradeLevel','integer'          , 'no-op' ],  \r\n",
 					"                        ['ReadingAssignmentLanguage',           'string'        , 'no-op'  ],\r\n",
-					"                        ['year', int, 'no-op'] ]\r\n",
+					"                        ['year', 'integer', 'no-op'] ]\r\n",
 					"\r\n",
 					"        self.schemas['AadGroup'] = [['ObjectId', 'string', 'hash'],\r\n",
 					"                        ['DisplayName', 'string', 'mask'],\r\n",
