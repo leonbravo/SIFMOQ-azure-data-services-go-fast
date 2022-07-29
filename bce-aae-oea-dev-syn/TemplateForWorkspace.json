@@ -4418,7 +4418,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "e6031fc8-e814-47fc-b7a8-c8e16f4c3620"
+						"spark.autotune.trackingId": "8e5a1ea3-63a1-4f6f-ae0b-51646c93b290"
 					}
 				},
 				"metadata": {
@@ -4909,7 +4909,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "35fa3359-3bb2-4dc9-8b9b-88a954c9ef9e"
+						"spark.autotune.trackingId": "f755e5c5-4ce5-4ce5-84f0-2a18aa1de4fa"
 					}
 				},
 				"metadata": {
@@ -4934,7 +4934,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": true
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -4990,7 +4991,7 @@
 							"use_test_env = False"
 						],
 						"outputs": [],
-						"execution_count": 13
+						"execution_count": 31
 					},
 					{
 						"cell_type": "code",
@@ -5013,7 +5014,7 @@
 							"import datetime"
 						],
 						"outputs": [],
-						"execution_count": 14
+						"execution_count": 32
 					},
 					{
 						"cell_type": "markdown",
@@ -5056,7 +5057,7 @@
 							"#date1 = date2"
 						],
 						"outputs": [],
-						"execution_count": 15
+						"execution_count": 33
 					},
 					{
 						"cell_type": "markdown",
@@ -5103,7 +5104,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 16
+						"execution_count": 34
 					},
 					{
 						"cell_type": "code",
@@ -5122,7 +5123,7 @@
 							"%run /Insights_py"
 						],
 						"outputs": [],
-						"execution_count": 17
+						"execution_count": 35
 					},
 					{
 						"cell_type": "code",
@@ -5168,7 +5169,7 @@
 							"#dfSourceSystemRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
 						],
 						"outputs": [],
-						"execution_count": 18
+						"execution_count": 36
 					},
 					{
 						"cell_type": "code",
@@ -5195,7 +5196,7 @@
 							"    # 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
 						],
 						"outputs": [],
-						"execution_count": 19
+						"execution_count": 37
 					},
 					{
 						"cell_type": "code",
@@ -5217,7 +5218,7 @@
 							"ms_insights = Insights(source_folder)"
 						],
 						"outputs": [],
-						"execution_count": 22
+						"execution_count": 38
 					},
 					{
 						"cell_type": "code",
@@ -5239,7 +5240,7 @@
 							"source_format= 'DELTA'"
 						],
 						"outputs": [],
-						"execution_count": 23
+						"execution_count": 39
 					},
 					{
 						"cell_type": "code",
@@ -5259,7 +5260,7 @@
 							"ms_insights.process_roster()"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 40
 					},
 					{
 						"cell_type": "code",
@@ -5282,7 +5283,7 @@
 							"#mssparkutils.fs.ls( path )"
 						],
 						"outputs": [],
-						"execution_count": 27
+						"execution_count": 41
 					},
 					{
 						"cell_type": "code",
@@ -5298,48 +5299,52 @@
 							}
 						},
 						"source": [
-							"pathnp =ms_insights.stage1np_roster + '/' + folders[-2]"
-						],
-						"outputs": [],
-						"execution_count": 28
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"pathnp"
-						],
-						"outputs": [],
-						"execution_count": 29
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
+							"pathnp =ms_insights.stage1np_roster + '/' + folders[-2]\r\n",
+							"pathnp\r\n",
 							"ms_insights._process_roster_date_folder(pathnp)"
 						],
 						"outputs": [],
-						"execution_count": 30
+						"execution_count": 42
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"for folder in folders\r\n",
+							"    pathnp =ms_insights.stage1np_roster + '/' + folder\r\n",
+							"    ms_insights._process_roster_date_folder(pathnp)"
+						],
+						"outputs": [],
+						"execution_count": 43
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							""
+						],
+						"outputs": [],
+						"execution_count": 44
 					},
 					{
 						"cell_type": "code",
@@ -5787,7 +5792,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "b9677165-3c8c-4667-8f49-76810e4cde5e"
+						"spark.autotune.trackingId": "730ecd7c-87fe-4b26-929c-7450efa0e2ee"
 					}
 				},
 				"metadata": {
@@ -5812,7 +5817,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": true
 					},
 					"sessionKeepAliveTimeout": 30
 				},
