@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "30ea7307-4b7a-4d0b-b9cb-715fdb5aff7d"
+				"spark.autotune.trackingId": "d143c046-30ba-47b9-8eff-90bc2c0e0cfb"
 			}
 		},
 		"metadata": {
@@ -455,7 +455,7 @@
 					"        folders = oea.get_folders(date_folder_path)\r\n",
 					"        for table_name in folders:\r\n",
 					"            self._process_roster_entity(date_folder_path, table_name)\r\n",
-					"            logger.info(\"Processing ms_insights roster snapshot data from: \" + source_path +'/'+table_name)\r\n",
+					"            logger.info(\"Processing ms_insights roster snapshot data from: \" + date_folder_path +'/'+table_name)\r\n",
 					"\r\n",
 					"\r\n",
 					"    def process_roster(self):\r\n",
