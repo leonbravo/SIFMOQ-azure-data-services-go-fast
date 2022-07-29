@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "35fa3359-3bb2-4dc9-8b9b-88a954c9ef9e"
+				"spark.autotune.trackingId": "2c0946f8-9d4f-4480-a75f-e94d23c8e3af"
 			}
 		},
 		"metadata": {
@@ -101,7 +101,7 @@
 					"storage_account = 'bceaaeoeadevlrs'\r\n",
 					"use_test_env = False"
 				],
-				"execution_count": 13
+				"execution_count": 31
 			},
 			{
 				"cell_type": "code",
@@ -123,7 +123,7 @@
 					"from faker import Faker\r\n",
 					"import datetime"
 				],
-				"execution_count": 14
+				"execution_count": 32
 			},
 			{
 				"cell_type": "markdown",
@@ -165,7 +165,7 @@
 					"#date2 = \"2022-07-12\"\r\n",
 					"#date1 = date2"
 				],
-				"execution_count": 15
+				"execution_count": 33
 			},
 			{
 				"cell_type": "markdown",
@@ -211,7 +211,7 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"execution_count": 16
+				"execution_count": 34
 			},
 			{
 				"cell_type": "code",
@@ -229,7 +229,7 @@
 				"source": [
 					"%run /Insights_py"
 				],
-				"execution_count": 17
+				"execution_count": 35
 			},
 			{
 				"cell_type": "code",
@@ -274,7 +274,7 @@
 					"#dfSessionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Session/*.csv')\r\n",
 					"#dfSourceSystemRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
 				],
-				"execution_count": 18
+				"execution_count": 36
 			},
 			{
 				"cell_type": "code",
@@ -300,7 +300,7 @@
 					"    stage2p = oea.stage2p\r\n",
 					"    # 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
 				],
-				"execution_count": 19
+				"execution_count": 37
 			},
 			{
 				"cell_type": "code",
@@ -321,7 +321,7 @@
 					"source_folder='SDS/M365'\r\n",
 					"ms_insights = Insights(source_folder)"
 				],
-				"execution_count": 22
+				"execution_count": 38
 			},
 			{
 				"cell_type": "code",
@@ -342,7 +342,7 @@
 					"pathnp = ms_insights.stage2np\r\n",
 					"source_format= 'DELTA'"
 				],
-				"execution_count": 23
+				"execution_count": 39
 			},
 			{
 				"cell_type": "code",
@@ -361,7 +361,7 @@
 					"oea.insert_watermark( source_folder, \"Roster\", date2)\r\n",
 					"ms_insights.process_roster()"
 				],
-				"execution_count": null
+				"execution_count": 40
 			},
 			{
 				"cell_type": "code",
@@ -383,7 +383,7 @@
 					"\r\n",
 					"#mssparkutils.fs.ls( path )"
 				],
-				"execution_count": 27
+				"execution_count": 41
 			},
 			{
 				"cell_type": "code",
@@ -399,45 +399,49 @@
 					}
 				},
 				"source": [
-					"pathnp =ms_insights.stage1np_roster + '/' + folders[-2]"
-				],
-				"execution_count": 28
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"pathnp"
-				],
-				"execution_count": 29
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
+					"pathnp =ms_insights.stage1np_roster + '/' + folders[-2]\r\n",
+					"pathnp\r\n",
 					"ms_insights._process_roster_date_folder(pathnp)"
 				],
-				"execution_count": 30
+				"execution_count": 42
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"for folder in folders\r\n",
+					"    pathnp =ms_insights.stage1np_roster + '/' + folder\r\n",
+					"    ms_insights._process_roster_date_folder(pathnp)"
+				],
+				"execution_count": 43
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				],
+				"execution_count": 44
 			},
 			{
 				"cell_type": "code",
