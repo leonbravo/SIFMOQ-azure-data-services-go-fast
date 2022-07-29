@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "86bd5b48-9dbf-4c86-bf1e-9e8e68568f4e"
+				"spark.autotune.trackingId": "f2cab60b-ebff-4dfc-980a-ba7cf00e7c3d"
 			}
 		},
 		"metadata": {
@@ -169,6 +169,12 @@
 					"            if item.name == \"SRS_SubjectNames.csv\":\r\n",
 					"                df= returnDataFrameBeforeProcessing(\"SRS_SubjectNames\")\r\n",
 					"                oea.ingest_delta_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['SRS_SubjectNames'], partition_by='SubjectName', primary_key='SubjectName')\r\n",
+					"            if item.name == \"SRS_ScaleScoreConversion.csv\":\r\n",
+					"                df= returnDataFrameBeforeProcessing(\"SRS_ScaleScoreConversion\")\r\n",
+					"                oea.ingest_delta_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['SRS_ScaleScoreConversion'], partition_by='Score', primary_key='Score')\r\n",
+					"            if item.name == \"Dates_WithSchoolTerm.csv\":\r\n",
+					"                df= returnDataFrameBeforeProcessing(\"Dates_WithSchoolTerm\")\r\n",
+					"                oea.ingest_delta_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['Dates_WithSchoolTerm'], partition_by='YearCalendar', primary_key='DateKey')\r\n",
 					"\r\n",
 					"            else:\r\n",
 					"                logger.info(\"No defined function for processing this insights data\"+item.name)\r\n",
