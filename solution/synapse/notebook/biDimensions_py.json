@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "9006e0f5-62c8-492d-b8f5-cc4ac9749b44"
+				"spark.autotune.trackingId": "86bd5b48-9dbf-4c86-bf1e-9e8e68568f4e"
 			}
 		},
 		"metadata": {
@@ -122,6 +122,7 @@
 					" \r\n",
 					"        self.schemas['SRS_SubjectNames'] = [['SubjectName', 'string', 'no-op'],\r\n",
 					"                                            ['SubjectGroupName', 'string', 'no-op']]\r\n",
+					"\r\n",
 					"        self.schemas['Dates_WithSchoolTerm']=[  ['YearCalendar','integer','no-op'],\r\n",
 					"                ['MonthNumberOfYear','integer','no-op'],\r\n",
 					"                ['Month Dates','string','no-op'],\r\n",
@@ -165,6 +166,10 @@
 					"            if item.name == \"Locations.csv\":\r\n",
 					"                df= returnDataFrameBeforeProcessing()\r\n",
 					"                oea.ingest_delta_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['Locations'], partition_by='SUB_LOCATION', primary_key='CampusID')\r\n",
+					"            if item.name == \"SRS_SubjectNames.csv\":\r\n",
+					"                df= returnDataFrameBeforeProcessing(\"SRS_SubjectNames\")\r\n",
+					"                oea.ingest_delta_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['SRS_SubjectNames'], partition_by='SubjectName', primary_key='SubjectName')\r\n",
+					"\r\n",
 					"            else:\r\n",
 					"                logger.info(\"No defined function for processing this insights data\"+item.name)\r\n",
 					"        \r\n",
