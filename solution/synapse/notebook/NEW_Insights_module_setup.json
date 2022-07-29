@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "6d821ca4-1533-4c70-8b7e-8c14b795f3da"
+				"spark.autotune.trackingId": "4385bdef-60b2-42a2-8491-057696b8017b"
 			}
 		},
 		"metadata": {
@@ -101,7 +101,7 @@
 					"storage_account = 'bceaaeoeadevlrs'\r\n",
 					"use_test_env = False"
 				],
-				"execution_count": 1
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -123,7 +123,7 @@
 					"from faker import Faker\r\n",
 					"import datetime"
 				],
-				"execution_count": 2
+				"execution_count": 14
 			},
 			{
 				"cell_type": "markdown",
@@ -165,7 +165,7 @@
 					"#date2 = \"2022-07-12\"\r\n",
 					"#date1 = date2"
 				],
-				"execution_count": 3
+				"execution_count": 15
 			},
 			{
 				"cell_type": "markdown",
@@ -211,7 +211,7 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"execution_count": 4
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
@@ -229,7 +229,7 @@
 				"source": [
 					"%run /Insights_py"
 				],
-				"execution_count": 5
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
@@ -274,7 +274,7 @@
 					"#dfSessionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Session/*.csv')\r\n",
 					"#dfSourceSystemRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
 				],
-				"execution_count": 6
+				"execution_count": 18
 			},
 			{
 				"cell_type": "code",
@@ -300,29 +300,7 @@
 					"    stage2p = oea.stage2p\r\n",
 					"    # 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
 				],
-				"execution_count": 7
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"\r\n",
-					"db_name= 'bceoea'\r\n",
-					"pathp = ms_insights.stage2p+'/'+source_folder\r\n",
-					"pathnp = ms_insights.stage2np\r\n",
-					"source_format= 'DELTA'"
-				],
-				"execution_count": 8
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",
@@ -344,6 +322,28 @@
 					"ms_insights = Insights(source_folder)"
 				],
 				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"\r\n",
+					"db_name= 'bceoea'\r\n",
+					"pathp = ms_insights.stage2p+'/'+source_folder\r\n",
+					"pathnp = ms_insights.stage2np\r\n",
+					"source_format= 'DELTA'"
+				],
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
@@ -407,7 +407,7 @@
 				},
 				"source": [
 					"oea.get_folders( pathnp )\r\n",
-					"\r\n",
+					"oea.\r\n",
 					"#mssparkutils.fs.ls( path )"
 				],
 				"execution_count": 29
