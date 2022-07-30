@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "44a256a7-3a75-4f56-b4ce-ef87b5a416b1"
+				"spark.autotune.trackingId": "26b04629-926f-4141-99d3-f7d92bccd107"
 			}
 		},
 		"metadata": {
@@ -98,7 +98,7 @@
 				"source": [
 					"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 				],
-				"execution_count": 89
+				"execution_count": 111
 			},
 			{
 				"cell_type": "code",
@@ -120,7 +120,7 @@
 					"use_test_env = False\r\n",
 					"source_folder='/BCE/BI/Dimensions'"
 				],
-				"execution_count": 90
+				"execution_count": 112
 			},
 			{
 				"cell_type": "code",
@@ -144,7 +144,7 @@
 					"import datetime\r\n",
 					""
 				],
-				"execution_count": 91
+				"execution_count": 113
 			},
 			{
 				"cell_type": "markdown",
@@ -179,7 +179,7 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"execution_count": 92
+				"execution_count": 114
 			},
 			{
 				"cell_type": "code",
@@ -204,7 +204,7 @@
 					"    stage2np = oea.stage2np\r\n",
 					"    stage2p = oea.stage3np"
 				],
-				"execution_count": 93
+				"execution_count": 115
 			},
 			{
 				"cell_type": "markdown",
@@ -263,7 +263,7 @@
 				"source": [
 					"%run /biDimensions_py"
 				],
-				"execution_count": 94
+				"execution_count": 116
 			},
 			{
 				"cell_type": "code",
@@ -284,7 +284,7 @@
 					"\r\n",
 					"classBiDim = biDimensions(source_folder)"
 				],
-				"execution_count": 95
+				"execution_count": 117
 			},
 			{
 				"cell_type": "code",
@@ -304,7 +304,7 @@
 					"print(classBiDim.stage1np)\r\n",
 					"print(classBiDim.source_path)"
 				],
-				"execution_count": 96
+				"execution_count": 118
 			},
 			{
 				"cell_type": "code",
@@ -320,14 +320,9 @@
 					}
 				},
 				"source": [
-					"    filename='SRS_SubjectNames.csv'\r\n",
-					"    table_name = filename.replace('.csv','')\r\n",
-					"    source_path=classBiDim.stage1np + '/'+ filename\r\n",
-					"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
-					"    spark_schema = oea.to_spark_schema(classBiDim.schemas[f'{table_name}'])\r\n",
-					"    df = spark.read.csv(source_path , header='True', schema=spark_schema)"
+					"   "
 				],
-				"execution_count": 97
+				"execution_count": 119
 			},
 			{
 				"cell_type": "code",
@@ -345,7 +340,7 @@
 				"source": [
 					"classBiDim.returnDataFrameBeforeProcessing(\"SRS_SubjectNames.csv\")"
 				],
-				"execution_count": 98
+				"execution_count": 120
 			},
 			{
 				"cell_type": "code",
@@ -370,7 +365,7 @@
 					"\r\n",
 					""
 				],
-				"execution_count": 99
+				"execution_count": 121
 			},
 			{
 				"cell_type": "code",
