@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f4424679-f092-4e69-ad63-1193acb6b756"
+				"spark.autotune.trackingId": "4e09d3b4-e549-4e75-af67-45c9c03172c0"
 			}
 		},
 		"metadata": {
@@ -155,7 +155,7 @@
 					"                ['Day of Term Reverse','integer','no-op'],\r\n",
 					"                ['Work Days','integer','no-op']]\r\n",
 					"\r\n",
-					"        self.source_path = self.source_folder\r\n",
+					"        self.source_file = self.source_folder\r\n",
 					"        self.table_name = ''\r\n",
 					"                    \r\n",
 					"    \r\n",
@@ -184,13 +184,14 @@
 					"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
 					"        logger.info(\"Processing ms_insights activity data from: \" + sourcepath)\r\n",
 					"        if sourcepath == '': \r\n",
-					"            self.source_path=self.source_folder  + '/'+ filename\r\n",
+					"            self.source_file=self.source_folder  + '/'+ filename\r\n",
 					"        else:\r\n",
-					"            self.source_path=sourcepath\r\n",
+					"            self.source_file=sourcepath\r\n",
+					"        \r\n",
 					"        self.table_name = filename.replace('.csv','')\r\n",
 					"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
 					"        spark_schema = oea.to_spark_schema(self.schemas[f'{self.table_name}'])\r\n",
-					"        df = spark.read.csv(self.source_path , header='True', schema=spark_schema)\r\n",
+					"        df = spark.read.csv(f'{self.stage1np}{self.source_file}, header='True', schema=spark_schema)\r\n",
 					"\r\n",
 					"        return df\r\n",
 					"\r\n",
