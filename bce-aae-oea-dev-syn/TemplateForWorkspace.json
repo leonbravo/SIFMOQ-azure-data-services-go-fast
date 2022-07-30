@@ -7794,7 +7794,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "57a531a7-28f9-4b82-851c-139e47bd457a"
+						"spark.autotune.trackingId": "312d4bfb-4c4c-40a8-bcd7-5b305107289e"
 					}
 				},
 				"metadata": {
@@ -7819,7 +7819,8 @@
 						"sparkVersion": "3.2",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -7871,7 +7872,7 @@
 							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 						],
 						"outputs": [],
-						"execution_count": 68
+						"execution_count": 78
 					},
 					{
 						"cell_type": "code",
@@ -7894,7 +7895,7 @@
 							"source_folder='/BCE/BI/Dimensions'"
 						],
 						"outputs": [],
-						"execution_count": 69
+						"execution_count": 79
 					},
 					{
 						"cell_type": "code",
@@ -7919,7 +7920,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 70
+						"execution_count": 80
 					},
 					{
 						"cell_type": "markdown",
@@ -7955,7 +7956,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 71
+						"execution_count": 81
 					},
 					{
 						"cell_type": "code",
@@ -7981,7 +7982,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": 72
+						"execution_count": 82
 					},
 					{
 						"cell_type": "markdown",
@@ -8041,7 +8042,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": 73
+						"execution_count": 83
 					},
 					{
 						"cell_type": "code",
@@ -8063,7 +8064,7 @@
 							"classBiDim = biDimensions(source_folder)"
 						],
 						"outputs": [],
-						"execution_count": 74
+						"execution_count": 84
 					},
 					{
 						"cell_type": "code",
@@ -8084,7 +8085,7 @@
 							"print(classBiDim.source_path)"
 						],
 						"outputs": [],
-						"execution_count": 76
+						"execution_count": 85
 					},
 					{
 						"cell_type": "code",
@@ -8100,10 +8101,15 @@
 							}
 						},
 						"source": [
-							""
+							"    filename='SRS_SubjectNames.csv'\r\n",
+							"    table_name = filename.replace('.csv','')\r\n",
+							"    source_path=classBiDim.stage1np + '/'+ filename\r\n",
+							"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
+							"    spark_schema = oea.to_spark_schema(classBiDim.schemas[f'{table_name}'])\r\n",
+							"    df = spark.read.csv(source_path , header='True', schema=spark_schema)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 88
 					},
 					{
 						"cell_type": "code",
@@ -8122,7 +8128,7 @@
 							"classBiDim.returnDataFrameBeforeProcessing(\"SRS_SubjectNames.csv\")"
 						],
 						"outputs": [],
-						"execution_count": 77
+						"execution_count": 86
 					},
 					{
 						"cell_type": "code",
@@ -8671,7 +8677,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "09b2ecda-ca3b-4029-9a06-791476aee2d3"
+						"spark.autotune.trackingId": "14b4f114-5c1f-4908-b535-d0b388a777c1"
 					}
 				},
 				"metadata": {
@@ -8741,33 +8747,33 @@
 							"        BaseOEAModule.__init__(self, source_folder)\r\n",
 							"      \r\n",
 							"        self.schemas['Locations'] = [\r\n",
-							"                        ['ADMIN_LOCATION','String','no-op'],\r\n",
-							"                        ['SUB_LOCATION','String','no-op'],\r\n",
-							"                        ['ADMIN_DESC','String','no-op'],\r\n",
-							"                        ['Directorate','String','no-op'],\r\n",
-							"                        ['ServiceCentre','String','no-op'],\r\n",
-							"                        ['Department','String','no-op'],\r\n",
+							"                        ['ADMIN_LOCATION','string','no-op'],\r\n",
+							"                        ['SUB_LOCATION','string','no-op'],\r\n",
+							"                        ['ADMIN_DESC','string','no-op'],\r\n",
+							"                        ['Directorate','string','no-op'],\r\n",
+							"                        ['ServiceCentre','string','no-op'],\r\n",
+							"                        ['Department','string','no-op'],\r\n",
 							"                        ['CampusID','Integer','no-op'],\r\n",
-							"                        ['SchoolType','String','no-op'],\r\n",
-							"                        ['IntegrumOU','String','no-op'],\r\n",
-							"                        ['OU4','String','no-op'],\r\n",
-							"                        ['Directorate_old','String','no-op'],\r\n",
-							"                        ['LocationType','String','no-op'],\r\n",
-							"                        ['ADMIN_LOCATION_PBI','String','no-op'],\r\n",
-							"                        ['Clusters','String','no-op'],\r\n",
-							"                        ['Suburb','String','no-op'],\r\n",
-							"                        ['Directorate_Sort','String','no-op'],\r\n",
-							"                        ['School Name','String','no-op'],\r\n",
+							"                        ['SchoolType','string','no-op'],\r\n",
+							"                        ['IntegrumOU','string','no-op'],\r\n",
+							"                        ['OU4','string','no-op'],\r\n",
+							"                        ['Directorate_old','string','no-op'],\r\n",
+							"                        ['LocationType','string','no-op'],\r\n",
+							"                        ['ADMIN_LOCATION_PBI','string','no-op'],\r\n",
+							"                        ['Clusters','string','no-op'],\r\n",
+							"                        ['Suburb','string','no-op'],\r\n",
+							"                        ['Directorate_Sort','string','no-op'],\r\n",
+							"                        ['School Name','string','no-op'],\r\n",
 							"                        ['School_Code','Integer','no-op'],\r\n",
 							"                        ['Campus_Code','Integer','no-op'],\r\n",
-							"                        ['Campus Name','String','no-op'],\r\n",
+							"                        ['Campus Name','string','no-op'],\r\n",
 							"                        ['latitude','float64','no-op'],\r\n",
 							"                        ['longitude','float64','no-op'],\r\n",
-							"                        ['LatLong','String','no-op'],\r\n",
-							"                        ['OfficeName','String','no-op'],\r\n",
-							"                        ['Suburb - School','String','no-op'],\r\n",
-							"                        ['GeoType','String','no-op'],\r\n",
-							"                        ['LeuvenCode','String','no-op']\r\n",
+							"                        ['LatLong','string','no-op'],\r\n",
+							"                        ['OfficeName','string','no-op'],\r\n",
+							"                        ['Suburb - School','string','no-op'],\r\n",
+							"                        ['GeoType','string','no-op'],\r\n",
+							"                        ['LeuvenCode','string','no-op']\r\n",
 							"                        ]\r\n",
 							"        self.schemas['SRS_ScaleScoreConversion'] = [['Score', 'integer', 'no-op'],\r\n",
 							"                                    ['Mark', 'string', 'no-op']]\r\n",
@@ -8806,7 +8812,7 @@
 							"                ['Day of Term','integer','no-op'],\r\n",
 							"                ['Day of Term Reverse','integer','no-op'],\r\n",
 							"                ['Work Days','integer','no-op']]\r\n",
-							"                \r\n",
+							"\r\n",
 							"        self.source_path = self.stage1np \r\n",
 							"        self.table_name = ''\r\n",
 							"                    \r\n",
@@ -8844,7 +8850,7 @@
 							"            self.source_path=sourcepath\r\n",
 							"        self.table_name = filename.replace('.csv','')\r\n",
 							"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
-							"        spark_schema = oea.to_spark_schema(self.schemas[f'{table_name}'])\r\n",
+							"        spark_schema = oea.to_spark_schema(self.schemas[f'{self.table_name}'])\r\n",
 							"        df = spark.read.csv(self.source_path , header='True', schema=spark_schema)\r\n",
 							"\r\n",
 							"        return df\r\n",
