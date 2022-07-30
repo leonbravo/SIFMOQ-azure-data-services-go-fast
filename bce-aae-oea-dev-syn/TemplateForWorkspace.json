@@ -7794,7 +7794,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "312d4bfb-4c4c-40a8-bcd7-5b305107289e"
+						"spark.autotune.trackingId": "44a256a7-3a75-4f56-b4ce-ef87b5a416b1"
 					}
 				},
 				"metadata": {
@@ -7819,8 +7819,7 @@
 						"sparkVersion": "3.2",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -7872,7 +7871,7 @@
 							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 						],
 						"outputs": [],
-						"execution_count": 78
+						"execution_count": 89
 					},
 					{
 						"cell_type": "code",
@@ -7895,7 +7894,7 @@
 							"source_folder='/BCE/BI/Dimensions'"
 						],
 						"outputs": [],
-						"execution_count": 79
+						"execution_count": 90
 					},
 					{
 						"cell_type": "code",
@@ -7920,7 +7919,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 80
+						"execution_count": 91
 					},
 					{
 						"cell_type": "markdown",
@@ -7956,7 +7955,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 81
+						"execution_count": 92
 					},
 					{
 						"cell_type": "code",
@@ -7982,7 +7981,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": 82
+						"execution_count": 93
 					},
 					{
 						"cell_type": "markdown",
@@ -8042,7 +8041,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": 83
+						"execution_count": 94
 					},
 					{
 						"cell_type": "code",
@@ -8064,7 +8063,7 @@
 							"classBiDim = biDimensions(source_folder)"
 						],
 						"outputs": [],
-						"execution_count": 84
+						"execution_count": 95
 					},
 					{
 						"cell_type": "code",
@@ -8085,7 +8084,7 @@
 							"print(classBiDim.source_path)"
 						],
 						"outputs": [],
-						"execution_count": 85
+						"execution_count": 96
 					},
 					{
 						"cell_type": "code",
@@ -8109,7 +8108,7 @@
 							"    df = spark.read.csv(source_path , header='True', schema=spark_schema)"
 						],
 						"outputs": [],
-						"execution_count": 88
+						"execution_count": 97
 					},
 					{
 						"cell_type": "code",
@@ -8128,7 +8127,7 @@
 							"classBiDim.returnDataFrameBeforeProcessing(\"SRS_SubjectNames.csv\")"
 						],
 						"outputs": [],
-						"execution_count": 86
+						"execution_count": 98
 					},
 					{
 						"cell_type": "code",
@@ -8154,7 +8153,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 42
+						"execution_count": 99
 					},
 					{
 						"cell_type": "code",
@@ -8677,7 +8676,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "14b4f114-5c1f-4908-b535-d0b388a777c1"
+						"spark.autotune.trackingId": "e6a8428b-9a77-490d-ab64-79c1cf4b6cdb"
 					}
 				},
 				"metadata": {
@@ -8845,7 +8844,7 @@
 							"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
 							"        logger.info(\"Processing ms_insights activity data from: \" + sourcepath)\r\n",
 							"        if sourcepath == '': \r\n",
-							"            self.source_path=self.source_path + '/'+ filename\r\n",
+							"            self.source_path=self.stage1np  + '/'+ filename\r\n",
 							"        else:\r\n",
 							"            self.source_path=sourcepath\r\n",
 							"        self.table_name = filename.replace('.csv','')\r\n",
