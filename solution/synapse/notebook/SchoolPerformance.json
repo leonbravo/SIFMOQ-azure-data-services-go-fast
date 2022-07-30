@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "1d07e4db-7356-4c52-b5b1-0c822b39dbef"
+				"spark.autotune.trackingId": "8e67104e-e39c-421f-9283-0fb776246b99"
 			}
 		},
 		"metadata": {
@@ -98,7 +98,7 @@
 				"source": [
 					"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 				],
-				"execution_count": 2
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -120,7 +120,7 @@
 					"use_test_env = False\r\n",
 					"source_folder='/BCE/BI/Dimensions'"
 				],
-				"execution_count": 3
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -144,7 +144,7 @@
 					"import datetime\r\n",
 					""
 				],
-				"execution_count": 4
+				"execution_count": 15
 			},
 			{
 				"cell_type": "markdown",
@@ -179,7 +179,7 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"execution_count": 5
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
@@ -204,7 +204,7 @@
 					"    stage2np = oea.stage2np\r\n",
 					"    stage2p = oea.stage3np"
 				],
-				"execution_count": 6
+				"execution_count": 17
 			},
 			{
 				"cell_type": "markdown",
@@ -263,7 +263,7 @@
 				"source": [
 					"%run /biDimensions_py"
 				],
-				"execution_count": 7
+				"execution_count": 18
 			},
 			{
 				"cell_type": "code",
@@ -284,7 +284,7 @@
 					"\r\n",
 					"classBiDim = biDimensions(source_folder)"
 				],
-				"execution_count": 8
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",
@@ -303,7 +303,7 @@
 					"source_folder\r\n",
 					"classBiDim.stage1np"
 				],
-				"execution_count": 10
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
@@ -321,7 +321,7 @@
 				"source": [
 					"classBiDim.returnDataFrameBeforeProcessing(\"SRS_SubjectNames\")"
 				],
-				"execution_count": 12
+				"execution_count": 21
 			},
 			{
 				"cell_type": "code",
@@ -346,7 +346,7 @@
 					"\r\n",
 					""
 				],
-				"execution_count": 11
+				"execution_count": 22
 			},
 			{
 				"cell_type": "code",
