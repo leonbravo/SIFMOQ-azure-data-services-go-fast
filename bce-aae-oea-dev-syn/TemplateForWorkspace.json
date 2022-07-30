@@ -8671,7 +8671,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "fd1f8b72-6bc7-4435-ae69-356e5f49d5db"
+						"spark.autotune.trackingId": "09b2ecda-ca3b-4029-9a06-791476aee2d3"
 					}
 				},
 				"metadata": {
@@ -8806,8 +8806,9 @@
 							"                ['Day of Term','integer','no-op'],\r\n",
 							"                ['Day of Term Reverse','integer','no-op'],\r\n",
 							"                ['Work Days','integer','no-op']]\r\n",
-							"            self.source_path = self.stage1np \r\n",
-							"            self.table_name = ''\r\n",
+							"                \r\n",
+							"        self.source_path = self.stage1np \r\n",
+							"        self.table_name = ''\r\n",
 							"                    \r\n",
 							"    \r\n",
 							"    def ingest(self):\r\n",
