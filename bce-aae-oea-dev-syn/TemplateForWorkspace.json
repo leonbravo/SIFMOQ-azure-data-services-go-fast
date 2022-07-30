@@ -596,9 +596,16 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "ingest into stage2p and stage2np",
+						"name": "Insights ingest into stage 2p and 2np",
 						"type": "SynapseNotebook",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Dimensions ingest",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -624,7 +631,7 @@
 						"type": "IfCondition",
 						"dependsOn": [
 							{
-								"activity": "ingest into stage2p and stage2np",
+								"activity": "Insights ingest into stage 2p and 2np",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -669,7 +676,7 @@
 						"type": "IfCondition",
 						"dependsOn": [
 							{
-								"activity": "ingest into stage2p and stage2np",
+								"activity": "Insights ingest into stage 2p and 2np",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -704,6 +711,30 @@
 								}
 							]
 						}
+					},
+					{
+						"name": "Dimensions ingest",
+						"type": "SynapseNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebook": {
+								"referenceName": "SchoolPerformanceTable",
+								"type": "NotebookReference"
+							},
+							"snapshot": true,
+							"sparkPool": {
+								"referenceName": "spark3p1sm",
+								"type": "BigDataPoolReference"
+							}
+						}
 					}
 				],
 				"policy": {
@@ -737,6 +768,7 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/notebooks/NEW_Insights_module_setup')]",
 				"[concat(variables('workspaceId'), '/bigDataPools/spark3p1sm')]",
+				"[concat(variables('workspaceId'), '/notebooks/SchoolPerformanceTable')]",
 				"[concat(variables('workspaceId'), '/pipelines/create_sql_db1')]",
 				"[concat(variables('workspaceId'), '/pipelines/create_lake_db1')]"
 			]
@@ -1095,11 +1127,11 @@
 				"parameters": {
 					"storageAccount": {
 						"type": "string",
-						"defaultValue": "stoeacisd3gg1"
+						"defaultValue": "bceaaeoeadevlrs"
 					},
 					"sourceDirectory": {
 						"type": "string",
-						"defaultValue": "contoso_sis"
+						"defaultValue": "/"
 					},
 					"stage": {
 						"type": "string",
@@ -4418,7 +4450,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "4d9a5b9f-ef97-4086-a6dc-9d6e1a658e58"
+						"spark.autotune.trackingId": "d143c046-30ba-47b9-8eff-90bc2c0e0cfb"
 					}
 				},
 				"metadata": {
@@ -4443,8 +4475,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -4909,7 +4940,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "78e3f101-07cb-4cc7-bc75-7321813b0272"
+						"spark.autotune.trackingId": "2c0946f8-9d4f-4480-a75f-e94d23c8e3af"
 					}
 				},
 				"metadata": {
@@ -4934,8 +4965,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -5792,7 +5822,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "1159c6e0-c636-48e2-9e4c-9e1f881119b2"
+						"spark.autotune.trackingId": "b9677165-3c8c-4667-8f49-76810e4cde5e"
 					}
 				},
 				"metadata": {
@@ -5817,8 +5847,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -7765,7 +7794,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "7099932d-085c-452a-95f2-63ecc3c8ed33"
+						"spark.autotune.trackingId": "1665b532-9247-46f1-a73c-667c200d3229"
 					}
 				},
 				"metadata": {
@@ -7843,7 +7872,7 @@
 							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 						],
 						"outputs": [],
-						"execution_count": 34
+						"execution_count": 2
 					},
 					{
 						"cell_type": "code",
@@ -7866,7 +7895,7 @@
 							"source_folder='/BCE/BI/Dimensions'"
 						],
 						"outputs": [],
-						"execution_count": 54
+						"execution_count": 3
 					},
 					{
 						"cell_type": "code",
@@ -7891,7 +7920,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 36
+						"execution_count": 4
 					},
 					{
 						"cell_type": "markdown",
@@ -7927,7 +7956,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 37
+						"execution_count": 5
 					},
 					{
 						"cell_type": "code",
@@ -7953,7 +7982,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": 38
+						"execution_count": 6
 					},
 					{
 						"cell_type": "markdown",
@@ -8013,7 +8042,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": 39
+						"execution_count": 7
 					},
 					{
 						"cell_type": "code",
@@ -8035,7 +8064,46 @@
 							"classBiDim = biDimensions(source_folder)"
 						],
 						"outputs": [],
-						"execution_count": 49
+						"execution_count": 8
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"source_folder\r\n",
+							"classBiDim.stage1np"
+						],
+						"outputs": [],
+						"execution_count": 10
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"classBiDim.returnDataFrameBeforeProcessing(\"SRS_SubjectNames\")"
+						],
+						"outputs": [],
+						"execution_count": 12
 					},
 					{
 						"cell_type": "code",
@@ -8056,12 +8124,12 @@
 							"\r\n",
 							"classBiDim.ingest()\r\n",
 							"#oea.ingest_snapshot_data(source_system=source_folder, tablename= table_name, primary_key='CampusID'\r\n",
-							"                       , schema=classBiDim.schemas[table_name],  partition_by='SUB_LOCATION')\r\n",
+							"#                       , schema=classBiDim.schemas[table_name],  partition_by='SUB_LOCATION')\r\n",
 							"\r\n",
 							""
 						],
 						"outputs": [],
-						"execution_count": 56
+						"execution_count": 11
 					},
 					{
 						"cell_type": "code",
@@ -8584,7 +8652,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "303d2baa-ff25-4178-a092-4dc112ce781f"
+						"spark.autotune.trackingId": "cec1e0ee-aace-4103-bdf3-fce51358a927"
 					}
 				},
 				"metadata": {
@@ -8729,16 +8797,16 @@
 							"        items = mssparkutils.fs.ls(self.stage1np)\r\n",
 							"        for item in items:\r\n",
 							"            if item.name == \"Locations.csv\":\r\n",
-							"                df= returnDataFrameBeforeProcessing()\r\n",
+							"                df= self.returnDataFrameBeforeProcessing()\r\n",
 							"                oea.ingest_delta_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['Locations'], partition_by='SUB_LOCATION', primary_key='CampusID')\r\n",
 							"            if item.name == \"SRS_SubjectNames.csv\":\r\n",
-							"                df= returnDataFrameBeforeProcessing(\"SRS_SubjectNames\")\r\n",
+							"                df= self.returnDataFrameBeforeProcessing(\"SRS_SubjectNames\")\r\n",
 							"                oea.ingest_delta_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['SRS_SubjectNames'], partition_by='SubjectName', primary_key='SubjectName')\r\n",
 							"            if item.name == \"SRS_ScaleScoreConversion.csv\":\r\n",
-							"                df= returnDataFrameBeforeProcessing(\"SRS_ScaleScoreConversion\")\r\n",
+							"                df= self.returnDataFrameBeforeProcessing(\"SRS_ScaleScoreConversion\")\r\n",
 							"                oea.ingest_delta_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['SRS_ScaleScoreConversion'], partition_by='Score', primary_key='Score')\r\n",
 							"            if item.name == \"Dates_WithSchoolTerm.csv\":\r\n",
-							"                df= returnDataFrameBeforeProcessing(\"Dates_WithSchoolTerm\")\r\n",
+							"                df= self.returnDataFrameBeforeProcessing(\"Dates_WithSchoolTerm\")\r\n",
 							"                oea.ingest_delta_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['Dates_WithSchoolTerm'], partition_by='YearCalendar', primary_key='DateKey')\r\n",
 							"\r\n",
 							"            else:\r\n",
@@ -10279,7 +10347,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "d3ccd456-3832-41bf-9ce9-30f0ac955cd0"
+						"spark.autotune.trackingId": "8e6ffb27-0ace-49de-84aa-db851a656d21"
 					}
 				},
 				"metadata": {
@@ -10304,8 +10372,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
