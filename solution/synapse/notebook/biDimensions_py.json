@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "36236125-0e58-4af8-9fd6-3c5bf4d1eaa5"
+				"spark.autotune.trackingId": "e27d7a21-3cfb-4051-b534-d0492681d0cd"
 			}
 		},
 		"metadata": {
@@ -174,7 +174,7 @@
 					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source_path, schema=self.schemas['SRS_ScaleScoreConversion'], primary_key='Score')\r\n",
 					"            if item.name == \"Dates_WithSchoolTerm.csv\":\r\n",
 					"                #df= self.returnDataFrameBeforeProcessing(\"Dates_WithSchoolTerm\")\r\n",
-					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source_path', schema=self.schemas['Dates_WithSchoolTerm'], primary_key='DateKey')\r\n",
+					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source_path, schema=self.schemas['Dates_WithSchoolTerm'], primary_key='DateKey')\r\n",
 					"\r\n",
 					"            else:\r\n",
 					"                logger.info(\"No defined function for processing this insights data\"+item.name)\r\n",
