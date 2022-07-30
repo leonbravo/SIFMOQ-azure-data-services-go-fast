@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "26b04629-926f-4141-99d3-f7d92bccd107"
+				"spark.autotune.trackingId": "94f5fb33-2b43-4883-8a64-0132d5fad5e6"
 			}
 		},
 		"metadata": {
@@ -98,7 +98,7 @@
 				"source": [
 					"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 				],
-				"execution_count": 111
+				"execution_count": 122
 			},
 			{
 				"cell_type": "code",
@@ -120,7 +120,7 @@
 					"use_test_env = False\r\n",
 					"source_folder='/BCE/BI/Dimensions'"
 				],
-				"execution_count": 112
+				"execution_count": 123
 			},
 			{
 				"cell_type": "code",
@@ -144,7 +144,7 @@
 					"import datetime\r\n",
 					""
 				],
-				"execution_count": 113
+				"execution_count": 124
 			},
 			{
 				"cell_type": "markdown",
@@ -179,7 +179,7 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"execution_count": 114
+				"execution_count": 125
 			},
 			{
 				"cell_type": "code",
@@ -204,7 +204,7 @@
 					"    stage2np = oea.stage2np\r\n",
 					"    stage2p = oea.stage3np"
 				],
-				"execution_count": 115
+				"execution_count": 126
 			},
 			{
 				"cell_type": "markdown",
@@ -263,7 +263,7 @@
 				"source": [
 					"%run /biDimensions_py"
 				],
-				"execution_count": 116
+				"execution_count": 127
 			},
 			{
 				"cell_type": "code",
@@ -284,7 +284,7 @@
 					"\r\n",
 					"classBiDim = biDimensions(source_folder)"
 				],
-				"execution_count": 117
+				"execution_count": 128
 			},
 			{
 				"cell_type": "code",
@@ -304,7 +304,7 @@
 					"print(classBiDim.stage1np)\r\n",
 					"print(classBiDim.source_path)"
 				],
-				"execution_count": 118
+				"execution_count": 129
 			},
 			{
 				"cell_type": "code",
@@ -322,7 +322,7 @@
 				"source": [
 					"   "
 				],
-				"execution_count": 119
+				"execution_count": 130
 			},
 			{
 				"cell_type": "code",
@@ -340,7 +340,7 @@
 				"source": [
 					"classBiDim.returnDataFrameBeforeProcessing(\"SRS_SubjectNames.csv\")"
 				],
-				"execution_count": 120
+				"execution_count": 131
 			},
 			{
 				"cell_type": "code",
@@ -360,12 +360,11 @@
 					"\r\n",
 					"\r\n",
 					"classBiDim.ingest()\r\n",
-					"#oea.ingest_snapshot_data(source_system=source_folder, tablename= table_name, primary_key='CampusID'\r\n",
-					"#                       , schema=classBiDim.schemas[table_name],  partition_by='SUB_LOCATION')\r\n",
+					"\r\n",
 					"\r\n",
 					""
 				],
-				"execution_count": 121
+				"execution_count": 132
 			},
 			{
 				"cell_type": "code",
@@ -644,7 +643,7 @@
 					"oea.create_sql_views(pathp, source_format)\r\n",
 					"oea.create_sql_views(pathnp, source_format)"
 				],
-				"execution_count": 129
+				"execution_count": 133
 			},
 			{
 				"cell_type": "code",

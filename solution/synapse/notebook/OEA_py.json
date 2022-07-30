@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b9677165-3c8c-4667-8f49-76810e4cde5e"
+				"spark.autotune.trackingId": "7c24013a-d900-4014-8c46-d0b96a86af0b"
 			}
 		},
 		"metadata": {
@@ -371,7 +371,6 @@
 					"        np_destination_path = f'{self.stage2np}/{source_path}_lookup'\n",
 					"        logger.info(f'Processing snapshot data from: {source_path} and writing out to: {p_destination_path}')\n",
 					"\n",
-					" \n",
 					"        df = inpdataframe.dropDuplicates([primary_key]) # More info: https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#streaming-deduplication\n",
 					"        \n",
 					"        df_pseudo, df_lookup = self.pseudonymize(df, schema)\n",

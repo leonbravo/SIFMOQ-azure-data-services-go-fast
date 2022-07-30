@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "09a5e911-a6f7-46e0-8a9f-22a44b98a0d9"
+				"spark.autotune.trackingId": "f40cabc7-2764-48f7-b79f-4995950ef780"
 			}
 		},
 		"metadata": {
@@ -155,7 +155,7 @@
 					"                ['Day of Term Reverse','integer','no-op'],\r\n",
 					"                ['Work Days','integer','no-op']]\r\n",
 					"\r\n",
-					"        self.source_path = self.stage1np \r\n",
+					"        self.source_path = source_folder\r\n",
 					"        self.table_name = ''\r\n",
 					"                    \r\n",
 					"    \r\n",
@@ -169,13 +169,10 @@
 					"            if item.name == \"Locations.csv\":\r\n",
 					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source_path, schema=self.schemas['Locations']       , primary_key='CampusID')\r\n",
 					"            if item.name == \"SRS_SubjectNames.csv\":\r\n",
-					"               # df= self.returnDataFrameBeforeProcessing(\"SRS_SubjectNames\")\r\n",
 					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source_path, schema=self.schemas['SRS_SubjectNames'], primary_key='SubjectName')\r\n",
 					"            if item.name == \"SRS_ScaleScoreConversion.csv\":\r\n",
-					"                #df= self.returnDataFrameBeforeProcessing(\"SRS_ScaleScoreConversion\")\r\n",
 					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source_path, schema=self.schemas['SRS_ScaleScoreConversion'], primary_key='Score')\r\n",
 					"            if item.name == \"Dates_WithSchoolTerm.csv\":\r\n",
-					"                #df= self.returnDataFrameBeforeProcessing(\"Dates_WithSchoolTerm\")\r\n",
 					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source_path, schema=self.schemas['Dates_WithSchoolTerm'], primary_key='DateKey')\r\n",
 					"\r\n",
 					"            else:\r\n",
