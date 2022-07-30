@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "e27d7a21-3cfb-4051-b534-d0492681d0cd"
+				"spark.autotune.trackingId": "831d3db0-a80d-4925-949b-b01e2878654a"
 			}
 		},
 		"metadata": {
@@ -154,8 +154,7 @@
 					"                ['Day of Term','integer','no-op'],\r\n",
 					"                ['Day of Term Reverse','integer','no-op'],\r\n",
 					"                ['Work Days','integer','no-op']]\r\n",
-					"\r\n",
-					"                                 \r\n",
+					"                    \r\n",
 					"    \r\n",
 					"    def ingest(self):\r\n",
 					"        \"\"\"  Processes insights data from stage1 into stage2 using structured streaming within the defined functions below.\"\"\"\r\n",
