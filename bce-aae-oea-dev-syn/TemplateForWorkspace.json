@@ -7794,7 +7794,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "8e67104e-e39c-421f-9283-0fb776246b99"
+						"spark.autotune.trackingId": "d4b69de7-c989-40db-b680-9adcbb3f1ad4"
 					}
 				},
 				"metadata": {
@@ -7871,7 +7871,7 @@
 							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 						],
 						"outputs": [],
-						"execution_count": 13
+						"execution_count": 23
 					},
 					{
 						"cell_type": "code",
@@ -7894,7 +7894,7 @@
 							"source_folder='/BCE/BI/Dimensions'"
 						],
 						"outputs": [],
-						"execution_count": 14
+						"execution_count": 24
 					},
 					{
 						"cell_type": "code",
@@ -7919,7 +7919,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 15
+						"execution_count": 25
 					},
 					{
 						"cell_type": "markdown",
@@ -7955,7 +7955,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 16
+						"execution_count": 26
 					},
 					{
 						"cell_type": "code",
@@ -7981,7 +7981,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": 17
+						"execution_count": 27
 					},
 					{
 						"cell_type": "markdown",
@@ -8041,7 +8041,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": 18
+						"execution_count": 28
 					},
 					{
 						"cell_type": "code",
@@ -8063,7 +8063,7 @@
 							"classBiDim = biDimensions(source_folder)"
 						],
 						"outputs": [],
-						"execution_count": 19
+						"execution_count": 29
 					},
 					{
 						"cell_type": "code",
@@ -8083,7 +8083,7 @@
 							"classBiDim.stage1np"
 						],
 						"outputs": [],
-						"execution_count": 20
+						"execution_count": 30
 					},
 					{
 						"cell_type": "code",
@@ -8102,7 +8102,7 @@
 							"classBiDim.returnDataFrameBeforeProcessing(\"SRS_SubjectNames\")"
 						],
 						"outputs": [],
-						"execution_count": 21
+						"execution_count": 31
 					},
 					{
 						"cell_type": "code",
@@ -8128,7 +8128,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 22
+						"execution_count": 32
 					},
 					{
 						"cell_type": "code",
@@ -8651,7 +8651,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "bc0751e2-7801-4ac3-a49f-7d0348309269"
+						"spark.autotune.trackingId": "7e6216a5-2ef9-45f3-874d-dac04ece3e1a"
 					}
 				},
 				"metadata": {
@@ -8797,16 +8797,16 @@
 							"        for item in items:\r\n",
 							"            if item.name == \"Locations.csv\":\r\n",
 							"                df= self.returnDataFrameBeforeProcessing()\r\n",
-							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['Locations'], partition_by='SUB_LOCATION', primary_key='CampusID')\r\n",
+							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['Locations']       , primary_key='CampusID')\r\n",
 							"            if item.name == \"SRS_SubjectNames.csv\":\r\n",
 							"                df= self.returnDataFrameBeforeProcessing(\"SRS_SubjectNames\")\r\n",
-							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['SRS_SubjectNames'], partition_by='SubjectName', primary_key='SubjectName')\r\n",
+							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['SRS_SubjectNames'], primary_key='SubjectName')\r\n",
 							"            if item.name == \"SRS_ScaleScoreConversion.csv\":\r\n",
 							"                df= self.returnDataFrameBeforeProcessing(\"SRS_ScaleScoreConversion\")\r\n",
-							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['SRS_ScaleScoreConversion'], partition_by='Score', primary_key='Score')\r\n",
+							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['SRS_ScaleScoreConversion'], primary_key='Score')\r\n",
 							"            if item.name == \"Dates_WithSchoolTerm.csv\":\r\n",
 							"                df= self.returnDataFrameBeforeProcessing(\"Dates_WithSchoolTerm\")\r\n",
-							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['Dates_WithSchoolTerm'], partition_by='YearCalendar', primary_key='DateKey')\r\n",
+							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['Dates_WithSchoolTerm'], primary_key='DateKey')\r\n",
 							"\r\n",
 							"            else:\r\n",
 							"                logger.info(\"No defined function for processing this insights data\"+item.name)\r\n",
