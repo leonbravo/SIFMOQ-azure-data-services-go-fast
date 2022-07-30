@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "df397692-43f9-4011-9d31-f05c5a76d7c1"
+				"spark.autotune.trackingId": "09a5e911-a6f7-46e0-8a9f-22a44b98a0d9"
 			}
 		},
 		"metadata": {
@@ -109,8 +109,8 @@
 					"                        ['School_Code','Integer','no-op'],\r\n",
 					"                        ['Campus_Code','Integer','no-op'],\r\n",
 					"                        ['Campus Name','string','no-op'],\r\n",
-					"                        ['latitude','float64','no-op'],\r\n",
-					"                        ['longitude','float64','no-op'],\r\n",
+					"                        ['latitude','string','no-op'],\r\n",
+					"                        ['longitude','string','no-op'],\r\n",
 					"                        ['LatLong','string','no-op'],\r\n",
 					"                        ['OfficeName','string','no-op'],\r\n",
 					"                        ['Suburb - School','string','no-op'],\r\n",
