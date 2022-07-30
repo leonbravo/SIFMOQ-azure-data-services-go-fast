@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "831d3db0-a80d-4925-949b-b01e2878654a"
+				"spark.autotune.trackingId": "73a350ff-b8fb-47b0-a1ee-eb29a4f6f150"
 			}
 		},
 		"metadata": {
@@ -154,6 +154,8 @@
 					"                ['Day of Term','integer','no-op'],\r\n",
 					"                ['Day of Term Reverse','integer','no-op'],\r\n",
 					"                ['Work Days','integer','no-op']]\r\n",
+					"            self.source_path = self.stage1np \r\n",
+					"            self.table_name = ''\r\n",
 					"                    \r\n",
 					"    \r\n",
 					"    def ingest(self):\r\n",
@@ -184,7 +186,7 @@
 					"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
 					"        logger.info(\"Processing ms_insights activity data from: \" + sourcepath)\r\n",
 					"        if sourcepath == '': \r\n",
-					"            self.source_path=self.stage1np + '/'+ filename\r\n",
+					"            self.source_path=self.source_path + '/'+ filename\r\n",
 					"        else:\r\n",
 					"            self.source_path=sourcepath\r\n",
 					"        self.table_name = filename.replace('.csv','')\r\n",
