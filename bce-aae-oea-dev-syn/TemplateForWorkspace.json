@@ -7794,7 +7794,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "1665b532-9247-46f1-a73c-667c200d3229"
+						"spark.autotune.trackingId": "8e67104e-e39c-421f-9283-0fb776246b99"
 					}
 				},
 				"metadata": {
@@ -7819,8 +7819,7 @@
 						"sparkVersion": "3.2",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -7872,7 +7871,7 @@
 							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": 13
 					},
 					{
 						"cell_type": "code",
@@ -7895,7 +7894,7 @@
 							"source_folder='/BCE/BI/Dimensions'"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 14
 					},
 					{
 						"cell_type": "code",
@@ -7920,7 +7919,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": 15
 					},
 					{
 						"cell_type": "markdown",
@@ -7956,7 +7955,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 16
 					},
 					{
 						"cell_type": "code",
@@ -7982,7 +7981,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": 6
+						"execution_count": 17
 					},
 					{
 						"cell_type": "markdown",
@@ -8042,7 +8041,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": 7
+						"execution_count": 18
 					},
 					{
 						"cell_type": "code",
@@ -8064,7 +8063,7 @@
 							"classBiDim = biDimensions(source_folder)"
 						],
 						"outputs": [],
-						"execution_count": 8
+						"execution_count": 19
 					},
 					{
 						"cell_type": "code",
@@ -8084,7 +8083,7 @@
 							"classBiDim.stage1np"
 						],
 						"outputs": [],
-						"execution_count": 10
+						"execution_count": 20
 					},
 					{
 						"cell_type": "code",
@@ -8103,7 +8102,7 @@
 							"classBiDim.returnDataFrameBeforeProcessing(\"SRS_SubjectNames\")"
 						],
 						"outputs": [],
-						"execution_count": 12
+						"execution_count": 21
 					},
 					{
 						"cell_type": "code",
@@ -8129,7 +8128,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 11
+						"execution_count": 22
 					},
 					{
 						"cell_type": "code",
@@ -8652,7 +8651,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "cec1e0ee-aace-4103-bdf3-fce51358a927"
+						"spark.autotune.trackingId": "bc0751e2-7801-4ac3-a49f-7d0348309269"
 					}
 				},
 				"metadata": {
@@ -8798,16 +8797,16 @@
 							"        for item in items:\r\n",
 							"            if item.name == \"Locations.csv\":\r\n",
 							"                df= self.returnDataFrameBeforeProcessing()\r\n",
-							"                oea.ingest_delta_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['Locations'], partition_by='SUB_LOCATION', primary_key='CampusID')\r\n",
+							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['Locations'], partition_by='SUB_LOCATION', primary_key='CampusID')\r\n",
 							"            if item.name == \"SRS_SubjectNames.csv\":\r\n",
 							"                df= self.returnDataFrameBeforeProcessing(\"SRS_SubjectNames\")\r\n",
-							"                oea.ingest_delta_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['SRS_SubjectNames'], partition_by='SubjectName', primary_key='SubjectName')\r\n",
+							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['SRS_SubjectNames'], partition_by='SubjectName', primary_key='SubjectName')\r\n",
 							"            if item.name == \"SRS_ScaleScoreConversion.csv\":\r\n",
 							"                df= self.returnDataFrameBeforeProcessing(\"SRS_ScaleScoreConversion\")\r\n",
-							"                oea.ingest_delta_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['SRS_ScaleScoreConversion'], partition_by='Score', primary_key='Score')\r\n",
+							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['SRS_ScaleScoreConversion'], partition_by='Score', primary_key='Score')\r\n",
 							"            if item.name == \"Dates_WithSchoolTerm.csv\":\r\n",
 							"                df= self.returnDataFrameBeforeProcessing(\"Dates_WithSchoolTerm\")\r\n",
-							"                oea.ingest_delta_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['Dates_WithSchoolTerm'], partition_by='YearCalendar', primary_key='DateKey')\r\n",
+							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['Dates_WithSchoolTerm'], partition_by='YearCalendar', primary_key='DateKey')\r\n",
 							"\r\n",
 							"            else:\r\n",
 							"                logger.info(\"No defined function for processing this insights data\"+item.name)\r\n",
