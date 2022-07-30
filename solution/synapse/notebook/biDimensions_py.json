@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "60d37e99-ad15-4d83-a06a-c7ecec515357"
+				"spark.autotune.trackingId": "d7e9158f-15eb-4bf4-a2fa-14428ae19e66"
 			}
 		},
 		"metadata": {
@@ -165,16 +165,16 @@
 					"        for item in items:\r\n",
 					"            if item.name == \"Locations.csv\":\r\n",
 					"                df= self.returnDataFrameBeforeProcessing()\r\n",
-					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['Locations'], partition_by='SUB_LOCATION', primary_key='CampusID')\r\n",
+					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['Locations']       , primary_key='CampusID')\r\n",
 					"            if item.name == \"SRS_SubjectNames.csv\":\r\n",
 					"                df= self.returnDataFrameBeforeProcessing(\"SRS_SubjectNames\")\r\n",
-					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['SRS_SubjectNames'], partition_by='SubjectName', primary_key='SubjectName')\r\n",
+					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['SRS_SubjectNames'], primary_key='SubjectName')\r\n",
 					"            if item.name == \"SRS_ScaleScoreConversion.csv\":\r\n",
 					"                df= self.returnDataFrameBeforeProcessing(\"SRS_ScaleScoreConversion\")\r\n",
-					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['SRS_ScaleScoreConversion'], partition_by='Score', primary_key='Score')\r\n",
+					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['SRS_ScaleScoreConversion'], primary_key='Score')\r\n",
 					"            if item.name == \"Dates_WithSchoolTerm.csv\":\r\n",
 					"                df= self.returnDataFrameBeforeProcessing(\"Dates_WithSchoolTerm\")\r\n",
-					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['Dates_WithSchoolTerm'], partition_by='YearCalendar', primary_key='DateKey')\r\n",
+					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['Dates_WithSchoolTerm'], primary_key='DateKey')\r\n",
 					"\r\n",
 					"            else:\r\n",
 					"                logger.info(\"No defined function for processing this insights data\"+item.name)\r\n",
