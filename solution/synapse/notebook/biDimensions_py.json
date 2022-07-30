@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "7b4d01a5-980d-4449-b67e-905909b9d2f5"
+				"spark.autotune.trackingId": "df397692-43f9-4011-9d31-f05c5a76d7c1"
 			}
 		},
 		"metadata": {
@@ -187,7 +187,7 @@
 					"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
 					"        logger.info(\"Processing ms_insights activity data from: \" + sourcepath)\r\n",
 					"        if sourcepath == '': \r\n",
-					"            self.source_path=self.source_path + '/'+ filename\r\n",
+					"            self.source_path=self.stage1np  + '/'+ filename\r\n",
 					"        else:\r\n",
 					"            self.source_path=sourcepath\r\n",
 					"        self.table_name = filename.replace('.csv','')\r\n",
