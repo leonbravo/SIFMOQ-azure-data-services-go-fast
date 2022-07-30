@@ -7794,7 +7794,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "d4b69de7-c989-40db-b680-9adcbb3f1ad4"
+						"spark.autotune.trackingId": "65e94a7f-eade-4630-b1cb-864d3e4072b2"
 					}
 				},
 				"metadata": {
@@ -7871,7 +7871,7 @@
 							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 						],
 						"outputs": [],
-						"execution_count": 23
+						"execution_count": 33
 					},
 					{
 						"cell_type": "code",
@@ -7894,7 +7894,7 @@
 							"source_folder='/BCE/BI/Dimensions'"
 						],
 						"outputs": [],
-						"execution_count": 24
+						"execution_count": 34
 					},
 					{
 						"cell_type": "code",
@@ -7919,7 +7919,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 25
+						"execution_count": 35
 					},
 					{
 						"cell_type": "markdown",
@@ -7955,7 +7955,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 26
+						"execution_count": 36
 					},
 					{
 						"cell_type": "code",
@@ -7981,7 +7981,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": 27
+						"execution_count": 37
 					},
 					{
 						"cell_type": "markdown",
@@ -8041,7 +8041,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": 28
+						"execution_count": 38
 					},
 					{
 						"cell_type": "code",
@@ -8063,7 +8063,7 @@
 							"classBiDim = biDimensions(source_folder)"
 						],
 						"outputs": [],
-						"execution_count": 29
+						"execution_count": 39
 					},
 					{
 						"cell_type": "code",
@@ -8079,11 +8079,30 @@
 							}
 						},
 						"source": [
-							"source_folder\r\n",
+							"print(source_folder)\r\n",
 							"classBiDim.stage1np"
 						],
 						"outputs": [],
-						"execution_count": 30
+						"execution_count": 43
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							""
+						],
+						"outputs": [],
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -8102,7 +8121,7 @@
 							"classBiDim.returnDataFrameBeforeProcessing(\"SRS_SubjectNames\")"
 						],
 						"outputs": [],
-						"execution_count": 31
+						"execution_count": 41
 					},
 					{
 						"cell_type": "code",
@@ -8128,7 +8147,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 32
+						"execution_count": 42
 					},
 					{
 						"cell_type": "code",
@@ -8651,7 +8670,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "7e6216a5-2ef9-45f3-874d-dac04ece3e1a"
+						"spark.autotune.trackingId": "81a4b5b3-0d3f-4f87-a144-bda71a45f011"
 					}
 				},
 				"metadata": {
@@ -8795,17 +8814,17 @@
 							"        \r\n",
 							"        items = mssparkutils.fs.ls(self.stage1np)\r\n",
 							"        for item in items:\r\n",
+							"            df= self.returnDataFrameBeforeProcessing(item.name)\r\n",
 							"            if item.name == \"Locations.csv\":\r\n",
-							"                df= self.returnDataFrameBeforeProcessing()\r\n",
 							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['Locations']       , primary_key='CampusID')\r\n",
 							"            if item.name == \"SRS_SubjectNames.csv\":\r\n",
-							"                df= self.returnDataFrameBeforeProcessing(\"SRS_SubjectNames\")\r\n",
+							"               # df= self.returnDataFrameBeforeProcessing(\"SRS_SubjectNames\")\r\n",
 							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['SRS_SubjectNames'], primary_key='SubjectName')\r\n",
 							"            if item.name == \"SRS_ScaleScoreConversion.csv\":\r\n",
-							"                df= self.returnDataFrameBeforeProcessing(\"SRS_ScaleScoreConversion\")\r\n",
+							"                #df= self.returnDataFrameBeforeProcessing(\"SRS_ScaleScoreConversion\")\r\n",
 							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['SRS_ScaleScoreConversion'], primary_key='Score')\r\n",
 							"            if item.name == \"Dates_WithSchoolTerm.csv\":\r\n",
-							"                df= self.returnDataFrameBeforeProcessing(\"Dates_WithSchoolTerm\")\r\n",
+							"                #df= self.returnDataFrameBeforeProcessing(\"Dates_WithSchoolTerm\")\r\n",
 							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{source_folder}{table_name}', schema=self.schemas['Dates_WithSchoolTerm'], primary_key='DateKey')\r\n",
 							"\r\n",
 							"            else:\r\n",
@@ -8813,14 +8832,15 @@
 							"        \r\n",
 							"        logger.info(\"Finished ingesting insights data from stage 1 to stage 2\")\r\n",
 							"    \r\n",
-							"    def returnDataFrameBeforeProcessing(self, tableName='Locations', sourcepath=''):\r\n",
+							"    def returnDataFrameBeforeProcessing(self, filename='Locations.csv', sourcepath=''):\r\n",
 							"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
 							"        logger.info(\"Processing ms_insights activity data from: \" + sourcepath)\r\n",
 							"        if sourcepath == '': \r\n",
 							"            sourcepath=self.stage1np + '/'+ tableName\r\n",
+							"        tableName = filename.replace('.csv','')\r\n",
 							"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
 							"        spark_schema = oea.to_spark_schema(self.schemas[f'{tableName}'])\r\n",
-							"        df = spark.readStream.csv(sourcepath + '.csv', header='True', schema=spark_schema)\r\n",
+							"        df = spark.read.csv(sourcepath , header='True', schema=spark_schema)\r\n",
 							"\r\n",
 							"        return df\r\n",
 							"\r\n",
