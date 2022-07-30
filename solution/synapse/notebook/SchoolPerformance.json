@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "94f5fb33-2b43-4883-8a64-0132d5fad5e6"
+				"spark.autotune.trackingId": "17750a4a-9cc2-43a4-b472-fd3eb7152264"
 			}
 		},
 		"metadata": {
@@ -358,11 +358,7 @@
 				"source": [
 					"table_name='Locations'\r\n",
 					"\r\n",
-					"\r\n",
-					"classBiDim.ingest()\r\n",
-					"\r\n",
-					"\r\n",
-					""
+					"classBiDim.ingest()"
 				],
 				"execution_count": 132
 			},
