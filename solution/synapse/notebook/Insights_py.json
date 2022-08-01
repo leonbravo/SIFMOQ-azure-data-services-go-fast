@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d143c046-30ba-47b9-8eff-90bc2c0e0cfb"
+				"spark.autotune.trackingId": "8c06c46c-725e-4388-aa91-55b5d1cbfcb9"
 			}
 		},
 		"metadata": {
@@ -418,7 +418,7 @@
 					"\r\n",
 					"\r\n",
 					"    def returnDataFrameBeforeProcessing(self, tableName='TechActivity', sourcepath=''):\r\n",
-					"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
+					"        \"\"\"\" Returns a Spark DF from the requested source, based in a foder/path. For uses with a file see biDimensions \"\"\"\r\n",
 					"        logger.info(\"Processing ms_insights activity data from: \" + sourcepath)\r\n",
 					"        if sourcepath == '': \r\n",
 					"            sourcepath=self.stage1np_activity\r\n",

@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "79356350-216b-43b3-9ed7-5d721517879c"
+				"spark.autotune.trackingId": "954922af-5262-4b24-9c63-e76a7f4f148c"
 			}
 		},
 		"metadata": {
@@ -167,13 +167,13 @@
 					"        for item in items:\r\n",
 					"            df= self.returnDataFrameBeforeProcessing(filename=item.name)\r\n",
 					"            if item.name == \"Locations.csv\":\r\n",
-					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source_path, schema=self.schemas['Locations']       , primary_key='CampusID')\r\n",
+					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source, schema=self.schemas[f'{self.table_name}'], primary_key='CampusID')\r\n",
 					"            if item.name == \"SRS_SubjectNames.csv\":\r\n",
-					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source_path, schema=self.schemas['SRS_SubjectNames'], primary_key='SubjectName')\r\n",
+					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source, schema=self.schemas[f'{self.table_name}'], primary_key='SubjectName')\r\n",
 					"            if item.name == \"SRS_ScaleScoreConversion.csv\":\r\n",
-					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source_path, schema=self.schemas['SRS_ScaleScoreConversion'], primary_key='Score')\r\n",
+					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source, schema=self.schemas[f'{self.table_name}'], primary_key='Score')\r\n",
 					"            if item.name == \"Dates_WithSchoolTerm.csv\":\r\n",
-					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source_path, schema=self.schemas['Dates_WithSchoolTerm'], primary_key='DateKey')\r\n",
+					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source, schema=self.schemas[f'{self.table_name}'], primary_key='DateKey')\r\n",
 					"\r\n",
 					"            else:\r\n",
 					"                logger.info(\"No defined function for processing this insights data\"+item.name)\r\n",
