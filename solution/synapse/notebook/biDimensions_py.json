@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ba27a5e8-bc2f-4bf5-a801-e4d88b80df4b"
+				"spark.autotune.trackingId": "487e9cd4-d29a-4692-aa4c-2b67925aad32"
 			}
 		},
 		"metadata": {
@@ -186,7 +186,7 @@
 					"        if sourcepath == '': \r\n",
 					"            self.source=self.stage1np  + '/'+ filename\r\n",
 					"        else:\r\n",
-					"            self.source=sourcepath\r\n",
+					"            self.source=self.stage1np  \r\n",
 					"        \r\n",
 					"        self.table_name = filename.replace('.csv','')\r\n",
 					"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
