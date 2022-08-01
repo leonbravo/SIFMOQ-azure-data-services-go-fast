@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "954922af-5262-4b24-9c63-e76a7f4f148c"
+				"spark.autotune.trackingId": "cb102b3a-ef0c-4ff8-a017-f966e55d72cf"
 			}
 		},
 		"metadata": {
@@ -167,13 +167,13 @@
 					"        for item in items:\r\n",
 					"            df= self.returnDataFrameBeforeProcessing(filename=item.name)\r\n",
 					"            if item.name == \"Locations.csv\":\r\n",
-					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source, schema=self.schemas[f'{self.table_name}'], primary_key='CampusID')\r\n",
+					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{self.source_folder}/{item.name}', schema=self.schemas[f'{self.table_name}'], primary_key='CampusID')\r\n",
 					"            if item.name == \"SRS_SubjectNames.csv\":\r\n",
-					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source, schema=self.schemas[f'{self.table_name}'], primary_key='SubjectName')\r\n",
+					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{self.source_folder}/{item.name}', schema=self.schemas[f'{self.table_name}'], primary_key='SubjectName')\r\n",
 					"            if item.name == \"SRS_ScaleScoreConversion.csv\":\r\n",
-					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source, schema=self.schemas[f'{self.table_name}'], primary_key='Score')\r\n",
+					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{self.source_folder}/{item.name}', schema=self.schemas[f'{self.table_name}'], primary_key='Score')\r\n",
 					"            if item.name == \"Dates_WithSchoolTerm.csv\":\r\n",
-					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source, schema=self.schemas[f'{self.table_name}'], primary_key='DateKey')\r\n",
+					"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=f'{self.source_folder}/{item.name}', schema=self.schemas[f'{self.table_name}'], primary_key='DateKey')\r\n",
 					"\r\n",
 					"            else:\r\n",
 					"                logger.info(\"No defined function for processing this insights data\"+item.name)\r\n",
