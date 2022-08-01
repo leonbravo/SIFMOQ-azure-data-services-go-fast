@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "8e6ffb27-0ace-49de-84aa-db851a656d21"
+				"spark.autotune.trackingId": "a770e697-308d-4d4f-8fea-cb8565f1b6a6"
 			}
 		},
 		"metadata": {
@@ -79,7 +79,7 @@
 					"source_folder= 'SDS/M365'\r\n",
 					"storage_account = 'bceaaeoeadevlrs' "
 				],
-				"execution_count": 155
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -111,7 +111,7 @@
 					"    stage2 = 'abfss://stage2@' + storage_account + '.dfs.core.windows.net'\r\n",
 					"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 				],
-				"execution_count": 156
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -129,7 +129,7 @@
 				"source": [
 					"%run OEA_py"
 				],
-				"execution_count": 157
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -202,7 +202,7 @@
 					"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
 					"            logger.info(query2.lastProgress)   "
 				],
-				"execution_count": 158
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -220,7 +220,7 @@
 				"source": [
 					"oea= OEA()"
 				],
-				"execution_count": 159
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -238,7 +238,7 @@
 				"source": [
 					"%run /Insights_py"
 				],
-				"execution_count": 160
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -258,7 +258,7 @@
 					"\r\n",
 					"test= Insights()"
 				],
-				"execution_count": 161
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -277,7 +277,7 @@
 					"df= test.returnDataFrameBeforeProcessing('TechActivity')\r\n",
 					""
 				],
-				"execution_count": 162
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -603,7 +603,7 @@
 					}
 				},
 				"source": [
-					"test.delete_stage2()"
+					"#test.delete_stage2()"
 				],
 				"execution_count": 152
 			},
