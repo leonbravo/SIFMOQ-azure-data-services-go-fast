@@ -5822,7 +5822,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "6e07d08b-9a51-4983-a638-31cb2bf519dc"
+						"spark.autotune.trackingId": "7c24013a-d900-4014-8c46-d0b96a86af0b"
 					}
 				},
 				"metadata": {
@@ -5847,8 +5847,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -7794,7 +7793,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "db7eba3a-063c-4c2e-9285-b8792ed39b29"
+						"spark.autotune.trackingId": "567b9dc6-2262-4105-819e-1a9bd55d4d32"
 					}
 				},
 				"metadata": {
@@ -7872,7 +7871,7 @@
 							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 						],
 						"outputs": [],
-						"execution_count": 1
+						"execution_count": 10
 					},
 					{
 						"cell_type": "code",
@@ -7895,7 +7894,7 @@
 							"source_folder='/BCE/BI/Dimensions'"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": 11
 					},
 					{
 						"cell_type": "code",
@@ -7920,7 +7919,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 12
 					},
 					{
 						"cell_type": "markdown",
@@ -7956,7 +7955,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": 13
 					},
 					{
 						"cell_type": "code",
@@ -7982,7 +7981,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 14
 					},
 					{
 						"cell_type": "markdown",
@@ -8042,7 +8041,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": 6
+						"execution_count": 15
 					},
 					{
 						"cell_type": "code",
@@ -8064,7 +8063,7 @@
 							"classBiDim = biDimensions(source_folder)"
 						],
 						"outputs": [],
-						"execution_count": 7
+						"execution_count": 16
 					},
 					{
 						"cell_type": "code",
@@ -8085,7 +8084,7 @@
 							"print(classBiDim.source_file)"
 						],
 						"outputs": [],
-						"execution_count": 8
+						"execution_count": 17
 					},
 					{
 						"cell_type": "code",
@@ -8104,7 +8103,7 @@
 							"   "
 						],
 						"outputs": [],
-						"execution_count": 9
+						"execution_count": 18
 					},
 					{
 						"cell_type": "code",
@@ -8123,7 +8122,7 @@
 							"classBiDim.returnDataFrameBeforeProcessing(\"SRS_SubjectNames.csv\")"
 						],
 						"outputs": [],
-						"execution_count": 161
+						"execution_count": 19
 					},
 					{
 						"cell_type": "code",
@@ -8667,7 +8666,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "19bc9df7-44c7-45b7-888e-bc587a842a50"
+						"spark.autotune.trackingId": "5411c160-a446-496a-8d4c-da4f2696af0a"
 					}
 				},
 				"metadata": {
@@ -8803,7 +8802,7 @@
 							"                ['Day of Term Reverse','integer','no-op'],\r\n",
 							"                ['Work Days','integer','no-op']]\r\n",
 							"\r\n",
-							"        self.source_file = self.source_folder\r\n",
+							"        self.source = self.source_folder\r\n",
 							"        self.table_name = ''\r\n",
 							"                    \r\n",
 							"    \r\n",
@@ -8829,17 +8828,18 @@
 							"        logger.info(\"Finished ingesting insights data from stage 1 to stage 2\")\r\n",
 							"    \r\n",
 							"    def returnDataFrameBeforeProcessing(self, filename='', sourcepath=''):\r\n",
-							"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
+							"        \"\"\" Returns a Spark DF from the requested source, based on file or foder/path. \"\"\"\r\n",
 							"        logger.info(\"Processing ms_insights activity data from: \" + sourcepath)\r\n",
 							"        if sourcepath == '': \r\n",
-							"            self.source_file=self.source_folder  + '/'+ filename\r\n",
+							"            self.source=self.stage1np  + '/'+ filename\r\n",
+							"            self.table_name = filename.replace('.csv','')\r\n",
 							"        else:\r\n",
-							"            self.source_file=sourcepath\r\n",
+							"            self.source=self.stage1np  \r\n",
 							"        \r\n",
-							"        self.table_name = filename.replace('.csv','')\r\n",
+							"        \r\n",
 							"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
 							"        spark_schema = oea.to_spark_schema(self.schemas[f'{self.table_name}'])\r\n",
-							"        df = spark.read.csv(self.source_file, header='True', schema=spark_schema)\r\n",
+							"        df = spark.read.csv(self.source, header='True', schema=spark_schema)\r\n",
 							"\r\n",
 							"        return df\r\n",
 							"\r\n",
