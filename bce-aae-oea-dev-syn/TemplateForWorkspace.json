@@ -5822,7 +5822,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "7c24013a-d900-4014-8c46-d0b96a86af0b"
+						"spark.autotune.trackingId": "2c4d7f56-dc8d-4d38-b861-b4ad6a86c565"
 					}
 				},
 				"metadata": {
@@ -5847,7 +5847,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": true
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -6326,12 +6327,14 @@
 							"        cmd += self.create_sql_views(self.path(f'stage{stage_num}p', source_dir), source_format)\n",
 							"        cmd += self.create_sql_views(self.path(f'stage{stage_num}np', source_dir), source_format)\n",
 							"        print(cmd)\n",
-							"\n",
+							"    \n",
+							"    #RETURNS STRING WITH SQL SETENCES COMBININT A DIRECTORY \n",
 							"    def create_sql_views(self, source_path, source_format):\n",
 							"        cmd = ''      \n",
 							"        dirs = self.get_folders(source_path)\n",
 							"        for table_name in dirs:\n",
-							"            cmd += f\"CREATE OR ALTER VIEW {table_name} AS\\n  SELECT * FROM OPENROWSET(BULK '{source_path}/{table_name}', FORMAT='{source_format}') AS [r];\\nGO\\n\"\n",
+							"            view_name = table_name.replace('.','_')\n",
+							"            cmd += f\"CREATE OR ALTER VIEW {view_name} AS\\n  SELECT * FROM OPENROWSET(BULK '{source_path}/{table_name}', FORMAT='{source_format}') AS [r];\\nGO\\n\"\n",
 							"        return cmd\n",
 							"\n",
 							"    def drop_sql_db(self, db_name):\n",
@@ -7793,7 +7796,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "544f4ab6-4123-4a74-8ece-60cc17183ff9"
+						"spark.autotune.trackingId": "7505978a-352d-4aa4-870c-d2f075d0edf3"
 					}
 				},
 				"metadata": {
@@ -7818,7 +7821,8 @@
 						"sparkVersion": "3.2",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -7870,7 +7874,7 @@
 							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 						],
 						"outputs": [],
-						"execution_count": 32
+						"execution_count": 43
 					},
 					{
 						"cell_type": "code",
@@ -7890,10 +7894,11 @@
 							"# meant to be parameters\r\n",
 							"storage_account = 'bceaaeoeadevlrs'\r\n",
 							"use_test_env = False\r\n",
-							"source_folder='/BCE/BI/Dimensions'"
+							"# NOTE NOT / AT THE BEGINNING\r\n",
+							"source_folder='BCE/BI/Dimensions'"
 						],
 						"outputs": [],
-						"execution_count": 33
+						"execution_count": 60
 					},
 					{
 						"cell_type": "code",
@@ -7918,7 +7923,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 34
+						"execution_count": 45
 					},
 					{
 						"cell_type": "markdown",
@@ -7954,7 +7959,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 35
+						"execution_count": 46
 					},
 					{
 						"cell_type": "code",
@@ -7980,7 +7985,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": 36
+						"execution_count": 47
 					},
 					{
 						"cell_type": "markdown",
@@ -8040,7 +8045,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": 37
+						"execution_count": 48
 					},
 					{
 						"cell_type": "code",
@@ -8062,7 +8067,7 @@
 							"classBiDim = biDimensions(source_folder)"
 						],
 						"outputs": [],
-						"execution_count": 38
+						"execution_count": 57
 					},
 					{
 						"cell_type": "code",
@@ -8083,7 +8088,7 @@
 							"print(classBiDim.source)"
 						],
 						"outputs": [],
-						"execution_count": 39
+						"execution_count": 50
 					},
 					{
 						"cell_type": "code",
@@ -8102,7 +8107,7 @@
 							"   "
 						],
 						"outputs": [],
-						"execution_count": 40
+						"execution_count": 51
 					},
 					{
 						"cell_type": "code",
@@ -8121,7 +8126,7 @@
 							"classBiDim.returnDataFrameBeforeProcessing(\"SRS_SubjectNames.csv\")"
 						],
 						"outputs": [],
-						"execution_count": 41
+						"execution_count": 52
 					},
 					{
 						"cell_type": "code",
@@ -8137,12 +8142,12 @@
 							}
 						},
 						"source": [
-							"table_name='Locations'\r\n",
+							"#table_name='Locations'\r\n",
 							"\r\n",
 							"classBiDim.ingest()"
 						],
 						"outputs": [],
-						"execution_count": 42
+						"execution_count": 53
 					},
 					{
 						"cell_type": "code",
@@ -8216,19 +8221,19 @@
 						},
 						"source": [
 							"# load needed activity table(s) from data lake storage\r\n",
-							"\r\n",
-							"source_folder='/BCE/BI/SchoolClassification/'\r\n",
-							"print (f'{stage1np}{source_folder}')\r\n",
+							"# NOTE NOT / AT THE BEGINNING\r\n",
+							"source_folder='BCE/BI/SchoolClassification/'\r\n",
+							"print (f'{stage1np}/{source_folder}')\r\n",
 							"\r\n",
 							"table_name='SchoolClassification'\r\n",
 							"\r\n",
-							"dfSchoolPerformanceRaw = pd.read_excel(f'{stage1np}{source_folder}{table_name}' + '.xlsx')\r\n",
+							"dfSchoolPerformanceRaw = pd.read_excel(f'{stage1np}/{source_folder}{table_name}' + '.xlsx')\r\n",
 							"\r\n",
 							"#spark.read.format(\"com.elastacloud.spark.excel\").load(f'{stage1np}{source_folder}' + 'SchoolClassification.xlsx')\r\n",
 							""
 						],
 						"outputs": [],
-						"execution_count": 40
+						"execution_count": 59
 					},
 					{
 						"cell_type": "code",
@@ -8426,14 +8431,14 @@
 							"db_name= 'bceoea'\r\n",
 							"#pathp = classSchool.stage2p\r\n",
 							"#pathnp = classSchool.stage2np\r\n",
-							"pathp  = classBiDim.stage2p\r\n",
-							"pathnp = classBiDim.stage2np\r\n",
+							"pathp  = classBiDim.stage2p #.replace('//','/')\r\n",
+							"pathnp = classBiDim.stage2np#.replace('//','/')\r\n",
 							"source_format= 'DELTA'\r\n",
 							"oea.create_sql_views(pathp, source_format)\r\n",
-							"oea.create_sql_views(pathnp, source_format)"
+							"#oea.create_sql_views(pathnp, source_format)"
 						],
 						"outputs": [],
-						"execution_count": 133
+						"execution_count": 67
 					},
 					{
 						"cell_type": "code",
@@ -8449,12 +8454,30 @@
 							}
 						},
 						"source": [
-							"oea.get_folders( pathnp )\r\n",
-							"\r\n",
-							"#mssparkutils.fs.ls( path )"
+							"mssparkutils.fs.ls( pathp )"
 						],
 						"outputs": [],
-						"execution_count": 124
+						"execution_count": 68
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"oea.get_folders( pathp )\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 69
 					},
 					{
 						"cell_type": "code",
@@ -8665,7 +8688,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "53f53703-f29a-478a-af2b-dbeb2edcc73c"
+						"spark.autotune.trackingId": "0ccbf9f7-0f96-487e-8afe-0db56195b3b0"
 					}
 				},
 				"metadata": {
@@ -8834,7 +8857,6 @@
 							"            self.table_name = filename.replace('.csv','')\r\n",
 							"        else:\r\n",
 							"            self.source=self.stage1np  \r\n",
-							"        \r\n",
 							"        \r\n",
 							"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
 							"        spark_schema = oea.to_spark_schema(self.schemas[f'{self.table_name}'])\r\n",
