@@ -4450,7 +4450,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "d143c046-30ba-47b9-8eff-90bc2c0e0cfb"
+						"spark.autotune.trackingId": "8c06c46c-725e-4388-aa91-55b5d1cbfcb9"
 					}
 				},
 				"metadata": {
@@ -4849,7 +4849,7 @@
 							"\r\n",
 							"\r\n",
 							"    def returnDataFrameBeforeProcessing(self, tableName='TechActivity', sourcepath=''):\r\n",
-							"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
+							"        \"\"\"\" Returns a Spark DF from the requested source, based in a foder/path. For uses with a file see biDimensions \"\"\"\r\n",
 							"        logger.info(\"Processing ms_insights activity data from: \" + sourcepath)\r\n",
 							"        if sourcepath == '': \r\n",
 							"            sourcepath=self.stage1np_activity\r\n",
@@ -7793,7 +7793,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "567b9dc6-2262-4105-819e-1a9bd55d4d32"
+						"spark.autotune.trackingId": "0258eece-926d-4213-b8dd-bd90cc370070"
 					}
 				},
 				"metadata": {
@@ -7818,8 +7818,7 @@
 						"sparkVersion": "3.2",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -7871,7 +7870,7 @@
 							"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 						],
 						"outputs": [],
-						"execution_count": 10
+						"execution_count": 20
 					},
 					{
 						"cell_type": "code",
@@ -7894,7 +7893,7 @@
 							"source_folder='/BCE/BI/Dimensions'"
 						],
 						"outputs": [],
-						"execution_count": 11
+						"execution_count": 21
 					},
 					{
 						"cell_type": "code",
@@ -7919,7 +7918,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 12
+						"execution_count": 22
 					},
 					{
 						"cell_type": "markdown",
@@ -7955,7 +7954,7 @@
 							"%run /OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 13
+						"execution_count": 23
 					},
 					{
 						"cell_type": "code",
@@ -7981,7 +7980,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": 14
+						"execution_count": 24
 					},
 					{
 						"cell_type": "markdown",
@@ -8041,7 +8040,7 @@
 							"%run /biDimensions_py"
 						],
 						"outputs": [],
-						"execution_count": 15
+						"execution_count": 25
 					},
 					{
 						"cell_type": "code",
@@ -8063,7 +8062,7 @@
 							"classBiDim = biDimensions(source_folder)"
 						],
 						"outputs": [],
-						"execution_count": 16
+						"execution_count": 26
 					},
 					{
 						"cell_type": "code",
@@ -8081,10 +8080,10 @@
 						"source": [
 							"print(source_folder)\r\n",
 							"print(classBiDim.stage1np)\r\n",
-							"print(classBiDim.source_file)"
+							"print(classBiDim.source)"
 						],
 						"outputs": [],
-						"execution_count": 17
+						"execution_count": 28
 					},
 					{
 						"cell_type": "code",
@@ -8103,7 +8102,7 @@
 							"   "
 						],
 						"outputs": [],
-						"execution_count": 18
+						"execution_count": 29
 					},
 					{
 						"cell_type": "code",
@@ -8122,7 +8121,7 @@
 							"classBiDim.returnDataFrameBeforeProcessing(\"SRS_SubjectNames.csv\")"
 						],
 						"outputs": [],
-						"execution_count": 19
+						"execution_count": 30
 					},
 					{
 						"cell_type": "code",
@@ -8143,7 +8142,7 @@
 							"classBiDim.ingest()"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 31
 					},
 					{
 						"cell_type": "code",
@@ -8666,7 +8665,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "5411c160-a446-496a-8d4c-da4f2696af0a"
+						"spark.autotune.trackingId": "c57ae447-870f-44ef-a21c-83f13f8c8717"
 					}
 				},
 				"metadata": {
@@ -8814,13 +8813,13 @@
 							"        for item in items:\r\n",
 							"            df= self.returnDataFrameBeforeProcessing(filename=item.name)\r\n",
 							"            if item.name == \"Locations.csv\":\r\n",
-							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source_path, schema=self.schemas['Locations']       , primary_key='CampusID')\r\n",
+							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source, schema=self.schemas[f'{self.table_name}'], primary_key='CampusID')\r\n",
 							"            if item.name == \"SRS_SubjectNames.csv\":\r\n",
-							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source_path, schema=self.schemas['SRS_SubjectNames'], primary_key='SubjectName')\r\n",
+							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source, schema=self.schemas[f'{self.table_name}'], primary_key='SubjectName')\r\n",
 							"            if item.name == \"SRS_ScaleScoreConversion.csv\":\r\n",
-							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source_path, schema=self.schemas['SRS_ScaleScoreConversion'], primary_key='Score')\r\n",
+							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source, schema=self.schemas[f'{self.table_name}'], primary_key='Score')\r\n",
 							"            if item.name == \"Dates_WithSchoolTerm.csv\":\r\n",
-							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source_path, schema=self.schemas['Dates_WithSchoolTerm'], primary_key='DateKey')\r\n",
+							"                oea.ingest_snapshot_data_frame( inpdataframe=df,source_path=self.source, schema=self.schemas[f'{self.table_name}'], primary_key='DateKey')\r\n",
 							"\r\n",
 							"            else:\r\n",
 							"                logger.info(\"No defined function for processing this insights data\"+item.name)\r\n",
