@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a8db9bef-bd23-493c-836a-dc7c70e4e91f"
+				"spark.autotune.trackingId": "03457fac-ed2d-4232-a742-0c1799be814d"
 			}
 		},
 		"metadata": {
@@ -98,7 +98,7 @@
 				"source": [
 					"spark.conf.set('spark.sql.execution.arrow.enabled', 'false')"
 				],
-				"execution_count": 146
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -120,7 +120,7 @@
 					"use_test_env = False\r\n",
 					"source_folder='/BCE/BI/Dimensions'"
 				],
-				"execution_count": 147
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -144,7 +144,7 @@
 					"import datetime\r\n",
 					""
 				],
-				"execution_count": 148
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
@@ -179,7 +179,7 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"execution_count": 149
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -204,7 +204,7 @@
 					"    stage2np = oea.stage2np\r\n",
 					"    stage2p = oea.stage3np"
 				],
-				"execution_count": 150
+				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
@@ -263,7 +263,7 @@
 				"source": [
 					"%run /biDimensions_py"
 				],
-				"execution_count": 151
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -284,7 +284,7 @@
 					"\r\n",
 					"classBiDim = biDimensions(source_folder)"
 				],
-				"execution_count": null
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -302,9 +302,9 @@
 				"source": [
 					"print(source_folder)\r\n",
 					"print(classBiDim.stage1np)\r\n",
-					"print(classBiDim.source_path)"
+					"print(classBiDim.source_file)"
 				],
-				"execution_count": null
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -322,7 +322,7 @@
 				"source": [
 					"   "
 				],
-				"execution_count": null
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -340,7 +340,7 @@
 				"source": [
 					"classBiDim.returnDataFrameBeforeProcessing(\"SRS_SubjectNames.csv\")"
 				],
-				"execution_count": null
+				"execution_count": 161
 			},
 			{
 				"cell_type": "code",
