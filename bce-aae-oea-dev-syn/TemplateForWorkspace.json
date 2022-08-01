@@ -3102,7 +3102,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"folder": {
-					"name": "Insights Module"
+					"name": "examples"
 				},
 				"nbformat": 4,
 				"nbformat_minor": 2,
@@ -4940,7 +4940,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "2c0946f8-9d4f-4480-a75f-e94d23c8e3af"
+						"spark.autotune.trackingId": "96eab129-b30d-4dc5-b1b2-a4f0bf37caea"
 					}
 				},
 				"metadata": {
@@ -4965,7 +4965,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": true
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -5822,7 +5823,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "2c4d7f56-dc8d-4d38-b861-b4ad6a86c565"
+						"spark.autotune.trackingId": "419352c3-ef2f-4fee-b1d2-eabc1ba659a6"
 					}
 				},
 				"metadata": {
@@ -7796,7 +7797,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "7505978a-352d-4aa4-870c-d2f075d0edf3"
+						"spark.autotune.trackingId": "38a10d84-83d0-469c-b432-ff59df78b168"
 					}
 				},
 				"metadata": {
@@ -8688,7 +8689,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "0ccbf9f7-0f96-487e-8afe-0db56195b3b0"
+						"spark.autotune.trackingId": "0ba9a10c-2706-4aeb-848d-f1a7cd3b9a00"
 					}
 				},
 				"metadata": {
@@ -8921,7 +8922,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"folder": {
-					"name": "Insights Module"
+					"name": "examples"
 				},
 				"nbformat": 4,
 				"nbformat_minor": 2,
@@ -8935,7 +8936,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "31659899-3137-4e68-a40b-a758bc86e7ec"
+						"spark.autotune.trackingId": "d987bee2-14c4-483b-91ce-01121b9cee1b"
 					}
 				},
 				"metadata": {
@@ -8953,6 +8954,7 @@
 				"cells": [
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"class ContosoSIS(BaseOEAModule):\r\n",
 							"    def __init__(self, oea, source_folder='contoso_sis', pseudonymize = True):\r\n",
