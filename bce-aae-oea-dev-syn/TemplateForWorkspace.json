@@ -4940,7 +4940,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "96eab129-b30d-4dc5-b1b2-a4f0bf37caea"
+						"spark.autotune.trackingId": "1cda49ba-bbb5-402f-9cd6-3b27b014ad1c"
 					}
 				},
 				"metadata": {
@@ -5823,7 +5823,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "419352c3-ef2f-4fee-b1d2-eabc1ba659a6"
+						"spark.autotune.trackingId": "681350b8-5282-42bd-a15a-024ee45cafaa"
 					}
 				},
 				"metadata": {
@@ -7797,7 +7797,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "38a10d84-83d0-469c-b432-ff59df78b168"
+						"spark.autotune.trackingId": "088cdeb9-52f5-4387-8d50-d1e5757b4160"
 					}
 				},
 				"metadata": {
@@ -7986,7 +7986,7 @@
 							"    stage2p = oea.stage3np"
 						],
 						"outputs": [],
-						"execution_count": 47
+						"execution_count": null
 					},
 					{
 						"cell_type": "markdown",
@@ -8234,7 +8234,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 59
+						"execution_count": 70
 					},
 					{
 						"cell_type": "code",
@@ -8689,7 +8689,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "0ba9a10c-2706-4aeb-848d-f1a7cd3b9a00"
+						"spark.autotune.trackingId": "331af40c-8064-4488-839a-28c6b5abd5d9"
 					}
 				},
 				"metadata": {
@@ -8730,7 +8730,23 @@
 							}
 						},
 						"source": [
-							"# BCE BI Dimensions Class"
+							"# BCE BI Dimensions Class\r\n",
+							"\r\n",
+							"Classes in this notebook define the schemas and particular implementations of OEA and BaseOEAModule\r\n",
+							"Thus to use this, a definition of Class "
+						]
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							""
 						]
 					},
 					{
@@ -8866,6 +8882,25 @@
 							"        return df\r\n",
 							"\r\n",
 							"\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 1
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
 							"\r\n",
 							"class SchoolPerformance(BaseOEAModule):\r\n",
 							"    \"\"\"\r\n",
@@ -8906,11 +8941,10 @@
 							"                logger.info(\"No defined function for processing this insights data\")\r\n",
 							"        \r\n",
 							"        logger.info(\"Finished ingesting insights data from stage 1 to stage 2\")\r\n",
-							"\r\n",
 							""
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": null
 					}
 				]
 			},
@@ -8936,7 +8970,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "d987bee2-14c4-483b-91ce-01121b9cee1b"
+						"spark.autotune.trackingId": "06137414-05af-4b28-832e-beb6966571c1"
 					}
 				},
 				"metadata": {
@@ -10388,7 +10422,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "8e6ffb27-0ace-49de-84aa-db851a656d21"
+						"spark.autotune.trackingId": "88212d7a-09d9-4a12-b9a8-6c0e1a80d931"
 					}
 				},
 				"metadata": {
@@ -10413,7 +10447,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": true
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -10449,7 +10484,7 @@
 							"storage_account = 'bceaaeoeadevlrs' "
 						],
 						"outputs": [],
-						"execution_count": 155
+						"execution_count": 1
 					},
 					{
 						"cell_type": "code",
@@ -10482,7 +10517,7 @@
 							"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 						],
 						"outputs": [],
-						"execution_count": 156
+						"execution_count": 2
 					},
 					{
 						"cell_type": "code",
@@ -10501,7 +10536,7 @@
 							"%run OEA_py"
 						],
 						"outputs": [],
-						"execution_count": 157
+						"execution_count": 3
 					},
 					{
 						"cell_type": "code",
@@ -10575,7 +10610,7 @@
 							"            logger.info(query2.lastProgress)   "
 						],
 						"outputs": [],
-						"execution_count": 158
+						"execution_count": 4
 					},
 					{
 						"cell_type": "code",
@@ -10594,7 +10629,7 @@
 							"oea= OEA()"
 						],
 						"outputs": [],
-						"execution_count": 159
+						"execution_count": 5
 					},
 					{
 						"cell_type": "code",
@@ -10613,7 +10648,7 @@
 							"%run /Insights_py"
 						],
 						"outputs": [],
-						"execution_count": 160
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
@@ -10634,7 +10669,7 @@
 							"test= Insights()"
 						],
 						"outputs": [],
-						"execution_count": 161
+						"execution_count": 7
 					},
 					{
 						"cell_type": "code",
@@ -10654,7 +10689,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 162
+						"execution_count": 8
 					},
 					{
 						"cell_type": "code",
@@ -10996,7 +11031,7 @@
 							}
 						},
 						"source": [
-							"test.delete_stage2()"
+							"#test.delete_stage2()"
 						],
 						"outputs": [],
 						"execution_count": 152
