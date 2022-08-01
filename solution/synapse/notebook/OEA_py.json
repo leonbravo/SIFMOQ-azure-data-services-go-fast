@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "7c24013a-d900-4014-8c46-d0b96a86af0b"
+				"spark.autotune.trackingId": "0b984134-9ba0-4dbf-99a5-6409ec9fe857"
 			}
 		},
 		"metadata": {
@@ -523,12 +523,14 @@
 					"        cmd += self.create_sql_views(self.path(f'stage{stage_num}p', source_dir), source_format)\n",
 					"        cmd += self.create_sql_views(self.path(f'stage{stage_num}np', source_dir), source_format)\n",
 					"        print(cmd)\n",
-					"\n",
+					"    \n",
+					"    #RETURNS STRING WITH SQL SETENCES COMBININT A DIRECTORY \n",
 					"    def create_sql_views(self, source_path, source_format):\n",
 					"        cmd = ''      \n",
 					"        dirs = self.get_folders(source_path)\n",
 					"        for table_name in dirs:\n",
-					"            cmd += f\"CREATE OR ALTER VIEW {table_name} AS\\n  SELECT * FROM OPENROWSET(BULK '{source_path}/{table_name}', FORMAT='{source_format}') AS [r];\\nGO\\n\"\n",
+					"            view_name = table_name.replace('.','_')\n",
+					"            cmd += f\"CREATE OR ALTER VIEW {view_name} AS\\n  SELECT * FROM OPENROWSET(BULK '{source_path}/{table_name}', FORMAT='{source_format}') AS [r];\\nGO\\n\"\n",
 					"        return cmd\n",
 					"\n",
 					"    def drop_sql_db(self, db_name):\n",
