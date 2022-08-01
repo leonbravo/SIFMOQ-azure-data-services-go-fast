@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "9d23f976-3b4d-45ff-a4f7-b5824c8bcb33"
+				"spark.autotune.trackingId": "79356350-216b-43b3-9ed7-5d721517879c"
 			}
 		},
 		"metadata": {
@@ -185,10 +185,11 @@
 					"        logger.info(\"Processing ms_insights activity data from: \" + sourcepath)\r\n",
 					"        if sourcepath == '': \r\n",
 					"            self.source=self.stage1np  + '/'+ filename\r\n",
+					"            self.table_name = filename.replace('.csv','')\r\n",
 					"        else:\r\n",
 					"            self.source=self.stage1np  \r\n",
 					"        \r\n",
-					"        self.table_name = filename.replace('.csv','')\r\n",
+					"        \r\n",
 					"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
 					"        spark_schema = oea.to_spark_schema(self.schemas[f'{self.table_name}'])\r\n",
 					"        df = spark.read.csv(self.source, header='True', schema=spark_schema)\r\n",
