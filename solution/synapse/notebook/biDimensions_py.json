@@ -19,7 +19,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "2956dff3-43a2-4ead-8f89-52946933963f"
+				"spark.autotune.trackingId": "5a44845f-b9c4-4cea-becc-b1a010cc113f"
 			}
 		},
 		"metadata": {
@@ -60,7 +60,23 @@
 					}
 				},
 				"source": [
-					"# BCE BI Dimensions Class"
+					"# BCE BI Dimensions Class\r\n",
+					"\r\n",
+					"Classes in this notebook define the schemas and particular implementations of OEA and BaseOEAModule\r\n",
+					"Thus to use this, a definition of Class "
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
 				]
 			},
 			{
