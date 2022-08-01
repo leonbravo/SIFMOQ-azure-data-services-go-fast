@@ -2,7 +2,7 @@
 	"name": "example_modules_py",
 	"properties": {
 		"folder": {
-			"name": "Insights Module"
+			"name": "examples"
 		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -16,7 +16,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "31659899-3137-4e68-a40b-a758bc86e7ec"
+				"spark.autotune.trackingId": "f21ea0ef-5444-44da-8154-9f98cf319169"
 			}
 		},
 		"metadata": {

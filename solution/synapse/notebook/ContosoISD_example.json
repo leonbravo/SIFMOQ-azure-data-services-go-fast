@@ -2,7 +2,7 @@
 	"name": "ContosoISD_example",
 	"properties": {
 		"folder": {
-			"name": "Insights Module"
+			"name": "examples"
 		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
