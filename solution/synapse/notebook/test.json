@@ -4,21 +4,21 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "spark8pmd",
+			"referenceName": "spark3p1sm",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
-			"driverMemory": "56g",
-			"driverCores": 8,
-			"executorMemory": "56g",
-			"executorCores": 8,
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
 			"numExecutors": 2,
 			"runAsWorkspaceSystemIdentity": false,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "831a5f4c-1fe7-43e0-b217-d8eaa6ee0c23"
+				"spark.autotune.trackingId": "f130e85b-2c29-47e0-89d2-ae9d0db6658c"
 			}
 		},
 		"metadata": {
@@ -32,19 +32,19 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark8pmd",
-				"name": "spark8pmd",
+				"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
+				"name": "spark3p1sm",
 				"type": "Spark",
-				"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark8pmd",
+				"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
-				"sparkVersion": "3.2",
-				"nodeCount": 10,
+				"sparkVersion": "3.1",
+				"nodeCount": 3,
 				"cores": 8,
 				"memory": 56,
-				"automaticScaleJobs": false
+				"automaticScaleJobs": true
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -275,7 +275,6 @@
 				},
 				"source": [
 					"df= test.returnDataFrameBeforeProcessing('TechActivity')\r\n",
-					"df\r\n",
 					""
 				],
 				"execution_count": 8
@@ -296,7 +295,7 @@
 				"source": [
 					"#df.select('signalType', 'year', 'month')"
 				],
-				"execution_count": 9
+				"execution_count": 163
 			},
 			{
 				"cell_type": "code",
@@ -314,7 +313,7 @@
 				"source": [
 					"test.stage2p"
 				],
-				"execution_count": 10
+				"execution_count": 164
 			},
 			{
 				"cell_type": "code",
@@ -337,7 +336,7 @@
 					"\r\n",
 					"oea.stage2p "
 				],
-				"execution_count": 11
+				"execution_count": 165
 			},
 			{
 				"cell_type": "code",
@@ -353,9 +352,9 @@
 					}
 				},
 				"source": [
-					"test.stage2np"
+					"test.stage2p"
 				],
-				"execution_count": 12
+				"execution_count": 166
 			},
 			{
 				"cell_type": "code",
@@ -375,7 +374,7 @@
 					"\r\n",
 					"source_path"
 				],
-				"execution_count": 13
+				"execution_count": 150
 			},
 			{
 				"cell_type": "code",
@@ -391,11 +390,9 @@
 					}
 				},
 				"source": [
-					"spark_schema = oea.to_spark_schema(test.schemas['TechActivity'])\r\n",
-					"\r\n",
-					""
+					"spark_schema = oea.to_spark_schema(test.schemas['TechActivity'])"
 				],
-				"execution_count": 14
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -411,10 +408,9 @@
 					}
 				},
 				"source": [
-					"source= test.stage1np_activity +'/*/*.csv'\r\n",
-					"print(source)"
+					"source= test.stage1np_activity +'/*/*.csv'"
 				],
-				"execution_count": 15
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -432,7 +428,7 @@
 				"source": [
 					"#df1 = spark.readStream.format(\"cloudFiles\").option(\"cloudFiles.format\", \"csv\").option(\"header\", \"false\").option( \"schema\",spark_schema).load(source)"
 				],
-				"execution_count": 16
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -453,7 +449,31 @@
 					" # .option(\"cloudFiles.schemaLocation\", \"<path-to-checkpoint>\").load(\"<path-to-source-data>\") \\\r\n",
 					""
 				],
-				"execution_count": 17
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#query = df.writeStream.format(\"delta\").outputMode(\"append\") \\\r\n",
+					"#                                .option(\"checkpointLocation\", test.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
+					"#                                .option(\"startingOffsets\", \"earliest\") \\\r\n",
+					"#                                .option(\"truncate\", False).partitionBy('year')  \r\n",
+					"#query = query.start(test.stage2p + '/TechActivity')\r\n",
+					"#query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
+					"#logger.info(query.lastProgress)"
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -476,7 +496,7 @@
 					"\r\n",
 					"#sqlContext.registerDataFrameAsTable(df, 'Activity')"
 				],
-				"execution_count": 18
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -494,7 +514,7 @@
 				"source": [
 					"spark.catalog.setCurrentDatabase('oea')"
 				],
-				"execution_count": 19
+				"execution_count": 151
 			},
 			{
 				"cell_type": "code",
@@ -512,7 +532,7 @@
 				"source": [
 					"sqlContext.registerDataFrameAsTable(df, 'Activity')"
 				],
-				"execution_count": 20
+				"execution_count": 134
 			},
 			{
 				"cell_type": "code",
@@ -531,7 +551,7 @@
 					"#oea.ingest_incremental_data( source_system=source_folder, tablename='Activity', schema=spark_schema, partition_by='year', primary_key='SignalId', data_format='csv', has_header=False)\r\n",
 					"        "
 				],
-				"execution_count": 21
+				"execution_count": 135
 			},
 			{
 				"cell_type": "code",
@@ -549,7 +569,7 @@
 				"source": [
 					"dfquery = spark.sql(\"select * from Activity where year = 2022 and SignalType = 'Call'\")"
 				],
-				"execution_count": 22
+				"execution_count": 136
 			},
 			{
 				"cell_type": "code",
@@ -567,7 +587,7 @@
 				"source": [
 					"#dfquery.show()"
 				],
-				"execution_count": 23
+				"execution_count": 137
 			},
 			{
 				"cell_type": "code",
@@ -585,7 +605,7 @@
 				"source": [
 					"#test.delete_stage2()"
 				],
-				"execution_count": 24
+				"execution_count": 152
 			},
 			{
 				"cell_type": "code",
@@ -605,223 +625,7 @@
 					"\r\n",
 					"#test.process_insights_activity_stage1_data()"
 				],
-				"execution_count": 25
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"df = spark.readStream.option(\"rescuedDataColumn\", \"_rescue\").option(\"header\",\"false\")\\\r\n",
-					"         .option(\"startingOffsets\", \"earliest\") \\\r\n",
-					"         .option(\"endingOffsets\", \"latest\") \\\r\n",
-					"         .csv(path=source, schema=spark_schema)\r\n",
-					""
-				],
-				"execution_count": 40
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"df = df.dropDuplicates(['SignalId'])"
-				],
-				"execution_count": 41
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"df = df.withColumn('year', F.year(F.col('StartTime')))"
-				],
-				"execution_count": 46
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"\r\n",
-					""
-				],
-				"execution_count": 29
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"df_pseudo, df_lookup = oea.pseudonymize(df, test.schemas['TechActivity'])"
-				],
-				"execution_count": 47
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"df_pseudo = df_pseudo.withColumn(\"Date\", to_date(col(\"StartTime\"), 'yyyy-MM-dd')).withColumn('month', F.month(F.col('StartTime')))"
-				],
-				"execution_count": 43
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"df_lookup = df_lookup.withColumn('year', F.year(F.col('StartTime')))"
-				],
-				"execution_count": 48
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"query = df_pseudo.writeStream.format(\"delta\").outputMode(\"append\") \\\r\n",
-					"                               \r\n",
-					"                                .option(\"checkpointLocation\", test.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
-					"                                .partitionBy('year')  \r\n",
-					"query = query.start(test.stage2p + '/TechActivity_pseudo')\r\n",
-					""
-				],
-				"execution_count": 132
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"logger.info(query.lastProgress)\r\n",
-					"query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
-					""
-				],
-				"execution_count": 133
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					" query2 = df_lookup.writeStream.format(\"delta\") \\\r\n",
-					"                              .outputMode(\"append\") \\\r\n",
-					"                              .option(\"checkpointLocation\", test.stage2np + '/_checkpoints/TechActivity_lookup/') \\\r\n",
-					"                              .partitionBy('year')\r\n",
-					"query2 = query2.start(test.stage2np + '/TechActivity_lookup')\r\n",
-					"logger.info(query2.lastProgress)  "
-				],
-				"execution_count": 44
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
-					""
-				],
-				"execution_count": null
+				"execution_count": 167
 			},
 			{
 				"cell_type": "code",

@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "7a8096c5-38c7-4550-9038-94efff0e4c03"
+				"spark.autotune.trackingId": "fde40227-fb2a-4c62-9304-8c89da62b62f"
 			}
 		},
 		"metadata": {
@@ -128,9 +128,7 @@
 					"                        ['ReadingAssignmentWordCount','integer'       , 'no-op'        ],      \r\n",
 					"                        ['ReadingAssignmentFleschKincaidGradeLevel','integer'          , 'no-op' ],  \r\n",
 					"                        ['ReadingAssignmentLanguage',           'string'        , 'no-op'  ],\r\n",
-					"                        ['year', 'integer', 'partition-by'],\r\n",
-					"                        ['month', 'integer', 'no-op'],\r\n",
-					"                        ['date', 'date', 'no-op']  ]\r\n",
+					"                        ['year', 'integer', 'no-op'] ]\r\n",
 					"\r\n",
 					"        self.schemas['AadGroup'] = [['ObjectId', 'string', 'hash'],\r\n",
 					"                        ['DisplayName', 'string', 'mask'],\r\n",
@@ -356,6 +354,7 @@
 					"        else:\r\n",
 					"            query = df_pseudo.writeStream.format(\"delta\") \\\r\n",
 					"                                         .outputMode(\"append\") \\\r\n",
+					"                                         .trigger(once=True) \\\r\n",
 					"                                         .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
 					"                                         .option(\"startingOffsets\", \"earliest\") \\\r\n",
 					"                                         .option(\"truncate\", False) \\\r\n",
@@ -369,6 +368,7 @@
 					"        else:\r\n",
 					"            query2 = df_lookup.writeStream.format(\"delta\") \\\r\n",
 					"                              .outputMode(\"append\") \\\r\n",
+					"                              .trigger(once=True) \\\r\n",
 					"                              .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_lookup/') \\\r\n",
 					"                              .option(\"startingOffsets\", \"earliest\") \\\r\n",
 					"                              .option(\"truncate\", False) \\\r\n",
