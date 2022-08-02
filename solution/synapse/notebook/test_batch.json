@@ -1,5 +1,5 @@
 {
-	"name": "test",
+	"name": "test_batch",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "eb8bd8fc-b4e2-4c17-91ec-22d2d3f21910"
+				"spark.autotune.trackingId": "2dd04c5d-a81a-40b4-b536-ffde7e5a2e80"
 			}
 		},
 		"metadata": {
