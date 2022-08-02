@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c793954f-19bc-454b-acc9-720ad96daab3"
+				"spark.autotune.trackingId": "831a5f4c-1fe7-43e0-b217-d8eaa6ee0c23"
 			}
 		},
 		"metadata": {
@@ -797,7 +797,7 @@
 				"source": [
 					" query2 = df_lookup.writeStream.format(\"delta\") \\\r\n",
 					"                              .outputMode(\"append\") \\\r\n",
-					"                              .option(\"checkpointLocation\", test.stage2p + '/_checkpoints/TechActivity_lookup/') \\\r\n",
+					"                              .option(\"checkpointLocation\", test.stage2np + '/_checkpoints/TechActivity_lookup/') \\\r\n",
 					"                              .partitionBy('year')\r\n",
 					"query2 = query2.start(test.stage2np + '/TechActivity_lookup')\r\n",
 					"logger.info(query2.lastProgress)  "
