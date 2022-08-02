@@ -1,6 +1,9 @@
 {
 	"name": "3_data_generation_demo",
 	"properties": {
+		"folder": {
+			"name": "examples"
+		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
@@ -13,16 +16,40 @@
 			"executorMemory": "28g",
 			"executorCores": 4,
 			"numExecutors": 2,
-			"runAsWorkspaceSystemIdentity": false
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "9ad83c0a-62f1-4510-988b-26ce0f35f21d"
+			}
 		},
 		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
 				"display_name": "Synapse PySpark"
 			},
 			"language_info": {
 				"name": "python"
-			}
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
+				"name": "spark3p1sm",
+				"type": "Spark",
+				"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 3,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": true
+			},
+			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
 			{
@@ -40,8 +67,7 @@
 					"\r\n",
 					"To generate test Ed-Fi data, simple run this notebook.\r\n",
 					"The test data will be generated in json format and written to stage1np/test_data in your data lake."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -59,7 +85,6 @@
 				"source": [
 					"%run OEA_py"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -78,7 +103,6 @@
 				"source": [
 					"%run DataGen_py"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -99,7 +123,6 @@
 					"writer = DataLakeWriter(oea.stage1np + '/test_data')\r\n",
 					"dg.generate_data(2, writer)"
 				],
-				"attachments": null,
 				"execution_count": null
 			}
 		]
