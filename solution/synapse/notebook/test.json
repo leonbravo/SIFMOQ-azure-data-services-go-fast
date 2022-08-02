@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a770e697-308d-4d4f-8fea-cb8565f1b6a6"
+				"spark.autotune.trackingId": "f1853426-f7c7-4fb9-90c6-46bef8e7ac84"
 			}
 		},
 		"metadata": {
@@ -79,7 +79,7 @@
 					"source_folder= 'SDS/M365'\r\n",
 					"storage_account = 'bceaaeoeadevlrs' "
 				],
-				"execution_count": 1
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -111,7 +111,7 @@
 					"    stage2 = 'abfss://stage2@' + storage_account + '.dfs.core.windows.net'\r\n",
 					"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
 				],
-				"execution_count": 2
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -129,7 +129,7 @@
 				"source": [
 					"%run OEA_py"
 				],
-				"execution_count": 3
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -202,7 +202,7 @@
 					"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
 					"            logger.info(query2.lastProgress)   "
 				],
-				"execution_count": 4
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -220,7 +220,7 @@
 				"source": [
 					"oea= OEA()"
 				],
-				"execution_count": 5
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -238,7 +238,7 @@
 				"source": [
 					"%run /Insights_py"
 				],
-				"execution_count": 6
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -258,7 +258,7 @@
 					"\r\n",
 					"test= Insights()"
 				],
-				"execution_count": 7
+				"execution_count": 15
 			},
 			{
 				"cell_type": "code",
@@ -275,9 +275,10 @@
 				},
 				"source": [
 					"df= test.returnDataFrameBeforeProcessing('TechActivity')\r\n",
+					"df\r\n",
 					""
 				],
-				"execution_count": 8
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
@@ -390,31 +391,9 @@
 					}
 				},
 				"source": [
-					"spark_schema = oea.to_spark_schema(test.schemas['TechActivity'])"
-				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"#query = df.writeStream.format(\"delta\").outputMode(\"append\") \\\r\n",
-					"#                                .option(\"checkpointLocation\", test.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
-					"#                                .option(\"startingOffsets\", \"earliest\") \\\r\n",
-					"#                                .option(\"truncate\", False).partitionBy('year')  \r\n",
-					"#query = query.start(test.stage2p + '/TechActivity')\r\n",
-					"#query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
-					"#logger.info(query.lastProgress)"
+					"spark_schema = oea.to_spark_schema(test.schemas['TechActivity'])\r\n",
+					"\r\n",
+					"df = df.withColumn('year', F.year(F.col('StartTime'))).withColumn('month', F.month(F.col('StartTime')))"
 				],
 				"execution_count": null
 			},
@@ -625,7 +604,98 @@
 					"\r\n",
 					"test.process_insights_activity_stage1_data()"
 				],
-				"execution_count": 167
+				"execution_count": 19
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df = spark.readStream.csv(test.stage1np_activity + '/*/*.csv'  , header='false', schema=activity_spark_schema)\\\r\n",
+					"                    .option(\"startingOffsets\", \"earliest\") \r\n",
+					"df = df.dropDuplicates(['SignalId'])\r\n",
+					"\r\n",
+					""
+				],
+				"execution_count": 20
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df_pseudo, df_lookup = oea.pseudonymize(df, test.schemas['TechActivity'])"
+				],
+				"execution_count": 22
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"query = df_pseudo.writeStream.format(\"delta\").outputMode(\"append\") \\\r\n",
+					"                                .trigger(once=True) \\\r\n",
+					"                                .option(\"checkpointLocation\", test.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
+					"                              \r\n",
+					"                                .partitionBy('year')  \r\n",
+					"query = query.start(test.stage2p + '/TechActivity')\r\n",
+					"query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
+					"logger.info(query.lastProgress)"
+				],
+				"execution_count": 24
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					" query2 = df_lookup.writeStream.format(\"delta\") \\\r\n",
+					"                              .outputMode(\"append\") \\\r\n",
+					"                              .trigger(once=True) \\\r\n",
+					"                              .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_lookup/') \\\r\n",
+					"                              .option(\"startingOffsets\", \"earliest\") \\\r\n",
+					"                              .partitionBy('year')\r\n",
+					"query2 = query2.start(self.stage2np + '/TechActivity_lookup')\r\n",
+					"query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
+					"logger.info(query2.lastProgress)  "
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
