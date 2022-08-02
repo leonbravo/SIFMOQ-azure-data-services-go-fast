@@ -2362,6 +2362,26 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 1')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://bceaaeoeadevlrs.dfs.core.windows.net/stage2p/SDS/M365/TechActivity_pseudo/',\n        FORMAT = 'DELTA'\n    ) AS [result]\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/1_read_me')]",
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
@@ -2987,6 +3007,9 @@
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"folder": {
+					"name": "examples"
+				},
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
@@ -3000,16 +3023,38 @@
 					"executorCores": 4,
 					"numExecutors": 2,
 					"runAsWorkspaceSystemIdentity": false,
-					"conf": {}
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "9ad83c0a-62f1-4510-988b-26ce0f35f21d"
+					}
 				},
 				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
 						"display_name": "Synapse PySpark"
 					},
 					"language_info": {
 						"name": "python"
-					}
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
+						"name": "spark3p1sm",
+						"type": "Spark",
+						"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 8,
+						"memory": 56
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -3027,8 +3072,7 @@
 							"\r\n",
 							"To generate test Ed-Fi data, simple run this notebook.\r\n",
 							"The test data will be generated in json format and written to stage1np/test_data in your data lake."
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -3046,7 +3090,6 @@
 						"source": [
 							"%run OEA_py"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -3066,7 +3109,6 @@
 						"source": [
 							"%run DataGen_py"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -3088,7 +3130,6 @@
 							"writer = DataLakeWriter(oea.stage1np + '/test_data')\r\n",
 							"dg.generate_data(2, writer)"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -4450,7 +4491,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "8c06c46c-725e-4388-aa91-55b5d1cbfcb9"
+						"spark.autotune.trackingId": "fde40227-fb2a-4c62-9304-8c89da62b62f"
 					}
 				},
 				"metadata": {
@@ -4785,6 +4826,7 @@
 							"        else:\r\n",
 							"            query = df_pseudo.writeStream.format(\"delta\") \\\r\n",
 							"                                         .outputMode(\"append\") \\\r\n",
+							"                                         .trigger(once=True) \\\r\n",
 							"                                         .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
 							"                                         .option(\"startingOffsets\", \"earliest\") \\\r\n",
 							"                                         .option(\"truncate\", False) \\\r\n",
@@ -4798,6 +4840,7 @@
 							"        else:\r\n",
 							"            query2 = df_lookup.writeStream.format(\"delta\") \\\r\n",
 							"                              .outputMode(\"append\") \\\r\n",
+							"                              .trigger(once=True) \\\r\n",
 							"                              .option(\"checkpointLocation\", self.stage2p + '/_checkpoints/TechActivity_lookup/') \\\r\n",
 							"                              .option(\"startingOffsets\", \"earliest\") \\\r\n",
 							"                              .option(\"truncate\", False) \\\r\n",
@@ -4940,7 +4983,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "1cda49ba-bbb5-402f-9cd6-3b27b014ad1c"
+						"spark.autotune.trackingId": "2c0946f8-9d4f-4480-a75f-e94d23c8e3af"
 					}
 				},
 				"metadata": {
@@ -4965,8 +5008,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -5823,7 +5865,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "681350b8-5282-42bd-a15a-024ee45cafaa"
+						"spark.autotune.trackingId": "127d788e-5dfa-4651-af5f-951540fe7f56"
 					}
 				},
 				"metadata": {
@@ -7797,7 +7839,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "088cdeb9-52f5-4387-8d50-d1e5757b4160"
+						"spark.autotune.trackingId": "c9284682-d389-4540-a3ac-a20dc988bf9a"
 					}
 				},
 				"metadata": {
@@ -7822,8 +7864,7 @@
 						"sparkVersion": "3.2",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -8689,7 +8730,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "331af40c-8064-4488-839a-28c6b5abd5d9"
+						"spark.autotune.trackingId": "5a44845f-b9c4-4cea-becc-b1a010cc113f"
 					}
 				},
 				"metadata": {
@@ -8714,8 +8755,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -8970,7 +9010,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "06137414-05af-4b28-832e-beb6966571c1"
+						"spark.autotune.trackingId": "f21ea0ef-5444-44da-8154-9f98cf319169"
 					}
 				},
 				"metadata": {
@@ -8988,7 +9028,6 @@
 				"cells": [
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"class ContosoSIS(BaseOEAModule):\r\n",
 							"    def __init__(self, oea, source_folder='contoso_sis', pseudonymize = True):\r\n",
@@ -10422,7 +10461,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "88212d7a-09d9-4a12-b9a8-6c0e1a80d931"
+						"spark.autotune.trackingId": "f130e85b-2c29-47e0-89d2-ae9d0db6658c"
 					}
 				},
 				"metadata": {
@@ -10447,8 +10486,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -10826,31 +10864,6 @@
 							}
 						},
 						"source": [
-							"#query = df.writeStream.format(\"delta\").outputMode(\"append\") \\\r\n",
-							"#                                .option(\"checkpointLocation\", test.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
-							"#                                .option(\"startingOffsets\", \"earliest\") \\\r\n",
-							"#                                .option(\"truncate\", False).partitionBy('year')  \r\n",
-							"#query = query.start(test.stage2p + '/TechActivity')\r\n",
-							"#query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
-							"#logger.info(query.lastProgress)"
-						],
-						"outputs": [],
-						"execution_count": null
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
 							"source= test.stage1np_activity +'/*/*.csv'"
 						],
 						"outputs": [],
@@ -10893,6 +10906,31 @@
 							"  # The schema location directory keeps track of your data schema over time\r\n",
 							" # .option(\"cloudFiles.schemaLocation\", \"<path-to-checkpoint>\").load(\"<path-to-source-data>\") \\\r\n",
 							""
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#query = df.writeStream.format(\"delta\").outputMode(\"append\") \\\r\n",
+							"#                                .option(\"checkpointLocation\", test.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
+							"#                                .option(\"startingOffsets\", \"earliest\") \\\r\n",
+							"#                                .option(\"truncate\", False).partitionBy('year')  \r\n",
+							"#query = query.start(test.stage2p + '/TechActivity')\r\n",
+							"#query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
+							"#logger.info(query.lastProgress)"
 						],
 						"outputs": [],
 						"execution_count": null
@@ -11052,10 +11090,1023 @@
 						"source": [
 							"#test.ingest()\r\n",
 							"\r\n",
-							"test.process_insights_activity_stage1_data()"
+							"#test.process_insights_activity_stage1_data()"
 						],
 						"outputs": [],
 						"execution_count": 167
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#test.delete_stage2()"
+						],
+						"outputs": [],
+						"execution_count": 32
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#test.process_activity()"
+						],
+						"outputs": [],
+						"execution_count": 50
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"db_name= 'bceoea'\r\n",
+							"\r\n",
+							"\r\n",
+							"pathp  = test.stage2p\r\n",
+							"pathnp = test.stage2np\r\n",
+							"source_format= 'DELTA'\r\n",
+							"\r\n",
+							"print(pathp, pathnp)\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 69
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"oea.create_sql_views(pathp, source_format)\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 71
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"print (test.stage1np_activity)\r\n",
+							"\r\n",
+							"oea.get_folders(test.stage1np_activity)\r\n",
+							"\r\n",
+							"mssparkutils.fs.ls(test.stage1np)\r\n",
+							"#pathnp = classSchool.stage2n"
+						],
+						"outputs": [],
+						"execution_count": 20
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/test_batch')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "spark3p1sm",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"runAsWorkspaceSystemIdentity": false,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "6bdcda2b-f1d2-48d8-9cf1-a0cf5ec2dd8e"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
+						"name": "spark3p1sm",
+						"type": "Spark",
+						"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 8,
+						"memory": 56
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Test Class"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"source_folder= 'SDS/M365'\r\n",
+							"storage_account = 'bceaaeoeadevlrs' "
+						],
+						"outputs": [],
+						"execution_count": 1
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"from pyspark.sql.functions import *\r\n",
+							"from pyspark.sql.window import Window\r\n",
+							"\r\n",
+							"# data lake and container information\r\n",
+							"\r\n",
+							"use_test_env = False\r\n",
+							"\r\n",
+							"if use_test_env:\r\n",
+							"    stage1 = 'abfss://stage1@' + storage_account + '.dfs.core.windows.net/stage1'\r\n",
+							"    stage2 = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/'\r\n",
+							"    stage3 = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/'\r\n",
+							"else:\r\n",
+							"    stage1 = 'abfss://stage1@' + storage_account + '.dfs.core.windows.net'\r\n",
+							"    stage2 = 'abfss://stage2@' + storage_account + '.dfs.core.windows.net'\r\n",
+							"    stage3 = 'abfss://stage3@' + storage_account + '.dfs.core.windows.net'"
+						],
+						"outputs": [],
+						"execution_count": 2
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"%run OEA_py"
+						],
+						"outputs": [],
+						"execution_count": 3
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"class test(BaseOEAModule):\r\n",
+							"    \"\"\"    Provides data processing methods for MS Insights data.\r\n",
+							"    Data is expected to be received via ADS into stage1np/ms_insights\r\n",
+							"    The structure of the folders in stage1np will then be something like:\r\n",
+							"        -> stage1np/example/test/*\r\n",
+							"\r\n",
+							"    In stage2, everything is written to stage2np/test and stage2p/test\r\n",
+							"    \"\"\"\r\n",
+							"\r\n",
+							"    def __init__(self, source_folder= 'example/test'):\r\n",
+							"        BaseOEAModule.__init__(self, source_folder)\r\n",
+							"        self.stage1np_activity = self.stage1np + '/'\r\n",
+							"        self.schemas['test'] = [['col', 'Integer', 'no-op']\r\n",
+							"                    ]\r\n",
+							"    \r\n",
+							"    def ingest(self):\r\n",
+							"        \"\"\"  Processes insights data from stage1 into stage2 using structured streaming within the defined functions below.\"\"\"\r\n",
+							"        logger.info(\"Processing data from: \" + self.stage1np)\r\n",
+							"        \r\n",
+							"        items = mssparkutils.fs.ls(self.stage1np)\r\n",
+							"        for item in items:\r\n",
+							"            if item.name.__contains__(\"csv\"):\r\n",
+							"                self.process_stage1_data()\r\n",
+							"\r\n",
+							"            else:\r\n",
+							"                logger.info(\"No defined function for processing this insights data\")\r\n",
+							"        \r\n",
+							"        logger.info(\"Finished ingesting data from stage 1 to stage 2\")\r\n",
+							"\r\n",
+							"    def process_stage1_data(self):\r\n",
+							"        \"\"\" Processes activity data from stage1 into stage2 using structured streaming. \"\"\"\r\n",
+							"        logger.info(\"Processing test data from: \" + self.stage1np_activity)\r\n",
+							"\r\n",
+							"        # Currently not using the OEA ingest_incremental_data function due to pulling out the partition folders\r\n",
+							"        activity_spark_schema = oea.to_spark_schema(self.schemas['test'])\r\n",
+							"        df = spark.readStream.csv(self.stage1np_activity + '*.csv', header='false', schema=activity_spark_schema)\r\n",
+							"        df = df.dropDuplicates(['col'])\r\n",
+							"        \r\n",
+							"       \r\n",
+							"        df_pseudo, df_lookup = oea.pseudonymize(df, self.schemas['test'])\r\n",
+							"\r\n",
+							"        if len(df_pseudo.columns) == 0:\r\n",
+							"            logger.info('No data to be written to stage2p')\r\n",
+							"        else:\r\n",
+							"            query = df_pseudo.writeStream.format(\"delta\").outputMode(\"append\").trigger(once=True).option(\"checkpointLocation\", self.stage1np_activity + '/_checkpoints_p')\r\n",
+							"            query = query.start(self.stage2p + '')\r\n",
+							"            query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
+							"            logger.info(query.lastProgress)\r\n",
+							"        \r\n",
+							"        if len(df_lookup.columns) == 0:\r\n",
+							"            logger.info('No data to be written to stage2np')\r\n",
+							"        else:\r\n",
+							"            query2 = df_lookup.writeStream.format(\"delta\").outputMode(\"append\").trigger(once=True).option(\"checkpointLocation\", self.stage1np_activity + '/_checkpoints_np')\r\n",
+							"            query2 = query2.start(self.stage2np + '')\r\n",
+							"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
+							"            logger.info(query2.lastProgress)   "
+						],
+						"outputs": [],
+						"execution_count": 4
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"oea= OEA()"
+						],
+						"outputs": [],
+						"execution_count": 5
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"%run /Insights_py"
+						],
+						"outputs": [],
+						"execution_count": 6
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#test0= test()\r\n",
+							"\r\n",
+							"test= Insights()"
+						],
+						"outputs": [],
+						"execution_count": 7
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"df= test.returnDataFrameBeforeProcessing('TechActivity')\r\n",
+							"df\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 8
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#df.select('signalType', 'year', 'month')"
+						],
+						"outputs": [],
+						"execution_count": 9
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"test.stage2p"
+						],
+						"outputs": [],
+						"execution_count": 10
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#test.stage2np = stage2\r\n",
+							"#test.stage2p = stage2\r\n",
+							"#oea.stage2np = stage2\r\n",
+							"#oea.stage2p = stage2\r\n",
+							"\r\n",
+							"oea.stage2p "
+						],
+						"outputs": [],
+						"execution_count": 11
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"test.stage2np"
+						],
+						"outputs": [],
+						"execution_count": 12
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"source_path=   oea.stage1np +'/'+ source_folder +'/activity'\r\n",
+							"\r\n",
+							"source_path"
+						],
+						"outputs": [],
+						"execution_count": 13
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"spark_schema = oea.to_spark_schema(test.schemas['TechActivity'])\r\n",
+							"\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 14
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"source= test.stage1np_activity +'/*/*.csv'\r\n",
+							"print(source)"
+						],
+						"outputs": [],
+						"execution_count": 15
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#df1 = spark.readStream.format(\"cloudFiles\").option(\"cloudFiles.format\", \"csv\").option(\"header\", \"false\").option( \"schema\",spark_schema).load(source)"
+						],
+						"outputs": [],
+						"execution_count": 16
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#spark.readStream.format(\"cloudFiles\").option(\"cloudFiles.format\", \"csv\") \\\r\n",
+							"  # The schema location directory keeps track of your data schema over time\r\n",
+							" # .option(\"cloudFiles.schemaLocation\", \"<path-to-checkpoint>\").load(\"<path-to-source-data>\") \\\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 17
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Queries with streaming sources must be executed with writeStream.start();\r\n",
+							"#display(df1)\r\n",
+							"#df1.show()\r\n",
+							"spark.catalog.listDatabases()\r\n",
+							"\r\n",
+							"#sqlContext.registerDataFrameAsTable(df, 'Activity')"
+						],
+						"outputs": [],
+						"execution_count": 18
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"spark.catalog.setCurrentDatabase('oea')"
+						],
+						"outputs": [],
+						"execution_count": 19
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"sqlContext.registerDataFrameAsTable(df, 'Activity')"
+						],
+						"outputs": [],
+						"execution_count": 20
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#oea.ingest_incremental_data( source_system=source_folder, tablename='Activity', schema=spark_schema, partition_by='year', primary_key='SignalId', data_format='csv', has_header=False)\r\n",
+							"        "
+						],
+						"outputs": [],
+						"execution_count": 21
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"dfquery = spark.sql(\"select * from Activity where year = 2022 and SignalType = 'Call'\")"
+						],
+						"outputs": [],
+						"execution_count": 22
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#dfquery.show()"
+						],
+						"outputs": [],
+						"execution_count": 23
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#test.delete_stage2()"
+						],
+						"outputs": [],
+						"execution_count": 24
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#test.ingest()\r\n",
+							"\r\n",
+							"#test.process_insights_activity_stage1_data()"
+						],
+						"outputs": [],
+						"execution_count": 25
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"df = spark.read.option(\"rescuedDataColumn\", \"_rescue\").option(\"header\",\"false\").option(\"inferSchema\", \"true\")\\\r\n",
+							"      .csv(path=source, schema=spark_schema)\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 50
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"df = df.dropDuplicates(['SignalId'])"
+						],
+						"outputs": [],
+						"execution_count": 51
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"df = df.withColumn('year', F.year(F.col('StartTime')))"
+						],
+						"outputs": [],
+						"execution_count": 52
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"df = df.withColumn(\"Date\", to_date(col(\"StartTime\"), 'yyyy-MM-dd')).withColumn('month', F.month(F.col('StartTime')))\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 53
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"df.show()"
+						],
+						"outputs": [],
+						"execution_count": 55
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"df_pseudo, df_lookup = oea.pseudonymize(df, test.schemas['TechActivity'])"
+						],
+						"outputs": [],
+						"execution_count": 56
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"mergeCondition = \"oldData.SignalId = newData.SignalId\"\r\n",
+							"Target_p= test.stage2np + '/TechActivity_pseudo'\r\n",
+							"Target_np= test.stage2p + '/TechActivity_lookup'\r\n",
+							"\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 57
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"var_checkp = DeltaTable.isDeltaTable(spark,  Target_p)\r\n",
+							"var_checknp= DeltaTable.isDeltaTable(spark,  Target_np)"
+						],
+						"outputs": [],
+						"execution_count": 47
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"try \r\n",
+							"    if (var_checkp):\r\n",
+							"        print(\"Performing Merge... on Existing table\")\r\n",
+							"\r\n",
+							"        olddt_np = DeltaTable.forPath(spark, Target_np) \r\n",
+							"        olddt_p = DeltaTable.forPath(spark, Target_p) \r\n",
+							"        olddt_p.alias(\"oldData\").merge(\r\n",
+							"            df_pseudo.alias(\"newData\"),\r\n",
+							"            mergeCondition) \\\r\n",
+							"        .whenMatchedUpdateAll() \\\r\n",
+							"        .whenNotMatchedInsertAll() \\\r\n",
+							"        .execute()\r\n",
+							"\r\n",
+							"        olddt_np.alias(\"oldData\").merge(\r\n",
+							"            df_lookup.alias(\"newData\"),\r\n",
+							"            mergeCondition) \\\r\n",
+							"        .whenMatchedUpdateAll() \\\r\n",
+							"        .whenNotMatchedInsertAll() \\\r\n",
+							"        .execute()\r\n",
+							"    else:\r\n",
+							"        print(\"Creating new Delta Table.\")    \r\n",
+							"        df_lookup.write.format(\"Delta\").save(Target_np)\r\n",
+							"        df_pseudo.write.format(\"Delta\").save(Target_p)\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 40
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							""
+						],
+						"outputs": [],
+						"execution_count": 133
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							" query2 = df_pseudo.write.format(\"delta\") \\\r\n",
+							"                              .option(\"checkpointLocation\", test.stage2p + '/_checkpoints/TechActivity_p/') \\\r\n",
+							"                              .option(\"startingOffsets\", \"earliest\") \\\r\n",
+							"                              .partitionBy('year').save(Target_p)\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 58
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"query2 = query2.start(self.stage2np + '/TechActivity_lookup')\r\n",
+							"query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
+							"logger.info(query2.lastProgress)  "
+						],
+						"outputs": [],
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -11176,7 +12227,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"autoPause": {
-					"enabled": true,
+					"enabled": false,
 					"delayInMinutes": 15
 				},
 				"autoScale": {
@@ -11191,7 +12242,7 @@
 				"libraryRequirements": {
 					"content": "opencensus-ext-azure >= 1.0.8\r\nFaker >= 8.0",
 					"filename": "/usr/csuser/clouddrive/OpenEduAnalytics/framework/requirements.txt",
-					"time": "2022-07-14T06:54:48.8041552Z"
+					"time": "2022-08-02T04:38:04.2517487Z"
 				},
 				"isComputeIsolationEnabled": false,
 				"sessionLevelPackagesEnabled": false,
