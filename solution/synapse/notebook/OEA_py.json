@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "3abc25ae-f130-43e1-ac5d-83ecc37909fc"
+				"spark.autotune.trackingId": "86c3b197-1fdd-4112-be14-61487734f1bb"
 			}
 		},
 		"metadata": {
@@ -134,6 +134,12 @@
 					"        if instrumentation_key:\n",
 					"            # Setup logging to go to app insights (more info here: https://github.com/balakreshnan/Samples2021/blob/main/Synapseworkspace/opencensuslog.md#azure-synapse-spark-logs-runtime-errors-to-application-insights)\n",
 					"            logger.addHandler(AzureLogHandler(connection_string='InstrumentationKey=' + instrumentation_key))\n",
+					"\n",
+					"    #fix column names by replacing unwanted characters with _ to satisfy the Parquet naming requirements\n",
+					"    def fix_column_names(self, df):\n",
+					"        \"\"\" Fix column names to satisfy the Parquet naming requirements by substituting invalid characters with an underscore. \"\"\"\n",
+					"        df_with_valid_column_names = df.select([F.col(col).alias(re.sub(\"[ ,;{}()\\n\\t=]+\", \"_\", col)) for col in df.columns])\n",
+					"        return df_with_valid_column_names\n",
 					"\n",
 					"    def get_value_from_db(self, query):\n",
 					"        df = spark.sql(query)\n",
@@ -372,11 +378,6 @@
 					"            msg += f\"{folder_name}: {entities}\\n\"\n",
 					"        print(msg)           \n",
 					"\n",
-					"    #fix column names by replacing unwanted characters with _ to satisfy the Parquet naming requirements\n",
-					"    def fix_column_names(self, df):\n",
-					"        \"\"\" Fix column names to satisfy the Parquet naming requirements by substituting invalid characters with an underscore. \"\"\"\n",
-					"        df_with_valid_column_names = df.select([F.col(col).alias(re.sub(\"[ ,;{}()\\n\\t=]+\", \"_\", col)) for col in df.columns])\n",
-					"        return df_with_valid_column_names\n",
 					"\n",
 					"    def to_spark_schema(self, schema):#: list[list[str]]):\n",
 					"        \"\"\" Creates a spark schema from a schema specified in the OEA schema format. \n",
