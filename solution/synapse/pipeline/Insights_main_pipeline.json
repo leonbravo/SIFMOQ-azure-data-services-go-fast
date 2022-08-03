@@ -23,7 +23,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"notebook": {
-						"referenceName": "Insights_module_setup",
+						"referenceName": "NEW_Insights_module_setup",
 						"type": "NotebookReference"
 					},
 					"snapshot": true,
@@ -34,7 +34,7 @@
 				}
 			},
 			{
-				"name": "If create_sql_db",
+				"name": "If create_sql_db pipeline",
 				"type": "IfCondition",
 				"dependsOn": [
 					{
@@ -79,7 +79,7 @@
 				}
 			},
 			{
-				"name": "If create_lake_db",
+				"name": "If create_lake_db pipeline",
 				"type": "IfCondition",
 				"dependsOn": [
 					{
