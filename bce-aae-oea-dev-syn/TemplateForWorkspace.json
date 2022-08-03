@@ -616,7 +616,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"notebook": {
-								"referenceName": "NEW_Insights_module_setup",
+								"referenceName": "Insights_module_setup",
 								"type": "NotebookReference"
 							},
 							"snapshot": true,
@@ -627,7 +627,7 @@
 						}
 					},
 					{
-						"name": "If create_sql_db",
+						"name": "If create_sql_db pipeline",
 						"type": "IfCondition",
 						"dependsOn": [
 							{
@@ -672,7 +672,7 @@
 						}
 					},
 					{
-						"name": "If create_lake_db",
+						"name": "If create_lake_db pipeline",
 						"type": "IfCondition",
 						"dependsOn": [
 							{
@@ -726,7 +726,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"notebook": {
-								"referenceName": "SchoolPerformanceTable",
+								"referenceName": "SchoolDimensions_setup",
 								"type": "NotebookReference"
 							},
 							"snapshot": true,
@@ -766,9 +766,9 @@
 				"lastPublishTime": "2021-11-23T20:25:17Z"
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/notebooks/NEW_Insights_module_setup')]",
+				"[concat(variables('workspaceId'), '/notebooks/Insights_module_setup')]",
 				"[concat(variables('workspaceId'), '/bigDataPools/spark3p1sm')]",
-				"[concat(variables('workspaceId'), '/notebooks/SchoolPerformanceTable')]",
+				"[concat(variables('workspaceId'), '/notebooks/SchoolDimensions_setup')]",
 				"[concat(variables('workspaceId'), '/pipelines/create_sql_db1')]",
 				"[concat(variables('workspaceId'), '/pipelines/create_lake_db1')]"
 			]
@@ -817,6 +817,10 @@
 									},
 									"type": "string"
 								}
+							},
+							"sparkPool": {
+								"referenceName": "spark3p1sm",
+								"type": "BigDataPoolReference"
 							}
 						}
 					}
@@ -842,7 +846,8 @@
 				"lastPublishTime": "2021-11-19T17:35:55Z"
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/notebooks/OEA_connector1')]"
+				"[concat(variables('workspaceId'), '/notebooks/OEA_connector1')]",
+				"[concat(variables('workspaceId'), '/bigDataPools/spark3p1sm')]"
 			]
 		},
 		{
@@ -2399,16 +2404,38 @@
 					"executorCores": 4,
 					"numExecutors": 2,
 					"runAsWorkspaceSystemIdentity": false,
-					"conf": {}
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "2c25082d-3806-4a17-96be-09cd6fc150ed"
+					}
 				},
 				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
 						"display_name": "python"
 					},
 					"language_info": {
 						"name": "python"
-					}
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
+						"name": "spark3p1sm",
+						"type": "Spark",
+						"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 8,
+						"memory": 56
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -2424,13 +2451,11 @@
 							"![OEA](https://openeducationanalytics.org/assets/imgs/img_oea_logo.png)\n",
 							"# OEA and the OEA Framework\n",
 							"\n",
-							"[OEA](https://openeducationanalytics.org/) is the overarching community and ecosystem centered around the effective and responsible use of data and analytics in education.\n",
-							"\n",
 							"The [OEA framework](https://github.com/microsoft/OpenEduAnalytics/tree/main/framework) is an open source python library and synapse pipeline assets - built in collaboration with the OEA community - that simplifies the process of working with the data in your data lake in a way that follows a standardized data lake architecture and data processing best practices through use of [Apache Spark](https://spark.apache.org/) and [delta lake](https://delta.io/) technologies.\n",
 							"\n",
-							"Listed below are 3 included examples that demonstrate the usage of the OEA framework."
-						],
-						"attachments": null
+							"![BCE](https://www.steptwo.com.au/wp-content/uploads/Brisbane-Catholic-Education-logo-2.jpg)\n",
+							""
+						]
 					},
 					{
 						"cell_type": "markdown",
@@ -2441,25 +2466,21 @@
 								}
 							}
 						},
-						"source": [],
-						"attachments": null
+						"source": [
+							""
+						]
 					},
 					{
 						"cell_type": "markdown",
 						"source": [
-							"# Example #1: End to end (collect, prep, view)\n",
-							"The OEA framework comes with a set of Synapse pipelines that demonstrate how to extract data from data sources with common interfaces.\n",
-							"\n",
-							"By clicking on \"Integrate\" in the left nav bar and opening \"example_main_pipeline\" you can run an example pipeline that does the following:\n",
-							"- 1. Retrieves data from an http endpoint\n",
-							"- 2. Lands the data in the stage1np directory\n",
-							"- 3. Ingests the data by first running a pseudonymization process, then writing pseudonymized data to delta tables in stage2p and writing non-pseudonymized data to delta tables in stage2np\n",
+							"# SDS/M365 #1: Collect, prep, view\n",
+							"The BCE implementation has crafted a main Synapse pipeline \"Insights_main_pipeline\"  that  \"Integrate\" and  does the following:\n",
+							"- 1. Retrieves data from a landing zone stage1np directory\n",
+							"- 2. Ingests the data by first running a pseudonymization process, then writing pseudonymized data to delta tables in stage2p and writing non-pseudonymized data to delta tables in stage2np\n",
 							"- 4. Creates a spark db that points to the delta tables in stage2p and stage2np\n",
 							"- 5. Creates a sql serverless db with views pointing to the delta tables in stage2p and stage2np\n",
-							"\n",
-							"You can then run the pipeline in the Reset folder called \"reset_all_for_source\" to reset everything in the data lake that was done in the \"example_main_pipeline\"."
-						],
-						"attachments": null
+							""
+						]
 					},
 					{
 						"cell_type": "markdown",
@@ -2471,33 +2492,13 @@
 							}
 						},
 						"source": [
-							"# Example #2: batch data processing\n",
-							"The notebook **_2_batch_processing_demo_** provides a self-contained demonstration of landing and ingesting 3 different types of batch data sets:\n",
+							"# BCE/BI/dimensions #2: batch data processing\n",
+							"The notebook **biDimensions** provides a self-contained demonstration of landing and ingesting 2 different types of batch data sets:\n",
 							"\n",
-							"1. [Incremental data](https://github.com/microsoft/OpenEduAnalytics/tree/main/framework#1-incremental-data)\n",
-							"2. [Delta data](https://github.com/microsoft/OpenEduAnalytics/tree/main/framework#2-delta-data-change-data)\n",
-							"3. [Snapshot data](https://github.com/microsoft/OpenEduAnalytics/tree/main/framework#3-snapshot-data)\n",
-							"\n",
-							"Open that notebook and walk through each cell for the details."
-						],
-						"attachments": null
-					},
-					{
-						"cell_type": "markdown",
-						"metadata": {
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"# Example #3: data generation demo\n",
-							"When learning to work synapse studio and the OEA framework, and when developing the data exploration and data prep scripts you need, it's especially helpful to have test data sets to work with.\n",
-							"\n",
-							"The notebook **_3_data_generation_demo_** data generation demo shows how to generate test data sets across multiple fictional schools for testing purposes."
-						],
-						"attachments": null
+							"1. CSV\n",
+							"2. Excel\n",
+							""
+						]
 					}
 				]
 			},
@@ -2508,6 +2509,9 @@
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"folder": {
+					"name": "examples"
+				},
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
@@ -2521,16 +2525,38 @@
 					"executorCores": 4,
 					"numExecutors": 2,
 					"runAsWorkspaceSystemIdentity": false,
-					"conf": {}
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "4cb17d7c-d9da-4e9c-80bd-5be432305740"
+					}
 				},
 				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
 						"display_name": "Synapse PySpark"
 					},
 					"language_info": {
 						"name": "python"
-					}
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
+						"name": "spark3p1sm",
+						"type": "Spark",
+						"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 8,
+						"memory": 56
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -2545,8 +2571,7 @@
 						"source": [
 							"# OEA Demo\r\n",
 							"This notebook demonstrates the batch processing features of the OEA framework."
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -2565,7 +2590,6 @@
 						"source": [
 							"%run /OEA_py"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -2580,8 +2604,7 @@
 						},
 						"source": [
 							"# Incremental batches"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -2600,7 +2623,6 @@
 							"# reset this example (deletes data in stage1np/example, stage2np/example, and stage2p/example)\r\n",
 							"oea.delete_data_source('example')"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -2625,7 +2647,6 @@
 							"df = oea.load_csv('stage1np/example/student')\r\n",
 							"df.show()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -2653,7 +2674,6 @@
 							"df = oea.load_delta('stage2p/example/student_pseudo')\r\n",
 							"df.show()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -2678,7 +2698,6 @@
 							"df = oea.load_csv('stage1np/example/student')\r\n",
 							"df.show()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -2706,7 +2725,6 @@
 							"df.show()\r\n",
 							"df.printSchema()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -2721,8 +2739,7 @@
 						},
 						"source": [
 							"# Delta batches"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -2741,7 +2758,6 @@
 							"# reset this example (deletes data in stage1np/example, stage2np/example, and stage2p/example)\r\n",
 							"oea.delete_data_source('delta_example')"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -2767,7 +2783,6 @@
 							"df = oea.load_csv('stage1np/delta_example/student')\r\n",
 							"df.show()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -2795,7 +2810,6 @@
 							"df = oea.load_delta('stage2p/delta_example/student_pseudo')\r\n",
 							"df.show()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -2821,7 +2835,6 @@
 							"df = oea.load_csv('stage1np/delta_example/student')\r\n",
 							"df.show()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -2849,7 +2862,6 @@
 							"df.show()\r\n",
 							"df.printSchema()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -2864,8 +2876,7 @@
 						},
 						"source": [
 							"# Snapshot batches"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -2884,7 +2895,6 @@
 							"# reset this example (deletes data in stage1np/example, stage2np/example, and stage2p/example)\r\n",
 							"oea.delete_data_source('snapshot_example')"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -2910,7 +2920,6 @@
 							"df = oea.load_csv('stage1np/snapshot_example/student')\r\n",
 							"df.show()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -2939,7 +2948,6 @@
 							"df.show()\r\n",
 							"df.printSchema()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -2965,7 +2973,6 @@
 							"df = oea.load_csv('stage1np/snapshot_example/student')\r\n",
 							"df.show()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -2994,7 +3001,6 @@
 							"df.show()\r\n",
 							"df.printSchema()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -3582,6 +3588,9 @@
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"folder": {
+					"name": "examples"
+				},
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
@@ -3595,16 +3604,38 @@
 					"executorCores": 4,
 					"numExecutors": 2,
 					"runAsWorkspaceSystemIdentity": false,
-					"conf": {}
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "f7195d1b-334a-45b7-921d-d6a8bc3b8ce2"
+					}
 				},
 				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
 						"display_name": "python"
 					},
 					"language_info": {
 						"name": "python"
-					}
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
+						"name": "spark3p1sm",
+						"type": "Spark",
+						"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 8,
+						"memory": 56
+					},
+					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
@@ -4327,9 +4358,9 @@
 							"            result['StaffSectionAssociations'] += school['_StaffSectionAssociations']\r\n",
 							"\r\n",
 							"\r\n",
-							"        return result\r\n"
+							"        return result\r\n",
+							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -4464,6 +4495,562 @@
 						],
 						"outputs": [],
 						"execution_count": 23
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Insights_module_setup')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Insights Module"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "spark3p1sm",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "b54d7285-e249-4f96-a860-eb26bdd2b1ce"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
+						"name": "spark3p1sm",
+						"type": "Spark",
+						"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 8,
+						"memory": 56
+					},
+					"sessionKeepAliveTimeout": 59
+				},
+				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Microsoft Insights Module Notebook\r\n",
+							"This notebook creates 26 tables into oea new Spark database\r\n",
+							"\r\n",
+							"oea is utilized for the Graph Reports API PowerBI dashboard provided"
+						]
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"### Provision storage accounts\r\n",
+							"\r\n",
+							"The storage account variable has to be changed to the name of the storage account associated with your Azure resource group."
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# data lake and container information\r\n",
+							"# meant to be parameters\r\n",
+							"storage_account = 'bceaaeoeadevlrs'\r\n",
+							"use_test_env = False"
+						],
+						"outputs": [],
+						"execution_count": 31
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType, ArrayType\r\n",
+							"from pyspark.sql.functions import *\r\n",
+							"from pyspark.sql.window import Window\r\n",
+							"from faker import Faker\r\n",
+							"import datetime"
+						],
+						"outputs": [],
+						"execution_count": 32
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"### Load Raw Data from Lake\r\n",
+							"The top cell sets the date of the data to be processed (this is currently set up to process the test data). \r\n",
+							"\r\n",
+							"Date can be used for watermark, but Insights class process everything in stage1 folder, \r\n",
+							"for effectively control date needs to be used for roster and activity"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Set the date to be processed\r\n",
+							"today = datetime.datetime.now()\r\n",
+							"date1 = today.strftime('%Y-%m-%d')\r\n",
+							"#date1.cast('string')\r\n",
+							"date2 = date1\r\n",
+							"#date1 = \"2022-02-02\"\r\n",
+							"#date2 = \"2022-07-12\"\r\n",
+							"#date1 = date2"
+						],
+						"outputs": [],
+						"execution_count": 33
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## 1. Activity table\r\n",
+							"Contains all activities (students and teachers) at a school-system level\r\n",
+							"\r\n",
+							"** Databases and tables used: **\r\n",
+							"\r\n",
+							" - None \r\n",
+							" \r\n",
+							"**CSV files used:**\r\n",
+							"\r\n",
+							"- M365/SDS/activity/(whatever the set date is)/*.csv\r\n",
+							"\r\n",
+							"**Database and table created:**\r\n",
+							"\r\n",
+							"1. Spark DB: s2_sds\r\n",
+							"- Table: techactivity\r\n",
+							""
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"%run /OEA_py"
+						],
+						"outputs": [],
+						"execution_count": 34
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"%run /Insights_py"
+						],
+						"outputs": [],
+						"execution_count": 35
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# no required per date1 as \r\n",
+							"#dfActivityRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/activity/'+ date1 + '/*.csv')\r\n",
+							"## load needed roster tables from data lake storage\r\n",
+							"#dfAADGroupRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadGroup/*.csv')\r\n",
+							"#dfAADGroupMembershipRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadGroupMembership/*.csv')\r\n",
+							"#dfAADUserRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadUser/*.csv')\r\n",
+							"#dfAADUserPersonMappingRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadUserPersonMapping/*.csv')\r\n",
+							"#dfCourseRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Course/*.csv')\r\n",
+							"#dfCourseGradeLevelRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/CourseGradeLevel/*.csv')\r\n",
+							"#dfCourseSubjectRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/CourseSubject/*.csv')\r\n",
+							"#dfEnrollmentRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Enrollment/*.csv')\r\n",
+							"#dfOrganizationRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Organization/*.csv')\r\n",
+							"#dfPersonRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Person/*.csv')\r\n",
+							"#dfPersonDemographicRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographic/*.csv')\r\n",
+							"#dfPersonDemographicEthnicityRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicEthnicity/*.csv')\r\n",
+							"#dfPersonDemographicPersonFlagRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicPersonFlag/*.csv')\r\n",
+							"#dfPersonDemographicRaceRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicRace/*.csv')\r\n",
+							"#dfPersonEmailAddressRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonEmailAddress/*.csv')\r\n",
+							"#dfPersonIdentifierRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonIdentifier/*.csv')\r\n",
+							"#dfPersonOrganizationRoleRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonOrganizationRole/*.csv')\r\n",
+							"#dfPersonPhoneNumberRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonPhoneNumber/*.csv')\r\n",
+							"#dfPersonRelationshipRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonRelationship/*.csv')\r\n",
+							"#dfRefDefinitionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/RefDefinition/*.csv')\r\n",
+							"#dfSectionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Section/*.csv')\r\n",
+							"#dfSectionSessionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SectionSession/*.csv')\r\n",
+							"#dfSectionSubjectRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SectionSubject/*.csv')\r\n",
+							"#dfSessionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Session/*.csv')\r\n",
+							"#dfSourceSystemRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
+						],
+						"outputs": [],
+						"execution_count": 36
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"if use_test_env:\r\n",
+							"    stage1np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage1np'\r\n",
+							"    stage2np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2np'\r\n",
+							"    stage2p = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2p'\r\n",
+							"else:\r\n",
+							"    stage1np = oea.stage1np\r\n",
+							"    stage2np = oea.stage2np\r\n",
+							"    stage2p = oea.stage2p\r\n",
+							"    # 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
+						],
+						"outputs": [],
+						"execution_count": 37
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# 0) Initialize the OEA framework and MSInsights module.\r\n",
+							"#oea = OEA(storage_account)\r\n",
+							"source_folder='SDS/M365'\r\n",
+							"ms_insights = Insights(source_folder)"
+						],
+						"outputs": [],
+						"execution_count": 38
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"db_name= 'bceoea'\r\n",
+							"pathp = ms_insights.stage2p+'/'+source_folder\r\n",
+							"pathnp = ms_insights.stage2np\r\n",
+							"source_format= 'DELTA'"
+						],
+						"outputs": [],
+						"execution_count": 39
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"oea.insert_watermark( source_folder, \"Roster\", date2)\r\n",
+							"ms_insights.process_roster()"
+						],
+						"outputs": [],
+						"execution_count": 40
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"folders= oea.get_folders( ms_insights.stage1np_roster )\r\n",
+							"\r\n",
+							"print ()\r\n",
+							"\r\n",
+							"#mssparkutils.fs.ls( path )"
+						],
+						"outputs": [],
+						"execution_count": 41
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"pathnp =ms_insights.stage1np_roster + '/' + folders[-2]\r\n",
+							"pathnp\r\n",
+							"ms_insights._process_roster_date_folder(pathnp)"
+						],
+						"outputs": [],
+						"execution_count": 42
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"for folder in folders\r\n",
+							"    pathnp =ms_insights.stage1np_roster + '/' + folder\r\n",
+							"    ms_insights._process_roster_date_folder(pathnp)"
+						],
+						"outputs": [],
+						"execution_count": 43
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							""
+						],
+						"outputs": [],
+						"execution_count": 44
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# 1) Process the raw activity data (csv format) from stage1 into stage2 data lake \r\n",
+							"# (adds schema details #and writes out in parquet format).\r\n",
+							"# NOTE: Does not write out to delta lake. \r\n",
+							"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
+							"#ms_insights.process_activity()\r\n",
+							"\r\n",
+							"#ms_insights.ingest()\r\n",
+							"\r\n",
+							"oea.insert_watermark( source_folder, \"Activity\", date2)\r\n",
+							"ms_insights.process_insights_activity_stage1_data()\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 10
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"print ( oea.get_latest_folder (ms_insights.stage1np_roster) )"
+						],
+						"outputs": [],
+						"execution_count": 26
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# 1b) Process the raw roster data (csv format) from stage1 into stage2 data lake\r\n",
+							"# (adds schema details and writes out in parquet format).\r\n",
+							"# NOTE: Does not write out to delta lake. \r\n",
+							"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
+							"#ms_insights._process_roster_date_folder(date_folder_path=date2)\r\n",
+							"#oea.create_lake_views( db_name, path, db_name)\r\n",
+							"oea.create_sql_views(pathp, source_format)"
+						],
+						"outputs": [],
+						"execution_count": 32
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"oea.create_sql_views(pathnp, source_format)"
+						],
+						"outputs": [],
+						"execution_count": 30
 					}
 				]
 			},
@@ -4960,562 +5547,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/NEW_Insights_module_setup')]",
-			"type": "Microsoft.Synapse/workspaces/notebooks",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "Insights Module"
-				},
-				"nbformat": 4,
-				"nbformat_minor": 2,
-				"bigDataPool": {
-					"referenceName": "spark3p1sm",
-					"type": "BigDataPoolReference"
-				},
-				"sessionProperties": {
-					"driverMemory": "28g",
-					"driverCores": 4,
-					"executorMemory": "28g",
-					"executorCores": 4,
-					"numExecutors": 2,
-					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
-						"spark.dynamicAllocation.minExecutors": "2",
-						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "2c0946f8-9d4f-4480-a75f-e94d23c8e3af"
-					}
-				},
-				"metadata": {
-					"saveOutput": true,
-					"enableDebugMode": false,
-					"kernelspec": {
-						"name": "synapse_pyspark",
-						"display_name": "Synapse PySpark"
-					},
-					"language_info": {
-						"name": "python"
-					},
-					"a365ComputeOptions": {
-						"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
-						"name": "spark3p1sm",
-						"type": "Spark",
-						"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
-						"auth": {
-							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
-						},
-						"sparkVersion": "3.1",
-						"nodeCount": 3,
-						"cores": 8,
-						"memory": 56
-					},
-					"sessionKeepAliveTimeout": 59
-				},
-				"cells": [
-					{
-						"cell_type": "markdown",
-						"metadata": {
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"# Microsoft Insights Module Example Notebook\r\n",
-							"This notebook creates 26 tables into two new Spark databases called s2np_insights and s2p_insights.\r\n",
-							"\r\n",
-							"s2p_insights is utilized for the Graph Reports API PowerBI dashboard provided"
-						]
-					},
-					{
-						"cell_type": "markdown",
-						"metadata": {
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"### Provision storage accounts\r\n",
-							"\r\n",
-							"The storage account variable has to be changed to the name of the storage account associated with your Azure resource group."
-						]
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"# data lake and container information\r\n",
-							"# meant to be parameters\r\n",
-							"storage_account = 'bceaaeoeadevlrs'\r\n",
-							"use_test_env = False"
-						],
-						"outputs": [],
-						"execution_count": 31
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType, ArrayType\r\n",
-							"from pyspark.sql.functions import *\r\n",
-							"from pyspark.sql.window import Window\r\n",
-							"from faker import Faker\r\n",
-							"import datetime"
-						],
-						"outputs": [],
-						"execution_count": 32
-					},
-					{
-						"cell_type": "markdown",
-						"metadata": {
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"### Load Raw Data from Lake\r\n",
-							"The top cell sets the date of the data to be processed (this is currently set up to process the test data). \r\n",
-							"\r\n",
-							"Date can be used for watermark, but Insights class process everything in stage1 folder, \r\n",
-							"for effectively control date needs to be used for roster and activity"
-						]
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"# Set the date to be processed\r\n",
-							"today = datetime.datetime.now()\r\n",
-							"date1 = today.strftime('%Y-%m-%d')\r\n",
-							"#date1.cast('string')\r\n",
-							"date2 = date1\r\n",
-							"#date1 = \"2022-02-02\"\r\n",
-							"#date2 = \"2022-07-12\"\r\n",
-							"#date1 = date2"
-						],
-						"outputs": [],
-						"execution_count": 33
-					},
-					{
-						"cell_type": "markdown",
-						"metadata": {
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"## 1. Activity table\r\n",
-							"Contains all activities (students and teachers) at a school-system level\r\n",
-							"\r\n",
-							"** Databases and tables used: **\r\n",
-							"\r\n",
-							" - None \r\n",
-							" \r\n",
-							"**CSV files used:**\r\n",
-							"\r\n",
-							"- M365/SDS/activity/(whatever the set date is)/*.csv\r\n",
-							"\r\n",
-							"**Database and table created:**\r\n",
-							"\r\n",
-							"1. Spark DB: s2_sds\r\n",
-							"- Table: techactivity\r\n",
-							""
-						]
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"%run /OEA_py"
-						],
-						"outputs": [],
-						"execution_count": 34
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"%run /Insights_py"
-						],
-						"outputs": [],
-						"execution_count": 35
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"# no required per date1 as \r\n",
-							"#dfActivityRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/activity/'+ date1 + '/*.csv')\r\n",
-							"## load needed roster tables from data lake storage\r\n",
-							"#dfAADGroupRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadGroup/*.csv')\r\n",
-							"#dfAADGroupMembershipRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadGroupMembership/*.csv')\r\n",
-							"#dfAADUserRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadUser/*.csv')\r\n",
-							"#dfAADUserPersonMappingRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/AadUserPersonMapping/*.csv')\r\n",
-							"#dfCourseRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Course/*.csv')\r\n",
-							"#dfCourseGradeLevelRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/CourseGradeLevel/*.csv')\r\n",
-							"#dfCourseSubjectRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/CourseSubject/*.csv')\r\n",
-							"#dfEnrollmentRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Enrollment/*.csv')\r\n",
-							"#dfOrganizationRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Organization/*.csv')\r\n",
-							"#dfPersonRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Person/*.csv')\r\n",
-							"#dfPersonDemographicRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographic/*.csv')\r\n",
-							"#dfPersonDemographicEthnicityRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicEthnicity/*.csv')\r\n",
-							"#dfPersonDemographicPersonFlagRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicPersonFlag/*.csv')\r\n",
-							"#dfPersonDemographicRaceRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonDemographicRace/*.csv')\r\n",
-							"#dfPersonEmailAddressRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonEmailAddress/*.csv')\r\n",
-							"#dfPersonIdentifierRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonIdentifier/*.csv')\r\n",
-							"#dfPersonOrganizationRoleRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonOrganizationRole/*.csv')\r\n",
-							"#dfPersonPhoneNumberRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonPhoneNumber/*.csv')\r\n",
-							"#dfPersonRelationshipRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/PersonRelationship/*.csv')\r\n",
-							"#dfRefDefinitionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/RefDefinition/*.csv')\r\n",
-							"#dfSectionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Section/*.csv')\r\n",
-							"#dfSectionSessionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SectionSession/*.csv')\r\n",
-							"#dfSectionSubjectRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SectionSubject/*.csv')\r\n",
-							"#dfSessionRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/Session/*.csv')\r\n",
-							"#dfSourceSystemRaw = spark.read.format('csv').load(f'{stage1np}/SDS/M365/roster/' + date2 + '*/SourceSystem/*.csv')"
-						],
-						"outputs": [],
-						"execution_count": 36
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"if use_test_env:\r\n",
-							"    stage1np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage1np'\r\n",
-							"    stage2np = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2np'\r\n",
-							"    stage2p = 'abfss://test-env@' + storage_account + '.dfs.core.windows.net/stage2p'\r\n",
-							"else:\r\n",
-							"    stage1np = oea.stage1np\r\n",
-							"    stage2np = oea.stage2np\r\n",
-							"    stage2p = oea.stage2p\r\n",
-							"    # 'abfss://stage2p@' + storage_account + '.dfs.core.windows.net'"
-						],
-						"outputs": [],
-						"execution_count": 37
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"# 0) Initialize the OEA framework and MSInsights module.\r\n",
-							"#oea = OEA(storage_account)\r\n",
-							"source_folder='SDS/M365'\r\n",
-							"ms_insights = Insights(source_folder)"
-						],
-						"outputs": [],
-						"execution_count": 38
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"db_name= 'bceoea'\r\n",
-							"pathp = ms_insights.stage2p+'/'+source_folder\r\n",
-							"pathnp = ms_insights.stage2np\r\n",
-							"source_format= 'DELTA'"
-						],
-						"outputs": [],
-						"execution_count": 39
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"oea.insert_watermark( source_folder, \"Roster\", date2)\r\n",
-							"ms_insights.process_roster()"
-						],
-						"outputs": [],
-						"execution_count": 40
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"folders= oea.get_folders( ms_insights.stage1np_roster )\r\n",
-							"\r\n",
-							"print ()\r\n",
-							"\r\n",
-							"#mssparkutils.fs.ls( path )"
-						],
-						"outputs": [],
-						"execution_count": 41
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"pathnp =ms_insights.stage1np_roster + '/' + folders[-2]\r\n",
-							"pathnp\r\n",
-							"ms_insights._process_roster_date_folder(pathnp)"
-						],
-						"outputs": [],
-						"execution_count": 42
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"for folder in folders\r\n",
-							"    pathnp =ms_insights.stage1np_roster + '/' + folder\r\n",
-							"    ms_insights._process_roster_date_folder(pathnp)"
-						],
-						"outputs": [],
-						"execution_count": 43
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							""
-						],
-						"outputs": [],
-						"execution_count": 44
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"# 1) Process the raw activity data (csv format) from stage1 into stage2 data lake \r\n",
-							"# (adds schema details #and writes out in parquet format).\r\n",
-							"# NOTE: Does not write out to delta lake. \r\n",
-							"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
-							"#ms_insights.process_activity()\r\n",
-							"\r\n",
-							"#ms_insights.ingest()\r\n",
-							"\r\n",
-							"oea.insert_watermark( source_folder, \"Activity\", date2)\r\n",
-							"ms_insights.process_insights_activity_stage1_data()\r\n",
-							""
-						],
-						"outputs": [],
-						"execution_count": 10
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"print ( oea.get_latest_folder (ms_insights.stage1np_roster) )"
-						],
-						"outputs": [],
-						"execution_count": 26
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"# 1b) Process the raw roster data (csv format) from stage1 into stage2 data lake\r\n",
-							"# (adds schema details and writes out in parquet format).\r\n",
-							"# NOTE: Does not write out to delta lake. \r\n",
-							"# Current \"NEW_MSInsights_py\" script only supports writing test data to stage2p.\r\n",
-							"#ms_insights._process_roster_date_folder(date_folder_path=date2)\r\n",
-							"#oea.create_lake_views( db_name, path, db_name)\r\n",
-							"oea.create_sql_views(pathp, source_format)"
-						],
-						"outputs": [],
-						"execution_count": 32
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"oea.create_sql_views(pathnp, source_format)"
-						],
-						"outputs": [],
-						"execution_count": 30
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/OEA_connector')]",
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
@@ -5865,7 +5896,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "127d788e-5dfa-4651-af5f-951540fe7f56"
+						"spark.autotune.trackingId": "ecbf4fc4-f782-4673-a654-b88bf629c329"
 					}
 				},
 				"metadata": {
@@ -5890,8 +5921,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": true
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -5952,12 +5982,6 @@
 							"        spark.sql(f\"CREATE TABLE IF NOT EXISTS OEA.watermark (source string not null, entity string not null, watermark timestamp not null) USING DELTA LOCATION '{self.framework_path}/db/watermark'\")\n",
 							"\n",
 							"        logger.debug(\"OEA initialized.\")\n",
-							"    #some require full path \n",
-							"    def path(self, container_name, directory_path=None):\n",
-							"        if directory_path:\n",
-							"            return f'abfss://{container_name}@{self.storage_account}.dfs.core.windows.net/{directory_path}'\n",
-							"        else:\n",
-							"            return f'abfss://{container_name}@{self.storage_account}.dfs.core.windows.net'\n",
 							"\n",
 							"    def convert_path(self, path):\n",
 							"        \"\"\" Converts the given path into a valid url.\n",
@@ -5967,22 +5991,97 @@
 							"        stage = path_args.pop(0)\n",
 							"        return self.path(stage, '/'.join(path_args))            \n",
 							"\n",
-							"    def _initialize_logger(self, instrumentation_key, logging_level):\n",
-							"        logging.lastResort = None\n",
-							"        # the logger will print an error like \"ValueError: I/O operation on closed file\" because we're trying to have log messages also print to stdout\n",
-							"        # and apparently this causes issues on some of the spark executor nodes. The bottom line is that we don't want these logging errors to get printed in the notebook output.\n",
-							"        logging.raiseExceptions = False\n",
-							"        logger.setLevel(logging_level)\n",
 							"\n",
-							"        handler = logging.StreamHandler(sys.stdout)\n",
-							"        handler.setLevel(logging_level)\n",
-							"        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')\n",
-							"        handler.setFormatter(formatter)\n",
-							"        logger.addHandler(handler)\n",
+							"    def create_empty_dataframe(self, schema):\n",
+							"        \"\"\" Creates an empty dataframe based on the given schema which is specified as an array of column names and sql types.\n",
+							"            eg, schema = [['data_source','string'], ['entity','string'], ['watermark','timestamp']]\n",
+							"        \"\"\"\n",
+							"        fields = []\n",
+							"        for col_name, col_type in schema:\n",
+							"            fields.append(StructField(col_name, globals()[col_type.lower().capitalize() + \"Type\"](), True))\n",
+							"        spark_schema = StructType(fields)\n",
+							"        df = spark.createDataFrame(spark.sparkContext.emptyRDD(), spark_schema)\n",
+							"        return df\n",
 							"\n",
-							"        if instrumentation_key:\n",
-							"            # Setup logging to go to app insights (more info here: https://github.com/balakreshnan/Samples2021/blob/main/Synapseworkspace/opencensuslog.md#azure-synapse-spark-logs-runtime-errors-to-application-insights)\n",
-							"            logger.addHandler(AzureLogHandler(connection_string='InstrumentationKey=' + instrumentation_key))\n",
+							"\n",
+							"    def create_lake_db(self, stage_num, source_dir, source_format='DELTA'):\n",
+							"        \"\"\" Creates a spark db that points to data in the given stage under the specified source directory (assumes that every folder in the source_dir is a table).\n",
+							"            Example: create_lake_db(2, 'contoso_sis')\n",
+							"            Note that a spark db that points to source data in the delta format can't be queried via SQL serverless pool. More info here: https://docs.microsoft.com/en-us/azure/synapse-analytics/sql/resources-self-help-sql-on-demand#delta-lake\n",
+							"        \"\"\"\n",
+							"        db_name = f's{stage_num}_{source_dir}'\n",
+							"        spark.sql(f'CREATE DATABASE IF NOT EXISTS {db_name}')\n",
+							"        self.create_lake_views(db_name, self.path(f'stage{stage_num}p', source_dir), source_format)\n",
+							"        self.create_lake_views(db_name, self.path(f'stage{stage_num}np', source_dir), source_format)\n",
+							"        result = \"Database created: \" + db_name\n",
+							"        logger.info(result)\n",
+							"        return result        \n",
+							"\n",
+							"    def create_lake_views(self, db_name, source_path, source_format):\n",
+							"        dirs = self.get_folders(source_path)\n",
+							"        for table_name in dirs:\n",
+							"            spark.sql(f\"create table if not exists {db_name}.{table_name} using {source_format} location '{source_path}/{table_name}'\")\n",
+							"\n",
+							"    def create_sql_db(self, stage_num, source_dir, source_format='DELTA'):\n",
+							"        \"\"\" Prints out the sql script needed for creating a sql serverless db and set of views. \"\"\"\n",
+							"        db_name = f'sqls{stage_num}_{source_dir}'\n",
+							"        cmd += '-- Create a new sql script then execute the following in it:'\n",
+							"        cmd += f\"IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '{db_name}')\\nBEGIN\\n  CREATE DATABASE {db_name};\\nEND;\\nGO\\n\"\n",
+							"        cmd += f\"USE {db_name};\\nGO\\n\\n\"\n",
+							"        cmd += self.create_sql_views(self.path(f'stage{stage_num}p', source_dir), source_format)\n",
+							"        cmd += self.create_sql_views(self.path(f'stage{stage_num}np', source_dir), source_format)\n",
+							"        print(cmd)\n",
+							"    \n",
+							"    #RETURNS STRING WITH SQL SETENCES COMBININT A DIRECTORY \n",
+							"    def create_sql_views(self, source_path, source_format):\n",
+							"        cmd = ''      \n",
+							"        dirs = self.get_folders(source_path)\n",
+							"        for table_name in dirs:\n",
+							"            view_name = table_name.replace('.','_')\n",
+							"            cmd += f\"CREATE OR ALTER VIEW {view_name} AS\\n  SELECT * FROM OPENROWSET(BULK '{source_path}/{table_name}', FORMAT='{source_format}') AS [r];\\nGO\\n\"\n",
+							"        return cmd\n",
+							"\n",
+							"    def delete_data_source(self, data_source):\n",
+							"        self.rm_if_exists(self.convert_path(f'stage1np/{data_source}'))\n",
+							"        self.rm_if_exists(self.convert_path(f'stage2np/{data_source}'))\n",
+							"        self.rm_if_exists(self.convert_path(f'stage2p/{data_source}'))\n",
+							"\n",
+							"    def delete(self, path):\n",
+							"        oea.rm_if_exists(self.convert_path(path))\n",
+							"\n",
+							"    def drop_lake_db(self, db_name):\n",
+							"        spark.sql(f'DROP DATABASE IF EXISTS {db_name} CASCADE')\n",
+							"        result = \"Database dropped: \" + db_name\n",
+							"        logger.info(result)\n",
+							"        return result       \n",
+							"\n",
+							"    def drop_sql_db(self, db_name):\n",
+							"        print('Click on the menu next to the SQL db and select \"Delete\"')\n",
+							"\n",
+							"    # Return the list of folders found in the given path.\n",
+							"    def get_folders(self, path):\n",
+							"        dirs = []\n",
+							"        try:\n",
+							"            items = mssparkutils.fs.ls(path)\n",
+							"            for item in items:\n",
+							"                #print(item.name, item.isDir, item.isFile, item.path, item.size)\n",
+							"                if item.isDir:\n",
+							"                    dirs.append(item.name)\n",
+							"        except Exception as e:\n",
+							"            logger.warning(\"[OEA] Could not get list of folders in specified path: \" + path + \"\\nThis may be because the path does not exist.\")\n",
+							"        return dirs\n",
+							"\n",
+							"    def get_latest_folder(self, path):\n",
+							"        folders = self.get_folders(path)\n",
+							"        if len(folders) > 0: return folders[-1]\n",
+							"        else: return None\n",
+							"        \n",
+							"\n",
+							"    #fix column names by replacing unwanted characters with _ to satisfy the Parquet naming requirements\n",
+							"    def fix_column_names(self, df):\n",
+							"        \"\"\" Fix column names to satisfy the Parquet naming requirements by substituting invalid characters with an underscore. \"\"\"\n",
+							"        df_with_valid_column_names = df.select([F.col(col).alias(re.sub(\"[ ,;{}()\\n\\t=]+\", \"_\", col)) for col in df.columns])\n",
+							"        return df_with_valid_column_names\n",
 							"\n",
 							"    def get_value_from_db(self, query):\n",
 							"        df = spark.sql(query)\n",
@@ -5992,9 +6091,6 @@
 							"    def get_last_watermark(self, source, entity):\n",
 							"        return self.get_value_from_db(f\"select w.watermark from oea.watermark w where w.source='{source}' and w.entity='{entity}' order by w.watermark desc\")\n",
 							"    \n",
-							"    #watermark for incremental tables\n",
-							"    def insert_watermark(self, source, entity, watermark_datetime):\n",
-							"        spark.sql(f\"insert into oea.watermark values ('{source}', '{entity}', '{watermark_datetime}')\")\n",
 							"\n",
 							"    def get_secret(self, secret_name):\n",
 							"        \"\"\" Retrieves the specified secret from the keyvault.\n",
@@ -6005,96 +6101,10 @@
 							"        value = token_library.getSecret(self.keyvault, secret_name, self.keyvault_linked_service)        \n",
 							"        return value\n",
 							"\n",
-							"    def delete(self, path):\n",
-							"        oea.rm_if_exists(self.convert_path(path))\n",
+							"    #watermark for incremental tables\n",
+							"    def insert_watermark(self, source, entity, watermark_datetime):\n",
+							"        spark.sql(f\"insert into oea.watermark values ('{source}', '{entity}', '{watermark_datetime}')\")\n",
 							"\n",
-							"    def land(self, data_source, entity, df, partition_label='', format_str='csv', header=True, mode='overwrite'):\n",
-							"        \"\"\" Lands data in stage1np. If partition label is not provided, the current datetime is used with the label of 'batchdate'.\n",
-							"            eg, land('contoso_isd', 'student', data, 'school_year=2021')\n",
-							"        \"\"\"\n",
-							"        tz = pytz.timezone(self.timezone)\n",
-							"        datetime_str = datetime.datetime.now(tz).replace(microsecond=0).isoformat()\n",
-							"        datetime_str = datetime_str.replace(':', '') # Path names can't have a colon - https://github.com/apache/hadoop/blob/trunk/hadoop-common-project/hadoop-common/src/site/markdown/filesystem/introduction.md#path-names\n",
-							"        df.write.format(format_str).save(self.path('stage1np', f'{data_source}/{entity}/{partition_label}/batchdate={datetime_str}'), header=header, mode=mode)\n",
-							"\n",
-							"    def load(self, folder, table, stage=None, data_format='delta'):\n",
-							"        \"\"\" Loads a dataframe based on the path specified in the given args \"\"\"\n",
-							"        if stage is None: stage = self.stage2p\n",
-							"        path = f\"{stage}/{folder}/{table}\"\n",
-							"        try:\n",
-							"            df = spark.read.load(f\"{stage}/{folder}/{table}\", format=data_format)\n",
-							"            return df        \n",
-							"        except AnalysisException as e:\n",
-							"            raise ValueError(\"Failed to load. Are you sure you have the right path?\\nMore info below:\\n\" + str(e)) \n",
-							"\n",
-							"    def load_csv(self, path, header=True):\n",
-							"        \"\"\" Loads a dataframe based on the path specified \n",
-							"            eg, df = load_csv('stage1np/example/student/*')\n",
-							"        \"\"\"\n",
-							"        url_path = self.convert_path(path)\n",
-							"        try:\n",
-							"            df = spark.read.load(url_path, format='csv', header=header)\n",
-							"            return df        \n",
-							"        except AnalysisException as e:\n",
-							"            raise ValueError(f\"Failed to load from: {url_path}. Are you sure you have the right path?\\nMore info below:\\n\" + str(e))\n",
-							"\n",
-							"    def load_delta(self, path):\n",
-							"        \"\"\" Loads a dataframe based on the path specified \n",
-							"            eg, df = load_delta('stage2np/example/student/*')\n",
-							"        \"\"\"\n",
-							"        url_path = self.convert_path(path)\n",
-							"        try:\n",
-							"            df = spark.read.load(url_path, format='delta')\n",
-							"            return df        \n",
-							"        except AnalysisException as e:\n",
-							"            raise ValueError(f\"Failed to load from: {url_path}. Are you sure you have the right path?\\nMore info below:\\n\" + str(e))\n",
-							"\n",
-							"    def load_from_stage1(self, path_and_filename, data_format='csv', header=True):\n",
-							"        \"\"\" Loads a dataframe with data from stage1, based on the path specified in the given args \"\"\"\n",
-							"        path = f\"{self.stage1np}/{path_and_filename}\"\n",
-							"        df = spark.read.load(path, format=data_format, header=header)\n",
-							"        return df        \n",
-							"\n",
-							"    def load_sample_from_csv_file(self, path_and_filename, header=True, stage=None):\n",
-							"        \"\"\" Loads a sample from the specified csv file and returns a pandas dataframe.\n",
-							"            Ex: print(load_sample_from_csv_file('/student_data/students.csv'))\n",
-							"        \"\"\"\n",
-							"        if stage is None: stage = self.stage1np\n",
-							"        csv_str = mssparkutils.fs.head(f\"{stage}/{path_and_filename}\") # https://docs.microsoft.com/en-us/azure/synapse-analytics/spark/microsoft-spark-utilities?pivots=programming-language-python#preview-file-content\n",
-							"        complete_lines = re.match(r\".*\\n\", csv_str, re.DOTALL).group(0)\n",
-							"        if header: header = 0 # for info on why this is needed: https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.read_csv.html\n",
-							"        else: header = None\n",
-							"        pdf = pd.read_csv(io.StringIO(complete_lines), sep=',', header=header)\n",
-							"        return pdf\n",
-							"\n",
-							"    def print_stage(self, path):\n",
-							"        \"\"\" Prints out the highlevel contents of the specified stage.\"\"\"\n",
-							"        msg = path + \"\\n\"\n",
-							"        folders = self.get_folders(path)\n",
-							"        for folder_name in folders:\n",
-							"            entities = self.get_folders(path + '/' + folder_name)\n",
-							"            msg += f\"{folder_name}: {entities}\\n\"\n",
-							"        print(msg)           \n",
-							"\n",
-							"    #fix column names by replacing unwanted characters with _ to satisfy the Parquet naming requirements\n",
-							"    def fix_column_names(self, df):\n",
-							"        \"\"\" Fix column names to satisfy the Parquet naming requirements by substituting invalid characters with an underscore. \"\"\"\n",
-							"        df_with_valid_column_names = df.select([F.col(col).alias(re.sub(\"[ ,;{}()\\n\\t=]+\", \"_\", col)) for col in df.columns])\n",
-							"        return df_with_valid_column_names\n",
-							"\n",
-							"    def to_spark_schema(self, schema):#: list[list[str]]):\n",
-							"        \"\"\" Creates a spark schema from a schema specified in the OEA schema format. \n",
-							"            Example:\n",
-							"            schemas['Person'] = [['Id','string','hash'],\n",
-							"                                    ['CreateDate','timestamp','no-op'],\n",
-							"                                    ['LastModifiedDate','timestamp','no-op']]\n",
-							"            to_spark_schema(schemas['Person'])\n",
-							"        \"\"\"\n",
-							"        fields = []\n",
-							"        for col_name, dtype, op in schema:\n",
-							"            fields.append(StructField(col_name, globals()[dtype.lower().capitalize() + \"Type\"](), True))\n",
-							"        spark_schema = StructType(fields)\n",
-							"        return spark_schema\n",
 							"\n",
 							"    #drops duplicates and append new ones\n",
 							"    def ingest_incremental_data(self, source_system, tablename, schema, partition_by, primary_key='id', data_format='csv', has_header=True):\n",
@@ -6136,23 +6146,6 @@
 							"            query2.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\n",
 							"            logger.info(query2.lastProgress) \n",
 							"\n",
-							"    #updates or append\n",
-							"    def _merge_into_table(self, df, destination_path, checkpoints_path, condition):\n",
-							"        \"\"\" Merges data from the given dataframe into the delta table at the specified destination_path, based on the given condition.\n",
-							"            If not delta table exists at the specified destination_path, a new delta table is created and the data from the given dataframe is inserted.\n",
-							"            eg, merge_into_table(df_lookup, np_destination_path, source_path + '/_checkpoints/delta_np', \"current.id_pseudonym = updates.id_pseudonym\")\n",
-							"        \"\"\"\n",
-							"        if DeltaTable.isDeltaTable(spark, destination_path):      \n",
-							"            dt = DeltaTable.forPath(spark, destination_path)\n",
-							"            def upsert(batch_df, batchId):\n",
-							"                dt.alias(\"current\").merge(batch_df.alias(\"updates\"), condition).whenMatchedUpdateAll().whenNotMatchedInsertAll().execute()                \n",
-							"            query = df.writeStream.format(\"delta\").foreachBatch(upsert).outputMode(\"update\").trigger(once=True).option(\"checkpointLocation\", checkpoints_path)\n",
-							"        else:\n",
-							"            logger.info(f'Delta table does not yet exist at {destination_path} - creating one now and inserting initial data.')\n",
-							"            query = df.writeStream.format(\"delta\").outputMode(\"append\").trigger(once=True).option(\"checkpointLocation\", checkpoints_path)\n",
-							"        query = query.start(destination_path)\n",
-							"        query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\n",
-							"        logger.info(query.lastProgress)    \n",
 							"    \n",
 							"    #calls merge into table \n",
 							"    def ingest_delta_data(self, source_system, tablename, schema, partition_by, primary_key='id', data_format='csv', has_header=True):\n",
@@ -6232,6 +6225,124 @@
 							"        else:\n",
 							"            df_lookup.write.save(np_destination_path, format='delta', mode='overwrite', mergeSchema= True) \n",
 							"\n",
+							"    def _initialize_logger(self, instrumentation_key, logging_level):\n",
+							"        logging.lastResort = None\n",
+							"        # the logger will print an error like \"ValueError: I/O operation on closed file\" because we're trying to have log messages also print to stdout\n",
+							"        # and apparently this causes issues on some of the spark executor nodes. The bottom line is that we don't want these logging errors to get printed in the notebook output.\n",
+							"        logging.raiseExceptions = False\n",
+							"        logger.setLevel(logging_level)\n",
+							"\n",
+							"        handler = logging.StreamHandler(sys.stdout)\n",
+							"        handler.setLevel(logging_level)\n",
+							"        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')\n",
+							"        handler.setFormatter(formatter)\n",
+							"        logger.addHandler(handler)\n",
+							"\n",
+							"        if instrumentation_key:\n",
+							"            # Setup logging to go to app insights (more info here: https://github.com/balakreshnan/Samples2021/blob/main/Synapseworkspace/opencensuslog.md#azure-synapse-spark-logs-runtime-errors-to-application-insights)\n",
+							"            logger.addHandler(AzureLogHandler(connection_string='InstrumentationKey=' + instrumentation_key))\n",
+							"\n",
+							"     \n",
+							"    def land(self, data_source, entity, df, partition_label='', format_str='csv', header=True, mode='overwrite'):\n",
+							"        \"\"\" Lands data in stage1np. If partition label is not provided, the current datetime is used with the label of 'batchdate'.\n",
+							"            eg, land('contoso_isd', 'student', data, 'school_year=2021')\n",
+							"        \"\"\"\n",
+							"        tz = pytz.timezone(self.timezone)\n",
+							"        datetime_str = datetime.datetime.now(tz).replace(microsecond=0).isoformat()\n",
+							"        datetime_str = datetime_str.replace(':', '') # Path names can't have a colon - https://github.com/apache/hadoop/blob/trunk/hadoop-common-project/hadoop-common/src/site/markdown/filesystem/introduction.md#path-names\n",
+							"        df.write.format(format_str).save(self.path('stage1np', f'{data_source}/{entity}/{partition_label}/batchdate={datetime_str}'), header=header, mode=mode)\n",
+							"\n",
+							"    # List installed packages\n",
+							"    def list_packages(self):\n",
+							"        import pkg_resources\n",
+							"        for d in pkg_resources.working_set:\n",
+							"            print(d)\n",
+							"\n",
+							"    def load(self, folder, table, stage=None, data_format='delta'):\n",
+							"        \"\"\" Loads a dataframe based on the path specified in the given args \"\"\"\n",
+							"        if stage is None: stage = self.stage2p\n",
+							"        path = f\"{stage}/{folder}/{table}\"\n",
+							"        try:\n",
+							"            df = spark.read.load(f\"{stage}/{folder}/{table}\", format=data_format)\n",
+							"            return df        \n",
+							"        except AnalysisException as e:\n",
+							"            raise ValueError(\"Failed to load. Are you sure you have the right path?\\nMore info below:\\n\" + str(e)) \n",
+							"\n",
+							"    def load_csv(self, path, header=True):\n",
+							"        \"\"\" Loads a dataframe based on the path specified \n",
+							"            eg, df = load_csv('stage1np/example/student/*')\n",
+							"        \"\"\"\n",
+							"        url_path = self.convert_path(path)\n",
+							"        try:\n",
+							"            df = spark.read.load(url_path, format='csv', header=header)\n",
+							"            return df        \n",
+							"        except AnalysisException as e:\n",
+							"            raise ValueError(f\"Failed to load from: {url_path}. Are you sure you have the right path?\\nMore info below:\\n\" + str(e))\n",
+							"\n",
+							"    def load_delta(self, path):\n",
+							"        \"\"\" Loads a dataframe based on the path specified \n",
+							"            eg, df = load_delta('stage2np/example/student/*')\n",
+							"        \"\"\"\n",
+							"        url_path = self.convert_path(path)\n",
+							"        try:\n",
+							"            df = spark.read.load(url_path, format='delta')\n",
+							"            return df        \n",
+							"        except AnalysisException as e:\n",
+							"            raise ValueError(f\"Failed to load from: {url_path}. Are you sure you have the right path?\\nMore info below:\\n\" + str(e))\n",
+							"\n",
+							"    def load_from_stage1(self, path_and_filename, data_format='csv', header=True):\n",
+							"        \"\"\" Loads a dataframe with data from stage1, based on the path specified in the given args \"\"\"\n",
+							"        path = f\"{self.stage1np}/{path_and_filename}\"\n",
+							"        df = spark.read.load(path, format=data_format, header=header)\n",
+							"        return df        \n",
+							"\n",
+							"    def load_sample_from_csv_file(self, path_and_filename, header=True, stage=None):\n",
+							"        \"\"\" Loads a sample from the specified csv file and returns a pandas dataframe.\n",
+							"            Ex: print(load_sample_from_csv_file('/student_data/students.csv'))\n",
+							"        \"\"\"\n",
+							"        if stage is None: stage = self.stage1np\n",
+							"        csv_str = mssparkutils.fs.head(f\"{stage}/{path_and_filename}\") # https://docs.microsoft.com/en-us/azure/synapse-analytics/spark/microsoft-spark-utilities?pivots=programming-language-python#preview-file-content\n",
+							"        complete_lines = re.match(r\".*\\n\", csv_str, re.DOTALL).group(0)\n",
+							"        if header: header = 0 # for info on why this is needed: https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.read_csv.html\n",
+							"        else: header = None\n",
+							"        pdf = pd.read_csv(io.StringIO(complete_lines), sep=',', header=header)\n",
+							"        return pdf\n",
+							"\n",
+							"    #updates or append\n",
+							"    def _merge_into_table(self, df, destination_path, checkpoints_path, condition):\n",
+							"        \"\"\" Merges data from the given dataframe into the delta table at the specified destination_path, based on the given condition.\n",
+							"            If not delta table exists at the specified destination_path, a new delta table is created and the data from the given dataframe is inserted.\n",
+							"            eg, merge_into_table(df_lookup, np_destination_path, source_path + '/_checkpoints/delta_np', \"current.id_pseudonym = updates.id_pseudonym\")\n",
+							"        \"\"\"\n",
+							"        if DeltaTable.isDeltaTable(spark, destination_path):      \n",
+							"            dt = DeltaTable.forPath(spark, destination_path)\n",
+							"            def upsert(batch_df, batchId):\n",
+							"                dt.alias(\"current\").merge(batch_df.alias(\"updates\"), condition).whenMatchedUpdateAll().whenNotMatchedInsertAll().execute()                \n",
+							"            query = df.writeStream.format(\"delta\").foreachBatch(upsert).outputMode(\"update\").trigger(once=True).option(\"checkpointLocation\", checkpoints_path)\n",
+							"        else:\n",
+							"            logger.info(f'Delta table does not yet exist at {destination_path} - creating one now and inserting initial data.')\n",
+							"            query = df.writeStream.format(\"delta\").outputMode(\"append\").trigger(once=True).option(\"checkpointLocation\", checkpoints_path)\n",
+							"        query = query.start(destination_path)\n",
+							"        query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\n",
+							"        logger.info(query.lastProgress)  \n",
+							"        \n",
+							"    #some require full path \n",
+							"    def path(self, container_name, directory_path=None):\n",
+							"        if directory_path:\n",
+							"            return f'abfss://{container_name}@{self.storage_account}.dfs.core.windows.net/{directory_path}'\n",
+							"        else:\n",
+							"            return f'abfss://{container_name}@{self.storage_account}.dfs.core.windows.net'\n",
+							"\n",
+							"    def print_stage(self, path):\n",
+							"        \"\"\" Prints out the highlevel contents of the specified stage.\"\"\"\n",
+							"        msg = path + \"\\n\"\n",
+							"        folders = self.get_folders(path)\n",
+							"        for folder_name in folders:\n",
+							"            entities = self.get_folders(path + '/' + folder_name)\n",
+							"            msg += f\"{folder_name}: {entities}\\n\"\n",
+							"        print(msg)           \n",
+							"\n",
+							"\n",
 							"#important here the treatment is specified following the label giving in the schema definition for the columns \n",
 							"    def pseudonymize(self, df, schema): #: list[list[str]]):\n",
 							"        \"\"\" Performs pseudonymization of the given dataframe based on the provided schema.\n",
@@ -6296,31 +6407,21 @@
 							"            entities = self.get_folders(path + '/' + folder_name)\n",
 							"            print(f\"{folder_name}: {entities}\")\n",
 							"\n",
-							"    # Return the list of folders found in the given path.\n",
-							"    def get_folders(self, path):\n",
-							"        dirs = []\n",
-							"        try:\n",
-							"            items = mssparkutils.fs.ls(path)\n",
-							"            for item in items:\n",
-							"                #print(item.name, item.isDir, item.isFile, item.path, item.size)\n",
-							"                if item.isDir:\n",
-							"                    dirs.append(item.name)\n",
-							"        except Exception as e:\n",
-							"            logger.warning(\"[OEA] Could not get list of folders in specified path: \" + path + \"\\nThis may be because the path does not exist.\")\n",
-							"        return dirs\n",
 							"\n",
-							"    def get_latest_folder(self, path):\n",
-							"        folders = self.get_folders(path)\n",
-							"        if len(folders) > 0: return folders[-1]\n",
-							"        else: return None\n",
+							"    def to_spark_schema(self, schema):#: list[list[str]]):\n",
+							"        \"\"\" Creates a spark schema from a schema specified in the OEA schema format. \n",
+							"            Example:\n",
+							"            schemas['Person'] = [['Id','string','hash'],\n",
+							"                                    ['CreateDate','timestamp','no-op'],\n",
+							"                                    ['LastModifiedDate','timestamp','no-op']]\n",
+							"            to_spark_schema(schemas['Person'])\n",
+							"        \"\"\"\n",
+							"        fields = []\n",
+							"        for col_name, dtype, op in schema:\n",
+							"            fields.append(StructField(col_name, globals()[dtype.lower().capitalize() + \"Type\"](), True))\n",
+							"        spark_schema = StructType(fields)\n",
+							"        return spark_schema\n",
 							"\n",
-							"    # Remove a folder if it exists (defaults to use of recursive removal).\n",
-							"    def rm_if_exists(self, path, recursive_remove=True):\n",
-							"        try:\n",
-							"            mssparkutils.fs.rm(path, recursive_remove)\n",
-							"            print(\"deleting files in\")\n",
-							"        except Exception as e:\n",
-							"            pass\n",
 							"\n",
 							"    def pop_from_path(self, path):\n",
 							"        \"\"\" Pops the last arg in a path and returns the path and the last arg as a tuple.\n",
@@ -6337,57 +6438,15 @@
 							"        m = re.match(r\".*:\\/\\/stage(?P<stage_num>\\d+)[n]?[p]?@[^/]+\\/(?P<ss>[^/]+)\", path)\n",
 							"        return m.groupdict()\n",
 							"    \n",
-							"    def create_lake_db(self, stage_num, source_dir, source_format='DELTA'):\n",
-							"        \"\"\" Creates a spark db that points to data in the given stage under the specified source directory (assumes that every folder in the source_dir is a table).\n",
-							"            Example: create_lake_db(2, 'contoso_sis')\n",
-							"            Note that a spark db that points to source data in the delta format can't be queried via SQL serverless pool. More info here: https://docs.microsoft.com/en-us/azure/synapse-analytics/sql/resources-self-help-sql-on-demand#delta-lake\n",
-							"        \"\"\"\n",
-							"        db_name = f's{stage_num}_{source_dir}'\n",
-							"        spark.sql(f'CREATE DATABASE IF NOT EXISTS {db_name}')\n",
-							"        self.create_lake_views(db_name, self.path(f'stage{stage_num}p', source_dir), source_format)\n",
-							"        self.create_lake_views(db_name, self.path(f'stage{stage_num}np', source_dir), source_format)\n",
-							"        result = \"Database created: \" + db_name\n",
-							"        logger.info(result)\n",
-							"        return result        \n",
+							"    # Remove a folder if it exists (defaults to use of recursive removal).\n",
+							"    def rm_if_exists(self, path, recursive_remove=True):\n",
+							"        try:\n",
+							"            mssparkutils.fs.rm(path, recursive_remove)\n",
+							"            print(\"deleting files in\")\n",
+							"        except Exception as e:\n",
+							"            pass\n",
 							"\n",
-							"    def create_lake_views(self, db_name, source_path, source_format):\n",
-							"        dirs = self.get_folders(source_path)\n",
-							"        for table_name in dirs:\n",
-							"            spark.sql(f\"create table if not exists {db_name}.{table_name} using {source_format} location '{source_path}/{table_name}'\")\n",
 							"\n",
-							"    def drop_lake_db(self, db_name):\n",
-							"        spark.sql(f'DROP DATABASE IF EXISTS {db_name} CASCADE')\n",
-							"        result = \"Database dropped: \" + db_name\n",
-							"        logger.info(result)\n",
-							"        return result       \n",
-							"\n",
-							"    def create_sql_db(self, stage_num, source_dir, source_format='DELTA'):\n",
-							"        \"\"\" Prints out the sql script needed for creating a sql serverless db and set of views. \"\"\"\n",
-							"        db_name = f'sqls{stage_num}_{source_dir}'\n",
-							"        cmd += '-- Create a new sql script then execute the following in it:'\n",
-							"        cmd += f\"IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '{db_name}')\\nBEGIN\\n  CREATE DATABASE {db_name};\\nEND;\\nGO\\n\"\n",
-							"        cmd += f\"USE {db_name};\\nGO\\n\\n\"\n",
-							"        cmd += self.create_sql_views(self.path(f'stage{stage_num}p', source_dir), source_format)\n",
-							"        cmd += self.create_sql_views(self.path(f'stage{stage_num}np', source_dir), source_format)\n",
-							"        print(cmd)\n",
-							"    \n",
-							"    #RETURNS STRING WITH SQL SETENCES COMBININT A DIRECTORY \n",
-							"    def create_sql_views(self, source_path, source_format):\n",
-							"        cmd = ''      \n",
-							"        dirs = self.get_folders(source_path)\n",
-							"        for table_name in dirs:\n",
-							"            view_name = table_name.replace('.','_')\n",
-							"            cmd += f\"CREATE OR ALTER VIEW {view_name} AS\\n  SELECT * FROM OPENROWSET(BULK '{source_path}/{table_name}', FORMAT='{source_format}') AS [r];\\nGO\\n\"\n",
-							"        return cmd\n",
-							"\n",
-							"    def drop_sql_db(self, db_name):\n",
-							"        print('Click on the menu next to the SQL db and select \"Delete\"')\n",
-							"\n",
-							"    # List installed packages\n",
-							"    def list_packages(self):\n",
-							"        import pkg_resources\n",
-							"        for d in pkg_resources.working_set:\n",
-							"            print(d)\n",
 							"\n",
 							"    def print_schema_starter(self, entity_name, df):\n",
 							"        \"\"\" Prints a starter schema that can be modified as needed when developing the oea schema for a new module. \"\"\"\n",
@@ -6413,21 +6472,7 @@
 							"            pdf = pd.DataFrame(value)\n",
 							"            mssparkutils.fs.put(f\"{container}/{folder}/{entity_name}.csv\", pdf.to_csv(index=False), True) # True indicates overwrite mode         \n",
 							"\n",
-							"    def create_empty_dataframe(self, schema):\n",
-							"        \"\"\" Creates an empty dataframe based on the given schema which is specified as an array of column names and sql types.\n",
-							"            eg, schema = [['data_source','string'], ['entity','string'], ['watermark','timestamp']]\n",
-							"        \"\"\"\n",
-							"        fields = []\n",
-							"        for col_name, col_type in schema:\n",
-							"            fields.append(StructField(col_name, globals()[col_type.lower().capitalize() + \"Type\"](), True))\n",
-							"        spark_schema = StructType(fields)\n",
-							"        df = spark.createDataFrame(spark.sparkContext.emptyRDD(), spark_schema)\n",
-							"        return df\n",
 							"\n",
-							"    def delete_data_source(self, data_source):\n",
-							"        self.rm_if_exists(self.convert_path(f'stage1np/{data_source}'))\n",
-							"        self.rm_if_exists(self.convert_path(f'stage2np/{data_source}'))\n",
-							"        self.rm_if_exists(self.convert_path(f'stage2p/{data_source}'))\n",
 							"\n",
 							"class BaseOEAModule:\n",
 							"    \"\"\" Provides data processing methods for Contoso SIS data (the student information system for the fictional Contoso school district).  \"\"\"\n",
@@ -7815,7 +7860,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/SchoolPerformance')]",
+			"name": "[concat(parameters('workspaceName'), '/SchoolDimensions_setup')]",
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -7839,7 +7884,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "c9284682-d389-4540-a3ac-a20dc988bf9a"
+						"spark.autotune.trackingId": "64ca2f0a-c998-4d66-8823-988931c94aec"
 					}
 				},
 				"metadata": {
@@ -7864,7 +7909,8 @@
 						"sparkVersion": "3.2",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 59
 				},
@@ -7879,7 +7925,7 @@
 							}
 						},
 						"source": [
-							"# School Performance Insights Module Example Notebook\r\n",
+							"# School Performance and BI dimensions Module Notebook\r\n",
 							"This notebook creates a table into  Spark database called bceoea.\r\n",
 							""
 						]
@@ -10461,7 +10507,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "f130e85b-2c29-47e0-89d2-ae9d0db6658c"
+						"spark.autotune.trackingId": "2c00b30d-0ada-4ef2-8324-758fc44901bb"
 					}
 				},
 				"metadata": {
@@ -10746,7 +10792,7 @@
 							"#df.select('signalType', 'year', 'month')"
 						],
 						"outputs": [],
-						"execution_count": 163
+						"execution_count": 9
 					},
 					{
 						"cell_type": "code",
@@ -10765,7 +10811,7 @@
 							"test.stage2p"
 						],
 						"outputs": [],
-						"execution_count": 164
+						"execution_count": 10
 					},
 					{
 						"cell_type": "code",
@@ -10789,7 +10835,7 @@
 							"oea.stage2p "
 						],
 						"outputs": [],
-						"execution_count": 165
+						"execution_count": 11
 					},
 					{
 						"cell_type": "code",
@@ -10808,7 +10854,7 @@
 							"test.stage2p"
 						],
 						"outputs": [],
-						"execution_count": 166
+						"execution_count": 16
 					},
 					{
 						"cell_type": "code",
@@ -10829,7 +10875,7 @@
 							"source_path"
 						],
 						"outputs": [],
-						"execution_count": 150
+						"execution_count": 17
 					},
 					{
 						"cell_type": "code",
@@ -10845,10 +10891,10 @@
 							}
 						},
 						"source": [
-							"spark_schema = oea.to_spark_schema(test.schemas['TechActivity'])"
+							"activity_spark_schema = oea.to_spark_schema(test.schemas['TechActivity'])"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 21
 					},
 					{
 						"cell_type": "code",
@@ -10867,7 +10913,68 @@
 							"source= test.stage1np_activity +'/*/*.csv'"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 19
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							" df = spark.readStream.csv(source , header='false', schema=activity_spark_schema, inferSchema=True)\r\n",
+							"    "
+						],
+						"outputs": [],
+						"execution_count": 22
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"df = df.dropDuplicates(['SignalId'])\r\n",
+							"df = df.withColumn('year', F.year(F.col('StartTime'))).withColumn('month', F.month(F.col('StartTime')))\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 23
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"df = df.withColumn(\"Date\", to_date(col(\"StartTime\"), 'yyyy-MM-dd'))\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 25
 					},
 					{
 						"cell_type": "code",
@@ -10924,16 +11031,73 @@
 							}
 						},
 						"source": [
-							"#query = df.writeStream.format(\"delta\").outputMode(\"append\") \\\r\n",
-							"#                                .option(\"checkpointLocation\", test.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
-							"#                                .option(\"startingOffsets\", \"earliest\") \\\r\n",
-							"#                                .option(\"truncate\", False).partitionBy('year')  \r\n",
-							"#query = query.start(test.stage2p + '/TechActivity')\r\n",
-							"#query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
-							"#logger.info(query.lastProgress)"
+							"df_pseudo, df_lookup = oea.pseudonymize(df, test.schemas['TechActivity'])"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 27
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"df_pseudo"
+						],
+						"outputs": [],
+						"execution_count": 30
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"query = df_pseudo.writeStream.format(\"delta\").outputMode(\"append\") \\\r\n",
+							"                                .option(\"checkpointLocation\", test.stage2p + '/_checkpoints/TechActivity_pseudo/') \\\r\n",
+							"                                .option(\"startingOffsets\", \"earliest\") \\\r\n",
+							"                                .option(\"truncate\", False).partitionBy('year')  \r\n",
+							"query = query.start(test.stage2p + '/TechActivity_pseudo')\r\n",
+							"#query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\r\n",
+							"#"
+						],
+						"outputs": [],
+						"execution_count": 31
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"logger.info(query.lastProgress)"
+						],
+						"outputs": [],
+						"execution_count": 33
 					},
 					{
 						"cell_type": "code",
@@ -11230,7 +11394,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "6bdcda2b-f1d2-48d8-9cf1-a0cf5ec2dd8e"
+						"spark.autotune.trackingId": "cf4add2b-4b17-486e-a98c-c84953654040"
 					}
 				},
 				"metadata": {
@@ -11936,7 +12100,7 @@
 							}
 						},
 						"source": [
-							"df.show()"
+							"df.show(1000)"
 						],
 						"outputs": [],
 						"execution_count": 55
