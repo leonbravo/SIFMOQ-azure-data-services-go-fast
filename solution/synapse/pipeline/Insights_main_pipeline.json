@@ -23,7 +23,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"notebook": {
-						"referenceName": "NEW_Insights_module_setup",
+						"referenceName": "Insights_module_setup",
 						"type": "NotebookReference"
 					},
 					"snapshot": true,

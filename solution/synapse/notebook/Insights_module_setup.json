@@ -1,5 +1,5 @@
 {
-	"name": "NEW_Insights_module_setup",
+	"name": "Insights_module_setup",
 	"properties": {
 		"folder": {
 			"name": "Insights Module"
@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "2c0946f8-9d4f-4480-a75f-e94d23c8e3af"
+				"spark.autotune.trackingId": "b54d7285-e249-4f96-a860-eb26bdd2b1ce"
 			}
 		},
 		"metadata": {
@@ -61,10 +61,10 @@
 					}
 				},
 				"source": [
-					"# Microsoft Insights Module Example Notebook\r\n",
-					"This notebook creates 26 tables into two new Spark databases called s2np_insights and s2p_insights.\r\n",
+					"# Microsoft Insights Module Notebook\r\n",
+					"This notebook creates 26 tables into oea new Spark database\r\n",
 					"\r\n",
-					"s2p_insights is utilized for the Graph Reports API PowerBI dashboard provided"
+					"oea is utilized for the Graph Reports API PowerBI dashboard provided"
 				]
 			},
 			{

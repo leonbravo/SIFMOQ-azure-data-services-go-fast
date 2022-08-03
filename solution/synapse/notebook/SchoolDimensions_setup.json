@@ -1,5 +1,5 @@
 {
-	"name": "SchoolPerformance",
+	"name": "SchoolDimensions_setup",
 	"properties": {
 		"description": "School Performance data including attendance",
 		"folder": {
@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c9284682-d389-4540-a3ac-a20dc988bf9a"
+				"spark.autotune.trackingId": "78ec3901-f96c-409b-b516-48faa768a68a"
 			}
 		},
 		"metadata": {
@@ -62,7 +62,7 @@
 					}
 				},
 				"source": [
-					"# School Performance Insights Module Example Notebook\r\n",
+					"# School Performance and BI dimensions Module Notebook\r\n",
 					"This notebook creates a table into  Spark database called bceoea.\r\n",
 					""
 				]
