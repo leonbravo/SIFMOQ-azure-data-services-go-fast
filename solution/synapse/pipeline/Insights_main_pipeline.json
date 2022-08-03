@@ -23,7 +23,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"notebook": {
-						"referenceName": "NEW_Insights_module_setup",
+						"referenceName": "Insights_module_setup",
 						"type": "NotebookReference"
 					},
 					"snapshot": true,
@@ -133,7 +133,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"notebook": {
-						"referenceName": "SchoolPerformanceTable",
+						"referenceName": "SchoolDimensions_setup",
 						"type": "NotebookReference"
 					},
 					"snapshot": true,
