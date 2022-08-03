@@ -1,6 +1,9 @@
 {
 	"name": "2_batch_processing_demo",
 	"properties": {
+		"folder": {
+			"name": "examples"
+		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
@@ -13,16 +16,40 @@
 			"executorMemory": "28g",
 			"executorCores": 4,
 			"numExecutors": 2,
-			"runAsWorkspaceSystemIdentity": false
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "4cb17d7c-d9da-4e9c-80bd-5be432305740"
+			}
 		},
 		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
 				"display_name": "Synapse PySpark"
 			},
 			"language_info": {
 				"name": "python"
-			}
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/21fec1ab-7af8-4f99-b66f-a69e7ba77a22/resourceGroups/BCE-AAE-OEA-DEV-RG/providers/Microsoft.Synapse/workspaces/bce-aae-oea-dev-syn/bigDataPools/spark3p1sm",
+				"name": "spark3p1sm",
+				"type": "Spark",
+				"endpoint": "https://bce-aae-oea-dev-syn.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark3p1sm",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 3,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": true
+			},
+			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
 			{
@@ -37,8 +64,7 @@
 				"source": [
 					"# OEA Demo\r\n",
 					"This notebook demonstrates the batch processing features of the OEA framework."
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -57,7 +83,6 @@
 				"source": [
 					"%run /OEA_py"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -71,8 +96,7 @@
 				},
 				"source": [
 					"# Incremental batches"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -91,7 +115,6 @@
 					"# reset this example (deletes data in stage1np/example, stage2np/example, and stage2p/example)\r\n",
 					"oea.delete_data_source('example')"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -115,7 +138,6 @@
 					"df = oea.load_csv('stage1np/example/student')\r\n",
 					"df.show()"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -142,7 +164,6 @@
 					"df = oea.load_delta('stage2p/example/student_pseudo')\r\n",
 					"df.show()"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -166,7 +187,6 @@
 					"df = oea.load_csv('stage1np/example/student')\r\n",
 					"df.show()"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -193,7 +213,6 @@
 					"df.show()\r\n",
 					"df.printSchema()"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -207,8 +226,7 @@
 				},
 				"source": [
 					"# Delta batches"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -227,7 +245,6 @@
 					"# reset this example (deletes data in stage1np/example, stage2np/example, and stage2p/example)\r\n",
 					"oea.delete_data_source('delta_example')"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -252,7 +269,6 @@
 					"df = oea.load_csv('stage1np/delta_example/student')\r\n",
 					"df.show()"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -279,7 +295,6 @@
 					"df = oea.load_delta('stage2p/delta_example/student_pseudo')\r\n",
 					"df.show()"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -304,7 +319,6 @@
 					"df = oea.load_csv('stage1np/delta_example/student')\r\n",
 					"df.show()"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -331,7 +345,6 @@
 					"df.show()\r\n",
 					"df.printSchema()"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -345,8 +358,7 @@
 				},
 				"source": [
 					"# Snapshot batches"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -365,7 +377,6 @@
 					"# reset this example (deletes data in stage1np/example, stage2np/example, and stage2p/example)\r\n",
 					"oea.delete_data_source('snapshot_example')"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -390,7 +401,6 @@
 					"df = oea.load_csv('stage1np/snapshot_example/student')\r\n",
 					"df.show()"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -418,7 +428,6 @@
 					"df.show()\r\n",
 					"df.printSchema()"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -443,7 +452,6 @@
 					"df = oea.load_csv('stage1np/snapshot_example/student')\r\n",
 					"df.show()"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -471,7 +479,6 @@
 					"df.show()\r\n",
 					"df.printSchema()"
 				],
-				"attachments": null,
 				"execution_count": null
 			}
 		]

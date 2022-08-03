@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "93cbb275-d288-4479-8b03-876c1f4ca9dd"
+				"spark.autotune.trackingId": "ecbf4fc4-f782-4673-a654-b88bf629c329"
 			}
 		},
 		"metadata": {
@@ -448,6 +448,7 @@
 					"        query = query.start(destination_path)\n",
 					"        query.awaitTermination()   # block until query is terminated, with stop() or with error; A StreamingQueryException will be thrown if an exception occurs.\n",
 					"        logger.info(query.lastProgress)  \n",
+					"        \n",
 					"    #some require full path \n",
 					"    def path(self, container_name, directory_path=None):\n",
 					"        if directory_path:\n",
