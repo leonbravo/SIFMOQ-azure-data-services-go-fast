@@ -1,0 +1,19 @@
+﻿@model WebApplication.Models.Wizards.PIAWizardViewModel
+
+
+<div class="form-group">
+    <a id="PIASummaryBackBtn" href="javascript:history.go(-1)" title="Back to List" class="btn btn-secondary">
+        <i class="fa fa-arrow-circle-left"></i> Back
+    </a>
+    <a class="btn btn-info " id="PIASUmmaryPrintBtn" title="Print Summary">
+        <i class="fa fa-print"></i> Print Summary
+    </a>
+</div>
+        
+
+    @await Html.PartialAsync("~/Views/Wizards/_PIAWizardSummaryStep9.cshtml")
+
+    @section Scripts
+{
+        <script src="~/js/readonlyPIA.js" type="text/javascript"></script>
+    }

@@ -1,0 +1,30 @@
+﻿@model WebApplication.Models.Wizards.PIAWizardViewModel;
+<br />
+<div class="form-group">
+    <h3>Impact Management Puts In Place A Plan For Reducing The Impact Of Such An Event Should It Happen</h3>
+    <p><b>Identify your stakeholders and plan how you will communicate with them</b></p>
+    <label asp-for="ImpactManagementReductionOptions" class="control-label"></label>
+    @Html.EditorFor(model => model.ImpactManagementReductionOptions, Model.ImpactManagementReductionOptions.TemplateName, new { @class = "form-control" })
+    <span asp-validation-for="ImpactManagementReductionOptions" class="text-danger"></span>
+    <label asp-for="ImpactManagementExplanation" class="control-label"></label> <span asp-validation-for="ImpactManagementExplanation" class="text-danger"></span>
+    <textarea asp-for="ImpactManagementExplanation" class="form-control" type="text" placeholder=""></textarea>
+
+    <br />
+
+    <h3>Plan What Happens After You Have Shared Or Released The Data</h3>
+    <label asp-for="StakeholdersAssurance" class="control-label"></label>
+    @Html.EditorFor(model => model.StakeholdersAssurance, Model.StakeholdersAssurance.TemplateName, additionalViewData: new { @class = "form-control" })
+    <span asp-validation-for="StakeholdersAssurance" class="text-danger"></span>
+    <label asp-for="StakeholderAssuranceExplanation" class="control-label"></label> <span asp-validation-for="StakeholderAssuranceExplanation" class="text-danger"></span>
+    <textarea asp-for="StakeholderAssuranceExplanation" class="form-control" type="text" placeholder=""></textarea>
+
+    <br />
+
+    <label asp-for="PlanForDataBreachProcess" class="control-label"></label>
+    @Html.EditorFor(model => model.PlanForDataBreachProcess, Model.PlanForDataBreachProcess.TemplateName, additionalViewData: new { @class = "form-control" })
+    <span asp-validation-for="PlanForDataBreachProcess" class="text-danger"></span>
+    <label asp-for="DataBreachPlanExplanation" class="control-label"></label><span asp-validation-for="DataBreachPlanExplanation" class="text-danger"></span>
+    <textarea asp-for="DataBreachPlanExplanation" class="form-control" type="text" placeholder=""></textarea>
+</div>
+
+

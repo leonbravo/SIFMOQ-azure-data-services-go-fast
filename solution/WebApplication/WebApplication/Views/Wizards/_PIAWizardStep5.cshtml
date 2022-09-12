@@ -1,0 +1,63 @@
+﻿@model WebApplication.Models.Wizards.PIAWizardViewModel;
+<br />
+<div class="form-group">
+
+    <h3>Meet Your Ethical Obligations</h3>
+
+    <div class="control-label">
+        <p><b>Considerations here include: consent, transparency, stakeholder engagement, and governance. You should document how you are going to achieve each of those aspects.</b></p>
+    </div>
+
+
+    <div class="form-group wizardSelector">
+        <label asp-for="RespectDataAssurances" class="control-label" style="width: 75%"></label>
+        <span style="padding-left: 50px;">
+            @Html.RadioButtonFor(model => model.RespectDataAssurances, "na") NA
+            @Html.RadioButtonFor(model => model.RespectDataAssurances, "yes") Yes
+            @Html.RadioButtonFor(model => model.RespectDataAssurances, "no") No
+        </span>
+        <span asp-validation-for="RespectDataAssurances" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DataAssuranceExplanation" class="control-label" style="width: 75%"></label>
+        <span style="padding-left: 50px;">
+            <textarea asp-for="DataAssuranceExplanation" class="form-control" type="text" placeholder=""></textarea>
+        </span>
+        <span asp-validation-for="DataAssuranceExplanation" class="text-danger"></span>
+    </div>
+
+    <div class="form-group wizardSelector">
+        <label asp-for="HasProvidedTransparency" class="control-label" style="width: 75%"></label>
+        <span style="padding-left: 50px;">
+            @Html.RadioButtonFor(model => model.HasProvidedTransparency, "na") NA
+            @Html.RadioButtonFor(model => model.HasProvidedTransparency, "yes") Yes
+            @Html.RadioButtonFor(model => model.HasProvidedTransparency, "no") No
+        </span>
+        <span asp-validation-for="HasProvidedTransparency" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ProvidedTransparencyExplanation" class="control-label" style="width: 75%"></label>
+        <span style="padding-left: 50px;">
+            <textarea asp-for="ProvidedTransparencyExplanation" class="form-control" type="text" placeholder=""></textarea>
+        </span>
+        <span asp-validation-for="ProvidedTransparencyExplanation" class="text-danger"></span>
+    </div>
+
+    <div class="form-group wizardSelector">
+        <label asp-for="HasObtainedSubjectsViews" class="control-label" style="width: 75%"></label>
+        <span style="padding-left: 50px;">
+            @Html.RadioButtonFor(model => model.HasObtainedSubjectsViews, "na") NA
+            @Html.RadioButtonFor(model => model.HasObtainedSubjectsViews, "yes") Yes
+            @Html.RadioButtonFor(model => model.HasObtainedSubjectsViews, "no") No
+        </span>
+        <span asp-validation-for="HasObtainedSubjectsViews" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SubjectsViewsExplanation" class="control-label" style="width: 75%"></label>
+        <span style="padding-left: 50px;">
+            <textarea asp-for="SubjectsViewsExplanation" class="form-control" type="text" placeholder=""></textarea>
+        </span>
+        <span asp-validation-for="SubjectsViewsExplanation" class="text-danger"></span>
+    </div>
+
+</div>

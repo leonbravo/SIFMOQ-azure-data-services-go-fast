@@ -1,0 +1,73 @@
+﻿@model WebApplication.Models.Wizards.PIAWizardViewModel;
+<br />
+
+<h3>Data Set Authorities</h3>
+<br />
+<div class="form-group row col-12">
+    <p>
+        <strong>
+            Identify the name of the data owner/sponsor, custodian and steward as it relates to the PHI platform. The owners, custodians and stewards will be responsible for how this data set is governed and managed
+        </strong>
+    </p>
+</div>
+
+<div class="form-group row col-12">
+    <div class="col-6">
+
+    </div>
+    <div class="col-6 ">
+        <label>Users</label>
+    </div>    
+
+    <div class="col-6">
+        <label class="control-label">
+            @Html.DisplayNameFor(model => model.DataOwner)
+            <i class="fas fa-info-circle" id="dataOwnerTT"></i>
+            <span asp-validation-for="DataOwner.UserId" class="text-danger"></span>
+        </label>
+    </div>
+    <div class="col-6">
+        @Html.DropDownListFor(model => model.DataOwner.UserId, ViewBag.Users as SelectList, "Select User", new { @class = "form-control", @id = "nameDroplist", @onchange = "setOwnerDisplayName(this)" })
+        @Html.HiddenFor(model => model.DataOwner.DisplayName, new { @id = "ownerName"})
+    </div>    
+</div>
+
+<div class="form-group row col-12">
+    <div class="col-6">
+        <label class="control-label">
+            @Html.DisplayNameFor(model => model.DataCustodian)
+            <i class="fas fa-info-circle" id="dataCustodianTT"></i>
+            <span asp-validation-for="DataCustodian.UserId" class="text-danger"></span> @* Validation for user id field. May need to change this for more complex validations *@
+        </label>
+    </div>
+    <div class="col-6">
+        @Html.DropDownListFor(model => model.DataCustodian.UserId, ViewBag.Users as SelectList, "Select User", new { @class = "form-control", @id = "nameDroplist", @onchange = "setOwnerDisplayName(this)" })
+        @Html.HiddenFor(model => model.DataCustodian.DisplayName, new { @id = "custodianName"})
+    </div>    
+</div>
+
+<div class="form-group row col-12">
+    <div class="col-6">
+        <label class="control-label">
+            @Html.DisplayNameFor(model => model.DataStewards)
+            <i class="fas fa-info-circle" id="dataStewardTT"></i>
+            <span asp-validation-for="DataStewards" class="text-danger"></span>
+        </label>
+
+        <div id="btnsAddRemoveSteward">
+            <button class="btn btn-light" id="addSteward" type="button"><i class="fas fa-plus"></i> Add More</button>
+            <button class="btn btn-light" id="removeSteward" type="button"><i class="fas fa-minus"></i> Remove Last</button>            
+        </div>        
+       
+    </div>
+    <div class="col-6 form-group" id="stewardsContainer">
+            @Html.EditorFor(model => model.DataStewards, new { @class = "form-control" })            
+    </div>
+</div>
+
+@* External users granted data access (hidden)  *@
+<div id="externalUsers">
+    @Html.EditorFor(model => model.ExternalUsers, "ExternalUsers")
+</div>
+
+<br />

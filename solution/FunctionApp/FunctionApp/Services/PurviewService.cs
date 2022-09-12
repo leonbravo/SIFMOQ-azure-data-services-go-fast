@@ -174,9 +174,10 @@ namespace FunctionApp.Services
                 string purviewAccount = metadata["TaskObject"]["ExecutionEngine"]["JsonProperties"]["PurviewAccountName"].ToString();
                 List<String> datasets = new List<String>();
                 string[] toIterate = { "SourceColumns", "TargetColumns" };
-                string QualifiedName = "";
                 string modifiedRelativePath = "";
-
+                string typeName = (String)null; string qualifiedName = (String)null; string name = (String)null; string path = (String)null; string description = (String)null; string objectType = (String)null;
+                string end1guid = (String)null; string end2guid = (String)null; string label = (String)null;
+                JArray processInputs = null; JArray processOutputs = null;
                 for (int i = 0; i < toIterate.Length; i++)
                 {
                     string choice = Regex.Match(toIterate[i], @"^.*?(?=Columns)").ToString();
@@ -184,7 +185,6 @@ namespace FunctionApp.Services
 
                     // Setting up Input/Output Entities
                     //Note - This will be expanded on as we expand more types to be read into purview. At the moment it assumes the items are read from a restricted set of sources
-                    string datasetType = "azure_datalake_gen2_resource_set";
                     string datasetPath = "/azure_storage_account#" + containerPartial + ".core.windows.net/azure_datalake_gen2_service#" + metadata["TaskObject"][choice]["System"]["SystemServer"].ToString() + "/" + "azure_datalake_gen2_filesystem#" + metadata["TaskObject"][choice]["System"]["Container"].ToString() + "/azure_datalake_gen2_path#" + metadata["TaskObject"][choice]["Instance"][choice + "RelativePath"].ToString() + "azure_datalake_gen2_resource_set#" + metadata["TaskObject"][choice]["DataFileName"].ToString();
                     //string datasetName = "";
                     //At the moment it only support resource sets -> This is for datalake gen2.
@@ -193,34 +193,29 @@ namespace FunctionApp.Services
                         case "Delta":
                             modifiedRelativePath = Regex.Replace(metadata["TaskObject"][choice]["Instance"][choice + "RelativePath"].ToString(), "[0-9]{2,}", "{N}");
                             modifiedRelativePath = modifiedRelativePath.Trim(new Char[] { '/' });
-                            QualifiedName = metadata["TaskObject"][choice]["System"]["SystemServer"] + "/" + metadata["TaskObject"][choice]["System"]["Container"].ToString().Trim(new Char[] { '/' }) + "/" + modifiedRelativePath + "/" + metadata["TaskObject"][choice]["DataFileName"].ToString().Trim(new Char[] { '/' }) + "/{SparkPartitions}";
+                            qualifiedName = metadata["TaskObject"][choice]["System"]["SystemServer"] + "/" + metadata["TaskObject"][choice]["System"]["Container"].ToString().Trim(new Char[] { '/' }) + "/" + modifiedRelativePath + "/" + metadata["TaskObject"][choice]["DataFileName"].ToString().Trim(new Char[] { '/' }) + "/{SparkPartitions}";
                             break;
                         default:
                             //datasetName = metadata["TaskObject"][choice]["DataFileName"].ToString().Split(new Char[] { ',', '.' })[0];
                             modifiedRelativePath = Regex.Replace(metadata["TaskObject"][choice]["Instance"][choice + "RelativePath"].ToString(), "[0-9]{2,}", "{N}");
                             modifiedRelativePath = modifiedRelativePath.Trim(new Char[] { '/' });
-                            QualifiedName = metadata["TaskObject"][choice]["System"]["SystemServer"] + "/" + metadata["TaskObject"][choice]["System"]["Container"].ToString().Trim(new Char[] { '/' }) + "/" + modifiedRelativePath + "/" + metadata["TaskObject"][choice]["DataFileName"].ToString().Trim(new Char[] { '/' });
+                            qualifiedName = metadata["TaskObject"][choice]["System"]["SystemServer"] + "/" + metadata["TaskObject"][choice]["System"]["Container"].ToString().Trim(new Char[] { '/' }) + "/" + modifiedRelativePath + "/" + metadata["TaskObject"][choice]["DataFileName"].ToString().Trim(new Char[] { '/' });
                             break;
                     }
-                    JObject dataset = JObject.FromObject(new
-                    {
-                        typeName = datasetType,
-                        attributes = new
-                        {
-                            qualifiedName = QualifiedName,
-                            name = metadata["TaskObject"][choice]["DataFileName"],
-                            path = datasetPath,
-                            description = (String)null,
-                            objectType = (String)null
-                        },
-                        status = "ACTIVE"
-                    });
 
+                    /****** ENTITY: DATASET ******/
+                    name = metadata["TaskObject"][choice]["DataFileName"].ToString();
+                    path = datasetPath;
+                    description = (String)null;
+                    objectType = (String)null;
+                    typeName = "azure_datalake_gen2_resource_set";
+
+                    JObject dataset = CreateEntity(typeName, qualifiedName, name, Path:path, Description:description, ObjectType:objectType);
 
                     JObject datasetJson = new JObject(new JProperty("entity", dataset));
                     var datasetConv = datasetJson.ToString();
                     var datasetBody = JObject.Parse(datasetConv);
-                    JObject datasetGuid = JObject.Parse(ExecuteRequest(purviewAccount, "post", ".catalog.purview.azure.com", "/api/atlas/v2/entity", "2021-07-01", datasetBody, logging).Result);
+                    JObject datasetGuid = JObject.Parse(await ExecuteRequest(purviewAccount, "post", ".catalog.purview.azure.com", "/api/atlas/v2/entity", "2021-07-01", datasetBody, logging));
                     //This is for the process at the end
                     datasets.Add(datasetGuid["guidAssignments"].First.Last.ToString());
 
@@ -231,46 +226,38 @@ namespace FunctionApp.Services
                         {
 
                             // Setting up Schema entity
-                            JObject schema = JObject.FromObject(new
-                            {
-                                typeName = "tabular_schema",
-                                attributes = new
-                                {
-                                    owner = (String)null,
-                                    replicatedTo = (String)null,
-                                    replicatedFrom = (String)null,
-                                    qualifiedName = metadata[choice + "HttpPath"] + "#__tabular_schema",
-                                    name = metadata[choice + "HttpPath"] + "#__tabular_schema",
-                                    description = (String)null,
-                                },
-                                status = "ACTIVE"
-                            });
+
+
+                            /****** ENTITY: TABULAR_SCHEMA ******/
+                            typeName = "tabular_schema";
+                            qualifiedName = metadata[choice + "HttpPath"].ToString() + "#__tabular_schema";
+                            name = metadata[choice + "HttpPath"].ToString() + "#__tabular_schema";
+                            description = (String)null;
+                            objectType = (String)null;
+
+                            JObject schema = CreateEntity(typeName, qualifiedName, name, Description: description, ObjectType: objectType);
 
                             JObject schemaJson = new JObject(new JProperty("entity", schema));
                             var schemaConv = schemaJson.ToString();
                             var schemaBody = JObject.Parse(schemaConv);
-                            var schemaGuid = JObject.Parse(ExecuteRequest(purviewAccount, "post", ".catalog.purview.azure.com", "/api/atlas/v2/entity", "2021-07-01", schemaBody, logging).Result);
+                            var schemaGuid = JObject.Parse(await ExecuteRequest(purviewAccount, "post", ".catalog.purview.azure.com", "/api/atlas/v2/entity", "2021-07-01", schemaBody, logging));
 
 
                             //Relationship for Dataset and schema
-                            JObject dsRelationship = JObject.FromObject(new
-                            {
-                                typeName = "tabular_schema_datasets",
-                                end1 = new
-                                {
-                                    guid = datasetGuid["guidAssignments"].First.Last.ToString()
-                                },
-                                end2 = new
-                                {
-                                    guid = schemaGuid["guidAssignments"].First.Last.ToString()
-                                },
-                                label = "r:" + datasetGuid["guidAssignments"].First.Last.ToString() + "_" + schemaGuid["guidAssignments"].First.Last.ToString(),
-                                status = "ACTIVE"
-                            });
+
+                            /****** RELATIONSHIP : TABULAR SCHEMA <-> DATASET ******/
+
+                            typeName = "tabular_schema_datasets";
+                            end1guid = datasetGuid["guidAssignments"].First.Last.ToString();
+                            end2guid = schemaGuid["guidAssignments"].First.Last.ToString();
+                            label = "r:" + datasetGuid["guidAssignments"].First.Last.ToString() + "_" + schemaGuid["guidAssignments"].First.Last.ToString();
+
+                            JObject dsRelationship = CreateRelationship(typeName, end1guid, end2guid, label);
+
                             //JObject dsRelJson = new JObject(new JProperty("relationship", dsRelationship));
                             var dsRelConv = dsRelationship.ToString();
                             var dsRelBody = JObject.Parse(dsRelConv);
-                            JObject dsRelGuid = JObject.Parse(ExecuteRequest(purviewAccount, "post", ".catalog.purview.azure.com", "/api/atlas/v2/relationship", "2021-07-01", dsRelBody, logging).Result);
+                            JObject dsRelGuid = JObject.Parse(await ExecuteRequest(purviewAccount, "post", ".catalog.purview.azure.com", "/api/atlas/v2/relationship", "2021-07-01", dsRelBody, logging));
 
 
 
@@ -297,49 +284,39 @@ namespace FunctionApp.Services
                                         conversion = "UTF8";
                                         break;
                                 }
-                                JObject entity = JObject.FromObject(new
-                                {
-                                    typeName = "column",
-                                    attributes = new
-                                    {
-                                        owner = (String)null,
-                                        replicatedTo = (String)null,
-                                        replicatedFrom = (String)null,
-                                        qualifiedName = metadata[choice + "HttpPath"] + "#__tabular_schema//" + column["name"].ToString(),
-                                        name = column["name"].ToString(),
-                                        description = (String)null,
-                                        type = conversion,
-                                    },
-                                    status = "ACTIVE"
-                                });
-                                entities.Add(entity);
+
+                                /****** ENTITY: COLUMN ******/
+                                typeName = "column";
+                                qualifiedName = metadata[choice + "HttpPath"].ToString() + "#__tabular_schema//" + column["name"].ToString();
+                                name = column["name"].ToString();
+                                description = (String)null;
+                                objectType = (String)null;
+
+                                JObject columnEntity = CreateEntity(typeName, qualifiedName, name, Description: description, ObjectType: objectType, DataType:conversion);
+
+                                entities.Add(columnEntity);
                             }
+
                             JObject colJson = new JObject(new JProperty("entities", entities));
                             string colConv = colJson.ToString();
                             JObject colBody = JObject.Parse(colConv);
-                            JObject colGuids = JObject.Parse(ExecuteRequest(purviewAccount, "post", ".catalog.purview.azure.com", "/api/atlas/v2/entity/bulk", "2021-07-01", colBody, logging).Result);
+                            JObject colGuids = JObject.Parse(await ExecuteRequest(purviewAccount, "post", ".catalog.purview.azure.com", "/api/atlas/v2/entity/bulk", "2021-07-01", colBody, logging));
                             var cols = colGuids["guidAssignments"];
                             //Setting up Schema/Column Relationship
                             foreach (var col in cols)
                             {
-                                JObject scRelationship = JObject.FromObject(new
-                                {
-                                    typeName = "tabular_schema_columns",
-                                    end1 = new
-                                    {
-                                        guid = schemaGuid["guidAssignments"].First.Last.ToString()
-                                    },
-                                    end2 = new
-                                    {
-                                        guid = col.First.ToString()
-                                    },
-                                    label = "r:" + schemaGuid["guidAssignments"].First.Last.ToString() + "_" + col.First.ToString(),
-                                    status = "ACTIVE"
-                                });
+                                /****** RELATIONSHIP : TABULAR SCHEMA <-> COLUMN ******/
+                                typeName = "tabular_schema_columns";
+                                end1guid = schemaGuid["guidAssignments"].First.Last.ToString();
+                                end2guid = col.First.ToString();
+                                label = "r:" + schemaGuid["guidAssignments"].First.Last.ToString() + "_" + col.First.ToString();
+
+                                JObject scRelationship = CreateRelationship(typeName, end1guid, end2guid, label);
+
                                 //JObject scRelJson = new JObject(new JProperty("relationship", scRelationship));
                                 var scRelConv = scRelationship.ToString();
                                 var scRelBody = JObject.Parse(scRelConv);
-                                JObject scRelGuid = JObject.Parse(ExecuteRequest(purviewAccount, "post", ".catalog.purview.azure.com", "/api/atlas/v2/relationship", "2021-07-01", scRelBody, logging).Result);
+                                JObject scRelGuid = JObject.Parse(await ExecuteRequest(purviewAccount, "post", ".catalog.purview.azure.com", "/api/atlas/v2/relationship", "2021-07-01", scRelBody, logging));
 
                             }
 
@@ -350,36 +327,37 @@ namespace FunctionApp.Services
                 //Finally we want to link up the dataset objects to the process
                 // Setting up the final process entity 
 
+
+
+                /****** PROCESS: SYNAPSE PIPELINE ******/
+
                 if (metadata["TaskObject"]["TMOptionals"]["QualifiedIDAssociation"].ToString() == "ExecutionId")
                 {
-                    QualifiedName = "Synapse_Pipeline_Execution_UID_" + metadata["TaskObject"]["ExecutionUid"];
+                    qualifiedName = "Synapse_Pipeline_Execution_UID_" + metadata["TaskObject"]["ExecutionUid"].ToString();
                 }
                 else if (metadata["TaskObject"]["TMOptionals"]["QualifiedIDAssociation"].ToString() == "TaskMasterId")
                 {
-                    QualifiedName = "TaskMasterId_" + metadata["TaskObject"]["TaskMasterId"];
+                    qualifiedName = "Synapse_Pipeline_TaskMasterId_" + metadata["TaskObject"]["TaskMasterId"].ToString();
                 }
                 else
                 {
                     logging.LogInformation("No valid QualifiedIDAssociation found - using TaskMasterId");
-                    QualifiedName = "TaskMasterId_" + metadata["TaskObject"]["TaskMasterId"];
+                    qualifiedName = "TaskMasterId_" + metadata["TaskObject"]["TaskMasterId"].ToString();
                 }
-                JObject process = JObject.FromObject(new
-                {
-                    typeName = "azure_synapse_pipeline",
-                    status = "ACTIVE",
-                    attributes = new
-                    {
-                        inputs = new JArray(JObject.FromObject(new { guid = datasets[0] })),
-                        outputs = new JArray(JObject.FromObject(new { guid = datasets[1] })),
-                        qualifiedName = QualifiedName,
-                        name = metadata["TaskObject"]["ExecutionEngine"]["ADFPipeline"] + "_" + DateTime.Now.ToString("dd/MM/yyyy HH:mm")
-                    },
-                });
+
+
+                typeName = "azure_synapse_pipeline";
+                name = metadata["TaskObject"]["ExecutionEngine"]["ADFPipeline"].ToString() + "_" + DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+                processInputs = new JArray(JObject.FromObject(new { guid = datasets[0] }));
+                processOutputs = new JArray(JObject.FromObject(new { guid = datasets[1] }));
+
+                JObject process = CreateProcess(typeName, qualifiedName, name, processInputs, processOutputs);
+
 
                 JObject processJson = new JObject(new JProperty("entity", process));
                 var processConv = processJson.ToString();
                 var processBody = JObject.Parse(processConv);
-                var processGuid = JObject.Parse(ExecuteRequest(purviewAccount, "post", ".catalog.purview.azure.com", "/api/atlas/v2/entity", "2021-07-01", processBody, logging).Result);
+                var processGuid = JObject.Parse(await ExecuteRequest(purviewAccount, "post", ".catalog.purview.azure.com", "/api/atlas/v2/entity", "2021-07-01", processBody, logging));
 
                 //
                 return JObject.FromObject(new
@@ -396,6 +374,143 @@ namespace FunctionApp.Services
                     Result = "Failure: " + e 
                 });
                 throw;
+            }
+        }
+            
+
+        public static JObject CreateEntity(string TypeName, string QualifiedName, string Name, string Path = (String)null, string Description = (String)null, string ObjectType = (String)null , string DataType = (String)null)
+        {
+            switch (TypeName)
+            {
+                case "azure_datalake_gen2_resource_set":
+                    return JObject.FromObject(new
+                    {
+                        typeName = TypeName,
+                        attributes = new
+                        {
+                            qualifiedName = QualifiedName,
+                            name = Name,
+                            path = Path,
+                            description = Description,
+                            objectType = ObjectType
+                        },
+                        status = "ACTIVE"
+                    });
+                case "column":
+                    return JObject.FromObject(new
+                    {
+                        typeName = TypeName,
+                        attributes = new
+                        {
+                            qualifiedName = QualifiedName,
+                            name = Name,
+                            owner = (String)null,
+                            replicatedTo = (String)null,
+                            replicatedFrom = (String)null,
+                            description = Description,
+                            type = DataType,
+                        },
+                        status = "ACTIVE"
+                    });
+
+                case "tabular_schema":
+                    return JObject.FromObject(new
+                    {
+                        typeName = TypeName,
+                        attributes = new
+                        {
+                            qualifiedName = QualifiedName,
+                            name = Name,
+                            owner = (String)null,
+                            replicatedTo = (String)null,
+                            replicatedFrom = (String)null,
+                            description = Description,
+                        },
+                        status = "ACTIVE"
+                    });
+                default:
+                    return JObject.FromObject(new
+                    {
+                        typeName = TypeName,
+                        attributes = new
+                        {
+                            qualifiedName = QualifiedName,
+                            name = Name,
+                            path = Path,
+                            description = Description,
+                            objectType = ObjectType
+                        },
+                        status = "ACTIVE"
+                    });
+            }
+        }
+        public static JObject CreateRelationship(string TypeName, string End1Guid, string End2Guid, string Label)
+        {
+            switch (TypeName)
+            {
+                case "tabular_schema_datasets": case "tabular_schema_columns":
+                    return JObject.FromObject(new
+                    {
+                        typeName = TypeName,
+                        end1 = new
+                        {
+                            guid = End1Guid
+                        },
+                        end2 = new
+                        {
+                            guid = End2Guid
+                        },
+                        label = Label,
+                        status = "ACTIVE"
+                    });
+                default:
+                    return JObject.FromObject(new
+                    {
+                        typeName = TypeName,
+                        end1 = new
+                        {
+                            guid = End1Guid
+                        },
+                        end2 = new
+                        {
+                            guid = End2Guid
+                        },
+                        label = Label,
+                        status = "ACTIVE"
+                    });
+            }
+        }
+
+        public static JObject CreateProcess(string TypeName, string QualifiedName, string Name, JArray ProcessInputs, JArray ProcessOutputs)
+        {
+            switch (TypeName)
+            {
+                case "azure_synapse_pipeline":
+                    return JObject.FromObject(new
+                    {
+                        typeName = TypeName,
+                        status = "ACTIVE",
+                        attributes = new
+                        {
+                            inputs = ProcessInputs,
+                            outputs = ProcessOutputs,
+                            qualifiedName = QualifiedName,
+                            name = Name
+                        },
+                    });
+                default:
+                    return JObject.FromObject(new
+                    {
+                        typeName = TypeName,
+                        status = "ACTIVE",
+                        attributes = new
+                        {
+                            inputs = ProcessInputs,
+                            outputs = ProcessOutputs,
+                            qualifiedName = QualifiedName,
+                            name = Name
+                        },
+                    });
             }
         }
 

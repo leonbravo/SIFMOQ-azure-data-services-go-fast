@@ -488,5 +488,35 @@
       "TargetFormat": "Not-Applicable",
       "TargetType": "Azure Synapse",
       "TaskTypeId": -6
+   },
+   {
+      "Folder": "Synpase-Stop-Idle-Spark-Sessions",
+      "GFPIR": "Azure",
+      "Pipeline": "Synpase_Stop_Idle_Spark_Sessions",
+      "SourceFormat": "Not-Applicable",
+      "SourceType": "N/A",
+      "TargetFormat": "Not-Applicable",
+      "TargetType": "Azure Synapse",
+      "TaskTypeId": -10
+   },
+   {
+      "Folder": "Rest-API-to-Azure-Storage",
+      "GFPIR": "Azure",
+      "Pipeline": "GPL_SparkNotebookExecution",
+      "SourceFormat": "Rest",
+      "SourceType": "Rest",
+      "TargetFormat": "Json",
+      "TargetType": "AzureBlobStorage",
+      "TaskTypeId": -9
+   },
+   {
+      "Folder": "Rest-API-to-Azure-Storage",
+      "GFPIR": "Azure",
+      "Pipeline": "GPL_SparkNotebookExecution",
+      "SourceFormat": "Rest",
+      "SourceType": "Rest",
+      "TargetFormat": "Json",
+      "TargetType": "AzureBlobFS",
+      "TaskTypeId": -9
    }
 ]

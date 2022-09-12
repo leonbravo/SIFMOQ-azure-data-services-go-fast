@@ -1,10 +1,8 @@
 @using Humanizer;
 @model WebApplication.Models.TaskGroupDependency
 
-@{
-    ViewData["Title"] = "Create - " + "TaskGroupDependency".Humanize(LetterCasing.Title);
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+@{ ViewData["Title"] = "Create - " + "TaskGroupDependency".Humanize(LetterCasing.Title);
+                Layout = "~/Views/Shared/_Layout.cshtml"; }
 
 <h1>Create</h1>
 
@@ -16,24 +14,31 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="AncestorTaskGroupId" class="control-label"></label>
-                <select asp-for="AncestorTaskGroupId" class ="form-control" asp-items="ViewBag.AncestorTaskGroupId"></select>
+                <select asp-for="AncestorTaskGroupId" class="form-control" asp-items="ViewBag.AncestorTaskGroupId"></select>
             </div>
             <div class="form-group">
                 <label asp-for="DescendantTaskGroupId" class="control-label"></label>
-                <select asp-for="DescendantTaskGroupId" class ="form-control" asp-items="ViewBag.DescendantTaskGroupId"></select>
+                <select asp-for="DescendantTaskGroupId" class="form-control" asp-items="ViewBag.DescendantTaskGroupId"></select>
             </div>
             <div class="form-group">
                 <label asp-for="DependencyType" class="control-label"></label>
-                <input asp-for="DependencyType" class="form-control" />
-                <span asp-validation-for="DependencyType" class="text-danger"></span>
+                <select asp-for="DependencyType" class="form-control" asp-items="ViewBag.DependencyType"></select>
             </div>
 
             <div class="form-group">
-                <a href="javascript:history.go(-1)" title="Back to List" class="btn btn-secondary" ><i class="fa fa-arrow-circle-left"></i> Back</a>            
+                <a href="javascript:history.go(-1)" title="Back to List" class="btn btn-secondary"><i class="fa fa-arrow-circle-left"></i> Back</a>
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#AncestorTaskGroupId').val(@ViewData["selectedTaskGroupId"]);
+            $('#DescendantTaskGroupId').val(@ViewData["selectedTaskGroupId"]);
+        });
+    </script>
+}

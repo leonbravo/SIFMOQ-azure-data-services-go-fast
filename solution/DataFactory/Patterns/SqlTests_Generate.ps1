@@ -1,7 +1,7 @@
 
 
 $sql = @"
-delete from [dbo].[TaskGroup] where taskgroupid <=0;            
+--delete from [dbo].[TaskGroup] where taskgroupid <=0;            
             
 SET IDENTITY_INSERT [dbo].[TaskGroup] ON
 INSERT INTO [dbo].[TaskGroup] ([TaskGroupId],[TaskGroupName],[SubjectAreaId], [TaskGroupPriority],[TaskGroupConcurrency],[TaskGroupJSON],[ActiveYN])
@@ -27,23 +27,21 @@ Values (-7,'DependencyChainL3',1, 0,10,null,1)
 
 SET IDENTITY_INSERT [dbo].[TaskGroup] OFF
 
-delete from [dbo].[TaskMaster] where taskmasterid <=0;
+--delete from [dbo].[TaskMaster] where taskmasterid <=0;
 
-delete from [dbo].[TaskInstance] where taskmasterid <=0;
-
-
+--delete from [dbo].[TaskInstance] where taskmasterid <=0;
 
 
 "@
 
-$tests = (Get-Content -Path  ($PWD.ToString() + '../../../FunctionApp/FunctionApp.TestHarness/UnitTests/tests.json') | ConvertFrom-Json)
+$tests = (Get-Content -Path  ($PWD.ToString() + '../../../FunctionApp/FunctionApp.TestHarness/UnitTests/tests.json') | ConvertFrom-Json -Depth 10)
 
 $i = 0
 foreach ($t in $tests)
 {
-    Write-Host "_____________________________"
-    Write-Host "Writing test number: " $i.ToString()
-    Write-Host "_____________________________"
+    Write-Verbose "_____________________________"
+    Write-Verbose ("Writing test number: " + $i.ToString())
+    Write-Verbose "_____________________________"
     $TaskMasterId = ($t.TaskMasterId)
     $TaskMasterName = $t.TestDescription
     $TaskTypeId = $t.TaskTypeId

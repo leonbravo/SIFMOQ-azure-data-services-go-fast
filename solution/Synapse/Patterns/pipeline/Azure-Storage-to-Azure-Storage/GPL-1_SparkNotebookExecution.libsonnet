@@ -9,8 +9,8 @@ local CalledPipelineName = if(GenerateArm=="false")
 			then "GPL_"+"SparkNotebookExecution"+ "_Primary_"+GFPIR 
 			else "[concat('GPL_"+"SparkNotebookExecution"+"_Primary_" + "', parameters('integrationRuntimeShortName'))]";
 local Folder =  if(GenerateArm=="false") 
-					then "ADS Go Fast/" + GFPIR + "/ErrorHandler/"
-					else "[concat('ADS Go Fast/', parameters('integrationRuntimeShortName'), '/ErrorHandler/')]";
+					then "ADS Go Fast/Data Movement/ExecuteNotebook/" + GFPIR +"/ErrorHandler/"
+					else "[concat('ADS Go Fast/Data Movement/ExecuteNotebook/', parameters('integrationRuntimeShortName'), '/ErrorHandler/')]";
 
 local pipeline = {} + ParentPipelineTemplate(Name, CalledPipelineName, Folder);
 	

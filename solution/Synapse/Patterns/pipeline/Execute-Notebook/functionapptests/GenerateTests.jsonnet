@@ -20,7 +20,8 @@ local tests =
         "SourceMaxConcurrentConnections":0,
         "SourceRecursively":"false",
         "SourceDeleteAfterCompletion":"false",
-        
+        "SourceWriteSchemaToPurview": "Disabled",
+
         "TargetFormat":"Notebook-Optional",
         "TargetType":"N/A",        
         "TargetDataFilename":"",
@@ -32,12 +33,15 @@ local tests =
         "TargetMaxConcurrentConnections":0,
         "TargetRecursively":"false",
         "TargetDeleteAfterCompletion":"false",
-        
-        "ExecuteNotebook": "Notebook 1",
+        "TargetWriteSchemaToPurview": "Disabled",
+
+        "ExecuteNotebook": "SampleNotebook",
         "CustomDefinitions": "",
-        "Description": "File copy between datalake zones",  
-        "SynapsePipeline": "GPL_SparkNotebookExecution_Primary_Azure"
-         
+        "Description": "Execute Notebook test - by default this execute the SampleNotebook provided within the synapse deployment.",  
+        "SynapsePipeline": "GPL_SparkNotebookExecution_Primary_Azure",
+        "Purview": "Disabled",
+        "QualifiedIDAssociation": "TaskMasterId", 
+        "UseNotebookActivity": "Disabled" 
        
     }
 
@@ -61,6 +65,7 @@ template(
     t.SourceMaxConcurrentConnections,
     t.SourceRecursively,
     t.SourceDeleteAfterCompletion,
+    t.SourceWriteSchemaToPurview,
     t.TargetFormat,
     t.TargetType,
     t.TargetDataFilename,
@@ -72,9 +77,13 @@ template(
     t.TargetMaxConcurrentConnections,
     t.TargetRecursively,
     t.TargetDeleteAfterCompletion,
+    t.TargetWriteSchemaToPurview,
     t.Description,
     t.ExecuteNotebook,
-    t.CustomDefinitions
+    t.CustomDefinitions,
+    t.Purview,
+    t.QualifiedIDAssociation, 
+    t.UseNotebookActivity
 );
 
 

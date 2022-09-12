@@ -12,6 +12,8 @@ $obj | Add-Member "AdsOpts_CD_Services_DataFactory_SubscriptionId" $Subscription
 $obj | ConvertTo-Json | Set-Content ('./pipeline/static/partials/secrets.libsonnet')
 #>
 
-Import-Module .\GatherOutputsFromTerraform.psm1 -force
-$tout = GatherOutputsFromTerraform
-$tout | ConvertTo-Json | Set-Content "./pipeline/static/partials/secrets.libsonnet"
+
+Write-Host $PWD.Path
+Import-Module ./GatherOutputsFromTerraform_DataFactoryFolder.psm1 -Force
+$tout = GatherOutputsFromTerraform_DataFactoryFolder
+$tout | ConvertTo-Json -Depth 10| Set-Content "./pipeline/static/partials/secrets.libsonnet"

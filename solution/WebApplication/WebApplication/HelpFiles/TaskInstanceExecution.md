@@ -7,3 +7,5 @@ The Status has a number of states:
 * InProgress
 * Complete
 * Failed
+
+[Relevant documentation link](https://microsoft.github.io/azure-data-services-go-fast-documentation/4-Web-Application-Manual/2-TaskInstances.html#22-task-instance-executions)

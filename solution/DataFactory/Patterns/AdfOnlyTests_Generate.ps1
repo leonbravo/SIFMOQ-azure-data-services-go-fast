@@ -1,9 +1,9 @@
 $patterns = ((Get-Content "Patterns.json") | ConvertFrom-Json).Folder | Sort-Object | Get-Unique
 
 foreach ($pattern in $patterns) {    
-    Write-Host "_____________________________"
-    Write-Host  $pattern
-    Write-Host "_____________________________"
+    Write-Verbose "_____________________________"
+    Write-Verbose  $pattern
+    Write-Verbose "_____________________________"
     $folder = "./pipeline/" + $pattern
 
     $tests = (Get-Content ($folder+"/tests.json")) | ConvertFrom-Json
@@ -12,7 +12,7 @@ foreach ($pattern in $patterns) {
 
     $i = 0
     foreach ($test in $tests) {
-        Write-Host "Test: $i"
+        Write-Verbose "Test: $i"
         $testasjson = ($test | ConvertTo-Json -Depth 100)
         foreach ($opts in $adsopts) {
         

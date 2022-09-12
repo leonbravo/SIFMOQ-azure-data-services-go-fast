@@ -1,0 +1,60 @@
+﻿@model IEnumerable<WebApplication.Models.IntegrationRuntimeMapping>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>TaskTypeMappings - Browse</h1>
+
+<p>
+    <a class="btn-sm btn-dark details" asp-action="Create">Create New</a>
+</p>
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th></th>
+             <th>
+                @Html.DisplayNameFor(model => model.IntegrationRuntimeMappingId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IntegrationRuntimeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IntegrationRuntimeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SystemId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ActiveYn)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IntegrationRuntimeMappingId" class="btn-sm btn-warning details" title="Edit"><i class="fa fa-pencil-square-o"></i></a> |
+                <a asp-action="Details" asp-route-id="@item.IntegrationRuntimeMappingId" class="btn-sm btn-info details" title="Details"><i class="fa fa-list-alt" aria-hidden="true"></i></a> |
+                <a asp-action="Delete" asp-route-id="@item.IntegrationRuntimeMappingId" class="btn-sm btn-danger details" title="Delete"><i class="fa fa-trash"></i></a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IntegrationRuntimeMappingId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IntegrationRuntimeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IntegrationRuntimeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SystemId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ActiveYn)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

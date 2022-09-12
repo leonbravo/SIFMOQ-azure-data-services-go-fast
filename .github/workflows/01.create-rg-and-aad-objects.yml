@@ -1,0 +1,69 @@
+name: Deploy Terraform State Store
+
+on:
+  workflow_dispatch:
+  push:
+    branches: $default-branch
+
+jobs:
+    deploy-state-store-non-prod:
+      name: Deploying state storage Non-Prod
+      env:   
+        # for state storage
+        resource_group_name  : ${{ secrets.ARM_RESOURCE_GROUP_NAME }}     
+        state_storage_account_name  : ${{ secrets.ARM_STORAGE_NAME }}     
+        environmentName : staging
+        gitDeploy : true
+      environment: 
+        name: NonProd
+      runs-on: ubuntu-latest
+      steps:
+      
+      - name: Checkout
+        uses: actions/checkout@v3.0.0
+
+      - name: Login via Az module
+        uses: azure/login@v1
+        with:
+          creds: '{"clientId":"${{ secrets.ARM_CLIENT_ID }}","clientSecret":"${{ secrets.ARM_CLIENT_SECRET }}","subscriptionId":"${{ secrets.ARM_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ARM_TENANT_ID }}"}'
+          enable-AzPSSession: true 
+          
+      - name: Run Prepare.ps1
+        id: state-deployment
+        working-directory: ./solution/DeploymentV2/
+        shell: pwsh
+        run: |
+          git update-index --chmod=+x ./Prepare.ps1  
+          ./Prepare.ps1           
+
+    #PROD ENVIRONMENT
+    deploy-state-store-prod:
+      name: Deploying state storage Prod
+      needs: [deploy-state-store-non-prod]
+      env:   
+        # for state storage
+        resource_group_name  : ${{ secrets.ARM_RESOURCE_GROUP_NAME }}     
+        state_storage_account_name  : ${{ secrets.ARM_STORAGE_NAME }}     
+        environmentName : production
+        gitDeploy : true
+      environment: 
+        name: Prod
+      runs-on: ubuntu-latest
+      steps:
+      
+      - name: Checkout
+        uses: actions/checkout@v3.0.0
+
+      - name: Login via Az module
+        uses: azure/login@v1
+        with:
+          creds: '{"clientId":"${{ secrets.ARM_CLIENT_ID }}","clientSecret":"${{ secrets.ARM_CLIENT_SECRET }}","subscriptionId":"${{ secrets.ARM_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.ARM_TENANT_ID }}"}'
+          enable-AzPSSession: true 
+          
+      - name: Run Prepare.ps1
+        id: state-deployment
+        working-directory: ./solution/DeploymentV2/
+        shell: pwsh
+        run: |
+          git update-index --chmod=+x ./Prepare.ps1  
+          ./Prepare.ps1           

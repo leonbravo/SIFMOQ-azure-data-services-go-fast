@@ -39,14 +39,53 @@ namespace WebApplication.Services
                 case TaskMasterWaterMark x:
                     return await LoadTaskMasterRoles(x.TaskMasterId, groups);
                 //these don't link back to subject area.
-                case SourceAndTargetSystems _:
-                case ScheduleInstance _:
-                case ScheduleMaster _:
-                case ExecutionEngine _:
+                case SourceAndTargetSystems x:
+                    return await LoadSourceAndTargetSystemRoles(x.SystemId, groups);
+                case ScheduleInstance x:
+                    if (!x.ScheduleMasterId.HasValue)
+                    {
+                        return new string[0];
+                    }
+                    return await LoadScheduleMasterRoles(x.ScheduleMasterId.Value, groups);
+                case ScheduleMaster x:
+                    return await LoadScheduleMasterRoles(x.ScheduleMasterId, groups);
+                case ExecutionEngine x:
+                    return await LoadExecutionEngineRoles(x.EngineId, groups);
                 default:
                     return new string[0];
             }
         }
+
+        private Task<string[]> LoadExecutionEngineRoles(long xEngineId, Guid[] groups) =>
+        (
+            from tr in _context.ExecutionEngine
+            join rm in ActiveRoleMaps(groups)
+                on tr.EngineId equals rm.EntityId
+            where rm.EntityTypeName == EntityRoleMap.ExecutionEngineTypeName
+                  && rm.EntityId == xEngineId
+            select rm.ApplicationRoleName
+        ).ToArrayAsync();
+
+        private Task<string[]> LoadScheduleMasterRoles(long systemId, Guid[] groups)
+        {
+            return (from tr in _context.ScheduleMaster
+                    join rm in ActiveRoleMaps(groups)
+                on tr.ScheduleMasterId equals rm.EntityId
+                    where rm.EntityTypeName == EntityRoleMap.ScheduleMasterTypeName
+                    && rm.EntityId == systemId
+                    select rm.ApplicationRoleName
+            ).ToArrayAsync();
+        }
+
+        private Task<string[]> LoadSourceAndTargetSystemRoles(long systemId, Guid[] groups) =>
+            (
+                from tr in _context.SourceAndTargetSystems
+                join rm in ActiveRoleMaps(groups)
+                    on tr.SystemId equals rm.EntityId
+                where rm.EntityTypeName == EntityRoleMap.SourceAndTargetTypeName
+                      && rm.EntityId == systemId
+                select rm.ApplicationRoleName
+            ).ToArrayAsync();
 
         private Task<string[]> LoadFrameworkTaskRunnerRoles(long taskRunnerId, Guid[] groups) =>
             (
@@ -58,15 +97,17 @@ namespace WebApplication.Services
                 join tg in _context.TaskGroup
                     on tm.TaskGroupId equals tg.TaskGroupId
                 join rm in ActiveRoleMaps(groups)
-                    on tg.SubjectAreaId equals rm.SubjectAreaId
+                    on tg.SubjectAreaId equals rm.EntityId
                 where tr.TaskRunnerId == taskRunnerId
+                && rm.EntityTypeName == EntityRoleMap.SubjectAreaTypeName
                 select rm.ApplicationRoleName
             ).ToArrayAsync();
 
         private Task<string[]> LoadSubjectAreaRoles(long subjectAreaId, Guid[] groups) =>
             (
                 from rm in ActiveRoleMaps(groups)
-                where rm.SubjectAreaId == subjectAreaId
+                where rm.EntityId == subjectAreaId
+                      && rm.EntityTypeName == EntityRoleMap.SubjectAreaTypeName
                 select rm.ApplicationRoleName
             ).ToArrayAsync();
 
@@ -74,8 +115,9 @@ namespace WebApplication.Services
             (
                 from rm in ActiveRoleMaps(groups)
                 join sa in _context.SubjectArea
-                    on rm.SubjectAreaId equals sa.SubjectAreaId
+                    on rm.EntityId equals sa.SubjectAreaId
                 where sa.SubjectAreaFormId == subjectAreaFormId
+                      && rm.EntityTypeName == EntityRoleMap.SubjectAreaTypeName
                 select rm.ApplicationRoleName
             ).ToArrayAsync();
 
@@ -87,8 +129,9 @@ namespace WebApplication.Services
                 join tg in _context.TaskGroup
                    on tm.TaskGroupId equals tg.TaskGroupId
                 join rm in ActiveRoleMaps(groups)
-                   on tg.SubjectAreaId equals rm.SubjectAreaId
+                   on tg.SubjectAreaId equals rm.EntityId
                 where ti.TaskInstanceId == taskInstanceId
+                      && rm.EntityTypeName == EntityRoleMap.SubjectAreaTypeName
                 select rm.ApplicationRoleName
             ).ToArrayAsync();
 
@@ -98,14 +141,15 @@ namespace WebApplication.Services
                 join tg in _context.TaskGroup
                    on tm.TaskGroupId equals tg.TaskGroupId
                 join rm in ActiveRoleMaps(groups)
-                   on tg.SubjectAreaId equals rm.SubjectAreaId
+                   on tg.SubjectAreaId equals rm.EntityId
                 where tm.TaskMasterId == taskMasterId
+                      && rm.EntityTypeName == EntityRoleMap.SubjectAreaTypeName
                 select rm.ApplicationRoleName
             ).ToArrayAsync();
 
 
 
-        IQueryable<SubjectAreaRoleMap> ActiveRoleMaps(Guid[] groups) =>
-            _context.SubjectAreaRoleMap.Where(rm => groups.Contains(rm.AadGroupUid) && rm.ActiveYn && rm.ExpiryDate > DateTimeOffset.Now);
+        IQueryable<EntityRoleMap> ActiveRoleMaps(Guid[] groups) =>
+            _context.EntityRoleMap.Where(rm => groups.Contains(rm.AadGroupUid) && rm.ActiveYN && rm.ExpiryDate > DateTimeOffset.Now);
     }
 }

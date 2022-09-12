@@ -4,7 +4,7 @@ $sql = @"
 
 "@
 
-$tests = (Get-Content -Path  ($PWD.ToString() + '../../../FunctionApp/FunctionApp.TestHarness/UnitTests/tests.json') | ConvertFrom-Json)
+$tests = (Get-Content -Path  ($PWD.ToString() + '../../../FunctionApp/FunctionApp.TestHarness/UnitTests/tests.json') | ConvertFrom-Json -Depth 10)
 
 
 
@@ -12,9 +12,9 @@ $tests = (Get-Content -Path  ($PWD.ToString() + '../../../FunctionApp/FunctionAp
 $i = 0
 foreach ($t in $tests)
 {
-    Write-Host "_____________________________"
-    Write-Host "Writing test number: " $i.ToString()
-    Write-Host "_____________________________"
+    Write-Information "_____________________________"
+    Write-Information "Writing test number: " $i.ToString()
+    Write-Information "_____________________________"
     
     $TaskMasterId = ($t.TaskMasterId)
     $TaskMasterName = $t.TestDescription

@@ -4,9 +4,10 @@ function(
     ADFPipeline = "GPL_AzureBlobStorage_ParquetAzureSqlTable_NA",
     Pattern = "Azure Storage to SQL Database",
     TestNumber = "-1",
-    SourceFormat = "Azure SQL",
+    SourceFormat = "Parquet",
     SourceType = "Azure SQL",
     DataFilename = "SalesLT.Customer.parquet",
+    DataFileNameChunkPostfix = "Enabled",
     SchemaFileName = "SalesLT.Customer.json",
     SourceSystemAuthType = "MSI",
     SkipLineCount = "",
@@ -17,15 +18,15 @@ function(
     DeleteAfterCompletion = "",
     TargetFormat = "Parquet",
     TargetType = "Azure Blob", 
-    TableSchema,
-    TableName,
-    StagingTableSchema,
-    StagingTableName,
-    AutoCreateTable,
-    PreCopySQL,
-    PostCopySQL,
-    AutoGenerateMerge,
-    MergeSQL,
+    TableSchema = "",
+    TableName = "",
+    StagingTableSchema = "",
+    StagingTableName = "",
+    AutoCreateTable = "",
+    PreCopySQL = "",
+    PostCopySQL = "",
+    AutoGenerateMerge = "",
+    MergeSQL = "",
     TestDescription = "",
     TaskDatafactoryIR = ""
     )
@@ -40,14 +41,17 @@ function(
             "MaxConcurrentConnections": MaxConcurrentConnections,
             "Recursively": Recursively,
             "DeleteAfterCompletion": DeleteAfterCompletion,
-            } 
+            }+
+            if (SourceFormat=="Parquet") 
+            then {"DataFileNameChunkPostfix": DataFileNameChunkPostfix} 
+            else {}                       
             + if (SourceFormat == "Excel") 
             then {"FirstRowAsHeader":FirstRowAsHeader,"SkipLineCount": SkipLineCount,  "SheetName":SheetName}
             else {}
             + if (SourceFormat == "Csv" || SourceFormat == "DelimitedText") 
             then {"SkipLineCount": SkipLineCount, "FirstRowAsHeader":FirstRowAsHeader}
             else {},
-            "Target":{
+        "Target":{
             "Type":TargetFormat,            
             "TableSchema":TableSchema,
             "TableName":TableName+TestNumber,

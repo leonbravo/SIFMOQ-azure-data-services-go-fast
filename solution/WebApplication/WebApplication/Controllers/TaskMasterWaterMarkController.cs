@@ -18,7 +18,13 @@ namespace WebApplication.Controllers
     {
         protected readonly AdsGoFastContext _context;
 
+        List<SelectListItem> columnType = new List<SelectListItem>
+        {
+            new SelectListItem { Text = "Date Time", Value = "DateTime"},
+            new SelectListItem { Text = "Big Integer", Value = "BigInt"},
+            new SelectListItem { Text = "LSN", Value = "lsn"},
 
+        };
         public TaskMasterWaterMarkController(AdsGoFastContext context, ISecurityAccessProvider securityAccessProvider, IEntityRoleProvider roleProvider) : base(securityAccessProvider, roleProvider)
         {
             Name = "TaskMasterWaterMark";
@@ -70,6 +76,8 @@ namespace WebApplication.Controllers
             }
             ViewBag.returnUrl = Request.Headers["Referer"].ToString();
             TaskMasterWaterMark taskMasterWaterMark = new TaskMasterWaterMark();
+            ViewData["ColumnType"] = new SelectList(columnType, "Value", "Text");
+
             taskMasterWaterMark.ActiveYn = true;
             return View(taskMasterWaterMark);
         }
@@ -93,6 +101,7 @@ namespace WebApplication.Controllers
                 return Redirect(returnUrl);
             }
             ViewData["TaskMasterId"] = new SelectList(_context.TaskMaster.OrderBy(x => x.TaskMasterName), "TaskMasterId", "TaskMasterName", taskMasterWaterMark.TaskMasterId);
+            ViewData["ColumnType"] = new SelectList(columnType, "Value", "Text", taskMasterWaterMark.TaskMasterWaterMarkColumnType);
             return View(taskMasterWaterMark);
         }
 
@@ -112,6 +121,7 @@ namespace WebApplication.Controllers
             if (!await CanPerformCurrentActionOnRecord(taskMasterWaterMark))
                 return new ForbidResult();
             ViewData["TaskMasterId"] = new SelectList(_context.TaskMaster.OrderBy(x => x.TaskMasterName), "TaskMasterId", "TaskMasterName", taskMasterWaterMark.TaskMasterId);
+            ViewData["ColumnType"] = new SelectList(columnType, "Value", "Text", taskMasterWaterMark.TaskMasterWaterMarkColumnType);
             ViewBag.returnUrl = Request.Headers["Referer"].ToString();
             return View(taskMasterWaterMark);
         }
@@ -155,6 +165,7 @@ namespace WebApplication.Controllers
                 return Redirect(returnUrl);
             }
             ViewData["TaskMasterId"] = new SelectList(_context.TaskMaster.OrderBy(x => x.TaskMasterName), "TaskMasterId", "TaskMasterName", taskMasterWaterMark.TaskMasterId);
+            ViewData["ColumnType"] = new SelectList(columnType, "Value", "Text", taskMasterWaterMark.TaskMasterWaterMarkColumnType);
             return View(taskMasterWaterMark);
         }
 
@@ -219,7 +230,7 @@ namespace WebApplication.Controllers
             cols.Add(JObject.Parse("{ 'data':'TaskMasterWaterMarkBigInt', 'name':'Watermark Value', 'autoWidth':true }"));
             cols.Add(JObject.Parse("{ 'data':'TaskMasterWaterMarkString', 'name':'Watermark String Value', 'autoWidth':true }"));
             cols.Add(JObject.Parse("{ 'data':'TaskWaterMarkJson', 'name':'Json', 'autoWidth':true }"));
-            cols.Add(JObject.Parse("{ 'data':'ActiveYn', 'name':'Active', 'autoWidth':true, 'ads_format': 'bool' }"));
+            cols.Add(JObject.Parse("{ 'data':'ActiveYn', 'name':'Is Active', 'autoWidth':true, 'ads_format': 'bool' }"));
 
             HumanizeColumns(cols);
 
@@ -278,13 +289,14 @@ namespace WebApplication.Controllers
                             on md.TaskMasterId equals tm.TaskMasterId
                          join tg in _context.TaskGroup
                             on tm.TaskGroupId equals tg.TaskGroupId
-                         join rm in _context.SubjectAreaRoleMap
-                            on tg.SubjectAreaId equals rm.SubjectAreaId
+                         join rm in _context.EntityRoleMap
+                            on tg.SubjectAreaId equals rm.EntityId
                          where
                              GetUserAdGroupUids().Contains(rm.AadGroupUid)
                              && permittedRoles.Contains(rm.ApplicationRoleName)
+                             && rm.EntityTypeName == EntityRoleMap.SubjectAreaTypeName
                              && rm.ExpiryDate > DateTimeOffset.Now
-                             && rm.ActiveYn
+                             && rm.ActiveYN
                          select md).Distinct();
                 }
 

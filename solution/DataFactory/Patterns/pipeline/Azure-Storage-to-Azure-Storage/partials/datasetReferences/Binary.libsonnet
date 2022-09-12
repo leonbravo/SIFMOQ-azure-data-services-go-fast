@@ -8,7 +8,7 @@ function (GenerateArm=false, Type = "AzureBlobStorage", GFPIR = "{IRA}", SourceO
     "parameters": if Type=="FileServer" then 
     {
         "Directory": {
-            "value": "@pipeline().parameters.TaskObject.%(SourceOrTarget)s.RelativePath" % { SourceOrTarget : SourceOrTarget},
+            "value": "@pipeline().parameters.TaskObject.Target.Instance.%(SourceOrTarget)sRelativePath" % { SourceOrTarget : SourceOrTarget},
             "type": "Expression"
         },
         "File": {
@@ -39,7 +39,7 @@ function (GenerateArm=false, Type = "AzureBlobStorage", GFPIR = "{IRA}", SourceO
             "type": "Expression"
         },
         "Directory": {
-            "value": "@pipeline().parameters.TaskObject.%(SourceOrTarget)s.RelativePath" % { SourceOrTarget : SourceOrTarget},
+            "value": "@pipeline().parameters.TaskObject.Target.Instance.%(SourceOrTarget)sRelativePath" % { SourceOrTarget : SourceOrTarget},
             "type": "Expression"
         },
         "FileSystem": {

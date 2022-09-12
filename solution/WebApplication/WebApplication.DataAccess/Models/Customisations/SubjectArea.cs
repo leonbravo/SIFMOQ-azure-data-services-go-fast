@@ -6,6 +6,6 @@ namespace WebApplication.Models
     {
         public virtual List<TaskGroup> TaskGroups { get; set; }
         public virtual SubjectAreaForm SubjectAreaForm { get; set; }
-        public virtual List<SubjectAreaRoleMap> SubjectAreaRoleMaps { get; set; }
+        //public virtual List<EntityRoleMap> SubjectAreaRoleMaps { get; set; }
     }
 }

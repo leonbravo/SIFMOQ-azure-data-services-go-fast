@@ -1,6 +1,5 @@
-{
-    "TeachingGroup": {
-      "RefId": "64A309DA-063A-2E35-B359-D75101A8C3D1",
+ {
+      "RefId": "C337D78A-E00B-C744-EF90-F2871CEB91A2",
       "SchoolYear": "2008",
       "LocalId": "20087ASPN",
       "ShortName": "7A SPN",
@@ -8,6 +7,7 @@
       "Set": "4",
       "Block": "6",
       "CurriculumLevel": "VELS Level 5",
+      "SchoolInfoRefId": "D3E34B35-9D75-101A-1234-00AA001A1676",			
       "StudentList": {
         "TeachingGroupStudent": [
           {
@@ -35,6 +35,15 @@
               "Type": "LGL",
               "FamilyName": "Smith",
               "GivenName": "Terence"
+            }
+          },
+          {
+            "StudentPersonalRefId": "7C834EA9-EDA1-2090-347F-83297E1C290C",
+            "StudentLocalId": "SMI004",
+            "Name": {
+              "Type": "LGL",
+              "FamilyName": "Simson",
+              "GivenName": "Bart"
             }
           }
         ]
@@ -77,5 +86,6 @@
       }
     }
   }
+  
 
 

@@ -24,6 +24,7 @@ RUN bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "$
     && sudo apt-get install -y powershell  \
     && rm ./packages-microsoft-prod.deb  \
     && sudo apt install -y dotnet-sdk-3.1  \
+    && sudo apt install -y dotnet-sdk-6.0  \
     && curl -fsSL https://deb.nodesource.com/setup_17.x | sudo -E bash -  \
     && apt-get install -y nodejs \
     && wget https://github.com/google/go-jsonnet/releases/download/v0.17.0/jsonnet-go_0.17.0_linux_amd64.deb  \
@@ -35,8 +36,7 @@ RUN bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "$
     && wget https://github.com/gruntwork-io/terragrunt/releases/download/v0.35.14/terragrunt_linux_amd64 \
     && mv terragrunt_linux_amd64 terragrunt \
     && chmod u+x terragrunt \
-    && mv terragrunt /usr/local/bin/terragrunt
-    
+    && mv terragrunt /usr/local/bin/terragrunt 
 
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \

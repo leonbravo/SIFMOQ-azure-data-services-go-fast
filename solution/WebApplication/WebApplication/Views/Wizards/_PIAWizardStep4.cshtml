@@ -1,0 +1,197 @@
+﻿@model WebApplication.Models.Wizards.PIAWizardViewModel
+<br />
+
+<h3>
+    Metadata
+</h3>
+<br />
+
+<div class="form-group row col-12">
+    <p>
+        <strong>
+            Conduct a high-level examination of your data, focusing on the data type, features, and properties. This involves:
+        </strong>
+    </p>
+</div>
+
+<div class="form-group row col-12 ">
+    <div class="col-2">
+        <strong>Data Type</strong>
+    </div>
+    <div class="col-10">
+        <div class="row wizardSelector">
+            <div class="col-5">
+                <label asp-for="DataForm" class="control-label"></label>
+            </div>
+            <div class="col-5">
+                <div>
+                    @Html.RadioButtonFor(model => model.DataForm, "FlatFile", false) Flat-file
+                </div>
+                <div>
+                    @Html.RadioButtonFor(model => model.DataForm, "Text") Text (Survey Data)
+                </div>
+                <div>
+                    @Html.RadioButtonFor(model => model.DataForm, "Database") Database
+                </div>
+            </div>
+            <span asp-validation-for="DataForm" class="text-danger"></span>
+        </div>
+        <div class="row wizardSelector">
+            <div class="col-5">
+                <label asp-for="InfoLevelOfData" class="control-label"></label>
+            </div>
+            <div class="col-5">
+                <div>
+                    @Html.RadioButtonFor(model => model.InfoLevelOfData, "IndividualLevel") Individual Level  <i class="fas fa-info-circle" id="microdataTT"></i>
+                </div>
+                <div>
+                    @Html.RadioButtonFor(model => model.InfoLevelOfData, "Aggregated") Aggregated
+                </div>
+                <div>
+                    @Html.RadioButtonFor(model => model.InfoLevelOfData, "Locality") Locality
+                </div>
+            </div>
+            <span asp-validation-for="InfoLevelOfData" class="text-danger"></span>
+        </div>
+    </div>
+</div>
+
+<div class="form-group row col-12">
+    <div class="col-2">
+        <strong>Variable Type</strong>
+    </div>
+    <div class="col-10">
+        <div class="row wizardSelector">
+            <div class="col-5">
+                <label asp-for="InfoLevelOfVariable" class="control-label"></label>
+            </div>
+            <div class="col-5">
+                <div>
+                    @Html.RadioButtonFor(model => model.InfoLevelOfVariable, "DirectIdentifier") Direct Identifiers  <i class="fas fa-info-circle" id="directIdTT"></i>
+                </div>
+                <div>
+                    @Html.RadioButtonFor(model => model.InfoLevelOfVariable, "IndirectIdentifiers") Indirect Identifiers  <i class="fas fa-info-circle" id="indirectIdTT"></i>
+                </div>
+                <div>
+                    @Html.RadioButtonFor(model => model.InfoLevelOfVariable, "AggregatedCohortGrouping") Aggregated Cohort Grouping
+                </div>
+            </div>
+            <span asp-validation-for="InfoLevelOfVariable" class="text-danger"></span>
+        </div>
+    </div>
+</div>
+<div class="form-group row col-12">
+    <div class="col-2">
+        <strong>Data Set Properties</strong>
+    </div>
+    <div class="col-10 row">
+        <div class="col-5">
+            <label asp-for="TopThreePropsOfData" class="control-label"></label>
+        </div>
+        <div class="col-5">
+            @Html.EditorFor(m => m.TopThreePropsOfData, Model.TopThreePropsOfData.TemplateName, new { @class = "form-control" })
+        </div>
+        <span asp-validation-for="TopThreePropsOfData" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-group row col-12">
+    <div class="col-2">
+        <strong>The data itself can have properties that make the data situation more or less sensitive. Please answer the following:</strong>
+        <i class="fas fa-info-circle" id="sensitiveInfoTT"></i>
+    </div>
+    <div class="col-10">
+        <div class="row wizardSelector">
+            <div class="col-5">
+                <label class="control-label">
+                    @Html.DisplayNameFor(model => model.IsDataQualityLevelHigh)
+                </label>
+            </div>
+            <div class="col-3">
+                @Html.RadioButtonFor(model => model.IsDataQualityLevelHigh, "true") Yes
+                @Html.RadioButtonFor(model => model.IsDataQualityLevelHigh, "false") No
+            </div>
+            <span asp-validation-for="IsDataQualityLevelHigh" class="text-danger"></span>
+            <div class="col-4">
+                <label asp-for="DataQualityExplanation" class="control-label"></label>
+                <br />
+                <textarea asp-for="DataQualityExplanation" class="form-control" type="text" placeholder=""></textarea>
+            </div>
+            <span asp-validation-for="DataQualityExplanation" class="text-danger"></span>
+        </div>
+        
+        <div class="row wizardSelector">
+            <div class="col-5">
+                <label class="control-label">
+                    @Html.DisplayNameFor(model => model.IsDataAboutVulnerablePopulation)
+                    <i class="fas fa-info-circle" id="vulnerableDataTT"></i>
+                </label>
+            </div>
+            <div class="col-3">
+                @Html.RadioButtonFor(model => model.IsDataAboutVulnerablePopulation, "true") Yes
+                @Html.RadioButtonFor(model => model.IsDataAboutVulnerablePopulation, "false") No
+            </div>
+            <span asp-validation-for="IsDataAboutVulnerablePopulation" class="text-danger"></span>
+            <div class="col-4">
+                <label asp-for="PopulationVulnerabilityExplanation" class="control-label"></label>
+                <br />
+                <textarea asp-for="PopulationVulnerabilityExplanation" class="form-control" type="text" placeholder=""></textarea>
+            </div>
+            <span asp-validation-for="PopulationVulnerabilityExplanation" class="text-danger"></span>
+        </div>
+        <div class="row wizardSelector">
+            <div class="col-5">
+                <label class="control-label">
+                    @Html.DisplayNameFor(model => model.WhenDataWasCollected)
+                </label>
+            </div>
+            <div class="col-3">
+                <input type="date" id="piaDatePicker" class="form-control" asp-for="WhenDataWasCollected" />
+                <span asp-validation-for="WhenDataWasCollected" class="text-danger"></span>
+            </div>
+            <div class="col-4">
+                <label asp-for="DataTimeCollectedExplanation" class="control-label"></label>
+                <br />
+                <textarea asp-for="DataTimeCollectedExplanation" class="form-control" type="text" placeholder=""></textarea>
+            </div>
+            <span asp-validation-for="DataTimeCollectedExplanation" class="text-danger"></span>
+        </div>
+        <div class="row wizardSelector">
+            <div class="col-5">
+                <label class="control-label">
+                    @Html.DisplayNameFor(model => model.IsDataHierarchical)
+                    <i class="fas fa-info-circle" id="hierarchicalTT"></i>
+                </label>
+            </div>
+            <div class="col-3">
+                @Html.RadioButtonFor(model => model.IsDataHierarchical, "true") Yes
+                @Html.RadioButtonFor(model => model.IsDataHierarchical, "false") No
+            </div>
+            <span asp-validation-for="IsDataHierarchical" class="text-danger"></span>
+            <div class="col-4">
+                <label asp-for="DataHierarchicalExplanation" class="control-label"></label>
+                <br />
+                <textarea asp-for="DataHierarchicalExplanation" class="form-control" type="text" placeholder=""></textarea>
+            </div>
+            <span asp-validation-for="DataHierarchicalExplanation" class="text-danger"></span>
+        </div>
+        <div class="row wizardSelector">
+            <div class="col-5">
+                <label class="control-label">
+                    @Html.DisplayNameFor(model => model.IsDataTimeStamped)
+                </label>
+            </div>
+            <div class="col-3">
+                @Html.RadioButtonFor(model => model.IsDataTimeStamped, "true") Yes
+                @Html.RadioButtonFor(model => model.IsDataTimeStamped, "false") No
+            </div>
+            <span asp-validation-for="IsDataTimeStamped" class="text-danger"></span>
+            <div class="col-4">
+                <label asp-for="DataTimestampedExplanation" class="control-label"></label>
+                <br />
+                <textarea asp-for="DataTimestampedExplanation" class="form-control" type="text" placeholder=""></textarea>
+            </div>
+            <span asp-validation-for="DataTimestampedExplanation" class="text-danger"></span>
+        </div>
+    </div>
+
+</div>

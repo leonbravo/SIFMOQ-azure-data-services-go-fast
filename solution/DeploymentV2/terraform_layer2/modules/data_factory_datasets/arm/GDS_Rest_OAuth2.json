@@ -1,0 +1,135 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "String",
+            "metadata": "name of the resource"
+        },
+        "dataFactoryName": {
+            "type": "String",
+            "metadata": "Data Factory name",
+            "defaultValue": "arkstgdfads"
+        },
+        "linkedServiceName": {
+            "type": "String",
+            "metadata": "The name of the linked service that this dataset uses"
+        },
+        "integrationRuntimeName": {
+            "type": "String",
+            "metadata": "The name of the integration runtime this dataset uses"
+        }
+
+    },
+    "resources": [
+        {
+            "apiVersion": "2018-06-01",
+            "name": "[concat(parameters('dataFactoryName'), '/', parameters('name'))]",
+		"properties": {
+			"linkedServiceName": {
+				"referenceName": "[parameters('linkedServiceName')]",
+				"type": "LinkedServiceReference",
+				"parameters": {
+					"BaseUrl": 
+					{
+                    	"value": "@dataset().BaseUrl",
+                    	"type": "Expression"
+					},
+					"ClientId": 
+					{
+                    	"value": "@dataset().ClientId",
+                    	"type": "Expression"
+					},
+					"KeyVaultBaseUrl": 
+					{
+                    	"value": "@dataset().KeyVaultBaseUrl",
+                    	"type": "Expression"
+					},
+					"PasswordSecret": 
+					{
+                    	"value": "@dataset().PasswordSecret",
+                    	"type": "Expression"
+					},
+					"TokenEndpoint": 
+					{
+                    	"value": "@dataset().TokenEndpoint",
+                    	"type": "Expression"
+					},
+					"Scope": 
+					{
+                    	"value": "@dataset().Scope",
+                    	"type": "Expression"
+					},
+					"Resource": 
+					{
+                    	"value": "@dataset().Resource",
+                    	"type": "Expression"
+					}
+				}
+			},
+			"parameters": {
+				"BaseUrl": 
+				{
+            		"type": "string"
+				},
+				"ClientId": 
+				{
+            		"type": "string"
+				},
+				"KeyVaultBaseUrl": 
+				{
+            		"type": "string"
+				},
+				"PasswordSecret": 
+				{
+            		"type": "string"
+				},
+				"TokenEndpoint": 
+				{
+            		"type": "string"
+				},
+				"Scope": 
+				{
+            		"type": "string"
+				},
+				"Resource": 
+				{
+            		"type": "string"
+				},
+				"RelativeUrl": 
+				{
+					"type": "string"
+				},
+				"RequestMethod": 
+				{
+					"type": "string"
+				},
+				"RequestBody": 
+				{
+					"type": "string"
+				}
+			},
+			"folder": {
+				"name": "[concat('ADS Go Fast/Generic/', parameters('integrationRuntimeName'))]"
+			},
+			"annotations": [],
+			"type": "RestResource",
+			"typeProperties": {
+            	"relativeUrl": {
+					"value": "@dataset().RelativeUrl",
+					"type": "Expression"
+            	},
+				"requestMethod": {
+					"value": "@dataset().RequestMethod",
+					"type": "Expression"
+				},
+				"requestBody": {
+					"value": "@dataset().RequestBody",
+					"type": "Expression"
+				}
+        	}
+		},
+		"type": "Microsoft.DataFactory/factories/datasets"
+	}
+	]
+}

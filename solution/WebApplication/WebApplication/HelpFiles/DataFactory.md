@@ -1,4 +1,0 @@
-## DataFactory
-
-
-Describes DataFactory instances

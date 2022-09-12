@@ -2,6 +2,7 @@ local partials = {
    "AzureSqlTable": import "Partial_LoadFromSql.libsonnet",
    "AzureSqlDWTable": import "Partial_LoadFromSql.libsonnet",   
    "SqlServerTable": import "Partial_LoadFromSql.libsonnet",   
+   "OracleServerTable": import "Partial_LoadFromSql.libsonnet",   
    "Parquet": import "Partial_LoadIntoParquet.libsonnet",   
 };
 

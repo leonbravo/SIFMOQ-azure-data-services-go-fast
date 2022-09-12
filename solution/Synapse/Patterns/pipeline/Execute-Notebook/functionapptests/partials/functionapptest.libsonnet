@@ -15,6 +15,7 @@ function(
     SourceMaxConcurrentConnections = 0,
     SourceRecursively = "false",
     SourceDeleteAfterCompletion = "",
+    SourceWriteSchemaToPurview = "Disabled",
     TargetFormat = "N/A",
     TargetType = "Notebook-Optional",
     TargetDataFilename = "",
@@ -26,15 +27,22 @@ function(
     TargetMaxConcurrentConnections = 0,
     TargetRecursively = "false",
     TargetDeleteAfterCompletion = "",
+    TargetWriteSchemaToPurview = "Disabled",
     TestDescription = "",
     ExecuteNotebook = "Notebook 1",
-    CustomDefinitions = ""
+    CustomDefinitions = "",
+    Purview = "Disabled",
+    QualifiedIDAssociation = "TaskMasterId",
+    UseNotebookActivity = "Disabled"
     )
 {
     local TaskMasterJson =     
     {
         "ExecuteNotebook": ExecuteNotebook,
         "CustomDefinitions": CustomDefinitions,
+        "Purview": Purview,
+        "QualifiedIDAssociation": QualifiedIDAssociation,
+        "UseNotebookActivity":UseNotebookActivity,
         "Source":{
             "Type": SourceFormat,                       
             "RelativePath": "",
@@ -43,6 +51,7 @@ function(
             "MaxConcurrentConnections": SourceMaxConcurrentConnections,
             "Recursively": SourceRecursively,
             "DeleteAfterCompletion": SourceDeleteAfterCompletion,
+            "WriteSchemaToPurview": SourceWriteSchemaToPurview
             
         },
 
@@ -53,7 +62,9 @@ function(
             "SchemaFileName": TargetSchemaFileName,            
             "MaxConcurrentConnections": TargetMaxConcurrentConnections,
             "Recursively": TargetRecursively,
-            "DeleteAfterCompletion": TargetDeleteAfterCompletion
+            "DeleteAfterCompletion": TargetDeleteAfterCompletion,
+            "WriteSchemaToPurview": TargetWriteSchemaToPurview
+
         },
     },
 
@@ -98,7 +109,8 @@ function(
     "TargetSystemSecretName":"",
 	"TargetSystemUserName":"",
     "SynapsePipeline": SynapsePipeline,
-    "TestDescription": "[" + TestNumber + "] " +  " Notebook execution test.",
-    "DependencyChainTag": "" 
+    "TestDescription": "[" + TestNumber + "] " +  " Execute Notebook test - by default this execute the SampleNotebook provided within the synapse deployment.",
+    "DependencyChainTag": "", 
+    "UseNotebookActivity": UseNotebookActivity
 }+commons
 

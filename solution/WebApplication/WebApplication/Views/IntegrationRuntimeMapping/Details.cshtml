@@ -1,0 +1,64 @@
+@using Humanizer;
+@model WebApplication.Models.IntegrationRuntimeMapping
+
+@{
+    ViewData["Title"] = "Details - " + "IntegrationRuntimeMapping".Humanize(LetterCasing.Title);
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+        <div class="alert alert-danger" role="alert">Caution. These records are critical to the application and changes may cause certain features to break.</div>    
+
+<h1>Details</h1>
+
+<div>
+    <h4> @("TaskTypeMapping".Humanize(LetterCasing.Title))</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IntegrationRuntimeMappingId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IntegrationRuntimeMappingId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IntegrationRuntimeId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IntegrationRuntimeId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IntegrationRuntimeName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IntegrationRuntimeName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SystemId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SystemId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ActiveYn)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ActiveYn)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a href="javascript:history.go(-1)" title="Back to List" class="btn btn-secondary"><i class="fa fa-arrow-circle-left"></i> Back</a>
+    <a asp-action="Edit" asp-route-id="@Model.IntegrationRuntimeMappingId" class="btn btn-warning details" title="Edit"><i class="fa fa-pencil-square-o"></i> Edit</a> 
+</div>
+@section Scripts
+{
+    <script type="text/javascript">
+		$(document).ready(function ()
+        {
+            $(".jsonpretty").each(function (index) {
+                $(".jsonformatted", this).JSONView($(".jsonraw", this)[0].innerText);
+                $(".jsonraw", this)[0].innerText = null;
+            });
+
+		});
+    </script>
+}   

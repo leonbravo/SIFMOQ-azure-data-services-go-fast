@@ -63,5 +63,6 @@ get_common_setting MICROSOFT_GPG_KEYS_URI
 curl -sSL ${MICROSOFT_GPG_KEYS_URI} | gpg --dearmor > /usr/share/keyrings/microsoft-archive-keyring.gpg
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/microsoft-archive-keyring.gpg] https://packages.microsoft.com/repos/azure-cli/ ${VERSION_CODENAME} main" > /etc/apt/sources.list.d/azure-cli.list
 apt-get update
-apt-get install -y azure-cli
+#apt-get install -y azure-cli
+sudo apt install -y --allow-downgrades azure-cli=2.37.0-1~buster
 echo "Done!"

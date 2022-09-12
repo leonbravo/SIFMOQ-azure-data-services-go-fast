@@ -1,12 +1,17 @@
 {
-  "SchoolInfo": {
-    "RefId": "D3E34B35-9D75-101A-8C3D-00AA001A1652",
+    "RefId": "D3E34B35-9D75-101A-1234-00AA001A1676",
     "LocalId": "01011234",
     "StateProvinceId": "01011234",
     "CommonwealthId": "012345",
     "ParentCommonwealthId": "012346",
-    "SchoolName": "Lincoln Secondary College",
+    "SchoolName": "Brisbane Secondary College",
     "LEAInfoRefId": "73648462-8886-24AA-5294-BC6380173276",
+    "ACARAId": "00AA001A1676",
+    "SchoolDistrictId": "D3E34B35",
+    "BoardingSchoolStatus": "N",
+    "EntityOpen": null,
+    "EntityClose": null,
+    "SchoolTimeZone": "1A1676",
     "OtherLEA": {
       "SIF_RefObject": "LEAInfo",
       "value": "AA648462-8886-24AA-5294-BC638017320B"
@@ -19,7 +24,7 @@
         "03"
       ]
     },
-    "SchoolURL": "http://www.lincolnsc.edu.vic.au",
+    "SchoolURL": "http://www.brisbanesc.edu.vic.au",
     "PrincipalInfo": {
       "ContactName": {
         "Type": "LGL",

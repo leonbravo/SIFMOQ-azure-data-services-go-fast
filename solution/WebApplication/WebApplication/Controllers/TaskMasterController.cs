@@ -57,6 +57,35 @@ namespace WebApplication.Controllers
             return View(taskMaster);
         }
 
+
+        [ChecksUserAccess]
+        public async Task<IActionResult> DetailsByTaskInstance(long? TaskInstanceId)
+        {
+            if (TaskInstanceId == null)
+            {
+                return NotFound();
+            }
+
+            var taskInstance= await _context.TaskInstance
+               .Include(t => t.TaskMaster)               
+               .FirstOrDefaultAsync(m => m.TaskInstanceId == TaskInstanceId);
+
+            var taskMaster = await _context.TaskMaster
+                .Include(t => t.ScheduleMaster)
+                .Include(t => t.SourceSystem)
+                .Include(t => t.TargetSystem)
+                .Include(t => t.TaskGroup)
+                .Include(t => t.TaskType)
+                .FirstOrDefaultAsync(m => m.TaskMasterId == taskInstance.TaskMasterId);
+            if (taskMaster == null)
+                return NotFound();
+            if (!await CanPerformCurrentActionOnRecord(taskMaster))
+                return new ForbidResult();
+
+            return View("Details",taskMaster);
+        }
+
+
         // GET: TaskMaster/Create
         public IActionResult Create(int? TaskGroupId)
         {
@@ -92,7 +121,7 @@ namespace WebApplication.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ChecksUserAccess]
-        public async Task<IActionResult> Create(string returnUrl, [Bind("TaskMasterId,TaskMasterName,TaskTypeId,TaskGroupId,ScheduleMasterId,SourceSystemId,TargetSystemId,DegreeOfCopyParallelism,AllowMultipleActiveInstances,TaskDatafactoryIr,TaskMasterJson,ActiveYn,DependencyChainTag,EngineId")] TaskMaster taskMaster)
+        public async Task<IActionResult> Create(string returnUrl, [Bind("TaskMasterId,TaskMasterName,TaskTypeId,TaskGroupId,ScheduleMasterId,SourceSystemId,TargetSystemId,DegreeOfCopyParallelism,AllowMultipleActiveInstances,TaskDatafactoryIr,TaskMasterJson,ActiveYn,DependencyChainTag,EngineId,InsertIntoCurrentSchedule")] TaskMaster taskMaster)
         {
             if (ModelState.IsValid)
             {
@@ -145,7 +174,7 @@ namespace WebApplication.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ChecksUserAccess]
-        public async Task<IActionResult> Edit(long id, [Bind("TaskMasterId,TaskMasterName,TaskTypeId,TaskGroupId,ScheduleMasterId,SourceSystemId,TargetSystemId,DegreeOfCopyParallelism,AllowMultipleActiveInstances,TaskDatafactoryIr,TaskMasterJson,ActiveYn,DependencyChainTag,EngineId")] TaskMaster taskMaster)
+        public async Task<IActionResult> Edit(long id, [Bind("TaskMasterId,TaskMasterName,TaskTypeId,TaskGroupId,ScheduleMasterId,SourceSystemId,TargetSystemId,DegreeOfCopyParallelism,AllowMultipleActiveInstances,TaskDatafactoryIr,TaskMasterJson,ActiveYn,DependencyChainTag,EngineId,InsertIntoCurrentSchedule")] TaskMaster taskMaster)
         {
             if (id != taskMaster.TaskMasterId)
             {
@@ -252,6 +281,7 @@ namespace WebApplication.Controllers
             cols.Add(JObject.Parse("{ 'data':'TargetSystem.SystemName', 'name':'Target' }"));
             cols.Add(JObject.Parse("{ 'data':'TaskDatafactoryIr', 'name':'Data Factory IR'}"));
             cols.Add(JObject.Parse("{ 'data':'ActiveYn', 'name':'ActiveYn', 'autoWidth':true, 'ads_format': 'bool' }"));
+            cols.Add(JObject.Parse("{ 'data':'InsertIntoCurrentSchedule', 'name':'InsertIntoCurrentSchedule', 'autoWidth':true, 'ads_format': 'bool' }"));
 
             HumanizeColumns(cols);
 
@@ -312,13 +342,14 @@ namespace WebApplication.Controllers
                         (from md in modelDataAll
                          join tg in _context.TaskGroup
                             on md.TaskGroupId equals tg.TaskGroupId
-                         join rm in _context.SubjectAreaRoleMap
-                            on tg.SubjectAreaId equals rm.SubjectAreaId
+                         join rm in _context.EntityRoleMap
+                            on tg.SubjectAreaId equals rm.EntityId
                          where
                              GetUserAdGroupUids().Contains(rm.AadGroupUid)
                              && permittedRoles.Contains(rm.ApplicationRoleName)
+                             && rm.EntityTypeName == EntityRoleMap.SubjectAreaTypeName
                              && rm.ExpiryDate > DateTimeOffset.Now
-                             && rm.ActiveYn
+                             && rm.ActiveYN
                          select md).Distinct();
                 }
 
@@ -403,6 +434,8 @@ namespace WebApplication.Controllers
 
                 tm.TaskMasterId = 0;
                 tm.TaskMasterName = tm.TaskMasterName + " Copy";
+                tm.ActiveYn = false;
+                
                 _context.Add(tm);
             }
             await _context.SaveChangesAsync();
@@ -462,7 +495,7 @@ namespace WebApplication.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ChecksUserAccess]
-        public async Task<IActionResult> EditPlus(long id, string returnUrl, [Bind("TaskMasterId,TaskMasterName,TaskTypeId,TaskGroupId,ScheduleMasterId,SourceSystemId,TargetSystemId,DegreeOfCopyParallelism,AllowMultipleActiveInstances,TaskDatafactoryIr,TaskMasterJson,ActiveYn,DependencyChainTag,EngineId")] TaskMaster taskMaster)
+        public async Task<IActionResult> EditPlus(long id, string returnUrl, [Bind("TaskMasterId,TaskMasterName,TaskTypeId,TaskGroupId,ScheduleMasterId,SourceSystemId,TargetSystemId,DegreeOfCopyParallelism,AllowMultipleActiveInstances,TaskDatafactoryIr,TaskMasterJson,ActiveYn,DependencyChainTag,EngineId,InsertIntoCurrentSchedule")] TaskMaster taskMaster)
         {
             if (id != taskMaster.TaskMasterId)
                 return NotFound();

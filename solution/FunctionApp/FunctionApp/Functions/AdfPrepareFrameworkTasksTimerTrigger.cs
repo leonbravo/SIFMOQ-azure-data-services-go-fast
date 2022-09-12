@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Cronos;
 using FunctionApp.DataAccess;
@@ -17,6 +18,8 @@ using FunctionApp.Helpers;
 using FunctionApp.Models;
 using FunctionApp.Models.Options;
 using FunctionApp.Services;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -33,19 +36,29 @@ namespace FunctionApp.Functions
         private readonly TaskMetaDataDatabase _taskMetaDataDatabase;
         private readonly DataFactoryPipelineProvider _dataFactoryPipelineProvider;
         private readonly TaskTypeMappingProvider _taskTypeMappingProvider;
+        private readonly IntegrationRuntimeMappingProvider _integrationRuntimeMappingProvider;
+        private readonly IHttpClientFactory _httpClientFactory;    
 
-        public AdfPrepareFrameworkTasksTimerTrigger(IOptions<ApplicationOptions> appOptions, TaskMetaDataDatabase taskMetaDataDatabase, DataFactoryPipelineProvider dataFactoryPipelineProvider, TaskTypeMappingProvider taskTypeMappingProvider)
+        public string HeartBeatFolder { get; set; }
+        public ILogger Log { get; set; }
+
+
+        public AdfPrepareFrameworkTasksTimerTrigger(IOptions<ApplicationOptions> appOptions, TaskMetaDataDatabase taskMetaDataDatabase, DataFactoryPipelineProvider dataFactoryPipelineProvider, TaskTypeMappingProvider taskTypeMappingProvider, IHttpClientFactory httpClientFactory, IntegrationRuntimeMappingProvider integrationRuntimeMappingProvider)
         {
             _appOptions = appOptions;
             _taskMetaDataDatabase = taskMetaDataDatabase;
             _dataFactoryPipelineProvider = dataFactoryPipelineProvider;
             _taskTypeMappingProvider = taskTypeMappingProvider;
+            _httpClientFactory = httpClientFactory;
+            _integrationRuntimeMappingProvider = integrationRuntimeMappingProvider;            
         }
 
         [FunctionName("PrepareFrameworkTasksTimerTrigger")]
         public async Task Run([TimerTrigger("0 */2 * * * *")] TimerInfo myTimer, ILogger log, ExecutionContext context)
         {
             Guid executionId = context.InvocationId;
+            this.HeartBeatFolder = context.FunctionAppDirectory;
+            this.Log = log;
             if (_appOptions.Value.TimerTriggers.EnablePrepareFrameworkTasks)
             {
                 FrameworkRunner fr = new FrameworkRunner(log, executionId);
@@ -56,16 +69,32 @@ namespace FunctionApp.Functions
 
         public async Task<dynamic> PrepareFrameworkTasksCore(Logging.Logging logging)
         {
-            await _taskMetaDataDatabase.ExecuteSql(
-                $"Insert into Execution values ('{logging.DefaultActivityLogItem.ExecutionUid}', '{DateTimeOffset.Now:u}', '{DateTimeOffset.Now.AddYears(999):u}')");
-
-            short frameworkWideMaxConcurrency = _appOptions.Value.FrameworkWideMaxConcurrency;
-
-            //Generate new task instances based on task master and schedules
-            await CreateScheduleAndTaskInstances(logging);
-
-            await _taskMetaDataDatabase.ExecuteSql("exec dbo.DistributeTasksToRunnners " + frameworkWideMaxConcurrency.ToString());
-
+            try
+            {
+                await _taskMetaDataDatabase.ExecuteSql(
+                    $"Insert into Execution values ('{logging.DefaultActivityLogItem.ExecutionUid}', '{DateTimeOffset.Now:u}', '{DateTimeOffset.Now.AddYears(999):u}')");
+                short frameworkWideMaxConcurrency = _appOptions.Value.FrameworkWideMaxConcurrency;
+                //Generate new task instances based on task master and schedules
+                await CreateScheduleAndTaskInstances(logging);
+                await _taskMetaDataDatabase.ExecuteSql("exec dbo.DistributeTasksToRunnners " + frameworkWideMaxConcurrency.ToString());
+            }
+            catch (Exception ex)
+            {
+                logging.LogErrors(new Exception("Prepare Framework Task Failed"));
+                logging.LogErrors(ex);
+            }
+            //Chain Straight into RunFramework Tasks
+            try
+            {
+                AdfRunFrameworkTasksTimerTrigger rfttt = new AdfRunFrameworkTasksTimerTrigger(_appOptions, _taskMetaDataDatabase, _httpClientFactory);
+                rfttt.HeartBeatFolder = this.HeartBeatFolder;                
+                await rfttt.Core(Log);
+            }
+            catch (Exception ex1)
+            {
+                logging.LogErrors(new Exception("Run Framework Task Failed"));
+                logging.LogErrors(ex1);
+            }
             return new { };
         }
        
@@ -149,7 +178,7 @@ namespace FunctionApp.Functions
             dynamic taskMasters = con.QueryWithRetry(@"Exec dbo.GetTaskMaster");
             // Get a list of Active task type mappings
             var taskTypeMappings = await _taskTypeMappingProvider.GetAllActive();
-
+            var integrationRuntimeMappings = await _integrationRuntimeMappingProvider.GetAllActive();
             foreach (dynamic row in taskMasters)
             {
                 DataRow drTaskInstance = dtTaskInstance.NewRow();
@@ -159,13 +188,20 @@ namespace FunctionApp.Functions
                 try
                {
                     dynamic taskMasterJson = JsonConvert.DeserializeObject(row.TaskMasterJSON);
+                    string sourceSystemId = row.SourceSystemId.ToString();
                     string sourceSystem = row.SourceSystemType.ToString();
                     string targetSystem = row.TargetSystemType.ToString();
+                    string targetSystemId = row.TargetSystemId.ToString();
                     string sourceType = taskMasterJson?.Source.Type.ToString();
                     string targetType = taskMasterJson?.Target.Type.ToString();
                     string integrationRuntime = row.TaskDatafactoryIR.ToString();
                     string taskExecutionType = row.TaskExecutionType.ToString();
                     Int64 taskTypeId = row.TaskTypeId;
+
+                    //Check whether our Source / IR mapping is valid
+                    //If invalid we throw an error
+                    IntegrationRuntimeMappingProvider.CheckValidTaskMasterMapping(integrationRuntimeMappings, sourceSystemId, targetSystemId, integrationRuntime);
+
 
                     // Determine the pipeline that we need to call 
                     var adfPipeline = TaskTypeMappingProvider.LookupMappingForTaskMaster(taskTypeMappings,
@@ -185,7 +221,7 @@ namespace FunctionApp.Functions
 
                     // Perform some transformations on the task master Json to support parameterisable Json templates
                     JObject root = new JObject();
-                    if (row.SourceSystemType == "ADLS" || row.SourceSystemType == "Azure Blob")
+                    if (row.SourceSystemType == "ADLS" || row.SourceSystemType == "Azure Blob" || row.SourceSystemType == "FileServer")
                     {
                         if (taskMasterJson?.Source.Type.ToString() != "Filelist")
                         {
@@ -193,7 +229,7 @@ namespace FunctionApp.Functions
                         }
                     }
 
-                    if (row.TargetSystemType == "ADLS" || row.TargetSystemType == "Azure Blob")
+                    if (row.TargetSystemType == "ADLS" || row.TargetSystemType == "Azure Blob" || row.TargetSystemType == "FileServer")
                     {
                         if (JObject.Parse(row.TaskMasterJSON)["Target"]["RelativePath"] != null)
                         {

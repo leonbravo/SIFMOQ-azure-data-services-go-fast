@@ -42,7 +42,28 @@ local Template_Azure_Storage_to_Azure_Storage = function(SourceType, SourceForma
         "TaskTypeId":-2,
         "Pipeline":"GPL_" + SourceType + "_" + SourceFormat + "_" + TargetType + "_" + TargetFormat  
 };
-
+local Template_Execute_SQL_Statement = function(SourceType, SourceFormat, TargetType, TargetFormat)
+{
+        "Folder": "Execute-SQL-Statement",
+        "GFPIR": "Azure",
+        "SourceType": SourceType,
+        "SourceFormat": "NA",
+        "TargetType": TargetType,
+        "TargetFormat": "NA",
+        "TaskTypeId":-8,
+        "Pipeline":"GPL_" +SourceType + "_NA_" + TargetType + "_NA_ExecuteSql" 
+};
+local Template_REST_API_to_Azure_Storage = function(SourceType, SourceFormat, TargetType, TargetFormat)
+{
+        "Folder": "REST-API-to-Azure-Storage",
+        "GFPIR": "Azure",
+        "SourceType": SourceType,
+        "SourceFormat": SourceFormat,
+        "TargetType": TargetType,
+        "TargetFormat": TargetFormat,
+        "TaskTypeId":-9,
+        "Pipeline":"GPL_" + SourceType + "_" + SourceFormat + "_" + TargetType + "_" + TargetFormat  
+};
 
 
 #SQL_Database_to_Azure_Storage
@@ -50,19 +71,25 @@ local Template_Azure_Storage_to_Azure_Storage = function(SourceType, SourceForma
     #Blob
     Template_SQL_Database_to_Azure_Storage("AzureSqlTable","Sql","AzureBlobStorage","Parquet"),
     Template_SQL_Database_to_Azure_Storage("SqlServerTable","Sql","AzureBlobStorage","Parquet"),
+    Template_SQL_Database_to_Azure_Storage("OracleServerTable","Sql","AzureBlobStorage","Parquet"),
     #Template_SQL_Database_to_Azure_Storage("AzureSqlDWTable","Sql","AzureBlobStorage","Parquet"),
     Template_SQL_Database_to_Azure_Storage("AzureSqlTable","Table","AzureBlobStorage","Parquet"),
     Template_SQL_Database_to_Azure_Storage("SqlServerTable","Table","AzureBlobStorage","Parquet"),
+    Template_SQL_Database_to_Azure_Storage("OracleServerTable","Table","AzureBlobStorage","Parquet"),
     #Template_SQL_Database_to_Azure_Storage("AzureSqlDWTable","Table","AzureBlobStorage","Parquet"),
     #ADLS
     Template_SQL_Database_to_Azure_Storage("AzureSqlTable","Sql","AzureBlobFS","Parquet"),
     Template_SQL_Database_to_Azure_Storage("SqlServerTable","Sql","AzureBlobFS","Parquet"),
+    Template_SQL_Database_to_Azure_Storage("OracleServerTable","Sql","AzureBlobFS","Parquet"),
     #Template_SQL_Database_to_Azure_Storage("AzureSqlDWTable","Sql","AzureBlobFS","Parquet"),
     Template_SQL_Database_to_Azure_Storage("AzureSqlTable","Table","AzureBlobFS","Parquet"),
     Template_SQL_Database_to_Azure_Storage("SqlServerTable","Table","AzureBlobFS","Parquet"),
+    Template_SQL_Database_to_Azure_Storage("OracleServerTable","Table","AzureBlobFS","Parquet"),
     #Template_SQL_Database_to_Azure_Storage("AzureSqlDWTable","Table","AzureBlobFS","Parquet")   
-    Template_SQL_Database_to_Azure_Storage("AzureSqlTable","Table","FileServer","Parquet"),
-    Template_SQL_Database_to_Azure_Storage("SqlServerTable","Table","FileServer","Parquet")
+    #Template_SQL_Database_to_Azure_Storage("AzureSqlTable","Table","FileServer","Parquet"),
+    #Template_SQL_Database_to_Azure_Storage("SqlServerTable","Table","FileServer","Parquet"),
+    #Template_SQL_Database_to_Azure_Storage("OracleServerTable","Table","FileServer","Parquet")
+
 ]
 +
 #SQL_Database_CDC_to_Azure_Storage
@@ -201,3 +228,24 @@ local Template_Azure_Storage_to_Azure_Storage = function(SourceType, SourceForma
     Template_Azure_Storage_to_Azure_Storage("AzureBlobStorage","Json","AzureBlobFS","DelimitedText")
     #Template_Azure_Storage_to_Azure_Storage("AzureBlobStorage","Json","AzureBlobFS","Excel") -- Excel is not supported as a datafactory target!!!,
 ]
++ 
+#Execute SQL Statement 
+[ 
+    Template_Execute_SQL_Statement("SqlServerTable","NA","SqlServerTable","NA"),
+    Template_Execute_SQL_Statement("AzureSqlTable","NA","AzureSqlTable","NA"),    
+    Template_Execute_SQL_Statement("AzureSqlDWTable","NA","AzureSqlDWTable","NA")        
+]
+/*
++ 
+#REST API to Azure Storage 
+[ 
+    Template_REST_API_to_Azure_Storage("Rest","Anonymous","AzureBlobStorage","Json"),
+    Template_REST_API_to_Azure_Storage("Rest","Anonymous","AzureBlobFS","Json"),
+    Template_REST_API_to_Azure_Storage("Rest","Basic","AzureBlobStorage","Json"),
+    Template_REST_API_to_Azure_Storage("Rest","Basic","AzureBlobFS","Json"),
+    Template_REST_API_to_Azure_Storage("Rest","OAuth2","AzureBlobStorage","Json"),
+    Template_REST_API_to_Azure_Storage("Rest","OAuth2","AzureBlobFS","Json"),
+    Template_REST_API_to_Azure_Storage("Rest","ServicePrincipal","AzureBlobStorage","Json"),
+    Template_REST_API_to_Azure_Storage("Rest","ServicePrincipal","AzureBlobFS","Json")
+]
+*/

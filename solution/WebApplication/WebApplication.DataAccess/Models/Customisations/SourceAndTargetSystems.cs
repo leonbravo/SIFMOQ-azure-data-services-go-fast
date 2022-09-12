@@ -7,5 +7,6 @@ namespace WebApplication.Models
         public virtual List<TaskMaster> TaskMastersSource { get; set; }
         public virtual List<TaskMaster> TaskMastersTarget { get; set; }
        
+        public virtual List<IntegrationRuntimeMapping> IntegrationRuntimeMappings { get; set; }
     }
 }

@@ -1,0 +1,81 @@
+@model IEnumerable<WebApplication.Models.IntegrationRuntimeMapping>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="alert alert-danger" role="alert">Caution. These records are critical to the application and changes may cause certain features to break.</div>
+<h1><i id="PageIcon" class="fas fa-map-marked-alt"></i> Task Type Mappings</h1>
+<table id="adsgofast_tablelist" class="table table-striped">
+    <thead class="thead">
+        <tr>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+@section Scripts
+{
+    <script src="~/lib/bswindow/bswindow.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        var ModelName = "IntegrationRuntimeMapping";
+        function BulkUpdateTaskTypeMappingTaskMasterJsonSchema(dt) {
+            var selected_indexes = dt.rows({ selected: true }).indexes();
+            var selected_pkeys = [];
+            $.each(selected_indexes, function (index, i) {
+                selected_pkeys.push(dt.data()[i]["IntegrationRuntimeMappingId"]);
+            });
+
+            bsWindow.prompt('', '', 'Enter JSON', function (res) {
+                if (res == null) {
+                    toastr.warning('No Json Entered. Update Cancelled');
+                    return;
+                }
+
+                $.post("/" + ModelName + "/BulkUpdateTaskTypeMappingTaskMasterJsonSchema", { Pkeys: JSON.stringify(selected_pkeys, null, 2), Json: res })
+                    .done(function (data) {
+                        dt.ajax.reload(null, false);
+                        toastr.success("Successfully Updated Rows");
+                    });
+            });
+        }
+
+
+        $(document).on('init.dt', function (e, settings) {
+            var api = new $.fn.dataTable.Api(settings);
+            var table = api.table();
+
+            //This is where custom buttons and things would go.
+            buttons = [
+
+                {
+                    extend: 'selected',
+                    className: 'btn-warning',
+                    text: '<a><i data-toggle="tooltip" title=" Bulk Update Json" class="fas fa-edit" style="width:16px"></i>Bulk Update Json</a>',
+                    action: function (e, dt, node, config) {
+                        BulkUpdateTaskTypeMappingTaskMasterJsonSchema(dt, "Untried");
+                    }
+                }
+
+            ];
+
+            $.each(buttons, function (index, button) {
+                table.button().add(null, button);
+            });
+
+            RestyleDataTableButtons();
+
+            $('[data-toggle="tooltip"]').tooltip()
+            $('[data-toggle="popover"]').popover();
+
+
+        });
+
+
+        $(document).ready(function () {
+            DataTablesGridPrep();
+        });
+    </script>
+}  

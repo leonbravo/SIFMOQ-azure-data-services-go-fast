@@ -6,23 +6,32 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.Graph;
 using WebApplication.Services;
 using WebApplication.Framework;
 using WebApplication.Models;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using WebApplication.Forms;
+using WebApplication.Models.Forms;
+using WebApplication.Models.Options;
+using WebApplication.Models.Wizards;
+using Site = WebApplication.Models.Site;
 
 namespace WebApplication.Controllers
 {
     public partial class SubjectAreaController : BaseController
     {
         protected readonly AdsGoFastContext _context;
-        
+        private readonly IOptions<ApplicationOptions> _options;
 
-        public SubjectAreaController(AdsGoFastContext context, ISecurityAccessProvider securityAccessProvider, IEntityRoleProvider roleProvider) : base(securityAccessProvider, roleProvider)
+
+        public SubjectAreaController(AdsGoFastContext context, ISecurityAccessProvider securityAccessProvider, IEntityRoleProvider roleProvider, IOptions<ApplicationOptions> options) : base(securityAccessProvider, roleProvider)
         {
             Name = "SubjectArea";
             _context = context;
+            _options = options;
         }
 
         // GET: SubjectArea
@@ -56,6 +65,11 @@ namespace WebApplication.Controllers
         // GET: SubjectArea/Create
         public IActionResult Create()
         {
+        	if (!CanPerformCurrentActionGlobally())
+            {
+                return Forbid();
+            }
+
             ViewData["SubjectAreaFormId"] = new SelectList(_context.SubjectAreaForm.OrderBy(x=>x.SubjectAreaFormId), "SubjectAreaFormId", "SubjectAreaFormId");
             SubjectArea subjectArea = new SubjectArea();
             subjectArea.ActiveYn = true;
@@ -68,21 +82,65 @@ namespace WebApplication.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ChecksUserAccess]
-        public async Task<IActionResult> Create([Bind("SubjectAreaId,SubjectAreaName,ActiveYn,SubjectAreaFormId,DefaultTargetSchema,UpdatedBy")] SubjectArea subjectArea)
+        public async Task<IActionResult> Create(
+            [Bind("SubjectAreaId,SubjectAreaName,ShortCode, ActiveYn,SubjectAreaFormId,DefaultTargetSchema,UpdatedBy")]
+            SubjectArea subjectArea)
         {
             if (ModelState.IsValid)
             {
                 subjectArea.UpdatedBy = User.Identity.Name;
+                subjectArea.ShortCode = subjectArea.ShortCode?.ToLower();
+
                 _context.Add(subjectArea);
                 if (!await CanPerformCurrentActionOnRecord(subjectArea))
                 {
                     return new ForbidResult();
                 }
+
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(IndexDataTable));
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException e)
+                {
+                    ModelState.AddModelError("SubjectAreaName", e.InnerException.Message);
+                    return View(subjectArea);
+                }
+
+                if (subjectArea.SubjectAreaFormId == null)
+                {
+                    await CreateEmptySubjectAreaFormAndPIAAsync(subjectArea);
+                }
+
+                
             }
-            ViewData["SubjectAreaFormId"] = new SelectList(_context.SubjectAreaForm.OrderBy(x=>x.SubjectAreaFormId), "SubjectAreaFormId", "SubjectAreaFormId", subjectArea.SubjectAreaFormId);
-            return View(subjectArea);
+            return RedirectToAction(nameof(IndexDataTable));
+        }
+
+        private async Task CreateEmptySubjectAreaFormAndPIAAsync(SubjectArea subjectArea)
+        {
+            var currentSite = new Site() { Name = _options.Value.SiteName, Id = _options.Value.SiteId };
+
+            PIAWizardViewModel pia = new PIAWizardViewModel()
+            {
+                BelongingDataset = subjectArea.SubjectAreaName,
+                BelongingDatasetCode = subjectArea.ShortCode,
+                Site = currentSite
+            };
+
+            var form = new SubjectAreaForm()
+            {
+                FormJson = JsonConvert.SerializeObject(pia.ToForm(), PIAForm.JsonSettings),
+                FormStatus = default,
+                Revision = 1,
+                UpdatedBy = User.Identity.Name
+            };
+
+            subjectArea.SubjectAreaForm = form;
+
+            _context.Add(form);
+            await _context.SaveChangesAsync();
         }
 
         // GET: SubjectArea/Edit/5
@@ -94,7 +152,9 @@ namespace WebApplication.Controllers
                 return NotFound();
             }
 
-            var subjectArea = await _context.SubjectArea.FindAsync(id);
+            var subjectArea = await _context.SubjectArea
+                .Include(x => x.SubjectAreaForm)
+                .FirstOrDefaultAsync(x => x.SubjectAreaId == id);
             if (subjectArea == null)
                 return NotFound();
 
@@ -112,26 +172,44 @@ namespace WebApplication.Controllers
         [ChecksUserAccess]
         public async Task<IActionResult> Edit(int id, [Bind("SubjectAreaId,SubjectAreaName,ActiveYn,SubjectAreaFormId,DefaultTargetSchema,UpdatedBy")] SubjectArea subjectArea)
         {
-            if (id != subjectArea.SubjectAreaId)
-            {
+            var subjectAreaRecord = await _context.SubjectArea
+                .Include(x => x.SubjectAreaForm)
+                .FirstOrDefaultAsync(x => x.SubjectAreaId == id);
+
+            if (subjectAreaRecord == null)
                 return NotFound();
-            }
+
+            var hasGlobalPermission = await CanPerformCurrentActionOnRecord(subjectAreaRecord);
+            var hasSpecialPermission = await this.CanEditSubjectArea(subjectAreaRecord);
+            if (!hasGlobalPermission && !hasSpecialPermission)
+                return Forbid();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    subjectArea.UpdatedBy = User.Identity.Name;
-                    _context.Update(subjectArea);
+                    //explicit property setting because we now have additional fields that are *NOT* set by edit
+                    subjectAreaRecord.SubjectAreaName = subjectArea.SubjectAreaName;
+                    subjectAreaRecord.ActiveYn = subjectArea.ActiveYn;
+                    subjectAreaRecord.SubjectAreaFormId = subjectArea.SubjectAreaFormId;
+                    subjectAreaRecord.DefaultTargetSchema = subjectArea.DefaultTargetSchema;
+                    subjectAreaRecord.UpdatedBy = User.GetUserName();
 
-                    if (!await CanPerformCurrentActionOnRecord(subjectArea))
+                    if (subjectAreaRecord.SubjectAreaFormId == null)
+                    {
+                        await CreateEmptySubjectAreaFormAndPIAAsync(subjectAreaRecord);
+                    }
+
+                    _context.Update(subjectAreaRecord);
+
+                    if (!await CanPerformCurrentActionOnRecord(subjectAreaRecord))
                         return new ForbidResult();
-			
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SubjectAreaExists(subjectArea.SubjectAreaId))
+                    if (!SubjectAreaExists(subjectAreaRecord.SubjectAreaId))
                     {
                         return NotFound();
                     }
@@ -144,6 +222,35 @@ namespace WebApplication.Controllers
             }
         ViewData["SubjectAreaFormId"] = new SelectList(_context.SubjectAreaForm.OrderBy(x=>x.SubjectAreaFormId), "SubjectAreaFormId", "SubjectAreaFormId", subjectArea.SubjectAreaFormId);
             return View(subjectArea);
+        }
+
+        [HttpGet]
+        [ChecksUserAccess]
+        public async Task<IActionResult> EditPIA(int? id)
+        {
+            if (id == null)
+            {
+                return View("Error", new ErrorViewModel() { Message = "Subject area was not found." });
+            }
+
+            var subjectAreaRecord = await _context.SubjectArea
+                .Include(x => x.SubjectAreaForm)
+                .FirstOrDefaultAsync(x => x.SubjectAreaId == id);
+
+            if (subjectAreaRecord == null)
+                return NotFound();
+
+            var hasGlobalPermission = await CanPerformCurrentActionOnRecord(subjectAreaRecord);
+            var hasSpecialPermission = await this.CanEditSubjectArea(subjectAreaRecord);
+            if (!hasGlobalPermission && !hasSpecialPermission)
+                return Forbid();
+
+            if (subjectAreaRecord.SubjectAreaFormId == null)
+            {
+                await CreateEmptySubjectAreaFormAndPIAAsync(subjectAreaRecord);
+            }
+
+            return RedirectToAction("PIAWizard", "Wizards", new { id = subjectAreaRecord.SubjectAreaId });
         }
 
         // GET: SubjectArea/Delete/5
@@ -199,13 +306,13 @@ namespace WebApplication.Controllers
             JObject GridOptions = new JObject();
 
             JArray cols = new JArray();
+            cols.Add(JObject.Parse("{ 'data':'ShortCode', 'name':'Code', 'autoWidth':true }"));
             cols.Add(JObject.Parse("{ 'data':'SubjectAreaId', 'name':'Id', 'autoWidth':true }"));
             cols.Add(JObject.Parse("{ 'data':'SubjectAreaName', 'name':'Name', 'autoWidth':true }"));
             cols.Add(JObject.Parse("{ 'data':'SubjectAreaFormId', 'name':'Form', 'autoWidth':true }"));
             cols.Add(JObject.Parse("{ 'data':'DefaultTargetSchema', 'name':'Default Target Schema', 'autoWidth':true }"));
             cols.Add(JObject.Parse("{ 'data':'UpdatedBy', 'name':'Updated By', 'autoWidth':true }"));
             cols.Add(JObject.Parse("{ 'data':'ActiveYn', 'name':'Is Active', 'autoWidth':true, 'ads_format':'bool'}"));
-
             HumanizeColumns(cols);
 
             JArray pkeycols = new JArray();
@@ -213,9 +320,11 @@ namespace WebApplication.Controllers
 
             JArray Navigations = new JArray();
             Navigations.Add(JObject.Parse("{'Url':'/TaskGroup/IndexDataTable?SubjectAreaId=','Description':'View Task Groups', 'Icon':'object-group','ButtonClass':'btn-primary'}"));
-            Navigations.Add(JObject.Parse("{'Url':'/TaskGroup/IndexDataTable?SubjectAreaId=','Description':'View System Mappings', 'Icon':'bullseye','ButtonClass':'btn-primary'}"));
-            Navigations.Add(JObject.Parse("{'Url':'/TaskGroup/IndexDataTable?SubjectAreaId=','Description':'View Role Mappings', 'Icon':'user-tag','ButtonClass':'btn-primary'}"));
-            Navigations.Add(JObject.Parse("{'Url':'/TaskGroup/IndexDataTable?SubjectAreaId=','Description':'Auto Create Target Schema & AD Groups', 'Icon':'cogs','ButtonClass':'btn-danger'}"));
+            //Navigations.Add(JObject.Parse("{'Url':'/TaskGroup/IndexDataTable?SubjectAreaId=','Description':'View System Mappings', 'Icon':'bullseye','ButtonClass':'btn-primary'}"));
+            //Navigations.Add(JObject.Parse("{'Url':'/TaskGroup/IndexDataTable?SubjectAreaId=','Description':'View Role Mappings', 'Icon':'user-tag','ButtonClass':'btn-primary'}"));
+			Navigations.Add(JObject.Parse("{'Url':'/SubjectArea/Provision?Id=','Description':'Auto Create Target Schema & AD Groups', 'Icon':'cogs','ButtonClass':'btn-danger'}"));
+			Navigations.Add(JObject.Parse("{'Url':'/SubjectArea/EditPIA/','Description':'Edit Privacy Impact Assessment', 'Icon':'pencil-alt','ButtonClass':'btn-primary'}"));
+			Navigations.Add(JObject.Parse("{'Url':'/Wizards/PIASummary/','Description':'View PIA Details', 'Icon':'list-alt','ButtonClass':'btn-primary'}"));
 
             GridOptions["GridColumns"] = cols;
             GridOptions["ModelName"] = "SubjectArea";
@@ -259,19 +368,25 @@ namespace WebApplication.Controllers
                 //filter the list by permitted roles
                 if (!CanPerformCurrentActionGlobally())
                 {
+                    //TODO: Ensure that this works properly with the switch from Roles to Groups
                     var permittedRoles = GetPermittedGroupsForCurrentAction();
-                    var identity = User.Identity.Name;
+                    var identity = User.GetUserName();
+
+                    var myIncompleteForms = _context
+                        .SubjectArea
+                        .Include(x => x.SubjectAreaForm)
+                        .Where(x => x.SubjectAreaForm == null || x.SubjectAreaForm.FormStatus < (int)SubjectAreaFormStatus.Complete)
+                        .Where(x => x.UpdatedBy == identity || (x.SubjectAreaForm != null && x.SubjectAreaForm.UpdatedBy == identity))
+                      ;
+
+                    var myRoleMaps = _context.GetEntityRoleMapsFor(EntityRoleMap.SubjectAreaTypeName,GetUserAdGroupUids(), permittedRoles);
 
                     modelDataAll =
-                        (from md in modelDataAll
-                         join rm in _context.SubjectAreaRoleMap
-                             on md.SubjectAreaId equals rm.SubjectAreaId
-                         where
-                            GetUserAdGroupUids().Contains(rm.AadGroupUid)
-                            && permittedRoles.Contains(rm.ApplicationRoleName)
-                            && rm.ExpiryDate > DateTimeOffset.Now
-                            && rm.ActiveYn
-                         select md).Distinct();
+                        from md in modelDataAll
+                        where
+                            myIncompleteForms.Any(x => x.SubjectAreaId == md.SubjectAreaId)
+                            || myRoleMaps.Any(x => x.EntityId == md.SubjectAreaId && x.EntityTypeName == EntityRoleMap.SubjectAreaTypeName)
+                        select md;
                 }
 
                 //Sorting    
@@ -282,7 +397,7 @@ namespace WebApplication.Controllers
                 //Search    
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    modelDataAll = modelDataAll.Where(m => m.SubjectAreaName == searchValue);
+                    modelDataAll = modelDataAll.Where(m => m.SubjectAreaName.Contains(searchValue));
                 }
 
                 //total number of rows count     
@@ -298,6 +413,93 @@ namespace WebApplication.Controllers
                 throw;
             }
 
+        }
+
+        [HttpGet]
+        [ChecksUserAccess]
+        public async Task<IActionResult> Publish(int? id)
+        {
+            var subjectArea = await _context.SubjectArea.FindAsync(id);
+            if (subjectArea == null)
+            {
+                return NotFound();
+            }
+
+            if (!await CanPerformCurrentActionOnRecord(subjectArea))
+            {
+                return Forbid();
+            }
+
+            subjectArea.TaskGroups = await _context.TaskGroup.Where(x => x.SubjectAreaId == subjectArea.SubjectAreaId).ToListAsync();
+            if (subjectArea.SubjectAreaFormId != null && subjectArea.SubjectAreaFormId != 0)
+                subjectArea.SubjectAreaForm = _context.SubjectAreaForm.First(x => x.SubjectAreaFormId == subjectArea.SubjectAreaFormId);
+
+            ViewBag.Roles = _context.EntityRoleMap.Where(x => x.EntityId == subjectArea.SubjectAreaId && x.EntityTypeName == EntityRoleMap.SubjectAreaTypeName);
+            return View(subjectArea);
+        }
+
+
+        [ChecksUserAccess]
+        public async Task<IActionResult> Provision(int id)
+        {
+            var subjectArea = await _context.SubjectArea.FindAsync(id);
+            if (subjectArea == null)
+            {
+                return NotFound();
+            }
+            // TODO: Implement the processing functionality
+            //await _processingClient.QueueSubjectAreaProvisioning(id);
+            return View(subjectArea);
+        }
+
+
+        [ChecksUserAccess]
+        public async Task<IActionResult> Revise(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction(nameof(IndexDataTable));
+            }
+
+            // get the subject area
+            var subjectArea = await _context.SubjectArea.FindAsync(id);
+            if (subjectArea == null)
+            {
+                return View("Error", new ErrorViewModel() { Message = "Subject area not found." });
+            }
+
+            if (!await base.CanPerformCurrentActionOnRecord(subjectArea))
+                return Forbid();
+
+            var saForm = await _context.SubjectAreaForm.FindAsync(subjectArea.SubjectAreaFormId);
+
+            // Deserialize model so we can reset some values
+            PIAWizardViewModel PIA = PIAWizardViewModel.FromForm(JsonConvert.DeserializeObject<PIAForm>(saForm.FormJson, PIAForm.JsonSettings));
+
+            // Set DbId within the json after getting id of new SubjectAreaForm
+            PIA.SubjectAreaId = subjectArea.SubjectAreaId;
+            PIA.MaxStep = 0;
+            PIA.Step = 0;
+
+            // Create new SubjectAreaForm with copied values
+            // Increment revision num and set form status back to 1
+            var revisedSubjectAreaForm = new SubjectAreaForm
+            {
+                FormStatus = (byte)SubjectAreaFormStatus.Incomplete,
+                FormJson = JsonConvert.SerializeObject(PIA.ToForm(), PIAForm.JsonSettings),
+                SubjectAreas = saForm.SubjectAreas,
+                Revision = (byte)(saForm.Revision + 1)
+            };
+
+            // Add to db
+            _context.SubjectAreaForm.Add(revisedSubjectAreaForm);
+            await _context.SaveChangesAsync();
+
+            subjectArea.SubjectAreaFormId = revisedSubjectAreaForm.SubjectAreaFormId;
+            await _context.SaveChangesAsync();
+
+            // Now we can redireect to the wizard with our new SubjectAreaForm
+            return RedirectToAction("PIAWizard", "Wizards", new { id = subjectArea.SubjectAreaId });
         }
     }
 }

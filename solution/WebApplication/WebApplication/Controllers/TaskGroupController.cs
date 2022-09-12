@@ -273,13 +273,13 @@ namespace WebApplication.Controllers
 
                     modelDataAll =
                         (from md in modelDataAll
-                         join rm in _context.SubjectAreaRoleMap
-                            on md.SubjectAreaId equals rm.SubjectAreaId
+                         join rm in _context.EntityRoleMap
+                            on md.SubjectAreaId equals rm.EntityId
                          where
                              GetUserAdGroupUids().Contains(rm.AadGroupUid)
                              && permittedRoles.Contains(rm.ApplicationRoleName)
                              && rm.ExpiryDate > DateTimeOffset.Now
-                             && rm.ActiveYn
+                             && rm.ActiveYN
                          select md).Distinct();
                 }
 

@@ -150,6 +150,11 @@ variable "deploy_app_insights" {
   default     = true
   type        = bool
 }
+variable "deploy_bastion" {
+  description = "Feature toggle for deploying bastion"
+  default     = true
+  type        = bool
+}
 variable "deploy_app_service_plan" {
   description = "Feature toggle for deploying the App Service"
   default     = true
@@ -170,6 +175,13 @@ variable "deploy_sql_server" {
   default     = true
   type        = bool
 }
+
+variable "deploy_metadata_database" {
+  description = "Feature toggle for deploying Metadata Database"
+  default     = true
+  type        = bool
+}
+
 variable "deploy_sql_extend_audit_policy" {
   description = "Feature toggle for deploying the SQL Server Extended Audit policy"
   default     = true
@@ -234,6 +246,54 @@ variable "deploy_selfhostedsql" {
   type        = bool
 }
 
+variable "deploy_h2o-ai" {
+  description = "Feature toggle for deploying H2O-AI VM"
+  default     = false
+  type        = bool
+}
+variable "deploy_custom_vm" {
+  description = "Feature toggle for deploying a custom virtual machine"
+  default     = false
+  type        = bool
+}
+variable "custom_vm_os" {
+  description = "User must define whether they wish deploy a 'windows' or 'linux' virtual machine."
+  default     = "linux"
+  type        = string
+}
+variable "synapse_git_toggle_integration" {
+  description = "Feature toggle for enabling synapse github integration"
+  default     = false
+  type        = bool
+}
+variable "synapse_git_integration_type" {
+  description = "User must define whether they wish to use 'github' integration or 'devops'"
+  default     = "github"
+  type        = string
+}
+
+variable "synapse_git_use_pat" {
+  description = "Whether a pat is required for authentication (non public repo)."
+  default     = true
+  type        = bool
+}
+
+variable "adf_git_toggle_integration" {
+  description = "Feature toggle for enabling adf github integration"
+  default     = false
+  type        = bool
+}
+
+variable "adf_git_use_pat" {
+  description = "Whether a pat is required for authentication (non public repo)."
+  default     = true
+  type        = bool
+}
+variable "deploy_custom_terraform" {
+  description = "Whether the platform deploys the infrastructure located in the terraform_custom folder"
+  default     = false
+  type        = bool
+}
 #---------------------------------------------------------------
 # Post IAC - Feature Toggles 
 #---------------------------------------------------------------
@@ -255,12 +315,27 @@ variable "publish_sample_files" {
   type        = bool
 }
 
-variable "publish_database" {
-  description = "Feature toggle for Publishing Database schema and seeding with data"
+variable "publish_metadata_database" {
+  description = "Feature toggle for Publishing Metadata Database schema and seeding with data"
   default     = true
   type        = bool
 }
+variable "publish_sql_logins" {
+  description = "Feature toggle for Publishing Synapse / SQL database logins for lockbox"
+  default     = true
+  type        = bool
+}
+variable "publish_functional_tests" {
+  description = "Feature toggle for Publishing Functional Tests to the Web App"
+  default     = false
+  type        = bool
+}
 
+variable "publish_purview_configuration" {
+  description = "Feature toggle for deploying the Purview configuration script (WIP)"
+  default     = false
+  type        = bool
+}
 variable "configure_networking" {
   description = "Feature toggle for post IAC network configuration"
   default     = true
@@ -277,6 +352,18 @@ variable "publish_web_app_addcurrentuserasadmin" {
   description = "Feature toggle for adding user running deployment as a webapp admin"
   default     = false
   type        = bool
+}
+
+variable "publish_sif_database" {
+  description = "Feature toggle for Publishing SIF Database"
+  default     = false
+  type        = bool
+}
+
+variable "sif_database_name" {
+  description = "SIF DataMart Name"
+  default     = "sif"
+  type        = string
 }
 
 #---------------------------------------------------------------
@@ -450,7 +537,112 @@ variable "synapse_sppool_name" {
   type        = string
 }
 
+variable "synapse_git_repository_owner" {
+  description = "The owner of the github repository to be used for synapse. Eg. for the repository https://github.com/contoso/ads, the owner is contoso"
+  default     = ""
+  type        = string
+}
 
+variable "synapse_git_repository_name" {
+  description = "The name of the github repository to be used for synapse"
+  default     = ""
+  type        = string
+}
+/*NOT CURRENLTY USED
+variable "synapse_git_repository_base_url" {
+  description = "The base URL of the git repository you are using for synapse E.g - https://github.com/microsoft/azure-data-services-go-fast-codebase / https://dev.azure.com/microsoft/_git/lockBoxProject"
+  default = ""
+  type = string
+}*/
+variable "synapse_git_repository_branch_name" {
+  description = "The name of the github branch to be used"
+  default     = "main"
+  type        = string
+}
+
+variable "synapse_git_repository_root_folder" {
+  description = "The name of the root folder to be used in the branch"
+  default     = "/"
+  type        = string
+}
+variable "synapse_git_github_host_url" {
+  description = "Specifies the GitHub Enterprise host name. For example: https://github.mydomain.com. Use https://github.com for open source repositories. Note: Not used for devops"
+  default     = "https://github.com"
+  type        = string
+}
+variable "synapse_git_devops_project_name" {
+  description = "The name of the project to be referenced within devops. Note: Not used for github."
+  default     = "/"
+  type        = string
+}
+
+variable "synapse_git_devops_tenant_id" {
+  description = "The tenant id of the devops project. By default it will be valued as your tenant_id. Note: Not used for github."
+  default     = ""
+  type        = string
+}
+
+variable "synapse_git_pat" {
+  description = "The personal access token used to authenticate the git account"
+  default     = ""
+  type        = string
+}
+variable "synapse_git_user_name" {
+  description = "The user name to be associated with the commit being done for the pipeline upload."
+  default     = ""
+  type        = string
+}
+
+variable "synapse_git_email_address" {
+  description = "The email address to be associated with the commit being done for the pipeline upload."
+  default     = ""
+  type        = string
+}
+variable "adf_git_repository_owner" {
+  description = "The owner of the github repository to be used for adf. Eg. for the repository https://github.com/contoso/ads, the owner is contoso"
+  default     = ""
+  type        = string
+}
+
+variable "adf_git_repository_name" {
+  description = "The name of the github repository to be used for synapse"
+  default     = ""
+  type        = string
+}
+variable "adf_git_repository_branch_name" {
+  description = "The name of the github branch to be used"
+  default     = "main"
+  type        = string
+}
+
+variable "adf_git_repository_root_folder" {
+  description = "The name of the root folder to be used in the branch"
+  default     = "/"
+  type        = string
+}
+
+variable "adf_git_host_url" {
+  description = "Specifies the GitHub Enterprise host name. For example: https://github.mydomain.com. Use https://github.com for open source repositories."
+  default     = "https://github.com"
+  type        = string
+}
+
+variable "adf_git_pat" {
+  description = "The personal access token used to authenticate the git account"
+  default     = ""
+  type        = string
+}
+variable "adf_git_user_name" {
+  description = "The user name to be associated with the commit being done for the pipeline upload."
+  default     = ""
+  type        = string
+}
+
+variable "adf_git_email_address" {
+  description = "The email address to be associated with the commit being done for the pipeline upload."
+  default     = ""
+  type        = string
+}
 #---------------------------------------------------------------
 # Scale settings
 #---------------------------------------------------------------
@@ -486,10 +678,159 @@ variable "synapse_spark_min_node_count" {
 
 variable "synapse_spark_max_node_count" {
   description = "The maximum number of spark nodes in the autoscale pool"
-  default     = 3
+  default     = 12
   type        = number
 }
 
 
 
 
+#---------------------------------------------------------------
+# Parameters for specifying existing resources for reuse/
+#---------------------------------------------------------------
+variable "existing_log_analytics_workspace_id" {
+  description = "An existing log analytics workspace id for reuse"
+  default     = ""
+  type        = string
+}
+variable "existing_log_analytics_resource_id" {
+  description = "An existing log analytics resource id for reuse"
+  default     = ""
+  type        = string
+}
+variable "existing_plink_subnet_id" {
+  description = "An existing subnet id for reuse for the Private link resources"
+  default     = ""
+  type        = string
+}
+
+
+variable "existing_bastion_subnet_id" {
+  description = "An existing subnet id for reuse for the Bastion host"
+  default     = ""
+  type        = string
+}
+variable "existing_app_service_subnet_id" {
+  description = "An existing subnet id for reuse for the App Service delegation"
+  default     = ""
+  type        = string
+}
+variable "existing_vm_subnet_id" {
+  description = "An existing subnet id for reuse for the Agent VMs"
+  default     = ""
+  type        = string
+}
+
+variable "existing_private_dns_zone_db_id" {
+  description = "An existing private DNS zone for privatelink.database.windows.net"
+  default     = ""
+  type        = string
+}
+
+variable "existing_private_dns_zone_kv_id" {
+  description = "An existing private DNS zone for privatelink.vaultcore.azure.net"
+  default     = ""
+  type        = string
+}
+
+variable "existing_private_dns_zone_blob_id" {
+  description = "An existing private DNS zone for privatelink.blob.core.azure.net"
+  default     = ""
+  type        = string
+}
+
+variable "existing_private_dns_zone_queue_id" {
+  description = "An existing private DNS zone for privatelink.queue.core.azure.net"
+  default     = ""
+  type        = string
+}
+
+variable "existing_private_dns_zone_dfs_id" {
+  description = "An existing private DNS zone for privatelink.dfs.core.azure.net"
+  default     = ""
+  type        = string
+}
+
+variable "existing_private_dns_zone_purview_id" {
+  description = "An existing private DNS zone for privatelink.purview.azure.net"
+  default     = ""
+  type        = string
+}
+
+variable "existing_private_dns_zone_purview_studio_id" {
+  description = "An existing private DNS zone for privatelink.purviewstudio.azure.net"
+  default     = ""
+  type        = string
+}
+
+variable "existing_private_dns_zone_servicebus_id" {
+  description = "An existing private DNS zone for privatelink.servicebus.windows.net"
+  default     = ""
+  type        = string
+}
+
+variable "existing_private_dns_zone_synapse_gateway_id" {
+  description = "An existing private DNS zone for privatelink.azuresynapse.net"
+  default     = ""
+  type        = string
+}
+
+variable "existing_private_dns_zone_synapse_studio_id" {
+  description = "An existing private DNS zone for privatelink.dev.azuresynapse.net"
+  default     = ""
+  type        = string
+}
+
+variable "existing_private_dns_zone_synapse_sql_id" {
+  description = "An existing private DNS zone for privatelink.sql.azuresynapse.net"
+  default     = ""
+  type        = string
+}
+
+variable "existing_synapse_private_link_hub_id" {
+  description = "An existing private link hub for synapse studio."
+  default     = ""
+  type        = string
+}
+
+variable "web_app_admin_security_group" {
+  description = "A web app Azure security group used for admin access."
+  default     = ""
+  type        = string
+}
+
+variable "custom_vm_plan_name" {
+  description = "An Azure vm plan name to be referenced for a custom vm image."
+  default     = ""
+  type        = string
+}
+variable "custom_vm_plan_product" {
+  description = "An Azure vm plan product to be referenced for a custom vm image."
+  default     = ""
+  type        = string
+}
+variable "custom_vm_plan_publisher" {
+  description = "An Azure vm plan publisher to be referenced for a custom vm image."
+  default     = ""
+  type        = string
+}
+variable "custom_vm_image_offer" {
+  description = "An Azure custom image marketplace image offer to be referenced for a custom vm image."
+  default     = ""
+  type        = string
+}
+variable "custom_vm_image_publisher" {
+  description = "An Azure custom image marketplace image publisher to be referenced for a custom vm image."
+  default     = ""
+  type        = string
+}
+variable "custom_vm_image_sku" {
+  description = "An Azure custom image marketplace image sku to be referenced for a custom vm image."
+  default     = ""
+  type        = string
+}
+variable "custom_vm_image_version" {
+  description = "An Azure custom image marketplace image version to be referenced for a custom vm image."
+  default     = "latest"
+  type        = string
+}

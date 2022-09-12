@@ -174,8 +174,12 @@ namespace FunctionApp.Functions
 
                     else
                     {
-                        logging.LogErrors(new Exception("Kusto query failed getting ADFPipeline Stats."));
+                        logging.LogErrors(new Exception("Kusto query failed getting GetADFActivityErrors."));
                     }
+                }
+                else
+                {
+                    logging.LogErrors(new Exception("Kusto query failed getting GetADFActivityErrors."));
                 }
             }
 

@@ -19,7 +19,7 @@ function()
                 "Disabled"
             ],
             "options": {
-                "infoText": "Use this if you wish to push metadata about your schema from this task to Purview. Note: It is advise to only use this after resources have been initially scanned."
+                "infoText": "(required) Use this if you wish to push metadata about your schema from this task to Purview. Note: It is advised to only use this after resources have been initially scanned."
             }
         },
         "RelativePath": {
@@ -28,7 +28,7 @@ function()
                 "inputAttributes": {
                     "placeholder": "eg. AwSample/dbo/Customer/{yyyy}/{MM}/{dd}/{hh}/"
                 },
-                "infoText": "Path of the file to be imported."
+                "infoText": "(optional) Path of the file to be imported."
             }
         },
         "DataFileName": {
@@ -37,7 +37,7 @@ function()
                 "inputAttributes": {
                     "placeholder": "eg. Customer.xlsx"
                 },
-                "infoText": "Name of the file to be imported."
+                "infoText": "(required) Name of the file to be imported."
             }
         },
         "SchemaFileName": {
@@ -46,7 +46,7 @@ function()
                 "inputAttributes": {
                     "placeholder": "eg. Customer_Schema.json"
                 },
-                "infoText": "Name of the schema file to use when generating the target table. *Note that if you do not provide a schema file then the schema will be automatically inferred based on the source data."
+                "infoText": "(required) Name of the schema file to use when generating the target table. *Note that if you do not provide a schema file then the schema will be automatically inferred based on the source data."
             }
         },      
         "MaxConcurrentConnections": {

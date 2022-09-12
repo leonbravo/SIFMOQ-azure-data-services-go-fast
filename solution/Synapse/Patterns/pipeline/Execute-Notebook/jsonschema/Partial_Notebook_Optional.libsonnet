@@ -19,7 +19,7 @@ function()
                 "Disabled"
             ],
             "options": {
-                "infoText": "Use this if you wish to push metadata about your schema from this task to Purview. Note: It is advise to only use this after resources have been initially scanned."
+                "infoText": "(required) Use this if you wish to push metadata about your schema from this task to Purview. Note: It is advise to only use this after resources have been initially scanned."
             },
         },
         "RelativePath": {
@@ -28,7 +28,7 @@ function()
                 "inputAttributes": {
                     "placeholder": "Note: This field is completely optional to use for values to place into the TaskObject passed into the Notebook."
                 },
-                "infoText": "Path of the folder holding the file to be imported/exported."
+                "infoText": "(optional) Path of the folder holding the file to be imported/exported."
             }
         },
         "DataFileName": {
@@ -37,7 +37,7 @@ function()
                 "inputAttributes": {
                     "placeholder": "Note: This field is completely optional to use for values to place into the TaskObject passed into the Notebook."
                 },
-                "infoText": "Name of the file to be imported."
+                "infoText": "(optional) Name of the file to be imported."
             }
         },
         "SchemaFileName": {
@@ -46,7 +46,7 @@ function()
                 "inputAttributes": {
                     "placeholder": "Note: This field is completely optional to use for values to place into the TaskObject passed into the Notebook."
                 },
-                "infoText": "Name of the schema file to use when generating the target table."
+                "infoText": "(optional) Name of the schema file to use when generating the target table."
             }
         } 
     },

@@ -22,7 +22,7 @@ function()
                         "Watermark"
                     ],
                     "options": {
-                        "infoText": "Select Full for Full Table Extraction & Watermark for Incremental based on a Watermark column"
+                        "infoText": "(required) Select Full for Full Table Extraction & Watermark for Incremental based on a Watermark column"
                     },
                     "default":"Table"
                 },
@@ -63,7 +63,7 @@ function()
                         "inputAttributes": {
                             "placeholder": "eg. Customer Id"
                         },
-                        "infoText": "If you want to break an extraction down into multiple files fill out the chunk fields. Otherwise leave blank."
+                        "infoText": "(optional) If you want to break an extraction down into multiple files fill out the chunk fields. Otherwise leave blank."
                     },
                     "default":""
                 },
@@ -73,7 +73,7 @@ function()
                         "inputAttributes": {
                             "placeholder": 0                        
                         },                        
-                        "infoText": "Number of rows to use for each [chunk] of data."
+                        "infoText": "(optional) Number of rows to use for each [chunk] of data."
                     },
                     "default": 0
                 }

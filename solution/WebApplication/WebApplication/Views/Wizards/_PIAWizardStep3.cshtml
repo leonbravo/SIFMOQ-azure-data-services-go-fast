@@ -1,0 +1,159 @@
+﻿@model WebApplication.Models.Wizards.PIAWizardViewModel
+<br />
+
+<h3>
+    Understanding Your Legal Responsibility
+</h3>
+<br />
+
+<div class="form-group row col-12">
+    <p>
+        <strong>
+            Before you proceed, please read and confirm the following disclaimer statements, by checking the appropriate boxes or updating with input from the dropdown options:
+        </strong>
+    </p>
+</div>
+
+<div class="form-group row col-12">
+    <div class="col-6">
+        <label asp-for="SupportingDocumentationLocation" class="control-label"></label>
+    </div>
+    <div class="col-6">
+        @Html.TextBoxFor(model => model.SupportingDocumentationLocation, new { @class = "form-control" })
+        <span asp-validation-for="SupportingDocumentationLocation" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group row col-12">
+    <div class="col-6">
+        <label class="control-label">
+            @Html.DisplayNameFor(model => model.DataPersonalOrDeIdentified)
+            <i class="fas fa-info-circle" id="personalInfoTT"></i>
+        </label>
+    </div>
+    <div class="col-6">
+        @Html.RadioButtonFor(model => model.DataPersonalOrDeIdentified, "deidentified") De-Identified
+        @Html.RadioButtonFor(model => model.DataPersonalOrDeIdentified, "personal") Personal
+        <span asp-validation-for="DataPersonalOrDeIdentified" class="text-danger"></span>
+    </div>
+</div>
+<div id="suppressionRuleQuestions">
+    <div class="form-group row col-12">
+        <div class="col-6">
+            
+            <h4>
+                Data Cleansing - If it is de-identified data, what controls need to be in place to maintain this status?
+            </h4>
+            
+        </div>
+    </div>
+
+    <div class="form-group row col-12">
+        <div class="col-6">
+            <label class="control-label">
+                @Html.DisplayNameFor(model => model.SuppressionRuleOne)
+            </label>
+        </div>
+        <div class="col-2">
+            @Html.RadioButtonFor(model => model.SuppressionRuleOne, "na") Not Applicable
+            <br />
+            @Html.RadioButtonFor(model => model.SuppressionRuleOne, "applied") I have applied this suppression rule
+            <br />
+            @Html.RadioButtonFor(model => model.SuppressionRuleOne, "notApplied") I have not applied this suppression rule
+            <span asp-validation-for="SuppressionRuleOne" class="text-danger"></span>
+        </div>
+        <div class="col-4">
+            <label asp-for="SuppressionRuleOneExpl"></label>
+            <br />
+            <textarea asp-for="SuppressionRuleOneExpl" rows="4" cols="50"></textarea>
+            <span asp-validation-for="SuppressionRuleOneExpl" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row col-12">
+        <div class="col-6">
+            <label class="control-label">
+                @Html.DisplayNameFor(model => model.SuppressionRuleTwo)
+            </label>
+        </div>
+        <div class="col-2">
+            @Html.RadioButtonFor(model => model.SuppressionRuleTwo, "na") Not Applicable
+            <br />
+            @Html.RadioButtonFor(model => model.SuppressionRuleTwo, "applied") I have applied this suppression rule
+            <br />
+            @Html.RadioButtonFor(model => model.SuppressionRuleTwo, "notApplied") I have not applied this suppression rule
+            <span asp-validation-for="SuppressionRuleTwo" class="text-danger"></span>
+        </div>
+        <div class="col-4">
+            <label asp-for="SuppressionRuleTwoExpl"></label>
+            <br />
+            <textarea asp-for="SuppressionRuleTwoExpl" rows="4" cols="50"></textarea>
+            <span asp-validation-for="SuppressionRuleTwoExpl" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row col-12">
+        <div class="col-6">
+            <label class="control-label">
+                @Html.DisplayNameFor(model => model.SuppressionRuleThree)
+            </label>
+        </div>
+        <div class="col-2">
+            @Html.RadioButtonFor(model => model.SuppressionRuleThree, "na") Not Applicable
+            <br />
+            @Html.RadioButtonFor(model => model.SuppressionRuleThree, "applied") I have applied this suppression rule
+            <br />
+            @Html.RadioButtonFor(model => model.SuppressionRuleThree, "notApplied") I have not applied this suppression rule
+            <span asp-validation-for="SuppressionRuleThree" class="text-danger"></span>
+        </div>
+        <div class="col-4">
+            <label asp-for="SuppressionRuleThreeExpl"></label>
+            <br />
+            <textarea asp-for="SuppressionRuleThreeExpl" rows="4" cols="50"></textarea>
+            <span asp-validation-for="SuppressionRuleThreeExpl" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row col-12">
+        <div class="col-6">
+            <label class="control-label">
+                @Html.DisplayNameFor(model => model.SuppressionRuleFour)
+            </label>
+        </div>
+        <div class="col-2">
+            @Html.RadioButtonFor(model => model.SuppressionRuleFour, "na") Not Applicable
+            <br />
+            @Html.RadioButtonFor(model => model.SuppressionRuleFour, "applied") I have applied this suppression rule
+            <br />
+            @Html.RadioButtonFor(model => model.SuppressionRuleFour, "notApplied") I have not applied this suppression rule
+            <span asp-validation-for="SuppressionRuleFour" class="text-danger"></span>
+        </div>
+        <div class="col-4">
+            <label asp-for="SuppressionRuleFourExpl"></label>
+            <br />
+            <textarea asp-for="SuppressionRuleFourExpl" rows="4" cols="50"></textarea>
+            <span asp-validation-for="SuppressionRuleFourExpl" class="text-danger"></span>
+        </div>
+    </div>
+</div>
+<div class="form-group row col-12">
+    <div class="col-6">
+        <label class="control-label">
+            @Html.DisplayNameFor(model => model.IdentifiedDataCustodianManagedRisk)
+        </label>
+    </div>
+    <div class="col-2">
+        @Html.RadioButtonFor(model => model.IdentifiedDataCustodianManagedRisk, "true") Yes
+        @Html.RadioButtonFor(model => model.IdentifiedDataCustodianManagedRisk, "false") No
+        <span asp-validation-for="IdentifiedDataCustodianManagedRisk" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group row col-12">
+    <div class="col row">
+        <label asp-for="DataRiskManagementExplanation"></label>
+    </div>
+    <div class="col row">
+        <textarea asp-for="DataRiskManagementExplanation" class="form-control" type="text" placeholder=""></textarea>
+        <span asp-validation-for="DataRiskManagementExplanation" class="text-danger"></span>
+    </div>
+    
+    
+</div>

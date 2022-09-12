@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "AdsGoFastDbUp": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "RelativePath": "samples/sif/",
+        "SynapseDatabaseName": "sifdm",
+        "AdlsStorageName": "https://sif3devdlsadsh5azadsl.blob.core.windows.net/datalakelanding"
+      }
+    }
+  }
+}

@@ -14,11 +14,14 @@ ADFPipelineRun
                                              toint( parse_json(tostring(parse_json(Parameters))).TaskInstanceId)
                                                 )
                                             ),     
-                ExecutionUid = coalesce(tostring(parse_json(tostring(parse_json(Parameters).Body)).ExecutionUid),
+                ExecutionUid = coalesce(
+                                coalesce(tostring(parse_json(tostring(parse_json(Parameters).Body)).ExecutionUid),
                                       coalesce(tostring(parse_json(tostring(parse_json(Parameters).TaskObject)).ExecutionUid), 
                                         tostring( parse_json(tostring(parse_json(Parameters))).ExecutionUid)
                                         )
-                                    )
+                                    ),
+                                tostring(new_guid())
+                                )
 | where isnotnull(TaskInstanceId) and isnotnull(ExecutionUid)
 | project  TaskInstanceId, ExecutionUid, PipelineStatus = Status, RunId, Start, End, TimeGenerated, ResourceId, PipelineName
 | summarize        

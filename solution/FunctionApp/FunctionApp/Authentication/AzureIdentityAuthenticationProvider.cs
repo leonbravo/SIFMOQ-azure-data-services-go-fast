@@ -49,11 +49,27 @@ namespace FunctionApp.Authentication
                 var defaultAzureCredentialOptions = new DefaultAzureCredentialOptions();
                 credential = new DefaultAzureCredential(defaultAzureCredentialOptions);
             }
-
+            resourceName = resourceName + "/.default";
             var requestContext = new TokenRequestContext(new [] {resourceName});
             var result = await credential.GetTokenAsync(requestContext, new CancellationToken()).ConfigureAwait(false);
 
             return result.Token;
+        }
+
+        public Azure.Core.TokenCredential GetAzureRestApiTokenCredential(string resourceName)
+        {
+            TokenCredential credential;
+            if (!_appOptions.UseMSI)
+            {
+                credential = new ClientSecretCredential(_authOptions.TenantId, _authOptions.ClientId, _authOptions.ClientSecret);
+            }
+            else
+            {
+                var defaultAzureCredentialOptions = new DefaultAzureCredentialOptions();
+                credential = new DefaultAzureCredential(defaultAzureCredentialOptions);
+            }            
+
+            return credential;
         }
     }
 

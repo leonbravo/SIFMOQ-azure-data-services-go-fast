@@ -7,7 +7,7 @@ function (GenerateArm=false, Type = "AzureBlobStorage", GFPIR = "{IRA}", SourceO
     "type": "DatasetReference",
     "parameters": {
         "RelativePath": {
-            "value": "@pipeline().parameters.TaskObject.%(SourceOrTarget)s.RelativePath" % { SourceOrTarget : SourceOrTarget},
+            "value": "@pipeline().parameters.TaskObject.Target.Instance.%(SourceOrTarget)sRelativePath" % { SourceOrTarget : SourceOrTarget},
             "type": "Expression"
         },
         "FileName": {

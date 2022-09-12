@@ -7,3 +7,5 @@ This table describes the dependency between 2 TaskGroups. In order for one task 
 
 The current dependency types available are:
 * TasksMatchedByTagAndSchedule
+
+[Relevant documentation link](https://microsoft.github.io/azure-data-services-go-fast-documentation/4-Web-Application-Manual/3-TaskGroups.html)

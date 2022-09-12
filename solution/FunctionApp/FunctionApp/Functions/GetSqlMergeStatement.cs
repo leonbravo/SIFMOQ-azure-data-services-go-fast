@@ -64,13 +64,13 @@ namespace FunctionApp.Functions
                 JArray arrStage = (JArray)data["Stage"];
                 string stagingTableSchema = data["StagingTableSchema"].ToString();
                 string stagingTableName = "#Temp_" + data["StagingTableName"].ToString() + g.ToString();
-                string createStatementStage = GenerateSqlStatementTemplates.GetCreateTable(arrStage, stagingTableSchema, stagingTableName, "",false);
+                string createStatementStage = GenerateSqlStatementTemplates.GetCreateTable(arrStage, stagingTableSchema, stagingTableName, "Azure SQL",false);
                 TaskMetaDataDatabase.ExecuteSql(createStatementStage, con);
 
                 JArray arrTarget = (JArray)data["Target"];
                 string targetTableSchema = data["TargetTableSchema"].ToString();
                 string targetTableName = "#Temp_" + data["TargetTableName"].ToString() + g.ToString();
-                string createStatementTarget = GenerateSqlStatementTemplates.GetCreateTable(arrTarget, targetTableSchema, targetTableName, "",false);
+                string createStatementTarget = GenerateSqlStatementTemplates.GetCreateTable(arrTarget, targetTableSchema, targetTableName, "Azure SQL",false);
 
                 TaskMetaDataDatabase.ExecuteSql(createStatementTarget, con);
 

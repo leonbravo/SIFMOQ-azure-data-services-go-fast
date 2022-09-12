@@ -43,6 +43,8 @@ namespace WebApplication
 
             //Configure Entity Framework with Token Auth via Interceptor
             services.AddSingleton<AadAuthenticationDbConnectionInterceptor>();
+            //services.AddSingleton<IMicrosoftGraphService, MicrosoftGraphService>();
+            
             services.AddDbContext<AdsGoFastContext>((provider, options) =>
             {
                 var appOptions = provider.GetService<IOptions<ApplicationOptions>>();
@@ -132,6 +134,7 @@ namespace WebApplication
             }
             else
             {
+                //app.UseDeveloperExceptionPage();
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();

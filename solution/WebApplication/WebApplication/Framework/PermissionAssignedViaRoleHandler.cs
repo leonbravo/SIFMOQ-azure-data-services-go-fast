@@ -19,7 +19,9 @@ namespace WebApplication.Framework
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionAssignedViaRole requirement)
         {
-            if (context.Resource is Endpoint endpoint)
+
+
+            if (((HttpContext)context.Resource).GetEndpoint() is Endpoint endpoint)
             {
                 var actionDescriptor = endpoint.Metadata.GetMetadata<ControllerActionDescriptor>();
 

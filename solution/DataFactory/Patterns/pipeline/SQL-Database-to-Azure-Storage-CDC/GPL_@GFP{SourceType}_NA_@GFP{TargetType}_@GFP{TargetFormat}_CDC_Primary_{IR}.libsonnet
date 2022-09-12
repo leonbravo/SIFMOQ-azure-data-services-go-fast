@@ -5,6 +5,7 @@ local Wrapper = import '../static/partials/wrapper.libsonnet';
 
 local typePropertiesInputOnly = import './partials/CDC_CopyActivity_TypeProperties_InputOnly.libsonnet';
 local typePropertiesInputOutput = import './partials/CDC_CopyActivity_TypeProperties_InputOutput.libsonnet';
+local SQL_Query = "@activity('AF Get Information Schema SQL').output.InformationSchemaSQL";
 local SQL_Statement1 = "@replace(\n  pipeline().parameters.TaskObject.Source.SQLStatement,\n  '/*Remove First*/--',\n  ''\n  )";
 local SQL_Statement2 = "@replace(\n  replace(\n    replace(\n      pipeline().parameters.TaskObject.Source.SQLStatement,\n      '/*Remove Second*/--',\n      ''\n      ),\n    '/*to_lsn*/',\n    activity('GetChangeCount').output.firstRow.to_lsn\n    ),\n'/*from_lsn*/',\nactivity('GetChangeCount').output.firstRow.from_lsn\n)";
 local parameterDefaultValue = import './partials/parameterDefaultValue.libsonnet';
@@ -34,8 +35,8 @@ local pipeline =
     "properties": {
         "activities": [
             {
-                "name": "GetChangeCount",
-                "type": "Lookup",
+                "name": "AF Get Information Schema SQL",
+                "type": "AzureFunctionActivity",
                 "dependsOn": [],
                 "policy": {
                     "timeout": "7.00:00:00",
@@ -45,7 +46,121 @@ local pipeline =
                     "secureInput": false
                 },
                 "userProperties": [],
-                "typeProperties": typePropertiesInputOnly(GenerateArm,GFPIR,SourceType, TargetType, TargetFormat, SQL_Statement1)
+                "typeProperties": {
+                    "functionName": "GetInformationSchemaSQL",
+                    "method": "POST",
+                    "body": {
+                        "value": "@json(concat('{\"TaskInstanceId\":\"', string(pipeline().parameters.TaskObject.TaskInstanceId), '\",\"ExecutionUid\":\"', string(pipeline().parameters.TaskObject.ExecutionUid), '\",\"RunId\":\"', string(pipeline().RunId), '\",\"TableSchema\":\"', string(pipeline().parameters.TaskObject.Source.TableSchema), '\",\"TableName\":\"', string(pipeline().parameters.TaskObject.Source.TableName),'\"}'))",
+                        "type": "Expression"
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "SLS_AzureFunctionApp",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "Lookup Get SQL Metadata",
+                "type": "Lookup",
+                "dependsOn": [
+                    {
+                        "activity": "AF Get Information Schema SQL",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": typePropertiesInputOnly(GenerateArm,GFPIR,SourceType, TargetType, TargetFormat, SQL_Query, false)
+
+            },
+            {
+                "name": "AF Log - Get Metadata Failed",
+                "type": "ExecutePipeline",
+                "dependsOn": [
+                    {
+                        "activity": "Lookup Get SQL Metadata",
+                        "dependencyConditions": [
+                            "Failed"
+                        ]
+                    }
+                ],
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "SPL_AzureFunction",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": false,
+                    "parameters": {
+                        "Body": {
+                            "value": "@json(concat('{\"TaskInstanceId\":\"', string(pipeline().parameters.TaskObject.TaskInstanceId), '\",\"ExecutionUid\":\"', string(pipeline().parameters.TaskObject.ExecutionUid), '\",\"RunId\":\"', string(pipeline().RunId), '\",\"LogTypeId\":1,\"LogSource\":\"ADF\",\"ActivityType\":\"Get Metadata\",\"StartDateTimeOffSet\":\"', string(pipeline().TriggerTime), '\",\"EndDateTimeOffSet\":\"', string(utcnow()), '\",\"Comment\":\"', encodeUriComponent(string(activity('Lookup Get SQL Metadata').error.message)), '\",\"Status\":\"Failed\"}'))",
+                            "type": "Expression"
+                        },
+                        "FunctionName": "Log",
+                        "Method": "Post"
+                    }
+                }
+            },
+            {
+                "name": "AF Persist Metadata and Get Mapping",
+                "type": "AzureFunctionActivity",
+                "dependsOn": [
+                    {
+                        "activity": "Lookup Get SQL Metadata",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "functionName": "TaskExecutionSchemaFile",
+                    "method": "POST",
+                    "body": {
+                        "value": "@json(\n concat('{\"TaskInstanceId\":\"',\n string(pipeline().parameters.TaskObject.TaskInstanceId), \n '\",\"ExecutionUid\":\"', \n string(pipeline().parameters.TaskObject.ExecutionUid), \n '\",\"RunId\":\"', string(pipeline().RunId), \n '\",\"StorageAccountName\":\"', \n string(pipeline().parameters.TaskObject.Target.System.SystemServer),\n  '\",\"StorageAccountContainer\":\"', \n  string(pipeline().parameters.TaskObject.Target.System.Container), \n  '\",\"RelativePath\":\"', \n  string(pipeline().parameters.TaskObject.Target.Instance.TargetRelativePath), \n  '\",\"SchemaFileName\":\"', \n  string(pipeline().parameters.TaskObject.Target.SchemaFileName), \n  '\",\"SourceType\":\"', \n  string(pipeline().parameters.TaskObject.Source.System.Type), \n  '\",\"TargetType\":\"', \n  if(\n    contains(\n    string(pipeline().parameters.TaskObject.Target.System.SystemServer),\n    '.dfs.core.windows.net'\n    ),\n   'ADLS',\n   'Azure Blob'), \n  '\",\"Data\":',\n  string(activity('Lookup Get SQL Metadata').output),\n  ',\"MetadataType\":\"SQL\"}')\n)",
+                        "type": "Expression"
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "SLS_AzureFunctionApp",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "GetChangeCount",
+                "type": "Lookup",
+                "dependsOn": [
+                    {
+                        "activity": "AF Persist Metadata and Get Mapping",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": typePropertiesInputOnly(GenerateArm,GFPIR,SourceType, TargetType, TargetFormat, SQL_Statement1, true)
             },
             {
                 "name": "HasChangedRows",

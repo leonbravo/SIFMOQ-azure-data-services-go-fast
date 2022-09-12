@@ -9,7 +9,10 @@ namespace WebApplication.Models
         [Display(Name = "Subject Area Name")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please input valid Area Name")]
         public string SubjectAreaName { get; set; }
-        [Display(Name = "Is Active")]
+
+        [StringLength(10)]
+        [RegularExpression("^[a-zA-Z0-9]{3,10}$", ErrorMessage = "Short Code must be between 3-10 alphanumeric characters.")]
+        public string ShortCode { get; set; }
         public bool ActiveYn { get; set; }
         [Display(Name = "Subject Area Form")]
         public int? SubjectAreaFormId { get; set; }

@@ -1,0 +1,15 @@
+﻿@model WebApplication.Models.InputSelectionOptionsFor<WebApplication.Forms.PIAWizard.DataBreachPlan>
+<div class="form-group row col-12">
+    @for (int i = 0; i < Model.Options.Count; i++)
+    {
+        <div class="col-6">
+            <input asp-for="Options[i].IsSelected" />
+            <input type="hidden" asp-for="Options[i].Option"/>
+            <label class="control-label">
+                @Html.DisplayFor(m => m.Options[i].Option)
+            </label>
+            <br>
+        </div>
+    }
+
+</div>

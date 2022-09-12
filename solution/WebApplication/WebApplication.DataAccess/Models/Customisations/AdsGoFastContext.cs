@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 namespace WebApplication.Models
@@ -19,7 +20,7 @@ namespace WebApplication.Models
             modelBuilder.Entity<ScheduleMaster>(entity =>
             {
                 entity.HasAnnotation("DisplayColumn", "ScheduleDesciption");
-                entity.Property(e => e.ActiveYn).HasColumnName("ActiveYN");
+                entity.Property(e => e.ActiveYn).HasColumnName("ActiveYn");
 
                 entity.Property(e => e.ScheduleDesciption)
                     .IsRequired()
@@ -91,7 +92,6 @@ namespace WebApplication.Models
             modelBuilder.Entity<SubjectArea>(entity =>
             {
                 entity.HasOne<SubjectAreaForm>(tg => tg.SubjectAreaForm).WithMany(sa => sa.SubjectAreas).HasForeignKey(tg => tg.SubjectAreaFormId);
-                entity.HasMany<SubjectAreaRoleMap>(sa => sa.SubjectAreaRoleMaps).WithOne(rm => rm.SubjectArea).HasForeignKey(tg => tg.SubjectAreaId);
             });
 
 
@@ -115,6 +115,13 @@ namespace WebApplication.Models
 
             });
 
+            modelBuilder.Entity<IntegrationRuntimeMapping>(entity =>
+            {
+
+                entity.HasOne<SourceAndTargetSystems>(ti => ti.SourceAndTargetSystem).WithMany(ie => ie.IntegrationRuntimeMappings).HasForeignKey(ti => ti.SystemId);
+
+            });
+
             modelBuilder.Entity<AdfpipelineStats1>(entity =>
             {
 
@@ -129,6 +136,18 @@ namespace WebApplication.Models
                 entity.HasOne<TaskMaster>(ti => ti.TaskMaster).WithOne();
             });
 
+        }
+
+        public IQueryable<EntityRoleMap> GetEntityRoleMapsFor(string entityTypeName, Guid[] assignedAdGroups, string[] applicationRoles)
+        {
+            return
+                from r in this.EntityRoleMap
+                where assignedAdGroups.Contains(r.AadGroupUid)
+                    && applicationRoles.Contains(r.ApplicationRoleName)
+                    && r.EntityTypeName == entityTypeName
+                    && r.ExpiryDate > DateTimeOffset.Now
+                      && r.ActiveYN
+                select r;
         }
     }
 }

@@ -10,7 +10,7 @@ resource "azurerm_storage_account" "blob" {
   account_kind             = "StorageV2"
   is_hns_enabled           = "false"
   min_tls_version          = "TLS1_2"
-  allow_blob_public_access = "false"
+  #allow_blob_public_access = "false"
   network_rules {
     default_action = var.is_vnet_isolated ? "Deny" : "Allow"
     bypass         = ["Metrics", "AzureServices"]
@@ -26,17 +26,17 @@ resource "azurerm_storage_account" "blob" {
 }
 
 resource "azurerm_role_assignment" "blob_function_app" {
-  count                = var.deploy_storage_account ? 1 : 0
+  count                = var.deploy_storage_account && var.deploy_function_app ? 1 : 0
   scope                = azurerm_storage_account.blob[0].id
   role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = azurerm_function_app.function_app.identity[0].principal_id
+  principal_id         = azurerm_function_app.function_app[0].identity[0].principal_id
 }
 
 resource "azurerm_role_assignment" "blob_data_factory" {
-  count                = var.deploy_storage_account ? 1 : 0
+  count                = var.deploy_storage_account && var.deploy_data_factory ? 1 : 0
   scope                = azurerm_storage_account.blob[0].id
   role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = azurerm_data_factory.data_factory.identity[0].principal_id
+  principal_id         = azurerm_data_factory.data_factory[0].identity[0].principal_id
 }
 
 resource "azurerm_role_assignment" "blob_purview_sp" {
@@ -52,7 +52,7 @@ resource "azurerm_private_endpoint" "blob_storage_private_endpoint_with_dns" {
   name                = "${local.blob_storage_account_name}-plink"
   location            = var.resource_location
   resource_group_name = var.resource_group_name
-  subnet_id           = azurerm_subnet.plink_subnet[0].id
+  subnet_id           = local.plink_subnet_id
 
   private_service_connection {
     name                           = "${local.blob_storage_account_name}-plink-conn"
@@ -63,7 +63,7 @@ resource "azurerm_private_endpoint" "blob_storage_private_endpoint_with_dns" {
 
   private_dns_zone_group {
     name                 = "privatednszonegroupstorage"
-    private_dns_zone_ids = [azurerm_private_dns_zone.private_dns_zone_blob[0].id]
+    private_dns_zone_ids = [local.private_dns_zone_blob_id]
   }
 
   depends_on = [
@@ -84,7 +84,7 @@ resource "azurerm_monitor_diagnostic_setting" "blob_storage_diagnostic_logs" {
   name                       = "diagnosticlogs"
   count                      = var.deploy_storage_account ? 1 : 0
   target_resource_id         = "${azurerm_storage_account.blob[0].id}/blobServices/default/"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace.id
+  log_analytics_workspace_id = local.log_analytics_resource_id
   # ignore_changes is here given the bug  https://github.com/terraform-providers/terraform-provider-azurerm/issues/10388
   lifecycle {
     ignore_changes = [log, metric]

@@ -32,3 +32,5 @@ An example of this type of format is:
 	"AutoGenerateMerge": "False"
 }}
 ```
+
+[Relevant documentation link](https://microsoft.github.io/azure-data-services-go-fast-documentation/4-Web-Application-Manual/1-TaskMasters.html)

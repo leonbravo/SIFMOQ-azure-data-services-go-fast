@@ -1,0 +1,23 @@
+﻿@model WebApplication.Models.Wizards.PIAWizardViewModel;
+<br />
+<div class="form-group">
+    <h3>Identify The Disclosure Control Processes That Are Relevant To Your Data Situation</h3>
+    <p><b>Disclosure control processes essentially attend to either or both of the two elements of your data situation: the data and i's environment. If your risk analysis in Component 6 suggests that you need stronger controls, then you have two (non-exclusive) choices:</b></p>
+    <ol>
+        <li><b>Reconfigure the data environment</b></li>
+        <li><b>Modify the data, including possibly reducing the amount of data under consideration</b></li>
+    </ol>
+
+    <label asp-for="ReconfigureEnvirontment" class="control-label"></label><span asp-validation-for="ReconfigureEnvirontment" class="text-danger"></span>
+    @Html.EditorFor(model => model.ReconfigureEnvirontment, Model.ReconfigureEnvirontment.TemplateName, additionalViewData: new { @class = "form-control" })
+    <label asp-for="ExplanationReconfigureEnvirontment" class="control-label"></label><span asp-validation-for="ExplanationReconfigureEnvirontment" class="text-danger"></span>
+    <br />
+    <textarea asp-for="ExplanationReconfigureEnvirontment" class="form-control" type="text" placeholder=""></textarea>
+
+    <label asp-for="ModifyingData" class="control-label"></label><span asp-validation-for="ModifyingData" class="text-danger"></span>
+    @Html.EditorFor(model => model.ModifyingData, Model.ModifyingData.TemplateName, additionalViewData: new { @class = "form-control" })
+    <label asp-for="ExplanationModifyingDataOptions" class="control-label"></label><span asp-validation-for="ExplanationModifyingDataOptions" class="text-danger"></span>
+    <br />
+    <textarea asp-for="ExplanationModifyingDataOptions" class="form-control" type="text" placeholder=""></textarea>
+    
+</div>

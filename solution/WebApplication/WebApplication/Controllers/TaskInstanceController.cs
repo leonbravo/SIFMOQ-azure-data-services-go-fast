@@ -218,6 +218,7 @@ namespace WebApplication.Controllers
             JArray Navigations = new JArray();
             //Navigations.Add(JObject.Parse("{'Url':'/TaskInstanceExecution?&TaskInstanceId=','Description':'View Task Instance Executions', 'Icon':'bolt','ButtonClass':'btn-primary'}"));
             Navigations.Add(JObject.Parse("{'Url':'/TaskInstanceExecution/IndexDataTable?&TaskInstanceId=','Description':'View Task Instance Executions', 'Icon':'bolt','ButtonClass':'btn-primary'}"));
+            Navigations.Add(JObject.Parse("{'Url':'/TaskMaster/DetailsByTaskInstance?&TaskInstanceId=','Description':'View Task Master', 'Icon':'list','ButtonClass':'btn-primary'}"));            
 
             GridOptions["GridColumns"] = cols;
             GridOptions["ModelName"] = "TaskMaster";
@@ -268,13 +269,14 @@ namespace WebApplication.Controllers
                             on md.TaskMasterId equals tm.TaskMasterId
                          join tg in _context.TaskGroup
                             on tm.TaskGroupId equals tg.TaskGroupId
-                         join rm in _context.SubjectAreaRoleMap
-                            on tg.SubjectAreaId equals rm.SubjectAreaId
+                         join rm in _context.EntityRoleMap
+                            on tg.SubjectAreaId equals rm.EntityId
                          where
                              GetUserAdGroupUids().Contains(rm.AadGroupUid)
                              && permittedRoles.Contains(rm.ApplicationRoleName)
+                             && rm.EntityTypeName == EntityRoleMap.SubjectAreaTypeName
                              && rm.ExpiryDate > DateTimeOffset.Now
-                             && rm.ActiveYn
+                             && rm.ActiveYN
                          select md).Distinct();
                 }
 
@@ -378,7 +380,7 @@ namespace WebApplication.Controllers
                 ti.NumberOfRetries = 0;
                 if (Status != "InProgress") { ti.TaskRunnerId = null; }
             }
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             //TODO: Add Error Handling
             return new OkObjectResult(new { });

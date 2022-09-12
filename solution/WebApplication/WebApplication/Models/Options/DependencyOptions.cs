@@ -1,4 +1,6 @@
-﻿namespace WebApplication.Models.Options
+﻿using System;
+
+namespace WebApplication.Models.Options
 {
     public class ApplicationOptions
     {
@@ -8,6 +10,8 @@
         public string AppInsightsWorkspaceId { get; set; }
         public string LogAnalyticsWorkspaceId { get; set; }
         public string ConnectionString { get; set; }
+        public Guid SiteId { get; set; }
+        public string SiteName { get; set; }
     }
 
     public class AuthOptions

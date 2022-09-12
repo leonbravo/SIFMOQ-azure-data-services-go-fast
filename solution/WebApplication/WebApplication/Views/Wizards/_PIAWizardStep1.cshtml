@@ -1,0 +1,157 @@
+﻿@using WebApplication.Forms.PIAWizard
+@model WebApplication.Models.Wizards.PIAWizardViewModel
+<br />
+
+<div class="row">
+    <h3>
+        Introduction
+    </h3>
+</div>
+<br />
+@*<div class="form-group row">
+
+
+    This data set is&nbsp;
+    <p>
+        @Html.DisplayFor(model => model.DataSetPrivacyStatus)
+    </p>.
+    Click&nbsp;
+    <span id="changePrivacyStatus">
+        <i class="fa fa-exclamation-circle"></i>
+    </span>&nbsp;
+    to change it.
+
+
+</div>*@
+
+<div class="form-group row col-12 wizardSelector">
+    <div class="col-6">
+        <label asp-for="DataSetPrivacyStatus" class="control-label"></label>
+        &nbsp;
+        <span id="privacyModalBtn">
+            <i class="fa fa-exclamation-circle"></i>
+        </span>
+    </div>
+    <div class="col-6">
+        @Html.DropDownListFor(model => model.DataSetPrivacyStatus, Html.GetEnumSelectList<PublicPrivateDataSet>(), "Select Dataset Privacy Status", new { @class = "form-control"})
+        <span asp-validation-for="DataSetPrivacyStatus" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group row col-12 wizardSelector">
+    <div class="col-6">
+        <label asp-for="AuthorisedByDataSubjects" class="control-label"></label>
+    </div>
+    <div class="col-6">
+        @Html.RadioButtonFor(model => model.AuthorisedByDataSubjects, "true") Yes
+        @Html.RadioButtonFor(model => model.AuthorisedByDataSubjects, "false") No
+        <span asp-validation-for="AuthorisedByDataSubjects" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-group row col-12 wizardSelector">
+    <div class="col-6">
+        <label asp-for="DataAgreementsSigned" class="control-label"></label>
+    </div>
+    <div class="col-6">
+        @Html.RadioButtonFor(model => model.DataAgreementsSigned, "true") Yes
+        @Html.RadioButtonFor(model => model.DataAgreementsSigned, "false") No
+        <span asp-validation-for="DataAgreementsSigned" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group row col-12 wizardSelector">
+    <div class="col-6">
+        <label asp-for="DataAgreementsLocation" class="control-label"></label>
+    </div>
+    <div class="col-6">
+        @Html.TextBoxFor(model => model.DataAgreementsLocation, new { @class = "form-control" })
+        <span asp-validation-for="DataAgreementsLocation" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group row col-12 wizardSelector">
+    <div class="col-6">
+        <label asp-for="UnderstandMetadata" class="control-label"></label>
+    </div>
+    <div class="col-6">
+        @Html.RadioButtonFor(model => model.UnderstandMetadata, "true") Yes
+        @Html.RadioButtonFor(model => model.UnderstandMetadata, "false") No
+        <span asp-validation-for="UnderstandMetadata" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group row col-12 wizardSelector">
+    <div class="col-6">
+        <label asp-for="AcceptResponsibility" class="control-label"></label>
+    </div>
+    <div class="col-6">
+        @Html.RadioButtonFor(model => model.AcceptResponsibility, "true") Yes
+        @Html.RadioButtonFor(model => model.AcceptResponsibility, "false") No
+        <span asp-validation-for="AcceptResponsibility" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group row col-12 wizardSelector">
+    <div class="col-6">
+        <label asp-for="DataSetDescription" class="control-label"></label>
+    </div>
+    <div class="col-6">
+        <textarea asp-for="DataSetDescription" class="form-control"></textarea>
+    </div>
+</div>
+
+<div class="form-group row col-12 wizardSelector">
+    <div class="col-6">
+        <label asp-for="SiteId" class="control-label"></label>
+    </div>
+    <div class="formSelect col-6">
+        @Html.DropDownListFor(model => model.Site.Id, ViewBag.Sites as SelectList, "Select Your site", new { @class = "form-control", @id = "dsSelection" })
+        @Html.HiddenFor(model => model.Site.Name, new { @id = "hiddenSiteName"})
+        <span asp-validation-for="SiteId" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group row col-12 wizardSelector">
+    <div class="col-6">
+        <label asp-for="DataSourceLocation" class="control-label"></label>
+    </div>
+    <div class="col-6">
+        @Html.TextBoxFor(model => model.DataSourceLocation, new { @class = "form-control" })
+        <span asp-validation-for="DataSourceLocation" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group row col-12 wizardSelector">
+    <div class="col-6">
+        <label asp-for="OwningSystem" class="control-label"></label>
+    </div>
+    <div class="formSelect col-6">
+        @Html.DropDownListFor(model => model.OwningSystem, ViewBag.SourceSystems as SelectList, "Select Your Source System", new { @class = "form-control", @id = "tgSelection" })
+        <span asp-validation-for="OwningSystem" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group row col-12 wizardSelector">
+    <div class="col-6">
+        <label asp-for="SystemDataLocation" class="control-label"></label>
+    </div>
+    <div class="col-6">
+        @Html.TextBoxFor(model => model.SystemDataLocation, new { @class = "form-control" })
+        <span asp-validation-for="SystemDataLocation" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="form-group col-12 row wizardSelector">
+    <div class="col-6">
+        <label asp-for="SystemPurposeVersion" style="width:90%" class="control-label"></label>
+    </div>
+    <div class="col-6" id="sysVersionInput">
+        @Html.TextBoxFor(model => model.SiteName, new { @size = 3, id = "spvSiteName", @readonly = "readonly" })
+        _
+        @Html.TextBoxFor(model => model.SourceSystemName, new { @size = 3, id = "spdSourceSystemName", @readonly = "readonly" })
+        _
+        @Html.TextBoxFor(model => model.SystemPurposeVersion, new { @size = 10 })
+        _
+        @Html.TextBoxFor(model => model.SystemPurposeVersionNumber, new { @size = 2 })
+    </div>
+</div>

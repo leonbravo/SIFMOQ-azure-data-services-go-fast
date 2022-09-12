@@ -12,41 +12,52 @@
     <h4> @("SubjectArea".Humanize(LetterCasing.Title))</h4>
     <hr />
     <dl class="row">
-            <dt class = "col-sm-2">
-                @Html.DisplayNameFor(model => model.SubjectAreaForm)
-            </dt>
-            <dd class = "col-sm-10">
-                @Html.DisplayFor(model => model.SubjectAreaForm.SubjectAreaFormId)
-            </dd>
-                <dt class = "col-sm-2">
-                    @Html.DisplayNameFor(model => model.SubjectAreaName)
-                </dt>
-                <dd class = "col-sm-10">
-                    @Html.DisplayFor(model => model.SubjectAreaName)
-                </dd>               
-                <dt class = "col-sm-2">
-                    @Html.DisplayNameFor(model => model.ActiveYn)
-                </dt>
-                <dd class = "col-sm-10">
-                    @Html.DisplayFor(model => model.ActiveYn)
-                </dd>               
-                <dt class = "col-sm-2">
-                    @Html.DisplayNameFor(model => model.DefaultTargetSchema)
-                </dt>
-                <dd class = "col-sm-10">
-                    @Html.DisplayFor(model => model.DefaultTargetSchema)
-                </dd>               
-                <dt class = "col-sm-2">
-                    @Html.DisplayNameFor(model => model.UpdatedBy)
-                </dt>
-                <dd class = "col-sm-10">
-                    @Html.DisplayFor(model => model.UpdatedBy)
-                </dd>               
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SubjectAreaName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SubjectAreaName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ShortCode)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ShortCode)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SubjectAreaForm.FormStatusDisplay)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SubjectAreaForm.FormStatusDisplay)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ActiveYn)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ActiveYn)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DefaultTargetSchema)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DefaultTargetSchema)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UpdatedBy)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UpdatedBy)
+        </dd>
     </dl>
 </div>
 <div>
     <a href="javascript:history.go(-1)" title="Back to List" class="btn btn-secondary"><i class="fa fa-arrow-circle-left"></i> Back</a>
-    <a asp-action="Edit" asp-route-id="@Model.SubjectAreaId" class="btn btn-warning details" title="Edit"><i class="fa fa-pencil-square-o"></i> Edit</a> 
+    <a asp-action="Edit" asp-route-id="@Model.SubjectAreaId" class="btn btn-warning details" title="Edit"><i class="fa fa-pencil-square-o"></i> Edit</a>
+
+    <hr />
+
+    <a href="@Url.ActionLink("PIAWizard", "Wizards", new { subjectAreaId = Model.SubjectAreaId })" title="Edit Privacy Impact Assessment" class="btn btn-outline-primary">Edit Privacy Impact Assessment</a>
+    <a href="@Url.ActionLink("PIASummary", "Wizards", new { id = Model.SubjectAreaId })" title="View PIA Summary" class="btn btn-info">Privacy Impact Assessment Summary</a>
 </div>
 @section Scripts
 {

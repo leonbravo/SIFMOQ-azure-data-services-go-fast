@@ -248,7 +248,7 @@ namespace WebApplication.Controllers
                 //Search    
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    modelDataAll = modelDataAll.Where(m => m.TaskTypeName == searchValue);
+                    modelDataAll = modelDataAll.Where(m => m.TaskTypeName.Contains(searchValue));
                 }
 
                 //total number of rows count     

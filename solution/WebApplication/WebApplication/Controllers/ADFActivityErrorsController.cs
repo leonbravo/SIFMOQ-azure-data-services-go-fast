@@ -7,17 +7,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using WebApplication.Models;
 using Dapper;
-using Microsoft.EntityFrameworkCore;
-using WebApplication.Controllers.Customisations;
 using WebApplication.Services;
 
 namespace WebApplication.Controllers

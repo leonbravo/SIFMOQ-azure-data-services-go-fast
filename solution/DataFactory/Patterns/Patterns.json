@@ -22,6 +22,16 @@
    {
       "Folder": "SQL-Database-to-Azure-Storage",
       "GFPIR": "Azure",
+      "Pipeline": "GPL_OracleServerTable_NA_AzureBlobStorage_Parquet",
+      "SourceFormat": "Sql",
+      "SourceType": "OracleServerTable",
+      "TargetFormat": "Parquet",
+      "TargetType": "AzureBlobStorage",
+      "TaskTypeId": -3
+   },
+   {
+      "Folder": "SQL-Database-to-Azure-Storage",
+      "GFPIR": "Azure",
       "Pipeline": "GPL_AzureSqlTable_NA_AzureBlobStorage_Parquet",
       "SourceFormat": "Table",
       "SourceType": "AzureSqlTable",
@@ -42,6 +52,16 @@
    {
       "Folder": "SQL-Database-to-Azure-Storage",
       "GFPIR": "Azure",
+      "Pipeline": "GPL_OracleServerTable_NA_AzureBlobStorage_Parquet",
+      "SourceFormat": "Table",
+      "SourceType": "OracleServerTable",
+      "TargetFormat": "Parquet",
+      "TargetType": "AzureBlobStorage",
+      "TaskTypeId": -3
+   },
+   {
+      "Folder": "SQL-Database-to-Azure-Storage",
+      "GFPIR": "Azure",
       "Pipeline": "GPL_AzureSqlTable_NA_AzureBlobFS_Parquet",
       "SourceFormat": "Sql",
       "SourceType": "AzureSqlTable",
@@ -62,6 +82,16 @@
    {
       "Folder": "SQL-Database-to-Azure-Storage",
       "GFPIR": "Azure",
+      "Pipeline": "GPL_OracleServerTable_NA_AzureBlobFS_Parquet",
+      "SourceFormat": "Sql",
+      "SourceType": "OracleServerTable",
+      "TargetFormat": "Parquet",
+      "TargetType": "AzureBlobFS",
+      "TaskTypeId": -3
+   },
+   {
+      "Folder": "SQL-Database-to-Azure-Storage",
+      "GFPIR": "Azure",
       "Pipeline": "GPL_AzureSqlTable_NA_AzureBlobFS_Parquet",
       "SourceFormat": "Table",
       "SourceType": "AzureSqlTable",
@@ -82,21 +112,11 @@
    {
       "Folder": "SQL-Database-to-Azure-Storage",
       "GFPIR": "Azure",
-      "Pipeline": "GPL_AzureSqlTable_NA_FileServer_Parquet",
+      "Pipeline": "GPL_OracleServerTable_NA_AzureBlobFS_Parquet",
       "SourceFormat": "Table",
-      "SourceType": "AzureSqlTable",
+      "SourceType": "OracleServerTable",
       "TargetFormat": "Parquet",
-      "TargetType": "FileServer",
-      "TaskTypeId": -3
-   },
-   {
-      "Folder": "SQL-Database-to-Azure-Storage",
-      "GFPIR": "Azure",
-      "Pipeline": "GPL_SqlServerTable_NA_FileServer_Parquet",
-      "SourceFormat": "Table",
-      "SourceType": "SqlServerTable",
-      "TargetFormat": "Parquet",
-      "TargetType": "FileServer",
+      "TargetType": "AzureBlobFS",
       "TaskTypeId": -3
    },
    {
@@ -738,5 +758,35 @@
       "TargetFormat": "DelimitedText",
       "TargetType": "AzureBlobFS",
       "TaskTypeId": -2
+   },
+   {
+      "Folder": "Execute-SQL-Statement",
+      "GFPIR": "Azure",
+      "Pipeline": "GPL_SqlServerTable_NA_SqlServerTable_NA_ExecuteSql",
+      "SourceFormat": "NA",
+      "SourceType": "SqlServerTable",
+      "TargetFormat": "NA",
+      "TargetType": "SqlServerTable",
+      "TaskTypeId": -8
+   },
+   {
+      "Folder": "Execute-SQL-Statement",
+      "GFPIR": "Azure",
+      "Pipeline": "GPL_AzureSqlTable_NA_AzureSqlTable_NA_ExecuteSql",
+      "SourceFormat": "NA",
+      "SourceType": "AzureSqlTable",
+      "TargetFormat": "NA",
+      "TargetType": "AzureSqlTable",
+      "TaskTypeId": -8
+   },
+   {
+      "Folder": "Execute-SQL-Statement",
+      "GFPIR": "Azure",
+      "Pipeline": "GPL_AzureSqlDWTable_NA_AzureSqlDWTable_NA_ExecuteSql",
+      "SourceFormat": "NA",
+      "SourceType": "AzureSqlDWTable",
+      "TargetFormat": "NA",
+      "TargetType": "AzureSqlDWTable",
+      "TaskTypeId": -8
    }
 ]

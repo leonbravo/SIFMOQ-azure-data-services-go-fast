@@ -14,34 +14,46 @@
     <h4> @("ExecutionEngine".Humanize(LetterCasing.Title))</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.EngineName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.EngineName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SystemType)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SystemType)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ResourceGroup)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ResourceGroup)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.SubscriptionUid)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.SubscriptionUid)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DefaultKeyVaultURL)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DefaultKeyVaultURL)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EngineJson)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EngineJson)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.LogAnalyticsWorkspaceId)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.LogAnalyticsWorkspaceId)
         </dd>
     </dl>

@@ -33,13 +33,13 @@ function runajv($a){
     } else {
         if($stderr.Contains("Cannot find schema"))
         {
-            write-host "SchemaFile Missing" -ForegroundColor DarkYellow -BackgroundColor Black            
+            Write-Verbose "SchemaFile Missing" #-ForegroundColor DarkYellow -BackgroundColor Black            
         }
         else 
         {
             if($stderr.Contains("failed test"))
             {
-            write-host $stderr.Split("failed test")[1] -ForegroundColor DarkRed -BackgroundColor Black        
+            Write-Verbose $stderr.Split("failed test")[1] #-ForegroundColor DarkRed -BackgroundColor Black        
             }
             else 
             {
@@ -70,7 +70,7 @@ foreach ($row in $output)
     if(($row.SourceType -eq $tmj.Source.Type) -and ($row.TargetType -eq $tmj.Target.Type))
     {            
         $schemaname = $row.MappingName 
-        Write-Host "Processing TaskMaster " $row.TaskMasterId " using " $schemaname -ForegroundColor Yellow
+        Write-Verbose "Processing TaskMaster " $row.TaskMasterId " using " $schemaname #-ForegroundColor Yellow
         $row.TaskMasterJson | Set-Content('./temp/FileForUpload.json')               
         $a = 'migrate -s "./TaskTypeJson/"'+$schemaname+'".json" -o ./DataFactory/Patterns/temp/migrated_schema.json'
         runajv -a $a

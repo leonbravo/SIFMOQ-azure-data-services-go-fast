@@ -8,7 +8,7 @@
 #   - You must be authenticated using the Azure CLI
 #   - Ensure you set your environment name below
 #-------------------------------------------------------------------------------------------------------------------------------------
-$environmentName = "local"
+$environmentName = "staging"
 
 $deploymentFolderPath = (Get-Location).Path
 
@@ -24,6 +24,8 @@ $sqlserver_name=$outputs.sqlserver_name.value
 $blobstorage_name=$outputs.blobstorage_name.value
 $adlsstorage_name=$outputs.adlsstorage_name.value
 $datafactory_name=$outputs.datafactory_name.value
+$datafactory_principal_id = $outputs.datafactory_principal_id.value
+$function_app_principal_id = $outputs.function_app_principal_id.value
 $keyvault_name=$outputs.keyvault_name.value
 $stagingdb_name=$outputs.stagingdb_name.value
 $sampledb_name=$outputs.sampledb_name.value
@@ -216,6 +218,26 @@ az rest --url $uri --method patch --body $body --headers "Content-Type=applicati
 $uri = "$purviewEndpoint/policystore/metadataroles?api-version=2021-07-01"
 CallPurviewApi -Method "GET" -Url $uri  -Body $body
 
-
 $uri = "$purviewEndpoint/policystore/metadataPolicies?api-version=2021-07-01"
 $res = (CallPurviewApi -Method "GET" -Url $uri  -Body $body) 
+$policy = $res
+
+$res | Select-Object {$.values.properties.attributeRules.name -eq "purviewmetadatarole_builtin_data-curator:$purview_name"}
+$datac = ($res.values.properties.attributeRules | Where-Object {$_.name -eq "purviewmetadatarole_builtin_data-curator:$purview_name"})
+$arrayIndex = [array]::indexof($policy.values.properties.attributeRules, ($policy.values.properties.attributeRules | Where-Object {$_.name -eq "purviewmetadatarole_builtin_data-curator:$purview_name"}))
+
+#datafactory / function app
+$objectIds = @($datafactory_principal_id, $function_app_principal_id)
+foreach ($id in $objectIds) {
+  #we dont want to add blank id's if any of the resources aren't deployed.
+  (if $id -ne "")
+  {
+    $datac.dnfCondition[0][0].attributeValueIncludedIn += $id
+  }
+}
+$policy.values.properties.attributeRules[$arrayIndex] = $datac 
+
+
+$uri = "$purviewEndpoint/policystore/metadataPolicies/$($policyId)?api-version=2021-07-01"
+$body = $policy.values | ConvertTo-Json -Depth 50
+CallPurviewApi -Method "PUT" -Url $uri  -Body $body

@@ -1,5 +1,7 @@
-Import-Module .\GatherOutputsFromTerraform.psm1 -force
-$tout = GatherOutputsFromTerraform
+
+Import-Module ./GatherOutputsFromTerraform_SynapseFolder.psm1 -Force
+$tout = GatherOutputsFromTerraform_SynapseFolder
+
 $sqlserver_name=$tout.sqlserver_name
 $stagingdb_name=$tout.stagingdb_name
 $metadatadb_name=$tout.metadatadb_name
@@ -8,7 +10,7 @@ $metadatadb_name=$tout.metadatadb_name
 $SqlInstalled = Get-InstalledModule SqlServer
 if($null -eq $SqlInstalled)
 {
-    write-host "Installing SqlServer Module"
+    Write-Information "Installing SqlServer Module"
     Install-Module -Name SqlServer -Scope CurrentUser -Force
 }
 

@@ -108,6 +108,10 @@
       "provider": "filesystem",
       "library": "wwwroot/js/bswindow/",
       "destination": "wwwroot/lib/bswindow/"
+    },
+    {
+      "library": "showdown@1.9.1",
+      "destination": "wwwroot/lib/showdown/"
     }
   ]
 }

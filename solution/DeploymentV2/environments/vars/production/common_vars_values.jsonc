@@ -1,0 +1,28 @@
+{
+  "owner_tag": "Contoso",
+  "deployment_principal_layers1and3": "ccbdbba4-669c-48d6-86b8-75c9ab2ee578",
+  "resource_location": "AustraliaEast",
+  "environment_tag": "stg",
+  "domain": "microsoft.com",
+  "subscription_id": "035a1364-f00d-48e2-b582-4fe125905ee3",
+  "prefix": "ads",
+  "resource_group_name": "gft2",
+  "state_storage_account_name": "lockboxftteststate",
+  "ip_address": "144.138.148.220",
+  "ip_address2": "144.138.148.220",
+  "tenant_id": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+  "synapse_administrators": 
+    {"Jorampon":"ccbdbba4-669c-48d6-86b8-75c9ab2ee578"},
+  "WEB_APP_ADMIN_USER":"ccbdbba4-669c-48d6-86b8-75c9ab2ee578",
+  "ARM_SYNAPSE_WORKSPACE_NAME": "adsdevsynwadskhpv", //Required by deployment script (pwsh) to openfirewall and provide access.. note that this will not be known until first deployment
+  "ARM_KEYVAULT_NAME": "ads-dev-kv-ads-khpv", //Required by deployment script (pwsh) to openfirewall and provide access.. note that this will not be known until first deployment
+  "ARM_DATALAKE_NAME": "adsdevdlsadskhpvadsl", //Required by deployment script (pwsh) to openfirewall and provide access.. note that this will not be known until first deployment,
+  "deploy_state_storage_account": false,
+  "deploy_cicd_vm": false,
+  "FeatureTemplateOverrides": {
+    "is_onprem_datafactory_ir_registered": false,
+    "deployment_layer3_complete": false,
+    "layer0_state": "remote",
+    "delay_private_access": true
+  }
+}

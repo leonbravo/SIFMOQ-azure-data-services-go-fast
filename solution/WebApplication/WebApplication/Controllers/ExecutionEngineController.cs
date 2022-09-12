@@ -63,7 +63,7 @@ namespace WebApplication.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ChecksUserAccess]
-        public async Task<IActionResult> Create([Bind("Id,Name,ResourceGroup,SubscriptionUid,DefaultKeyVaultUrl,LogAnalyticsWorkspaceId")] ExecutionEngine executionEngine)
+        public async Task<IActionResult> Create([Bind("EngineId,EngineName,SystemType,ResourceGroup,SubscriptionUid,DefaultKeyVaultURL,EngineJson,LogAnalyticsWorkspaceId")] ExecutionEngine executionEngine)
         {
             if (ModelState.IsValid)
             {
@@ -102,7 +102,7 @@ namespace WebApplication.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ChecksUserAccess]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,ResourceGroup,SubscriptionUid,DefaultKeyVaultUrl, EngineJson, LogAnalyticsWorkspaceId")] ExecutionEngine executionEngine)
+        public async Task<IActionResult> Edit(long id, [Bind("EngineId,EngineName,SystemType,ResourceGroup,SubscriptionUid,DefaultKeyVaultURL,EngineJson,LogAnalyticsWorkspaceId")] ExecutionEngine executionEngine)
         {
             if (id != executionEngine.EngineId)
             {

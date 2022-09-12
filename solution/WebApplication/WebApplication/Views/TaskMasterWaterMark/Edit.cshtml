@@ -23,8 +23,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="TaskMasterWaterMarkColumnType" class="control-label"></label>
-                <input asp-for="TaskMasterWaterMarkColumnType" class="form-control" />
-                <span asp-validation-for="TaskMasterWaterMarkColumnType" class="text-danger"></span>
+                <select asp-for="TaskMasterWaterMarkColumnType" class="form-control" asp-items="ViewBag.ColumnType"></select>
             </div>
             <div class="form-group">
                 <label asp-for="TaskMasterWaterMarkDateTime" class="control-label"></label>
@@ -52,7 +51,12 @@
                 </label>
             </div>
             <div class="form-group">
-                <a href="javascript:history.go(-1)" title="Back to List" class="btn btn-secondary"><i class="fa fa-arrow-circle-left"></i> Back</a>
+                <label asp-for="UpdatedOn" class="control-label"></label>
+                <input asp-for="UpdatedOn" class="form-control" />
+                <span asp-validation-for="UpdatedOn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <a href="javascript:history.go(-1)" title="Back to List" class="btn btn-secondary" ><i class="fa fa-arrow-circle-left"></i> Back</a>            
                 <input type="submit" value="Save" class="btn btn-danger" />
             </div>
         </form>

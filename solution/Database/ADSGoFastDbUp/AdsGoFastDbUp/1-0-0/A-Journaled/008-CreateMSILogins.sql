@@ -1,4 +1,4 @@
-        DROP USER IF EXISTS [$FunctionAppName$] 
+        /* DROP USER IF EXISTS [$FunctionAppName$] 
         CREATE USER [$FunctionAppName$] FROM EXTERNAL PROVIDER;
         ALTER ROLE db_datareader ADD MEMBER [$FunctionAppName$];
         ALTER ROLE db_datawriter ADD MEMBER [$FunctionAppName$];
@@ -18,4 +18,4 @@
         ALTER ROLE db_datareader ADD MEMBER [$DataFactoryName$];
         ALTER ROLE db_datawriter ADD MEMBER [$DataFactoryName$];
         GRANT EXECUTE ON SCHEMA::[dbo] TO [$DataFactoryName$];
-        GO
+        GO */

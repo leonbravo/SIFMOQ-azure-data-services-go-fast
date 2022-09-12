@@ -1,5 +1,8 @@
-Import-Module .\GatherOutputsFromTerraform.psm1 -force
-$tout = GatherOutputsFromTerraform
+
+Write-Host $PWD
+Import-Module ./GatherOutputsFromTerraform_DataFactoryFolder.psm1 -Force
+$tout = GatherOutputsFromTerraform_DataFactoryFolder
+
 $sqlserver_name=$tout.sqlserver_name
 $stagingdb_name=$tout.stagingdb_name
 $metadatadb_name=$tout.metadatadb_name
@@ -8,7 +11,7 @@ $metadatadb_name=$tout.metadatadb_name
 $SqlInstalled = Get-InstalledModule SqlServer
 if($null -eq $SqlInstalled)
 {
-    write-host "Installing SqlServer Module"
+    Write-Verbose "Installing SqlServer Module"
     Install-Module -Name SqlServer -Scope CurrentUser -Force
 }
 
@@ -57,8 +60,11 @@ Select a.* from
 		-7,
 		'EntireGroup'
 ) a
-right join [dbo].[TaskGroupDependency]  b on a.AncestorTaskGroupid = b.AncestorTaskGroupid and a.DescendantTaskGroupId = b.DescendantTaskGroupId
+left outer join [dbo].[TaskGroupDependency]  b on a.AncestorTaskGroupid = b.AncestorTaskGroupid and a.DescendantTaskGroupId = b.DescendantTaskGroupId
 where b.AncestorTaskGroupid is null
 "@
-Invoke-Sqlcmd -ServerInstance "$sqlserver_name.database.windows.net,1433" -Database $metadatadb_name -AccessToken $token -query $sqlcommand   
+Invoke-Sqlcmd -ServerInstance "$sqlserver_name.database.windows.net,1433" -Database $metadatadb_name -AccessToken $token -query $sqlcommand 
+
+
+
 

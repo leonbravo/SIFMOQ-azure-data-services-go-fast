@@ -291,6 +291,10 @@ solution/Synapse/Patterns/SqlTests.sql
 solution/Synapse/Patterns/pipeline/*/output/
 solution/FunctionApp/Patterns/pipeline/*/output/
 
+#test folders
+solution/DataFactory/Patterns/pipeline/*/functionapptests/tests/tests.json
+solution/Synapse/Patterns/pipeline/*/functionapptests/tests/tests.json
+solution/DeploymentV2/terraform_layer0/.terraform.lock.hcl
 /.vscode/extensions.json
 /.vscode/launch.json
 /.vscode/tasks.json

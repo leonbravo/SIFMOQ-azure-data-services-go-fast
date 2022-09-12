@@ -18,7 +18,7 @@ function()
                 "inputAttributes": {
                     "placeholder": "eg. AwSample/dbo/Customer/{yyyy}/{MM}/{dd}/{hh}/"
                 },
-                "infoText": "Path of the file to be copied. You can use pattern match characters eg. *. See https://docs.microsoft.com/en-us/azure/data-factory/connector-azure-blob-storage?tabs=data-factory#blob-storage-as-a-source-type"
+                "infoText": "(optional) Path of the file to be copied. You can use pattern match characters eg. *. See https://docs.microsoft.com/en-us/azure/data-factory/connector-azure-blob-storage?tabs=data-factory#blob-storage-as-a-source-type"
             }
         },
         "DataFileName": {
@@ -28,7 +28,7 @@ function()
                 "inputAttributes": {
                     "placeholder": "eg. *.parquet"
                 },
-                "infoText": "Name of the file to be copied. You can use pattern match characters eg. *. See https://docs.microsoft.com/en-us/azure/data-factory/connector-azure-blob-storage?tabs=data-factory#blob-storage-as-a-source-type"
+                "infoText": "(required) Name of the file to be copied. You can use pattern match characters eg. *. See https://docs.microsoft.com/en-us/azure/data-factory/connector-azure-blob-storage?tabs=data-factory#blob-storage-as-a-source-type"
             }
         },
         "Recursively": {
@@ -39,7 +39,7 @@ function()
             ],
             "default": "true",
             "options": {
-                "infoText": "Set to true if you want the framework to copy files from subfolders."
+                "infoText": "(required) Set to true if you want the framework to copy files from subfolders."
             }
         },
         "DeleteAfterCompletion": {
@@ -50,14 +50,14 @@ function()
             ],
             "default": "true",
             "options": {
-                "infoText": "Set to true if you want the framework to remove the source file after a successsful copy."
+                "infoText": "(required) Set to true if you want the framework to remove the source file after a successsful copy."
             }
         },        
         "MaxConcurrentConnections": {
             "type": "integer",
             "default": 100,
             "options": {                        
-                "infoText": "The upper limit of concurrent connections established to the data store during the activity run. Specify a value only when you want to limit concurrent connections"
+                "infoText": "(required) The upper limit of concurrent connections established to the data store during the activity run. Specify a value only when you want to limit concurrent connections"
             }
         }    
     },

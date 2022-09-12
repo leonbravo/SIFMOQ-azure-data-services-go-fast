@@ -18,6 +18,7 @@ namespace WebApplication.Models
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please input valid json data")]
         public string TaskMasterJson { get; set; }
         public bool ActiveYn { get; set; }
+        public bool InsertIntoCurrentSchedule { get; set; }
         public string DependencyChainTag { get; set; }
         public long EngineId { get; set; }
     }

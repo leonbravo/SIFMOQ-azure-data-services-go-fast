@@ -17,7 +17,7 @@ function(SourceType = "", SourceFormat = "Notebook-Optional",TargetType = "", Ta
                 "Disabled"
             ],
             "options": {
-                "infoText": "Use this to enable the pipeline to be written to purview. Note: This will not work if Purview is not enabled and configured with the ExecutionEngine."
+                "infoText": "(required) Use this to enable the pipeline to be written to purview. Note: This will not work if Purview is not enabled and configured with the ExecutionEngine."
             }
         },
         "QualifiedIDAssociation": {
@@ -28,7 +28,7 @@ function(SourceType = "", SourceFormat = "Notebook-Optional",TargetType = "", Ta
                 "TaskMasterId"
             ],
             "options": {
-                "infoText": "This is used to enable Purview to direct the QualifiedID (UID) to attach itself to the relevant ID. Note: If attached to the ExecutionID each indiviudal run of the pipeline with have a lineage."
+                "infoText": "(optional) This is used to enable Purview to direct the QualifiedID (UID) to attach itself to the relevant ID. Note: If attached to the ExecutionID each indiviudal run of the pipeline with have a lineage."
             }
         }, 
         "ExecuteNotebook": {
@@ -37,7 +37,7 @@ function(SourceType = "", SourceFormat = "Notebook-Optional",TargetType = "", Ta
                 "inputAttributes": {
                     "placeholder": "DeltaProcessingNotebook"
                 },
-                "infoText": "Use this field to define the name of the notebook to execute."
+                "infoText": "(required) Use this field to define the name of the notebook to execute."
             }
         },
         "Source": partials[SourceFormat](),
@@ -48,13 +48,25 @@ function(SourceType = "", SourceFormat = "Notebook-Optional",TargetType = "", Ta
                 "inputAttributes": {
                     "placeholder": ""
                 },
-                "infoText": "Use this field to create fields to use in your notebook from the TaskObject."
+                "infoText": "(optional) Use this field to create fields to use in your notebook from the TaskObject."
+            }
+        },
+        "UseNotebookActivity": {
+            "type": "string",
+            "default": "Disabled",
+            "enum": [
+                "Enabled",
+                "Disabled"
+            ],
+            "options": {
+                "infoText": "(required) This flag is used to control the method used to call the Synapse Notebook that carries out the processing. When Enabled the default notebook activity type within Synapse pipelines will be used. Note that this will force a new spark session for each job execution. By leaving this flag disabled an Azure Function is used to call the notebook and Spark Sessions will be reused if available."
             }
         }
     },
     "required": [
         "ExecuteNotebook",
         "Purview",
-        "CustomDefinitions"
+        "CustomDefinitions",
+        "UseNotebookActivity"
     ]
 }

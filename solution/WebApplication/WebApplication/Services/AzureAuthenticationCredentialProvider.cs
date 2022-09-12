@@ -63,20 +63,12 @@ namespace WebApplication.Services
         /// </remarks>
         public async Task<string> GetMsalRestApiToken(TokenRequestContext requestContext, CancellationToken cancellationToken)
         {
-            TokenCredential credential = null;
-            if (!string.IsNullOrEmpty(_authOptions.Value.ClientSecret))
-            {
-                credential = new ClientSecretCredential(_authOptions.Value.TenantId, _authOptions.Value.ClientId, _authOptions.Value.ClientSecret);
-            }
-            else
-            {
                 var defaultAzureCredentialOptions = new DefaultAzureCredentialOptions()
                 {
                     ExcludeAzureCliCredential = true,
                     ExcludeManagedIdentityCredential = !_appOptions.Value.UseMSI
                 };
-                credential = new DefaultAzureCredential(defaultAzureCredentialOptions);
-            }
+                var credential = new DefaultAzureCredential(defaultAzureCredentialOptions);
 
             var result = await credential.GetTokenAsync(requestContext, cancellationToken);
 

@@ -17,16 +17,27 @@ function()
                         "inputAttributes": {
                             "placeholder": "eg. AwSample/dbo/Customer/{yyyy}/{MM}/{dd}/{hh}/"
                         },
-                        "infoText": "Path of the file to be imported."
+                        "infoText": "(optional) Path of the file to be imported."
                     }
                 },
                 "DataFileName": {
                     "type": "string",
                     "options": {
                         "inputAttributes": {
-                            "placeholder": "eg. Customer.xlsx"
+                            "placeholder": "eg. Customer.parquet"
                         },
-                        "infoText": "Name of the file to be imported."
+                        "infoText": "(required) Name of the file to be imported."
+                    }
+                },
+                "DataFileNameChunkPostfix": {
+                    "type": "string",
+                    "enum": [
+                        "Enabled",
+                        "Disabled"
+                    ],
+                    "default": "Enabled",
+                    "options": {                        
+                        "infoText": "(required) When Enabled the import task will assume that the incoming file name has a chunk identifier at the end of the file name (eg. Customer.chunk1.parquet)"
                     }
                 },
                 "SchemaFileName": {
@@ -35,7 +46,7 @@ function()
                         "inputAttributes": {
                             "placeholder": "eg. Customer_Schema.json"
                         },
-                        "infoText": "Name of the schema file to use when generating the target table. *Note that if you do not provide a schema file then the schema will be automatically inferred based on the source data."
+                        "infoText": "(required) Name of the schema file to use when generating the target table. *Note that if you do not provide a schema file then the schema will be automatically inferred based on the source data."
                     }
                 }
             },
@@ -43,6 +54,7 @@ function()
                 "Type",
                 "RelativePath",
                 "DataFileName",
+                "DataFileNameChunkPostfix",
                 "SchemaFileName"
             ]
  

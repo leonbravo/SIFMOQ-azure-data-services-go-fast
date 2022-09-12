@@ -1,4 +1,5 @@
 @using Humanizer; 
+@using WebApplication.Controllers
 @model WebApplication.Models.SubjectArea
 
 @{
@@ -25,11 +26,6 @@
                     <input class="form-check-input" asp-for="ActiveYn" /> @Html.DisplayNameFor(model => model.ActiveYn)
                 </label>
             </div>
-            @*<div class="form-group">
-                <label asp-for="SubjectAreaFormId" class="control-label"></label>
-                <input asp-for="SubjectAreaFormId" class="form-control" />
-                <span asp-validation-for="SubjectAreaFormId" class="text-danger"></span>
-            </div>*@
             <div class="form-group">
                 <label asp-for="DefaultTargetSchema" class="control-label"></label>
                 <input asp-for="DefaultTargetSchema" class="form-control" />
@@ -42,6 +38,7 @@
             </div>
             <div class="form-group">
                 <a href="javascript:history.go(-1)" title="Back to List" class="btn btn-secondary" ><i class="fa fa-arrow-circle-left"></i> Back</a>            
+                <a href="@Url.ActionLink(nameof(WizardsController.PIAWizard), "Wizards", new { subjectAreaId = Model.SubjectAreaId })" title="Edit Privacy Impact Assessment" class="btn btn-outline-primary">Edit Privacy Impact Assessment</a>
                 <input type="submit" value="Save" class="btn btn-danger" />
             </div>
         </form>

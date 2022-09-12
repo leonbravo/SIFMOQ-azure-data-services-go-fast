@@ -12,7 +12,7 @@ namespace WebApplication.Models
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please input valid Resource Group")]
         public string ResourceGroup { get; set; }
         public Guid? SubscriptionUid { get; set; }
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Please input valid KeyVault Url")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Please input valid KeyVault URL")]
         public string DefaultKeyVaultURL { get; set; }
         public string EngineJson { get; set; }
         public Guid? LogAnalyticsWorkspaceId { get; set; }

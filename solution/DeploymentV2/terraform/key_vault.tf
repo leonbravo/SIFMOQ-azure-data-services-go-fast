@@ -25,7 +25,7 @@ resource "azurerm_key_vault" "app_vault" {
 // Grant secret and key access to the current app to store the secret values --------------------------
 // Allows the deployment service principal to compare / check state later
 resource "azurerm_key_vault_access_policy" "user_access" {
-  count        = (var.cicd_sp_id == data.azurerm_client_config.current.object_id? 0 : 1)
+  count        = (var.cicd_sp_id == data.azurerm_client_config.current.object_id ? 0 : 1)
   key_vault_id = azurerm_key_vault.app_vault.id
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = data.azurerm_client_config.current.object_id
@@ -43,10 +43,10 @@ resource "azurerm_key_vault_access_policy" "user_access" {
 }
 
 resource "azurerm_key_vault_access_policy" "cicd_access" {
-  count        = (var.cicd_sp_id == ""? 0 : 1)
+  count        = (var.cicd_sp_id == "" ? 0 : 1)
   key_vault_id = azurerm_key_vault.app_vault.id
   tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = (var.cicd_sp_id == data.azurerm_client_config.current.object_id? var.cicd_sp_id : data.azurerm_client_config.current.object_id)
+  object_id    = (var.cicd_sp_id == data.azurerm_client_config.current.object_id ? var.cicd_sp_id : data.azurerm_client_config.current.object_id)
 
   key_permissions = [
     "Delete", "List", "Get", "Create", "Update", "Purge"
@@ -61,22 +61,23 @@ resource "azurerm_key_vault_access_policy" "cicd_access" {
 }
 
 resource "time_sleep" "cicd_access" {
-  depends_on = [azurerm_key_vault_access_policy.cicd_access,azurerm_key_vault_access_policy.user_access]
+  depends_on      = [azurerm_key_vault_access_policy.cicd_access, azurerm_key_vault_access_policy.user_access]
   create_duration = "10s"
 }
 
 // Allows the data factory to retrieve the azure function host key
 resource "azurerm_key_vault_access_policy" "adf_access" {
+  count        = var.deploy_data_factory ? 1 : 0
   key_vault_id = azurerm_key_vault.app_vault.id
   tenant_id    = var.tenant_id
-  object_id    = azurerm_data_factory.data_factory.identity[0].principal_id
+  object_id    = azurerm_data_factory.data_factory[0].identity[0].principal_id
 
   key_permissions = [
     "Get", "List"
   ]
 
   secret_permissions = [
-    "list", "get"
+    "List", "Get"
   ]
   depends_on = [
     azurerm_key_vault.app_vault,
@@ -95,7 +96,7 @@ resource "azurerm_key_vault_access_policy" "purview_access" {
   ]
 
   secret_permissions = [
-    "list", "get"
+    "List", "Get"
   ]
   depends_on = [
     azurerm_key_vault.app_vault,
@@ -104,16 +105,17 @@ resource "azurerm_key_vault_access_policy" "purview_access" {
 
 // Allows the Azure function to retrieve the Function App - AAD App Reg - Client Secret
 resource "azurerm_key_vault_access_policy" "function_app" {
+  count        = var.deploy_function_app ? 1 : 0
   key_vault_id = azurerm_key_vault.app_vault.id
   tenant_id    = var.tenant_id
-  object_id    = azurerm_function_app.function_app.identity[0].principal_id
+  object_id    = azurerm_function_app.function_app[0].identity[0].principal_id
 
   key_permissions = [
     "Get", "List"
   ]
 
   secret_permissions = [
-    "list", "get"
+    "List", "Get"
   ]
   depends_on = [
     azurerm_key_vault.app_vault,
@@ -132,7 +134,7 @@ resource "azurerm_key_vault_access_policy" "synapse_access" {
   ]
 
   secret_permissions = [
-    "list", "get"
+    "List", "Get"
   ]
   depends_on = [
     azurerm_key_vault.app_vault,
@@ -146,7 +148,7 @@ resource "azurerm_private_endpoint" "app_vault_private_endpoint_with_dns" {
   name                = "${local.key_vault_name}-plink"
   location            = var.resource_location
   resource_group_name = var.resource_group_name
-  subnet_id           = azurerm_subnet.plink_subnet[0].id
+  subnet_id           = local.plink_subnet_id
 
   private_service_connection {
     name                           = "${local.key_vault_name}-plink-conn"
@@ -157,7 +159,7 @@ resource "azurerm_private_endpoint" "app_vault_private_endpoint_with_dns" {
 
   private_dns_zone_group {
     name                 = "privatednszonegroup"
-    private_dns_zone_ids = [azurerm_private_dns_zone.private_dns_zone_kv[0].id]
+    private_dns_zone_ids = [local.private_dns_zone_kv_id]
   }
 
   depends_on = [
@@ -177,7 +179,7 @@ resource "azurerm_monitor_diagnostic_setting" "app_vault_diagnostic_logs" {
   name = "diagnosticlogs"
 
   target_resource_id         = azurerm_key_vault.app_vault.id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace.id
+  log_analytics_workspace_id = local.log_analytics_resource_id
   # ignore_changes is here given the bug  https://github.com/terraform-providers/terraform-provider-azurerm/issues/10388
   lifecycle {
     ignore_changes = [log, metric]
@@ -212,7 +214,8 @@ resource "azurerm_monitor_diagnostic_setting" "app_vault_diagnostic_logs" {
 
 // Actual secrets ----------------------------------------------------------------------
 data "azurerm_function_app_host_keys" "function_app_host_key" {
-  name                = azurerm_function_app.function_app.name
+  count               = var.deploy_function_app ? 1 : 0
+  name                = azurerm_function_app.function_app[0].name
   resource_group_name = var.resource_group_name
   depends_on = [
     time_sleep.cicd_access,
@@ -222,8 +225,9 @@ data "azurerm_function_app_host_keys" "function_app_host_key" {
 
 
 resource "azurerm_key_vault_secret" "function_app_key" {
+  count        = var.deploy_function_app ? 1 : 0
   name         = "AdsGfCoreFunctionAppKey"
-  value        = data.azurerm_function_app_host_keys.function_app_host_key.default_function_key
+  value        = data.azurerm_function_app_host_keys.function_app_host_key[0].default_function_key
   key_vault_id = azurerm_key_vault.app_vault.id
   depends_on = [
     time_sleep.cicd_access,
@@ -242,6 +246,7 @@ resource "azurerm_key_vault_secret" "purview_ir_sp_password" {
 }
 
 resource "azurerm_key_vault_secret" "azure_function_secret" {
+  count        = var.deploy_function_app ? 1 : 0
   name         = "AzureFunctionClientSecret"
   value        = azuread_application_password.function_app[0].value
   key_vault_id = azurerm_key_vault.app_vault.id

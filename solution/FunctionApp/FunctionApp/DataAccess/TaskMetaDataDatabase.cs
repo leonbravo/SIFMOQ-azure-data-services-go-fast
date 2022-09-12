@@ -94,7 +94,7 @@ namespace FunctionApp.DataAccess
             SqlConnection con = new SqlConnection(GetConnectionString());
             if (!_options.ServiceConnections.AdsGoFastTaskMetaDataDatabaseUseTrustedConnection)
             {
-                string token = await _azureAuthProvider.GetAzureRestApiToken("https://database.windows.net/");
+                string token = await _azureAuthProvider.GetAzureRestApiToken("https://database.windows.net");
                 con.AccessToken = token;
             }
             return con;

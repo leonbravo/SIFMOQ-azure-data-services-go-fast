@@ -190,6 +190,37 @@ function GetTaskTypeMappings() {
 };
 
 
+function GetIntegrationRuntimeMappings() {
+    var DataToPost = {};
+
+    DataToPost = {
+        SourceSystemId: $('#SourceSystemId').val(),
+        TargetSystemId: $('#TargetSystemId').val()
+
+    };
+
+
+    $('#smartwizard').smartWizard("loader", "show");
+    $.ajax({
+        url: "/IntegrationRuntimeMapping/FindMapping",
+        dataType: "json",
+        type: "post",
+        data: DataToPost,
+        success: function (data, textStatus, jqXHR) {
+            integrationRuntimeMappings = data;
+            EnterStep5b();
+            $('#smartwizard').smartWizard("loader", "hide");
+        },
+        error: function (xhr, status, error) {
+            var errorMsg = `${xhr.status}: ${xhr.responseText}`;
+            toastr.warning(`Error - ${errorMsg}`);
+            $('#smartwizard').smartWizard("loader", "hide");
+            $('#smartwizard').smartWizard("reset");
+        }
+    });
+};
+
+
 function EnterStep2() {
     var currentSourceSystemSelectedOption = $(':selected', $('#SourceSystemId'));
 
@@ -204,6 +235,7 @@ function EnterStep2() {
     })
     SourceCheck();
 }
+
 
 function EnterStep3() {
     //Find Selected SourceSystem
@@ -385,8 +417,23 @@ function EnterStep5() {
     if (editor !== undefined) {
         $('#TaskMasterJson').val(JSON.stringify(editor.getValue()));
     }
+    GetIntegrationRuntimeMappings();
+
 }
 
+function EnterStep5b() {
+    var currentSourceSystemSelectedOption = $(':selected', $('#TaskDatafactoryIr'));
+
+    currentSourceSystemSelectedOption = $(':selected', $('#TaskDatafactoryIr'));
+    $('#TaskDatafactoryIr option').remove();
+    $.each(integrationRuntimeMappings.ValidIRs, function (key, value) {
+        var opt = $('<option value="' + value.IntegrationRuntimeName + '">' + value.IntegrationRuntimeName + '</option>')
+        if (opt.val() == currentSourceSystemSelectedOption.val()) {
+            opt.attr('selected', 'selected');
+        }
+        $('#TaskDatafactoryIr').append(opt);
+    })
+}
 
 
 function CreateJsonEditor() {

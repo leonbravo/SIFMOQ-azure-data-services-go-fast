@@ -4,9 +4,9 @@
 
 The Azure Data Services Go Fast Codebase is a combination of Microsoft components designed to shorten the "time to value" when deploying an Azure Data Platform. Key features include:
 
-- Infrastucture as code (IAC) deployment of MVP Azure Data Platform 
+- Infrastructure as code (IAC) deployment of MVP Azure Data Platform 
 - "Out of the box" Continuous Integration and Continuous Deployment framework  
-- Enterpise grade security and monitoring with full support for Key Vault, VNETS, Private Enpoints and Managed Service Identities
+- Enterprise grade security and monitoring with full support for Key Vault, VNETS, Private Endpoints and Managed Service Identities
 - Codeless Ingestion from commonly used enterprise source systems into an enterprise data lake
 - Users can interact with capabilities through a webpage and embedded dashboards.
 
@@ -18,7 +18,7 @@ At its core this project is intended to be an accelerator. As such, it is design
 
 ## Getting Started
 
-Getting started is always the hardest part of any process so help clients & partners get started with this repository we provide a set of online, on-boarding and upskilling workshops. Spaces in these workshops are limited and subject to an application process. If you are intersted then please 
+Getting started is always the hardest part of any process so to help clients & partners get started with this repository we provide a set of online, on-boarding and upskilling workshops. Spaces in these workshops are limited and subject to an application process. If you are interested then please 
 nominate yourself at [https://forms.office.com/r/qbQrU6jFsj](https://forms.office.com/r/qbQrU6jFsj).
   
 
@@ -32,7 +32,7 @@ Deployment of this project requires a variety of services across Azure. Please e
 >- Owner rights on the Azure Resource Group
 >- Power BI Workspace (Optional)
 
-*Note that for a fully functioning deployment the deployment process will create a Deployment Service principal and two Azure Application Registrtions within the Azure Active Directory (AAD) domain that is connected to your Azure subscription. It is recommended that you use an Azure subscription and AAD on which you have the necessary priveleges to perform these operations. 
+*Note that for a fully functioning deployment the deployment process will create a Deployment Service principal and two Azure Application Registrations within the Azure Active Directory (AAD) domain that is connected to your Azure subscription. It is recommended that you use an Azure subscription and AAD on which you have the necessary privileges to perform these operations. 
 
 You can sign up for an Azure subscription [here](https://azure.microsoft.com/en-us/free/) 
 
@@ -47,25 +47,58 @@ You will also need some development tools to edit and run the deployment scripts
 >- A windows based computer (local or cloud)
 >- [Visual Studio Code](https://visualstudio.microsoft.com/downloads/)
 >- [Docker Desktop](https://www.docker.com/products/docker-desktop)
->- [Windows Store Ubuntu 18.04 LTS](https://www.microsoft.com/store/productId/9N9TNGVNDL3Q)
+>- [Windows Store Ubuntu 18.04 LTS](https://apps.microsoft.com/store/detail/ubuntu-1804-on-windows/9N9TNGVNDL3Q)
 
 The deployment uses a concept of **Developing inside a Container** to containerize all the necessary pre-requisite components without requiring them to be installed on the local machine. Follow our [Configuring your System for Development Containers](https://code.visualstudio.com/docs/remote/containers) guide.
 
 Once you have set up these pre-requisites you will then need to [Clone](https://docs.github.com/en/enterprise-server@3.1/repositories/creating-and-managing-repositories/cloning-a-repository) this repository to your local machine. 
 
+:triangular_flag_on_post: If you want a stable deployment it is highly recommended that you checkout one of the official release tags. For example, if you wish to deploy v1.0.2 run the line below from within the directory into which you cloned the repository.
+
+```bash 
+git checkout tags/v2.0.0
+```
+
 ## Deployment
 To deploy the solution open **Visual Studio Code** and carry out the following steps.
 
->- [ ] From the menu select "File" then "Open Folder". Navigate the directory into which you cloned the solution. It should look like the image below with a ".devcontainer" folder at the root. Open this folder in Visual Studio Code. 
+>- :white_check_mark: From the menu select "File" then "Open Folder". Navigate the directory into which you cloned the solution. It should look like the image below with a ".devcontainer" folder at the root. Open this folder in Visual Studio Code. 
 ![image](https://user-images.githubusercontent.com/11702150/149238286-314b01ab-4cd8-4ac7-b3f5-32ca5a8d8661.png)
 
->- [ ] Next, from the Visual Studio Code menu, select "View", "Command Palette". When the search box opens type "Remote-Containers: Reopen in Container". **Note** that Docker Desktop needs to be running before you perform this step. 
->- [ ] From the menu select "Terminal", "New Terminal". A new Powershell Core window will open at the bottom of your screen. You are now running within the Docker container.
->- [ ] You are now in the development and deployment environment. Within the new terminal window navigate to the DeploymentV2 directory using the commands below:
+>- :white_check_mark: Next, from the Visual Studio Code menu, select "View", "Command Palette". When the search box opens type "Remote-Containers: Reopen in Container". **Note** that Docker Desktop needs to be running before you perform this step. 
+>- :white_check_mark: From the menu select "Terminal", "New Terminal". A new Powershell Core window will open at the bottom of your screen. You are now running within the Docker container.
+>- :white_check_mark: You are now in the development and deployment environment. Within the new terminal window navigate to the DeploymentV2 directory using the commands below:
 ``` pwsh
 cd ./solution/DeploymentV2
 ```
->- [ ] You are now ready to begin the IAC deployment. To do so follow [this detailed guide.](./solution/DeploymentV2/README.md)
+>- :white_check_mark: You are now ready to begin the IAC deployment. To do so follow [this detailed guide.](./solution/DeploymentV2/README.md)
+
+
+## :hash: Code Composition
+See below for the a "Cloc" generated breakdown of the source code files by format: 
+Language|# Files|Blank Lines|Comment Lines|Code Lines
+:-------|-------:|-------:|-------:|-------:
+JSON|508|52|0|367628
+YAML|20|4140|4215|186305
+SQL|180|2058|2098|38799
+C#|240|3910|1461|19565
+Razor|322|1757|268|18142
+CSS|4|2117|42|9440
+HCL|97|1090|581|9248
+Jupyter Notebook|15|0|1937|3755
+PowerShell|70|858|704|3568
+JavaScript|12|268|218|1288
+Markdown|40|235|0|994
+SVG|7|0|18|657
+MSBuild script|8|60|2|634
+Bourne Shell|3|62|72|423
+Python|2|14|64|55
+Dockerfile|1|6|9|34
+DOS Batch|1|4|3|1
+HTML|1|1|0|0
+--------|--------|--------|--------|--------
+SUM:|1531|16632|11692|660536
+
 
 ## Post Deployment Set-up and Instructions
 =======
@@ -107,6 +140,11 @@ provided by the bot. You will only need to do this once across all repos using o
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+Recommended Maintenance activities when contributing:
+1. Check Azure Cli for new versions - upgrade, test and remediate where necessary
+1. Check Terraform Providers for new versions - upgrade, test and remediate where necessary
+1. Check Dependecny Libraies for Function Application and Web Application for new versions - upgrade, test and remediate where necessary
 
 ## Security
 Microsoft takes the security of our software products and services seriously, which includes all source code repositories managed through our GitHub organizations, which include Microsoft, Azure, DotNet, AspNet, Xamarin, and our GitHub organizations. Please review this repository's [security section](../../security) for more details.

@@ -1,0 +1,470 @@
+{
+  "type": "object",
+  "required": [],
+  "properties": {
+    "owner_tag": {
+      "type": "string",
+      "default": "Contoso",
+      "description": "Owner tag to be applied to resources.",
+      "examples": [
+          "Contoso"
+      ], 
+      "options": {
+        "category": "Target Azure Environment"
+      }
+    },
+    "resource_location": {
+      "type": "string",
+      "default": "australiaeast",
+      "description": "Azure region to be used for deployment.",
+      "enum": [
+          "australiaeast",
+          "brazilsouth",
+          "eastasia",
+          "eastus",
+          "eastus2",
+          "northeurope",
+          "southcentralus",
+          "southeastasia",
+          "westcentralus",
+          "westeurope",
+          "westus",
+          "westus2"
+       ],
+       "examples":[],
+       "options": {
+        "category": "Target Azure Environment"
+      }
+    },
+    "environment_tag": {
+      "type": "string",
+      "default": "dev",
+      "description": "Environment tag to be used in resource naming convention. Keep to 3 letters to prevent names becoming too long.",
+      "examples": [
+          "dev"
+      ],
+      "options": {
+        "category": "Target Azure Environment"
+      }
+    },
+    "domain": {
+      "type": "string",
+      "default": "mydomain.com",
+      "description": "Azure Active Directory Domain to be used for authentication",
+      "examples": [
+          "mydomain.com"
+      ],
+      "options": {
+        "category": "Target Azure Environment"
+      }
+    },
+    "subscription_id": {
+      "type": "string",
+      "default": "035ass64-f00d-48e2-b582-4fe1ss905ee3",
+      "description": "Id of the subscription into which the analytics landing zone will be deployed",
+      "examples": [
+          "035a1ss4-f00d-48e2-b582-4fe1ss905ee3"
+      ],
+      "options": {
+        "category": "Target Azure Environment"
+      }
+    },
+    "prefix": {
+      "type": "string",
+      "default": "ads",
+      "description": "Prefix to be applied to all resource names. Keep to 3 letters to prevent names becoming too long.",
+      "examples": [
+          "ads"
+      ],
+      "options": {
+        "category": "Target Azure Environment"
+      }
+    },
+    "resource_group_name": {
+      "type": "string",
+      "default": "gf1",
+      "description": "Name of the resource group into which the analytics landing zone will be deployed",
+      "examples": [
+          "gf1"
+      ],
+      "options": {
+        "category": "Target Azure Environment"
+      }
+    },
+    "state_storage_account_name": {
+      "type": "string",
+      "default": "gf1state",
+      "description": "Name of the storage account name into which the terraform states will be stored",
+      "examples": [
+          "gf1state"
+      ],
+      "options": {
+        "category": "Target Azure Environment"
+      }
+    },
+    "ip_address": {
+      "type": "string",
+      "examples": [],
+      "description": "Primary Deployment IP Address. This is usually the IP of the CICD agent. If deploying locally set it to your IPAddress. The agent will update this dynamically in the CICD workflow.",
+      "options": {
+        "category": "Target Azure Environment"
+      }
+    },
+    "ip_address2": {
+      "type": "string",
+      "examples": [],
+      "description": "Secondary Deployment IP Address. If deploying locally set it to your IPAddress. If Layers 1 & 3 are deploying from an IP Address that is different to the primary IP then put the layers 1 & 3 IP addess here.",
+      "options": {
+        "category": "Target Azure Environment"
+      }
+    },
+    "tenant_id": {
+      "type": "string",
+      "examples": ["ee3e45d7-7080-4b63-9d85-86fbfa917bb1"],
+      "description": "The id of the Azure tenant that you wish to deploy into.",
+      "options": {
+        "category": "Target Azure Environment"
+      }
+    },
+    "deployment_principal_layers1and3": {
+      "description": "Object Id of the AAD account that will manage layer's 1 & 3. Note leave this blank if you are going to also include this principal in the resource owner's collection.",
+      "type": "string",
+      "default": "",
+      "examples": []
+    },
+    "resource_owners": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default":[],
+      "examples": ["ee3e45d7-7080-4b63-9d85-86fbfa917bb1"],
+      "description": "List of object id's relating to identities that will own all deployed resources.",
+      "options": {
+        "category": "Target Azure Environment"
+      }
+    },
+    "synapse_administrators": {
+      "type": "object",
+      "required": [],
+      "properties": {},
+      "default": {},
+      "description": "Object with a property for each user that is to be a Synapse Administrator. The property name is descriptive only and should be unique. The property value is the object_id of the user. Leave as empty object when not is use. NOTE - do not include the Synpase Workspace creator in this list as it will be added automatically.",
+      "examples": [
+          {
+              "user_1": "5c736d19-4076-4a76-87f3-6fbfd77f007d",
+              "user_2": "5c732d19-4076-4a76-87f3-6fbfd72f007d"
+          }],
+      "options": {
+        "category": "Target Azure Environment"
+      }
+    },
+    "azure_sql_aad_administrators": {
+      "type": "object",
+      "required": [],        
+      "default": {"sql_aad_admin": ""},
+      "description": "Object with a property for each user that is to be a Azure SQL Administrator. This should be a user or AAD Group. The property name should be the username of the user in AAD and should be unique. The property value is the object_id of the user. You MUST provide the sql_aad_admin property which will determine the AAD Admin setting for the Azure SQL Server. ",
+      "properties": {
+        "sql_aad_admin": {
+          "type": "string"
+        },
+        "deploy_agent": {
+          "type": "string"
+        }
+      },
+      "examples": [
+          {
+              "sql_aad_admin": "5c736d19-4076-4a76-87f3-6fbfd77f007d",
+              "deploy_agent": "5c732d19-4076-4a76-87f3-6fbfd72f007d"
+          }
+      ],
+      "options": {
+        "category": "Target Azure Environment"
+      }
+    },
+    "azure_purview_data_curators": {
+      "type": "object",
+      "required": [],
+      "properties": {},
+      "default": {},
+      "description": "Object with a property for each user that is to be a Purview Data Curator for root object. The property name is descriptive only and should be unique. The property value is the object_id of the user. Leave as empty object when not is use.",
+      "examples": [
+        {
+            "user_1": "5c736d19-4076-4a76-87f3-6fbfd77f007d",
+            "user_2": "5c732d19-4076-4a76-87f3-6fbfd72f007d"
+        }
+      ],
+      "options": {
+        "category": "Target Azure Environment"
+      }
+    },
+    "synapse_publishers": {
+      "type": "object",
+      "required": [],
+      "properties": {},
+      "default": {},
+      "description": "Object with a property for each user that is to be a Synapse Publisher. The property name is descriptive only and should be unique. The property value is the object_id of the user. Leave as empty object when not is use.",
+      "examples": [
+          {
+              "user_1": "5c736d19-4076-4a76-87f3-6fbfd77f007d",
+              "user_2": "5c732d19-4076-4a76-87f3-6fbfd72f007d"
+          }
+      ],
+      "options": {
+        "category": "Target Azure Environment"
+      }
+        
+    },
+    "synapse_contributors": {
+      "type": "object",
+      "required": [],
+      "properties": {},
+      "default": {},
+      "description": "Object with a property for each user that is to be a Synapse Contributor. The property name is descriptive only and should be unique. The property value is the object_id of the user. Leave as empty object when not is use.",
+      "examples": [
+          {
+              "user_1": "5c736d19-4076-4a76-87f3-6fbfd77f007d",
+              "user_2": "5c732d19-4076-4a76-87f3-6fbfd72f007d"
+          }],
+          "options": {
+            "category": "Target Azure Environment"
+          }
+    },
+    "WEB_APP_ADMIN_USER": {
+      "type": "string",
+      "default": "#####",
+      "description": "Object_Id of the user that you would like to have direct, explicit admin access to framework web front end.Set to '#####' if not in use. This setting over-rides the WEB_APP_ADMIN_SECURITY_GROUP. Use in scenarios where use of a security group is not possible.",
+      "examples": [
+          "5c732d19-4076-4a76-87f3-6fbfd72f007d"            
+        ],
+        "options": {
+          "category": "Target Azure Environment"
+        }
+    },
+    "WEB_APP_ADMIN_SECURITY_GROUP": {
+      "type": "string",
+      "default": "#####",
+      "description": "Name of the security group whos memebers will be given admin access to framework web front end.Set to '#####' if not in use.",
+      "examples": [
+          "mysecuritygroup"            
+        ],
+        "options": {
+          "category": "Target Azure Environment"
+        }
+    },
+    "ARM_SYNAPSE_WORKSPACE_NAME": {
+      "type": "string",
+      "default": "adsstgsynwadslwra",
+      "description": "Post Layer 1 Resource name. Deployment of Terraform Layer One will give you these values. They are required to allow subsequent agent deployments to open firewall rules to allow deployment updates.",
+      "examples": [
+          "adsstgsynwadslwra"            
+        ],
+        "options": {
+          "category": "Target Azure Environment"
+        }
+    },
+    "ARM_KEYVAULT_NAME": {
+      "type": "string",
+      "default": "ads-stg-kv-ads-lwra",
+      "description": "Post Layer 1 Resource name. Deployment of Terraform Layer One will give you these values. They are required to allow subsequent agent deployments to open firewall rules to allow deployment updates..",
+      "examples": [
+          "ads-stg-kv-ads-lwra"            
+        ],
+        "options": {
+          "category": "Target Azure Environment"
+        }
+    },
+    "ARM_DATALAKE_NAME": {
+      "type": "string",
+      "default": "adsstgdlsadslwraadsl",
+      "description": "Post Layer 1 Resource name. Deployment of Terraform Layer One will give you these values. They are required to allow subsequent agent deployments to open firewall rules to allow deployment updates..",
+      "examples": [
+          "adsstgdlsadslwraadsl"            
+        ],
+        "options": {
+          "category": "Target Azure Environment"
+        }
+    },
+    "ARM_PAL_PARTNER_ID": {
+      "type": "string",
+      "default": "0",
+      "description": "ID of Implementation Partner for PAL purposes. Set to 0 if not in use",
+      "examples": [
+          "0"            
+        ],
+        "options": {
+          "category": "Target Azure Environment"
+        }
+    },
+    "GIT_REPOSITORY_NAME": {
+      "type": "string",
+      "default": "#####",
+      "description": "Git Repository name used for for publishing ADF and Synapse artefacts.  Only used if synapse_git_toggle_integration or adf_git_toggle_integration is true in the hcl file. Set to '#####' if not using Git integration for Synapse and ADF.",
+      "examples": [
+          "mytestrepo"            
+        ],
+        "options": {
+          "category": "Target Azure Environment"
+        }
+    },
+    "GIT_SYNAPSE_REPOSITORY_BRANCH_NAME": {
+      "type": "string",
+      "default": "#####",
+      "description": "Git Branch Name associated with the branch that will be used to publish Synapse artefacts. Only used if synapse_git_toggle_integration is true in the hcl file. Set to '#####' if not using Git integration for Synapse and ADF.",
+      "examples": [
+          "main"            
+        ],
+        "options": {
+          "category": "Target Azure Environment"
+        }
+    },
+    "GIT_USER_NAME": {
+      "type": "string",
+      "default": "#####",
+      "description": "Usernames of git user used for publishing artefacts.  Only used if synapse_git_toggle_integration or adf_git_toggle_integration is true in the hcl file.  Set to '#####' if not using Git integration for Synapse and ADF.",
+      "examples": [
+          "test user"            
+        ],
+        "options": {
+          "category": "Target Azure Environment"
+        }
+    },
+    "GIT_EMAIL_ADDRESS": {
+      "type": "string",
+      "default": "#####",
+      "description": "Email address of git user used for publishing artefacts.  Only used if synapse_git_toggle_integration or adf_git_toggle_integration is true in the hcl file. Set to '#####' if not using Git integration for Synapse and ADF.",
+      "examples": [
+          "test@test.com"            
+        ],
+        "options": {
+          "category": "Target Azure Environment"
+        }
+    },
+    "GIT_ADF_REPOSITORY_NAME": {
+      "type": "string",
+      "default": "#####",
+      "description": "Git Repository name used for for publishing ADF and Synapse artefacts.  Only used if synapse_git_toggle_integration or adf_git_toggle_integration is true in the hcl file.Set to '#####' if not using Git integration for Synapse and ADF.",
+      "examples": [
+          "mytestrepo"            
+        ],
+        "options": {
+          "category": "Target Azure Environment"
+        }
+    },
+    "GIT_ADF_REPOSITORY_BRANCH_NAME": {
+      "type": "string",
+      "default": "#####",
+      "description": "Git Branch Name associated with the branch that will be used to publish Synapse artefacts. Only used if synapse_git_toggle_integration is true in the hcl file. Set to '#####' if not using Git integration for Synapse and ADF.",
+      "examples": [
+          "main"            
+        ],
+        "options": {
+          "category": "Target Azure Environment"
+        }
+    },
+    "GIT_ADF_USER_NAME": {
+      "type": "string",
+      "default": "#####",
+      "description": "Usernames of git user used for publishing artefacts.  Only used if synapse_git_toggle_integration or adf_git_toggle_integration is true in the hcl file.  Set to '#####' if not using Git integration for Synapse and ADF.",
+      "examples": [
+          "test user"            
+        ],
+        "options": {
+          "category": "Target Azure Environment"
+        }
+    },
+    "GIT_ADF_EMAIL_ADDRESS": {
+      "type": "string",
+      "default": "#####",
+      "description": "Email address of git user used for publishing artefacts.  Only used if synapse_git_toggle_integration or adf_git_toggle_integration is true in the hcl file. Set to '#####' if not using Git integration for Synapse and ADF.",
+      "examples": [
+          "test@test.com"            
+        ],
+        "options": {
+          "category": "Git Integration"
+        }
+    },
+    "deploy_state_storage_account": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true then Layer Zero will deploy the state storage account. Generally set to false unless using full private networking.",
+      "examples": [
+          true, false          
+        ],
+        "options": {
+          "category": "Terraform Layer 0 Options"
+        }
+    },
+    "deploy_cicd_vm": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true then Layer Zero will deploy a VM to host a CICD agent. Generally set to false unless using full private networking.",
+      "examples": [
+          true, false                  
+        ],
+        "options": {
+          "category": "Terraform Layer 0 Options"
+        }
+    },   
+    "FeatureTemplateOverrides": {
+      "type": "object",
+      "description": "Each deployment references a feature template (eg. basic_deployment, full_deployment etc). This collection of objects allows you to override the default feature template values.",
+      "required": ["is_onprem_datafactory_ir_registered", "delay_private_access", "layer0_state", "deployment_layer3_complete"],
+      "properties": 
+      {
+        "is_onprem_datafactory_ir_registered": {
+          "type": "boolean",
+          "default": false,
+          "description": "Flag that controls creation of self hosted Azure Data Factory IR related artefacts. On initial deployment of a new environment set this to false. Once you have completed initial deployment, install all Self_hosted ADF IRs then set this flag to true and re-deploy.",
+          "examples": [
+              true, false           
+            ],
+            "options": {
+              "category": "Deployment Lifecycle Toggles"
+            }
+        },
+        "delay_private_access": {
+          "type": "boolean",
+          "default": true,
+          "description": "Set to true to allow firewall based access to public IP's. Often used to allow cloud-hosted CICD agents access to the environment.",
+          "examples": [
+            true, false                  
+            ],
+            "options": {
+              "category": "Deployment Lifecycle Toggles"
+            }
+        },
+        "layer0_state": {
+          "type": "string",
+          "default": "remote",
+          "description": "Determines if layer 0 state file will be local or remote. Useful for initial deployment in fully private network environment's as the CICD agent will not be able to access the state account until networking elements are establlished.",
+          "examples": [
+              "remote", "local"            
+            ],
+            "options": {
+              "category": "Deployment Lifecycle Toggles"
+            }
+        },
+        "deployment_layer3_complete": {
+          "type": "boolean",
+          "default": false,
+          "description": "The build and publishing of the FunctionApp (layer2) must not occur until deployment layer3 has set certain permissions. This flag defaults to false to prevent publishing of source code binaries on initial deployment. Once layer 3 is confirmed complete flip this flag to true and re-deploy. ",
+          "examples": [
+            true, false               
+            ],
+            "options": {
+              "category": "Deployment Lifecycle Toggles"
+            }
+        }
+      },
+      "examples": [
+        {"is_onprem_datafactory_ir_registered":true}
+      ],
+      "options": {
+        "category": "Feature Template Overrides"
+      }
+    }
+
+    
+  }
+}

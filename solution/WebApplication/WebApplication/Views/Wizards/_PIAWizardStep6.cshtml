@@ -1,0 +1,62 @@
+﻿@model WebApplication.Models.Wizards.PIAWizardViewModel;
+<br />
+<div class="form-group">
+    <h3>Identify The Processes You Will Need To Go Through To Assess Disclosure Risk</h3>
+    <p><b>Risk assessment is a crucial step in the process of producing safe useful data, helping you to:</b></p>
+    <ul>
+        <li><b>Determine whether your data should be shared or released at all</b></li>
+        <li><b>Determine how much disclosure control should be applied</b></li>
+        <li><b>Think about the optimum means for sharing or releasing your data</b></li>
+    </ul>
+
+    <div class="row">
+        <div class="col-6">
+            <label asp-for="HasInitialSpecification" class="control-label"></label>
+        </div>
+        <div class="col-6">
+            @Html.RadioButtonFor(model => model.HasInitialSpecification, "true") Yes
+            @Html.RadioButtonFor(model => model.HasInitialSpecification, "false") No
+        </div>
+        <span asp-validation-for="HasInitialSpecification" class="text-danger"></span>
+    </div>
+
+    <br />
+    <label asp-for="TopLevelAssessment" class="control-label"></label>
+    <div class="row">
+        <div class="col-4">
+            @Html.EditorFor(model => model.TopLevelAssessment, Model.TopLevelAssessment.TemplateName, additionalViewData: new { @class = "form-control" })
+            <span asp-validation-for="TopLevelAssessment" class="text-danger"></span>
+        </div>
+        <div class="col-8">
+            <div class="topLevelAssessmentText">
+                <textarea asp-for="DataComplexityExpl" class="form-control" type="text" placeholder=""></textarea>
+                <span asp-validation-for="DataComplexityExpl" class="text-danger"></span>
+            </div>
+            <div class="topLevelAssessmentText">
+                <textarea asp-for="SensitiveVariableExpl" class="form-control" type="text" placeholder=""></textarea>
+                <span asp-validation-for="SensitiveVariableExpl" class="text-danger"></span>
+            </div>
+            <div class="topLevelAssessmentText">
+                <textarea asp-for="DetailedVariableExpl" class="form-control" type="text" placeholder=""></textarea>
+                <span asp-validation-for="DetailedVariableExpl" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+
+    <div>
+        <label asp-for="AnalysisExplanation" class="control-label"></label>
+        <br />
+        <textarea asp-for="AnalysisExplanation" class="form-control" type="text" placeholder=""></textarea>
+        <span asp-validation-for="AnalysisExplanation" class="text-danger"></span>
+    </div>
+
+    <br />
+
+    <div>
+        <label asp-for="DataAnalyticalApproaches" class="control-label"></label><span asp-validation-for="DataAnalyticalApproaches" class="text-danger"></span>
+        @Html.EditorFor(model => model.DataAnalyticalApproaches, Model.DataAnalyticalApproaches.TemplateName, additionalViewData: new { @class = "form-control" })
+    </div>
+
+    
+</div>

@@ -16,7 +16,7 @@ function()
                 },
                 "IncrementalType": {
                     "type": "string",
-                    "description": "Full Extraction or Incremental based on a Watermark Column",
+                    "description": "(required) Full Extraction or Incremental based on a Watermark Column",
                     "enum": [
                         "Watermark"
                     ],
@@ -31,7 +31,7 @@ function()
                         "inputAttributes": {
                             "placeholder": "eg. dbo"
                         }, 
-                        "infoText": "The schema of the table to extract."
+                        "infoText": "(required) The schema of the table to extract."
                     },
                     "default":""
 
@@ -42,7 +42,7 @@ function()
                         "inputAttributes": {
                             "placeholder": "eg. Customer"
                         }, 
-                        "infoText": "The name of the table to extract."
+                        "infoText": "(required) The name of the table to extract."
                     },
                     "default":""
                 },

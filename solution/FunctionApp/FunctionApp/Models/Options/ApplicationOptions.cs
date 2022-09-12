@@ -8,5 +8,6 @@
         public TimerTriggers TimerTriggers { get; set; }
         public LocalPaths LocalPaths { get; set; }
         public TestingOptions TestingOptions { get; set; }
+        public string SendGridApiKey { get; set; }
     }
 }

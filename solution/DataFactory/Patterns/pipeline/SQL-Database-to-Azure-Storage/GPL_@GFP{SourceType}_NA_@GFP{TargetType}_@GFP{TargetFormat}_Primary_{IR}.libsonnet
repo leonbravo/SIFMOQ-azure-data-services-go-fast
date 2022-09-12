@@ -28,7 +28,7 @@ local pipeline = {
 					"functionName": "GetInformationSchemaSQL",
 					"method": "POST",
 					"body": {
-						"value": "@json(concat('{\"TaskInstanceId\":\"', string(pipeline().parameters.TaskObject.TaskInstanceId), '\",\"ExecutionUid\":\"', string(pipeline().parameters.TaskObject.ExecutionUid), '\",\"RunId\":\"', string(pipeline().RunId), '\",\"TableSchema\":\"', string(pipeline().parameters.TaskObject.Source.TableSchema), '\",\"TableName\":\"', string(pipeline().parameters.TaskObject.Source.TableName),'\"}'))",
+						"value": "@json(concat('{\"TaskInstanceId\":\"', string(pipeline().parameters.TaskObject.TaskInstanceId), '\",\"ExecutionUid\":\"', string(pipeline().parameters.TaskObject.ExecutionUid), '\",\"RunId\":\"', string(pipeline().RunId), '\",\"SourceType\":\"', string(pipeline().parameters.TaskObject.Source.System.Type), '\",\"TableSchema\":\"', string(pipeline().parameters.TaskObject.Source.TableSchema), '\",\"TableName\":\"', string(pipeline().parameters.TaskObject.Source.TableName),'\"}'))",
 						"type": "Expression"
 					}
 				},

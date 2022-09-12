@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebApplication.Framework
 {
@@ -31,5 +32,10 @@ namespace WebApplication.Framework
         public static IDictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> collection) 
             => new Dictionary<TKey, TValue>(collection);
 
+        public static SelectList ToSelectList<T>(this IEnumerable<T> collection, string dataValueField, string dataTextField) 
+            => new SelectList(collection, dataValueField, dataTextField);
+
+        public static SelectList ToSelectList<T>(this IEnumerable<T> collection, string dataValueField, string dataTextField, object selectedValue)
+            => new SelectList(collection, dataValueField, dataTextField, selectedValue);
     }
 }

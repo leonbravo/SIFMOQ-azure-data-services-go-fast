@@ -1,0 +1,26 @@
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="alert alert-danger" role="alert">Caution. These records are critical to the application and changes may cause certain features to break.</div>
+<h1><i id="PageIcon" class="fas fa-bullseye"></i> EntityRoleMaps</h1>
+<table id="adsgofast_tablelist" class="table table-striped">
+    <thead class="thead">
+        <tr>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        var ModelName = "EntityRoleMap";
+
+        $(document).ready(function () {
+            DataTablesGridPrep();
+        });
+    </script>
+}  

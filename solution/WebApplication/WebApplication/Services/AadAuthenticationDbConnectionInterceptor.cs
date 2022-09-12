@@ -27,7 +27,7 @@ namespace WebApplication.Services
             return base.ConnectionOpening(connection, eventData, result);
         }
 
-        public override async Task<InterceptionResult> ConnectionOpeningAsync(
+        public override async ValueTask<InterceptionResult> ConnectionOpeningAsync(
             DbConnection connection,
             ConnectionEventData eventData,
             InterceptionResult result,

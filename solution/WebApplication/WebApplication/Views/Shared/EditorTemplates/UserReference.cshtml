@@ -1,0 +1,5 @@
+﻿@model UserReference;
+<div class="form-group">
+    @Html.DropDownListFor(model => model.UserId, ViewBag.Users as SelectList, "Select User", new { @class = "form-control", @id = "nameDroplist", @onchange = "setDisplayName(this)", @required = "required" })
+    @Html.HiddenFor(model => model.DisplayName)
+</div>

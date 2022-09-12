@@ -10,13 +10,21 @@ using WebApplication.Framework;
 using WebApplication.Models;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Web;
 
 namespace WebApplication.Controllers
 {
     public partial class TaskGroupDependencyController : BaseController
     {
         protected readonly AdsGoFastContext _context;
-        
+
+        List<SelectListItem> dependencyType = new List<SelectListItem>
+        {
+            new SelectListItem { Text = "EntireGroup", Value = "EntireGroup"},
+            new SelectListItem { Text = "TasksMatchedByTagAndSchedule", Value = "TasksMatchedByTagAndSchedule"},
+        };
 
         public TaskGroupDependencyController(AdsGoFastContext context, ISecurityAccessProvider securityAccessProvider, IEntityRoleProvider roleProvider) : base(securityAccessProvider, roleProvider)
         {
@@ -56,9 +64,15 @@ namespace WebApplication.Controllers
         // GET: TaskGroupDependency/Create
         public IActionResult Create()
         {
-            ViewData["AncestorTaskGroupId"] = new SelectList(_context.TaskGroup.OrderBy(x=>x.TaskGroupName), "TaskGroupId", "TaskGroupName");
+            NameValueCollection QueryParams = HttpUtility.ParseQueryString(new Uri(Request.Headers["Referer"]).Query);
+            if (QueryParams["TaskGroupId"] != null)
+            {
+                ViewData["selectedTaskGroupId"] = int.Parse(QueryParams["TaskGroupId"]);
+            }
+            ViewData["AncestorTaskGroupId"] = new SelectList(_context.TaskGroup.OrderBy(x => x.TaskGroupName), "TaskGroupId", "TaskGroupName");
             ViewData["DescendantTaskGroupId"] = new SelectList(_context.TaskGroup.OrderBy(x=>x.TaskGroupName), "TaskGroupId", "TaskGroupName");
-     TaskGroupDependency taskGroupDependency = new TaskGroupDependency();
+            ViewData["DependencyType"] = new SelectList(dependencyType, "Value", "Text");
+            TaskGroupDependency taskGroupDependency = new TaskGroupDependency();
             return View(taskGroupDependency);
         }
 
@@ -82,6 +96,9 @@ namespace WebApplication.Controllers
             }
         ViewData["AncestorTaskGroupId"] = new SelectList(_context.TaskGroup.OrderBy(x=>x.TaskGroupName), "TaskGroupId", "TaskGroupName", taskGroupDependency.AncestorTaskGroupId);
         ViewData["DescendantTaskGroupId"] = new SelectList(_context.TaskGroup.OrderBy(x=>x.TaskGroupName), "TaskGroupId", "TaskGroupName", taskGroupDependency.DescendantTaskGroupId);
+
+        ViewData["DependencyType"] = new SelectList(dependencyType, "Value", "Text", taskGroupDependency.DependencyType);
+
             return View(taskGroupDependency);
         }
 
@@ -102,6 +119,7 @@ namespace WebApplication.Controllers
                 return new ForbidResult();
         ViewData["AncestorTaskGroupId"] = new SelectList(_context.TaskGroup.OrderBy(x=>x.TaskGroupName), "TaskGroupId", "TaskGroupName", taskGroupDependency.AncestorTaskGroupId);
         ViewData["DescendantTaskGroupId"] = new SelectList(_context.TaskGroup.OrderBy(x=>x.TaskGroupName), "TaskGroupId", "TaskGroupName", taskGroupDependency.DescendantTaskGroupId);
+        ViewData["DependencyType"] = new SelectList(dependencyType, "Value", "Text", taskGroupDependency.DependencyType);
             return View(taskGroupDependency);
         }
 
@@ -144,6 +162,8 @@ namespace WebApplication.Controllers
             }
         ViewData["AncestorTaskGroupId"] = new SelectList(_context.TaskGroup.OrderBy(x=>x.TaskGroupName), "TaskGroupId", "TaskGroupName", taskGroupDependency.AncestorTaskGroupId);
         ViewData["DescendantTaskGroupId"] = new SelectList(_context.TaskGroup.OrderBy(x=>x.TaskGroupName), "TaskGroupId", "TaskGroupName", taskGroupDependency.DescendantTaskGroupId);
+        ViewData["DependencyType"] = new SelectList(dependencyType, "Value", "Text", taskGroupDependency.DependencyType);
+
             return View(taskGroupDependency);
         }
 
@@ -249,6 +269,28 @@ namespace WebApplication.Controllers
                 // Getting all Customer data    
                 var modelDataAll = from dep in _context.TaskGroupDependency select dep;
 
+                //filter the list by permitted roles
+                if (!CanPerformCurrentActionGlobally())
+                {
+                    //TODO: Test that the change from GetPermittedRolesForCurrentAction didnt' break this
+                    var requiredRoles = GetPermittedGroupsForCurrentAction();
+
+                    var filteredTaskGroups =
+                        from tg in _context.TaskGroup
+                        join rm in _context.GetEntityRoleMapsFor(EntityRoleMap.SubjectAreaTypeName, GetUserAdGroupUids(), requiredRoles)
+                            on tg.SubjectAreaId equals rm.EntityId
+                        select tg;
+
+                    //cross join + distinct to get all possiblities without a GroupJoin (which doesnt' work in EFCore)
+                    modelDataAll =
+                        (from md in modelDataAll
+                         from tg in filteredTaskGroups
+                         where
+                             tg.TaskGroupId == md.AncestorTaskGroupId
+                             || tg.TaskGroupId == md.DescendantTaskGroupId
+                         select md).Distinct();
+                }
+
                 modelDataAll = modelDataAll
                     .Include(t => t.AncestorTaskGroup)
                     .Include(t => t.DescendantTaskGroup).AsNoTracking();
@@ -291,13 +333,15 @@ namespace WebApplication.Controllers
         public async Task<IActionResult> DetailsPlus([FromQuery] long AncestorTaskGroupId, [FromQuery] long DescendantTaskGroupId)
         {
             var taskGroupDependency = await _context.TaskGroupDependency
+                .Include(m => m.AncestorTaskGroup)
+                .Include(m => m.DescendantTaskGroup)
                 .FirstOrDefaultAsync(m => m.AncestorTaskGroupId == AncestorTaskGroupId && m.DescendantTaskGroupId == DescendantTaskGroupId);
             if (taskGroupDependency == null)
             {
                 return NotFound();
             }
 
-            return View("Details", taskGroupDependency);
+            return View("DetailsPlus", taskGroupDependency);
         }
 
         // GET: TaskGroupDependency/Edit/5
@@ -308,7 +352,7 @@ namespace WebApplication.Controllers
             {
                 return NotFound();
             }
-            return View("Edit", taskGroupDependency);
+            return View("EditPlus", taskGroupDependency);
         }
 
         // POST: TaskGroupDependency/Edit/5

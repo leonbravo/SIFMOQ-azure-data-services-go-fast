@@ -1,0 +1,637 @@
+﻿@model WebApplication.Models.Wizards.PIAWizardViewModel;
+
+<style>    
+    .title-table { padding: 0; padding-top:0.5rem;}
+    
+    body {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        color: #212529;
+        font-size: 12pt;
+        font-weight: normal;
+    }
+</style>
+
+<div class="form-group summarySection" id="summaryBody">
+    <h2>Privacy Impact Assessment Summary</h2>
+    <br />
+    
+    <div class="sa-pia-summary">
+        <table class="w-50">
+            <colgroup>
+            </colgroup>
+            <tbody>
+                <tr>
+                    <th>Subject Area Name</th>
+                    <td>@Model.BelongingDataset</td>
+                </tr>
+                <tr>
+                    <th>Subject Area Short Code</th>
+                    <td>@Model.BelongingDatasetCode</td>
+                </tr>
+                <tr>
+                    <th>Data Set Privacy</th>
+                    <td id="privacyStatusValue">@Html.DisplayFor(model => model.DataSetPrivacyStatus)</td>
+                </tr>               
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="stepSection">
+
+        @* Step 1 *@
+        <div class="step-heading">
+            <h3>
+                Introduction
+            </h3>
+
+            <a class="btn btn-info editBtn" href="#step-1"><i class="fas fa-edit"></i>Edit</a>
+        </div>
+
+        <div class="sectionBody">
+
+            <table class="col-12">
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.AuthorisedByDataSubjects)</p>
+                        <p class="pl-3 mb-0">@(@Model.AuthorisedByDataSubjects ? "Yes" : "No")</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.DataAgreementsSigned)</p>
+                        <p class="pl-3 mb-0">@(@Model.DataAgreementsSigned ? "Yes" : "No")</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.DataAgreementsLocation)</p>
+                        <p class="pl-3 mb-0">@Html.DisplayFor(model => model.DataAgreementsLocation)</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.UnderstandMetadata)</p>
+                        <p class="pl-3 mb-0">@(@Model.UnderstandMetadata ? "Yes" : "No")</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.AcceptResponsibility)</p>
+                        <p class="pl-3 mb-0">@(@Model.AcceptResponsibility ? "Yes" : "No")</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.DataSetDescription)</p>
+                        <p class="pl-3 mb-0">@Html.DisplayFor(model => model.DataSetDescription)</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.DataSourceLocation)</p>
+                        <p class="pl-3 mb-0">@Html.DisplayFor(model => model.DataSourceLocation)</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.SystemDataLocation)</p>
+                        <p class="pl-3 mb-0">@Html.DisplayFor(model => model.SystemDataLocation)</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.SiteId)</p>
+                        <p class="pl-3 mb-0">@Html.DisplayFor(model => model.SiteName)</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.OwningSystem)</p>
+                        <p class="pl-3 mb-0">@Html.DisplayFor(model => model.SourceSystemName)</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.SystemPurposeVersion)</p>
+                        <p class="pl-3 mb-0">@Html.DisplayFor(model => model.SystemPurposeVersionFullName)</p>
+                    </th>
+                </tr>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    @* Step 2 *@
+    <div class="stepSection stepsAfterIntro">
+
+        <div class="step-heading">
+            <h3>
+                Data Set Authorities
+            </h3>
+
+            <a class="btn btn-info editBtn" href="#step-2"><i class="fas fa-edit"></i>Edit</a>
+        </div>
+
+        <div class="sectionBody">
+
+            <table class="col-12">
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.DataOwner)</p>
+                        <p class="pl-3 mb-0">@Html.DisplayFor(model => model.DataOwner.DisplayName)</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.DataCustodian)</p>
+                        <p class="pl-3 mb-0">@Html.DisplayFor(model => model.DataCustodian.DisplayName)</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.DataStewards)</p>
+                        @for (int i = 0; i < Model.DataStewards.Count; i++)
+                        {
+                            <p class="pl-3 mb-0">@Html.DisplayFor(model => model.DataStewards[i].DisplayName)</p>
+                        }
+                    </th>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+
+    @* Step 3 *@
+    <div class="stepSection stepsAfterIntro">
+
+        <div class="step-heading">
+            <h3>
+                Understanding Your Legal Responsibility
+            </h3>
+
+            <a class="btn btn-info editBtn" href="#step-3"><i class="fas fa-edit"></i>Edit</a>
+        </div>
+
+        <div class="sectionBody">
+
+            <table class="col-12">
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.SupportingDocumentationLocation)</p>
+                        <p class="pl-3">@Html.DisplayFor(model => model.SupportingDocumentationLocation)</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.DataPersonalOrDeIdentified)</p>
+                        <p class="pl-3">@Html.DisplayFor(model => model.DataPersonalOrDeIdentified)</p>
+                    </th>
+                </tr>
+            </table>
+
+            <div>
+                <p>
+                    <h4> Data Suppression Rules</h4>
+                </p>
+            </div>
+
+            <table class="col-12">
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.SuppressionRuleOne)</p>
+                        <p class="pl-3 mb-2">@Html.DisplayFor(model => model.SuppressionRuleOne).</p>
+                        <p class="pl-3">@Html.DisplayFor(model => model.SuppressionRuleOneExpl)</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.SuppressionRuleTwo)</p>
+                        <p class="pl-3 mb-2">@Html.DisplayFor(model => model.SuppressionRuleTwo).</p>
+                        <p class="pl-3">@Html.DisplayFor(model => model.SuppressionRuleTwoExpl)</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.SuppressionRuleThree)</p>
+                        <p class="pl-3 mb-2">@Html.DisplayFor(model => model.SuppressionRuleThree).</p>
+                        <p class="pl-3">@Html.DisplayFor(model => model.SuppressionRuleThreeExpl)</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.SuppressionRuleFour)</p>
+                        <p class="pl-3 mb-2">@Html.DisplayFor(model => model.SuppressionRuleFour).</p>
+                        <p class="pl-3">@Html.DisplayFor(model => model.SuppressionRuleFourExpl)</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.IdentifiedDataCustodianManagedRisk)</p>
+                        <p class="pl-3">@(@Model.IdentifiedDataCustodianManagedRisk ? "Yes" : "No")</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.DataRiskManagementExplanation)</p>
+                        <p class="pl-3 mb-2">
+                            @Html.DisplayFor(model => model.DataRiskManagementExplanation)
+                        </p>
+                    </th>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+
+    @* Step 4 *@
+    <div class="stepSection stepsAfterIntro">
+
+        <div class="step-heading">
+            <h3>
+                Metadata
+            </h3>
+
+            <a class="btn btn-info editBtn" href="#step-4"><i class="fas fa-edit"></i>Edit</a>
+        </div>
+
+        <div class="sectionBody">
+
+            <table class="col-12">
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.DataForm)</p>
+                        <p class="pl-3 mb-0">@Html.DisplayFor(model => model.DataForm)</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.InfoLevelOfData)</p>
+                        <p class="pl-3 mb-0">@Html.DisplayFor(model => model.InfoLevelOfData)</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.InfoLevelOfVariable)</p>
+                        <p class="pl-3 mb-0">@Html.DisplayFor(model => model.InfoLevelOfVariable)</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12 row-multiselect-options">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.TopThreePropsOfData)</p>
+
+                        @foreach (var opt in Model.TopThreePropsOfData.Options)
+                        {
+                            <div class="col-6">
+                                @Html.DisplayFor(m => opt.Option)
+                                @Html.DisplayFor(m => opt.IsSelected)
+                                <br />
+                            </div>
+                        }
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.IsDataQualityLevelHigh)</p>
+                        <p class="pl-3 mb-2">
+                            @(@Model.IsDataQualityLevelHigh ? "Yes" : "No")
+                        </p>
+                        <p class="pl-3 mb-2">
+                            @Html.DisplayFor(model => model.DataQualityExplanation)
+                        </p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.IsDataAboutVulnerablePopulation)</p>
+                        <p class="pl-3 mb-2">
+                            @(@Model.IsDataAboutVulnerablePopulation ? "Yes" : "No")
+                        </p>
+                        <p class="pl-3 mb-2">
+                            @Html.DisplayFor(model => model.PopulationVulnerabilityExplanation)
+                        </p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.WhenDataWasCollected)</p>
+                        <p class="pl-3 mb-2">
+                            @Html.DisplayFor(model => model.WhenDataWasCollected)
+                        </p>
+                        <p class="pl-3 mb-2">
+                            @Html.DisplayFor(model => model.DataTimeCollectedExplanation)
+                        </p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.IsDataHierarchical)</p>
+                        <p class="pl-3 mb-2">
+                            @(@Model.IsDataHierarchical ? "Yes" : "No")
+                        </p>
+                        <p class="pl-3 mb-2">
+                            @Html.DisplayFor(model => model.DataHierarchicalExplanation)
+                        </p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.IsDataTimeStamped)</p>
+                        <p class="pl-3 mb-2">
+                            @(@Model.IsDataTimeStamped ? "Yes" : "No")
+                        </p>
+                        <p class="pl-3 mb-2">
+                            @Html.DisplayFor(model => model.DataTimestampedExplanation)
+                        </p>
+                    </th>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+
+
+    @* Step 5 *@
+    <div class="stepSection stepsAfterIntro">
+
+        <div class="step-heading">
+            <h3>
+                Meet Your Ethical Obligations
+            </h3>
+
+            <a class="btn btn-info editBtn" href="#step-5"><i class="fas fa-edit"></i>Edit</a>
+        </div>
+
+        <div class="sectionBody">
+
+            <table class="col-12">
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.RespectDataAssurances)</p>
+                        <p class="pl-3 mb-2">
+                            @Html.DisplayFor(model => model.RespectDataAssurances)
+                        </p>
+                        <p class="pl-3 mb-2">
+                            @Html.DisplayFor(model => model.DataAssuranceExplanation)
+                        </p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.HasProvidedTransparency)</p>
+                        <p class="pl-3 mb-2">
+                            @Html.DisplayFor(model => model.HasProvidedTransparency)
+                        </p>
+                        <p class="pl-3 mb-2">
+                            @Html.DisplayFor(model => model.ProvidedTransparencyExplanation)
+                        </p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.HasObtainedSubjectsViews)</p>
+                        <p class="pl-3 mb-2">
+                            @Html.DisplayFor(model => model.HasObtainedSubjectsViews)
+                        </p>
+                        <p class="pl-3 mb-2">
+                            @Html.DisplayFor(model => model.SubjectsViewsExplanation)
+                        </p>
+                    </th>
+                </tr>
+
+            </table>
+
+        </div>
+    </div>
+
+
+
+    @* Step 6 *@
+    <div class="stepSection stepsAfterIntro privateSectionSummary">
+
+        <div class="step-heading">
+            <h3>
+                Identify The Processes You Will Need To Go Through
+            </h3>
+
+            <a class="btn btn-info editBtn" href="#step-6"><i class="fas fa-edit"></i>Edit</a>
+        </div>
+
+        <div class="sectionBody">
+
+            <table class="col-12">
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.HasInitialSpecification)</p>
+                        <p class="pl-3 mb-0">@Html.DisplayFor(model => model.HasInitialSpecification)</p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12 row-multiselect-options">
+                        <div class="col-12">
+                            <p class="mb-2">@Html.DisplayNameFor(model => model.TopLevelAssessment)</p>
+                        </div>
+                        @for (int i = 0; i < Model.TopLevelAssessment.Options.Count; i++)
+                        {
+                            <div class="p-3 col-4 mb-2">
+                                @Html.DisplayFor(m => Model.TopLevelAssessment.Options[i].Option)
+                                @Html.DisplayFor(m => Model.TopLevelAssessment.Options[i].IsSelected)
+                            </div>
+                            <div class="p-3 col-8 pl-3">
+                                @if (i == 0)
+                                {
+                                    @Html.DisplayFor(model => model.DataComplexityExpl)
+                                }
+                                @if (i == 1)
+                                {
+                                    @Html.DisplayFor(model => model.SensitiveVariableExpl)
+                                }
+                                @if (i == 2)
+                                {
+                                    @Html.DisplayFor(model => model.DetailedVariableExpl)
+                                }
+                            </div>
+                        }
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12">
+                        <p class="mb-2">@Html.DisplayNameFor(model => model.AnalysisExplanation)</p>
+                        <p class="p-2 pl-3 mb-2">
+                            @Html.DisplayFor(model => model.AnalysisExplanation)
+                        </p>
+                    </th>
+                </tr>
+
+                <tr class="row col-12">
+                    <th class="col-12 row-multiselect-options">
+                        <div class="mb-2 col-12">@Html.DisplayNameFor(model => model.DataAnalyticalApproaches)</div>
+                        @foreach (var opt in Model.DataAnalyticalApproaches.Options)
+                        {
+                            <div class="col-6">
+                                @Html.DisplayFor(m => opt.Option)
+                                @Html.DisplayFor(m => opt.IsSelected)
+                                <br />
+                            </div>
+                        }
+                    </th>
+                </tr>
+
+            </table>
+            
+        </div>
+    </div>
+
+    @* Step 7 *@
+    <div class="stepSection stepsAfterIntro privateSectionSummary">
+        <div class="step-heading">
+            <h3>
+                Identify The Disclosure Control Processes That Are Relevant To Your Data Situation
+            </h3>
+
+            <a class="btn btn-info editBtn" href="#step-7"><i class="fas fa-edit"></i>Edit</a>
+        </div>
+
+        <div class="sectionBody">
+            
+            <table>
+
+                <tr class="row col-12">
+                    <th class="col-12 row-multiselect-options">
+                        <div class="mb-2 col-12">@Html.DisplayNameFor(model => model.ReconfigureEnvirontment)</div>
+                        @foreach (var opt in Model.ReconfigureEnvirontment.Options)
+                        {
+                            <div class="col-6">
+                                @Html.DisplayFor(m => opt.Option)
+                                @Html.DisplayFor(m => opt.IsSelected)
+                                <br/>
+                            </div>
+                        }
+                        
+                        <div class="p-3 mb-2 pl-3 col-12">@Html.DisplayFor(model => model.ExplanationReconfigureEnvirontment)</div>
+                    </th>
+                </tr>
+                
+                <tr class="row col-12">
+                    <th class="col-12 row-multiselect-options">
+                        <div class="mb-2 col-12">@Html.DisplayNameFor(model => model.ModifyingData)</div>
+                        @foreach (var opt in Model.ModifyingData.Options)
+                        {
+                            <div class="col-6">
+                                @Html.DisplayFor(m => opt.Option)
+                                @Html.DisplayFor(m => opt.IsSelected)
+                                <br />
+                            </div>
+                        }
+                        
+                        <div class="p-3 mb-2 pl-3 col-12">@Html.DisplayFor(model => model.ExplanationModifyingDataOptions)</div>
+                    </th>
+                </tr>
+
+            </table>
+            
+        </div>
+    </div>
+
+    @* Step 8 *@
+    <div class="stepSection stepsAfterIntro privateSectionSummary">
+        <div class="step-heading">
+            <h3>
+                Impact Management Puts In Place A Plan For Reducing The Impact Of Such An Event Should It Happen
+            </h3>
+
+            <a class="btn btn-info editBtn" href="#step-8"><i class="fas fa-edit"></i>Edit</a>
+        </div>
+
+        <div class="sectionBody">
+            
+            <table>
+
+                <tr class="row col-12">
+                    <th class="col-12 row-multiselect-options">
+                        <div class="mb-2 col-12">@Html.DisplayNameFor(model => model.ImpactManagementReductionOptions)</div>
+                        @foreach (var opt in Model.ImpactManagementReductionOptions.Options)
+                        {
+                            <div class="col-6">
+                                @Html.DisplayFor(m => opt.Option)
+                                @Html.DisplayFor(m => opt.IsSelected)
+                                <br/>
+                            </div>
+                        }
+                        
+                        <div class="p-3 mb-2 pl-3 col-12">@Html.DisplayFor(model => model.ImpactManagementExplanation)</div>
+                    </th>
+                </tr>
+                
+                <tr class="row col-12">
+                    <th class="col-12 row-multiselect-options">
+                        <div class="mb-2 col-12">@Html.DisplayNameFor(model => model.StakeholdersAssurance)</div>
+                        @foreach (var opt in Model.StakeholdersAssurance.Options)
+                        {
+                            <div class="col-6">
+                                @Html.DisplayFor(m => opt.Option)
+                                @Html.DisplayFor(m => opt.IsSelected)
+                                <br />
+                            </div>
+                        }
+                        
+                        <div class="p-3 mb-2 pl-3 col-12">@Html.DisplayFor(model => model.StakeholderAssuranceExplanation)</div>
+                    </th>
+                </tr>
+                
+                <tr class="row col-12">
+                    <th class="col-12 row-multiselect-options">
+                        <div class="mb-2 col-12">@Html.DisplayNameFor(model => model.PlanForDataBreachProcess)</div>
+                        @foreach (var opt in Model.PlanForDataBreachProcess.Options)
+                        {
+                            <div class="col-6">
+                                @Html.DisplayFor(m => opt.Option)
+                                @Html.DisplayFor(m => opt.IsSelected)
+                                <br />
+                            </div>
+                        }
+                        <br />
+                        <div class="p-3 mb-2 pl-3 col-12">@Html.DisplayFor(model => model.DataBreachPlanExplanation)</div>
+                    </th>
+                </tr>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>

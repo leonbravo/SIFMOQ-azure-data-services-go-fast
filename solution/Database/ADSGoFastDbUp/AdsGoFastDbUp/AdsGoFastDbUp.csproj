@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
     <PropertyGroup>
@@ -18,7 +18,24 @@
     <None Remove="1-0-0\A-Journaled\006-Data.sql" />       
     <None Remove="1-0-0\A-Journaled\007-ManualInserts.sql" />
     <None Remove="1-0-0\A-Journaled\008-CreateMSILogins.sql" />
+    <None Remove="1-0-0\A-Journaled\009-SubjectAreaForm-AddRevision.sql" />
+    <None Remove="1-0-1\A-Journaled\001-dbo_GetFrameworkTaskRunnners.sql" />     
+    <None Remove="1-0-1\A-Journaled\002-AddNewTaskTypes.sql" />    
+    <None Remove="1-0-1\A-Journaled\003-CreateIntegrationRuntimeMapping.sql" />   
+    <None Remove="1-0-1\A-Journaled\004-Alter_dbo_GetTaskMaster.sql" />   
+    <None Remove="1-0-1\A-Journaled\005-UpdateSynapseEngine.sql" />   
+    <None Remove="1-0-2\A-Journaled\001-AddRestAPI.sql" />   
+    <None Remove="1-0-2\A-Journaled\002-AddTemporalTables.sql" />   
+    <None Remove="1-0-2\A-Journaled\003-Extend-SubjectAreaMap-Table.sql" />   
+    <None Remove="1-0-2\A-Journaled\004-ModifyTaskMaster.sql" />   
+    <None Remove="1-0-2\A-Journaled\005-AddSynapseContainerAsSource.sql" />         
+    <None Remove="1-0-3\A-Journaled\001-UpdateOracleSource.sql" />  
+    <None Remove="1-0-3\A-Journaled\002-InsertSIFSamples.sql" />  
+    <None Remove="1-0-3\A-Journaled\003-InsertStopIdleSparkSessions.sql" />  
     
+
+
+            
   </ItemGroup>
 
   <ItemGroup>
@@ -29,7 +46,21 @@
     <EmbeddedResource Include="1-0-0\A-Journaled\005-Users.sql" />       
     <EmbeddedResource Include="1-0-0\A-Journaled\006-Data.sql" />       
     <EmbeddedResource Include="1-0-0\A-Journaled\007-ManualInserts.sql" />       
-    <EmbeddedResource Include="1-0-0\A-Journaled\008-CreateMSILogins.sql" />    
+    <EmbeddedResource Include="1-0-0\A-Journaled\008-CreateMSILogins.sql" />            
+    <EmbeddedResource Include="1-0-0\A-Journaled\009-SubjectAreaForm-AddRevision.sql" />    
+    <EmbeddedResource Include="1-0-1\A-Journaled\001-dbo_GetFrameworkTaskRunnners.sql" />    
+    <EmbeddedResource Include="1-0-1\A-Journaled\002-AddNewTaskTypes.sql" />
+    <EmbeddedResource Include="1-0-1\A-Journaled\003-CreateIntegrationRuntimeMapping.sql" />    
+    <EmbeddedResource Include="1-0-1\A-Journaled\004-Alter_dbo_GetTaskMaster.sql" />
+    <EmbeddedResource Include="1-0-1\A-Journaled\005-UpdateSynapseEngine.sql" /> 
+    <EmbeddedResource Include="1-0-2\A-Journaled\001-AddRestAPI.sql" /> 
+    <EmbeddedResource Include="1-0-2\A-Journaled\002-AddTemporalTables.sql" /> 
+    <EmbeddedResource Include="1-0-2\A-Journaled\003-Extend-SubjectAreaMap-Table.sql" /> 
+    <EmbeddedResource Include="1-0-2\A-Journaled\004-ModifyTaskMaster.sql" /> 
+    <EmbeddedResource Include="1-0-2\A-Journaled\005-AddSynapseContainerAsSource.sql" />
+    <EmbeddedResource Include="1-0-3\A-Journaled\001-UpdateOracleSource.sql" />
+    <EmbeddedResource Include="1-0-3\A-Journaled\002-InsertSIFSamples.sql" />
+    <EmbeddedResource Include="1-0-3\A-Journaled\003-InsertStopIdleSparkSessions.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,6 +72,10 @@
   <ItemGroup>
     <Folder Include="1-0-0\B-Always\" />
     <Folder Include="1-0-0\" />
+    <Folder Include="1-0-1\" />
+    <Folder Include="1-0-2\" />
+    <Folder Include="1-0-3\" />
+
   </ItemGroup>
 
   <ItemGroup>

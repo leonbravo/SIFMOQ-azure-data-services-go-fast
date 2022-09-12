@@ -15,7 +15,7 @@ function(SourceType = "", SourceFormat = "Not-Applicable", TargetType = "", Targ
                 "inputAttributes": {
                     "placeholder": "TestPool"
                 },
-                "infoText": "Use this field to define the name of the Synapse SQL Pool you are wanting to manipulate within your workspace."
+                "infoText": "(required) Use this field to define the name of the Synapse SQL Pool you are wanting to manipulate within your workspace."
             }
         },
         "SQLPoolOperation": {
@@ -25,7 +25,7 @@ function(SourceType = "", SourceFormat = "Not-Applicable", TargetType = "", Targ
                 "Pause"
             ],
             "options": {
-                "infoText": "Use this field to select whether you would like to start or pause the SQLPool you have defined."
+                "infoText": "(required) Use this field to select whether you would like to start or pause the SQLPool you have defined."
             },
         },
         "Source": partials[SourceFormat](),

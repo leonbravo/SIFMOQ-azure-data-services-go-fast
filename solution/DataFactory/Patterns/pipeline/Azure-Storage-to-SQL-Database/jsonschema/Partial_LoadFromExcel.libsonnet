@@ -17,7 +17,7 @@ function()
                         "inputAttributes": {
                             "placeholder": "eg. AwSample/dbo/Customer/{yyyy}/{MM}/{dd}/{hh}/"
                         },
-                        "infoText": "Path of the file to be imported."
+                        "infoText": "(optional) Path of the file to be imported."
                     }
                 },
                 "DataFileName": {
@@ -26,7 +26,7 @@ function()
                         "inputAttributes": {
                             "placeholder": "eg. Customer.xlsx"
                         },
-                        "infoText": "Name of the file to be imported."
+                        "infoText": "(required) Name of the file to be imported."
                     }
                 },
                 "SchemaFileName": {
@@ -35,7 +35,7 @@ function()
                         "inputAttributes": {
                             "placeholder": "eg. Customer_Schema.json"
                         },
-                        "infoText": "Name of the schema file to use when generating the target table. *Note that if you do not provide a schema file then the schema will be automatically inferred based on the source data."
+                        "infoText": "(required) Name of the schema file to use when generating the target table. *Note that if you do not provide a schema file then the schema will be automatically inferred based on the source data."
                     }
                 },
                 "FirstRowAsHeader": {
@@ -46,7 +46,7 @@ function()
                     ],
                     "default": "true",
                     "options": {                        
-                        "infoText": "Set to true if you want the first row of data to be used as column names."
+                        "infoText": "(required) Set to true if you want the first row of data to be used as column names."
                     }
                 },
                 "SheetName": {
@@ -55,7 +55,7 @@ function()
                         "inputAttributes": {
                             "placeholder": "eg. Sheet1"
                         },
-                        "infoText": "Name of the Excel Worksheet that you wish to import"
+                        "infoText": "(required) Name of the Excel Worksheet that you wish to import"
                     }
                 }        
             },

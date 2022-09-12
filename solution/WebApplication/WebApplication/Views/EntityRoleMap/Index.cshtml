@@ -1,0 +1,72 @@
+@model IEnumerable<WebApplication.Models.EntityRoleMap>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>EntityRoleMap - Browse</h1>
+
+<p>
+    <a class="btn-sm btn-dark details" asp-action="Create">Create New</a>
+</p>
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EntityId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EntityTypeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AadGroupUid)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationRoleName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExpiryDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ActiveYN)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedBy)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EntityId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EntityTypeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AadGroupUid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApplicationRoleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExpiryDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ActiveYN)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedBy)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.EntityRoleMapId" class="btn-sm btn-dark details">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.EntityRoleMapId" class="btn-sm btn-info details">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.EntityRoleMapId" class="btn-sm btn-danger details">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

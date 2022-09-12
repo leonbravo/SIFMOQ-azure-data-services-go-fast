@@ -20,6 +20,8 @@ namespace FunctionApp.Models
                 JToken chunkField = taskMasterJson["Source"]["ChunkField"];
                 JToken tableSchema = taskMasterJson["Source"]["TableSchema"];
                 JToken tableName = taskMasterJson["Source"]["TableName"];
+                JToken tableSchemaUpper = JToken.Parse((taskMasterJson["Source"]["TableSchema"].ToString()).ToUpper());
+                JToken tableNameUpper = JToken.Parse((taskMasterJson["Source"]["TableName"].ToString()).ToUpper());
                 string extractionSql =
                     JsonHelpers.GetStringValueFromJson(logging, "ExtractionSQL", tmSource, "", false);
                 dynamic chunkSize = JsonHelpers.GetDynamicValueFromJson(logging, "ChunkSize", tmSource, "", false);
@@ -39,13 +41,26 @@ namespace FunctionApp.Models
                     if (incrementalType.ToString() == "Full" &&
                         string.IsNullOrWhiteSpace(taskMasterJson["Source"]["ChunkSize"].ToString()))
                     {
-                        sqlStatement = $"SELECT * FROM {tableSchema}.{tableName}";
+                        if (taskMasterJson["Source"]["System"]["Type"].ToString() == "Oracle Server")
+                        {
+                            sqlStatement = $"SELECT * FROM {tableSchemaUpper}.{tableNameUpper}";
+                        }
+                        else {
+                            sqlStatement = $"SELECT * FROM {tableSchema}.{tableName}";
+                        }
                     }
                     else if (incrementalType.ToString() == "Full" &&
                              !string.IsNullOrWhiteSpace(taskMasterJson["Source"]["ChunkSize"].ToString()))
                     {
-                        sqlStatement =
+                        if (taskMasterJson["Source"]["System"]["Type"].ToString() == "Oracle Server")
+                        {
+                            sqlStatement =
+                            $"SELECT * FROM {tableSchemaUpper}.{tableNameUpper} WHERE CAST({chunkField} AS BIGINT) %  <batchcount> = <item> -1. ";
+                        }
+                        else {
+                            sqlStatement =
                             $"SELECT * FROM {tableSchema}.{tableName} WHERE CAST({chunkField} AS BIGINT) %  <batchcount> = <item> -1. ";
+                        }
                     }
                     else if (incrementalType.ToString() == "Watermark" &&
                              string.IsNullOrWhiteSpace(taskMasterJson["Source"]["ChunkSize"].ToString()))
@@ -53,14 +68,28 @@ namespace FunctionApp.Models
                         if (incrementalColumnType.ToString() == "DateTime")
                         {
                             DateTime incrementalValueDateTime = (DateTime)TaskInstanceJson["IncrementalValue"];
-                            sqlStatement =
+                            if (taskMasterJson["Source"]["System"]["Type"].ToString() == "Oracle Server")
+                            {
+                                sqlStatement =
+                                $"SELECT * FROM {tableSchemaUpper}.{tableNameUpper} WHERE {incrementalField} > Cast('{incrementalValueDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff")}' as datetime) AND {incrementalField} <= Cast('<newWatermark>' as datetime)";
+                            }
+                            else {
+                                sqlStatement =
                                 $"SELECT * FROM {tableSchema}.{tableName} WHERE {incrementalField} > Cast('{incrementalValueDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff")}' as datetime) AND {incrementalField} <= Cast('<newWatermark>' as datetime)";
+                            }
                         }
                         else if (incrementalColumnType.ToString() == "BigInt")
                         {
                             int incrementalValueBigInt = (int)TaskInstanceJson["IncrementalValue"];
-                            sqlStatement =
+                            if (taskMasterJson["Source"]["System"]["Type"].ToString() == "Oracle Server")
+                            {
+                                sqlStatement =
+                                $"SELECT * FROM {tableSchemaUpper}.{tableNameUpper} WHERE {incrementalField} > Cast('{incrementalValueBigInt}' as bigint) AND {incrementalField} <= cast('<newWatermark>' as bigint)";
+                            }
+                            else {
+                                sqlStatement =
                                 $"SELECT * FROM {tableSchema}.{tableName} WHERE {incrementalField} > Cast('{incrementalValueBigInt}' as bigint) AND {incrementalField} <= cast('<newWatermark>' as bigint)";
+                            }
                         }
                     }
                     else if (incrementalType.ToString() == "Watermark" &&
@@ -69,14 +98,28 @@ namespace FunctionApp.Models
                         if (incrementalColumnType.ToString() == "DateTime")
                         {
                             DateTime incrementalValueDateTime = (DateTime)TaskInstanceJson["IncrementalValue"];
-                            sqlStatement =
+                            if (taskMasterJson["Source"]["System"]["Type"].ToString() == "Oracle Server")
+                            {
+                                sqlStatement =
+                                $"SELECT * FROM {tableSchemaUpper}.{tableNameUpper} WHERE {incrementalField} > Cast('{incrementalValueDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff")}' as datetime) AND {incrementalField} <= Cast('<newWatermark>' as datetime) AND CAST({chunkField} AS BIGINT) %  <batchcount> = <item> -1.";
+                            }
+                            else {
+                                sqlStatement =
                                 $"SELECT * FROM {tableSchema}.{tableName} WHERE {incrementalField} > Cast('{incrementalValueDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff")}' as datetime) AND {incrementalField} <= Cast('<newWatermark>' as datetime) AND CAST({chunkField} AS BIGINT) %  <batchcount> = <item> -1.";
+                            }
                         }
                         else if (incrementalColumnType.ToString() == "BigInt")
                         {
                             int incrementalValueBigInt = (int)TaskInstanceJson["IncrementalValue"];
-                            sqlStatement =
+                            if (taskMasterJson["Source"]["System"]["Type"].ToString() == "Oracle Server")
+                            {
+                                sqlStatement =
+                                $"SELECT * FROM {tableSchemaUpper}.{tableNameUpper} WHERE {incrementalField} > Cast('{incrementalValueBigInt}' as bigint) AND {incrementalField} <= Cast('<newWatermark>' as bigint) AND CAST({chunkField} AS BIGINT) %  <batchcount> = <item> -1.";
+                            }
+                            else {
+                                sqlStatement =
                                 $"SELECT * FROM {tableSchema}.{tableName} WHERE {incrementalField} > Cast('{incrementalValueBigInt}' as bigint) AND {incrementalField} <= Cast('<newWatermark>' as bigint) AND CAST({chunkField} AS BIGINT) %  <batchcount> = <item> -1.";
+                            }
                         }
                     }
                 }
@@ -85,21 +128,45 @@ namespace FunctionApp.Models
                 {
                     if (incrementalType.ToString() == "Full")
                     {
-                        sqlStatement = $"SELECT * FROM {tableSchema}.{tableName}";
+                        if (taskMasterJson["Source"]["System"]["Type"].ToString() == "Oracle Server")
+                        {
+                            sqlStatement = $"SELECT * FROM {tableSchemaUpper}.{tableNameUpper}";
+                        }
+                        else {
+                            sqlStatement = $"SELECT * FROM {tableSchema}.{tableName}";
+                        }
                     }
                     else if (incrementalType.ToString() == "Watermark")
                     {
                         if (incrementalColumnType.ToString() == "DateTime")
                         {
                             DateTime incrementalValueDateTime = (DateTime)TaskInstanceJson["IncrementalValue"];
-                            sqlStatement =
+                            if (taskMasterJson["Source"]["System"]["Type"].ToString() == "Oracle Server")
+                            {
+                                sqlStatement =
+                                $"SELECT * FROM {tableSchemaUpper}.{tableNameUpper} WHERE {incrementalField} > Cast('{incrementalValueDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff")}' as datetime) AND {incrementalField} <= Cast('<newWatermark>' as datetime)";
+
+                            }
+                            else {
+                                sqlStatement =
                                 $"SELECT * FROM {tableSchema}.{tableName} WHERE {incrementalField} > Cast('{incrementalValueDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff")}' as datetime) AND {incrementalField} <= Cast('<newWatermark>' as datetime)";
+
+                            }
                         }
                         else if (incrementalColumnType.ToString() == "BigInt")
                         {
                             int incrementalValueBigInt = (int)TaskInstanceJson["IncrementalValue"];
-                            sqlStatement =
+                            if (taskMasterJson["Source"]["System"]["Type"].ToString() == "Oracle Server")
+                            {
+                                sqlStatement =
+                                $"SELECT * FROM {tableSchemaUpper}.{tableNameUpper} WHERE {incrementalField} > Cast('{incrementalValueBigInt}' as bigint) AND {incrementalField} <= cast('<newWatermark>' as bigint)";
+
+                            }
+                            else {
+                                sqlStatement =
                                 $"SELECT * FROM {tableSchema}.{tableName} WHERE {incrementalField} > Cast('{incrementalValueBigInt}' as bigint) AND {incrementalField} <= cast('<newWatermark>' as bigint)";
+
+                            }
                         }
                     }
                     else

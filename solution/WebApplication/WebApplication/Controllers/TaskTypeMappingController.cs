@@ -257,8 +257,7 @@ namespace WebApplication.Controllers
                 //Search    
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    //TODO: Implement search
-                    //modelDataAll = modelDataAll.Where(m => m.TaskMasterName.Contains(searchValue));
+                    modelDataAll = modelDataAll.Where(m => m.MappingName.Contains(searchValue));
                 }
 
                 //Filter based on querystring params
@@ -298,7 +297,7 @@ namespace WebApplication.Controllers
         {
 
 
-            Int64 TaskTypeId = System.Convert.ToInt64(Request.Form["TaskTypeId"]);
+            Int64 TaskTypeId = System.Convert.ToInt64(Request.Form["TaskTypeId"]); //Source System Instead
 
 
             List<TaskTypeMapping> taskTypeMappings = new List<TaskTypeMapping>();

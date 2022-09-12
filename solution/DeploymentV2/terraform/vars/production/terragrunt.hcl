@@ -26,6 +26,7 @@ inputs = {
   owner_tag                             = "Contoso"        # Owner tag value for Azure resources
   environment_tag                       = "prd"            # This is used on Azure tags as well as all resource names
   ip_address                            = ""               # This is the ip address of the agent/current IP. Used to create firewall exemptions.
+  deploy_custom_terraform               = false # This is whether the infrastructure located in the terraform_custom folder is deployed or not.
   deploy_sentinel                       = true
   deploy_purview                        = false  
   deploy_synapse                        = true

@@ -37,48 +37,50 @@ resource "azuread_service_principal" "function_app" {
 
 # This allows the function app MSI to be able to call/request the Azure function App reg
 resource "azuread_app_role_assignment" "func_msi_app_role" {
-  count               = var.deploy_azure_ad_function_app_registration ? 1 : 0
+  count               = var.deploy_function_app && var.deploy_azure_ad_function_app_registration ? 1 : 0
   app_role_id         = random_uuid.function_app_reg_role_id.result
-  principal_object_id = azurerm_function_app.function_app.identity[0].principal_id
+  principal_object_id = azurerm_function_app.function_app[0].identity[0].principal_id
   resource_object_id  = azuread_service_principal.function_app[0].object_id
 }
 
 # This allows the function app SP to be able to call/request the Azure function App reg / SP
 # This allows us to debug locally by using the app reg details for both auth modes
 resource "azuread_app_role_assignment" "func_sp_app_role" {
-  count               = var.deploy_azure_ad_function_app_registration ? 1 : 0
+  count               = var.deploy_function_app && var.deploy_azure_ad_function_app_registration ? 1 : 0
   app_role_id         = random_uuid.function_app_reg_role_id.result
   principal_object_id = azuread_service_principal.function_app[0].object_id
   resource_object_id  = azuread_service_principal.function_app[0].object_id
 }
 
 resource "azuread_application_password" "function_app" {
-  count                 = var.deploy_azure_ad_function_app_registration ? 1 : 0
+  count                 = var.deploy_function_app && var.deploy_azure_ad_function_app_registration ? 1 : 0
   application_object_id = azuread_application.function_app_reg[0].object_id
 }
 
 resource "azurerm_function_app" "function_app" {
   name                       = local.functionapp_name
+  count                      = var.deploy_function_app && var.deploy_app_service_plan ? 1 : 0
   location                   = var.resource_location
   resource_group_name        = var.resource_group_name
   app_service_plan_id        = azurerm_app_service_plan.app_service_plan[0].id
   storage_account_name       = azurerm_storage_account.storage_acccount_security_logs.name
   storage_account_access_key = azurerm_storage_account.storage_acccount_security_logs.primary_access_key
-  version                    = "~3"
+  version                    = "~4"
 
   https_only = true
 
   site_config {
-    always_on              = true
-    ftps_state             = "Disabled"
-    vnet_route_all_enabled = var.is_vnet_isolated
+    always_on                = true
+    dotnet_framework_version = "v6.0"
+    ftps_state               = "Disabled"
+    vnet_route_all_enabled   = var.is_vnet_isolated
     dynamic "ip_restriction" {
       for_each = var.is_vnet_isolated ? [1] : []
       content {
         priority                  = 100
         name                      = "Allow Private Link Subnet"
         action                    = "Allow"
-        virtual_network_subnet_id = azurerm_subnet.plink_subnet[0].id
+        virtual_network_subnet_id = local.plink_subnet_id
       }
     }
     dynamic "ip_restriction" {
@@ -87,7 +89,7 @@ resource "azurerm_function_app" "function_app" {
         priority                  = 110
         name                      = "Allow App Service Subnet"
         action                    = "Allow"
-        virtual_network_subnet_id = azurerm_subnet.app_service_subnet[0].id
+        virtual_network_subnet_id = local.app_service_subnet_id
       }
     }
     dynamic "ip_restriction" {
@@ -115,12 +117,12 @@ resource "azurerm_function_app" "function_app" {
     WEBSITE_RUN_FROM_PACKAGE = 0
 
     FUNCTIONS_WORKER_RUNTIME                                                    = "dotnet"
-    FUNCTIONS_EXTENSION_VERSION                                                 = "~3"
+    FUNCTIONS_EXTENSION_VERSION                                                 = "~4"
     AzureWebJobsStorage                                                         = azurerm_storage_account.storage_acccount_security_logs.primary_connection_string
     APPINSIGHTS_INSTRUMENTATIONKEY                                              = azurerm_application_insights.app_insights[0].instrumentation_key
     ApplicationOptions__UseMSI                                                  = true
-    ApplicationOptions__ServiceConnections__AdsGoFastTaskMetaDataDatabaseServer = "${azurerm_mssql_server.sqlserver[0].name}.database.windows.net"
-    ApplicationOptions__ServiceConnections__AdsGoFastTaskMetaDataDatabaseName   = azurerm_mssql_database.web_db[0].name
+    ApplicationOptions__ServiceConnections__AdsGoFastTaskMetaDataDatabaseServer = var.deploy_metadata_database ? "${azurerm_mssql_server.sqlserver[0].name}.database.windows.net" : null
+    ApplicationOptions__ServiceConnections__AdsGoFastTaskMetaDataDatabaseName   = var.deploy_metadata_database ? azurerm_mssql_database.web_db[0].name : null
     ApplicationOptions__ServiceConnections__CoreFunctionsURL                    = local.functionapp_url
     ApplicationOptions__ServiceConnections__AppInsightsWorkspaceId              = azurerm_application_insights.app_insights[0].app_id
 
@@ -151,20 +153,21 @@ resource "azurerm_function_app" "function_app" {
 }
 
 resource "azurerm_app_service_virtual_network_swift_connection" "vnet_integration_func" {
-  count          = var.is_vnet_isolated ? 1 : 0
-  app_service_id = azurerm_function_app.function_app.id
-  subnet_id      = azurerm_subnet.app_service_subnet[0].id
+  count          = var.is_vnet_isolated && var.deploy_function_app ? 1 : 0
+  app_service_id = azurerm_function_app.function_app[0].id
+  subnet_id      = local.app_service_subnet_id
 }
 
 # Diagnostic logs--------------------------------------------------------------------------
 resource "azurerm_monitor_diagnostic_setting" "function_diagnostic_logs" {
-  name = "diagnosticlogs"
+  count = var.deploy_function_app ? 1 : 0
+  name  = "diagnosticlogs"
   # ignore_changes is here given the bug  https://github.com/terraform-providers/terraform-provider-azurerm/issues/10388
   lifecycle {
     ignore_changes = [log, metric]
   }
-  target_resource_id         = azurerm_function_app.function_app.id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace.id
+  target_resource_id         = azurerm_function_app.function_app[0].id
+  log_analytics_workspace_id = local.log_analytics_resource_id
 
   log {
     category = "FunctionAppLogs"

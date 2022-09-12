@@ -146,7 +146,6 @@ namespace FunctionApp.Functions
                             };
 
                             string mergeSql = GenerateSqlStatementTemplates.GetSql(System.IO.Path.Combine(EnvironmentHelper.GetWorkingFolder(),_appOptions.Value.LocalPaths.SQLTemplateLocation), "MergeIntoActivityLevelLogs", sqlParams);
-                            logging.LogInformation(mergeSql.ToString());
                             conWrite.ExecuteWithRetry(mergeSql);
                             conWrite.Close();
                             conWrite.Dispose();

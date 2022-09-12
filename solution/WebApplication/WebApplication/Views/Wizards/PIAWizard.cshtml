@@ -1,0 +1,183 @@
+@model WebApplication.Models.Wizards.PIAWizardViewModel
+@{
+    ViewData["Title"] = "Privacy Impact Assessment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Modal -->
+<div class="modal fade" id="PIAProcessModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Data Set Privacy Impact Assessment Process</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h3>Is Your Data Set Publicly Available?</h3>
+                <hr />
+                <br />
+                <p>
+                    The Office of the Australian Information Commissioner (OAIC) and Commonwealth Scientific and Industrial Research Organisation (CSIRO)'s Data61 (Office of the Australian Information Commissioner, 2017) released the De-identification Decision-Making Framework (DDF) to assist organisations
+                    to de-identify their data effectively. The DDF is a practical and accessible guide for Australian organisations that handle personal information and are considering sharing or releasing it to meet their ethical responsibilities and legal obligations, such as those under the Privacy Act 1988.
+                    OAIC have released the DDF as a freely available open source book as they feel that they have an important message that they want to ensure is disseminated as widely as possible.
+                </p>
+                <p>
+                    We have used that guide extensively to develop our process for assessing the privacy impacts at a data set level, to closely align with an approach recommended by the Information Commissioner. Being able to demonstrate the close alignment with the advice provided by the OAIC that we
+                    have adopted provides us with a high level of confidence of implementing suitable privacy controls as well as being able to defend the approach we have taken.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* todo: make this look better *@
+<h1>Privacy Impact Assessment - Subject Area: @Model.BelongingDataset</h1>
+<!-- MultiStep Form -->
+<div id="smartwizard">
+    <ul class="nav">
+        <li>
+            <a class="nav-link" href="#step-1">
+                <strong>Step 1</strong>
+                <br />
+                Introduction
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" href="#step-2">
+                <strong>Step 2</strong>
+                <br />
+                Data Set Authorities
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" href="#step-3">
+                <strong>Step 3</strong>
+                <br />
+                Legal Responsibility
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" href="#step-4">
+                <strong>Step 4</strong>
+                <br />
+                Know Your Data
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" href="#step-5">
+                <strong>Step 5</strong>
+                <br />
+                Ethical Obligations
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" href="#step-6">
+                <strong>Step 6</strong>
+                <br />
+                Risk Processes
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" href="#step-7">
+                <strong>Step 7</strong>
+                <br />
+                Control Process
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" href="#step-8">
+                <strong>Step 8</strong>
+                <br />
+                Impact Management
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" href="#step-9">
+                <strong>Step 9</strong>
+                <br />
+                Summary
+            </a>
+        </li>
+
+    </ul>
+
+    @using (Html.BeginForm("PIAWizard", "Wizards", new { subjectAreaId = Model.SubjectAreaId }, FormMethod.Post, true, new { @id = "form" }))
+    {
+        @Html.HiddenFor(m => m.Step)
+        @Html.HiddenFor(m => m.MaxStep)
+        @Html.HiddenFor(m => m.SubjectAreaId)
+        @Html.HiddenFor(m => m.SubmissionMethod)
+        @Html.HiddenFor(m => m.BelongingDataset)
+        @Html.HiddenFor(m => m.BelongingDatasetCode)
+
+        <div class="tab-content">
+            <div id="step-1" class="tab-pane" role="tabpanel">
+                @await Html.PartialAsync("_PIAWizardStep1.cshtml")
+            </div>
+            <div id="step-2" class="tab-pane" role="tabpanel">
+                @await Html.PartialAsync("_PIAWizardStep2.cshtml")
+            </div>
+            <div id="step-3" class="tab-pane" role="tabpanel">
+                @await Html.PartialAsync("_PIAWizardStep3.cshtml")
+            </div>
+            <div id="step-4" class="tab-pane" role="tabpanel">
+                @await Html.PartialAsync("_PIAWizardStep4.cshtml")
+            </div>
+            <div id="step-5" class="tab-pane" role="tabpanel">
+                @await Html.PartialAsync("_PIAWizardStep5.cshtml")
+            </div>
+            <div id="step-6" class="tab-pane privateDataSetStep" role="tabpanel">
+                <div class="card-body text-danger text-center privateDataSetWarning">
+                    <strong>This step is only required for private data sets. You may skip it if your data set is public</strong>
+                    <a class="btn btn-warning editBtn" href="#step-9"><i class="fas fa-edit"></i>Skip to Summary</a>
+                </div>
+                @await Html.PartialAsync("_PIAWizardStep6.cshtml")
+            </div>
+            <div id="step-7" class="tab-pane privateDataSetStep" role="tabpanel">
+                <div class="card-body text-danger text-center privateDataSetWarning">
+                    <strong>This step is only required for private data sets. You may skip it if your data set is public</strong>
+                    <a class="btn btn-warning editBtn" href="#step-9"><i class="fas fa-edit"></i>Skip to Summary</a>
+                </div>
+                @await Html.PartialAsync("_PIAWizardStep7.cshtml")
+            </div>
+            <div id="step-8" class="tab-pane privateDataSetStep" role="tabpanel">
+                <div class="card-body text-danger text-center privateDataSetWarning">
+                    <strong>This step is only required for private data sets. You may skip it if your data set is public</strong>
+                    <a class="btn btn-warning editBtn" href="#step-9"><i class="fas fa-edit"></i>Skip to Summary</a>
+                </div>
+                @await Html.PartialAsync("_PIAWizardStep8.cshtml")
+            </div>
+            <div id="step-9" class="tab-pane" role="tabpanel">
+                <br />
+                <div class="form-group">
+                    
+                    <div class="card">
+                        <div class="card-body text-danger text-center">
+                            <strong>Please review your selections and make sure all data is accurate and true. To formalise the submission of this Privacy Impact Assessment, click the submit button at the bottom of this page.</strong>
+                        </div>
+                    </div>
+
+                    @await Html.PartialAsync("_PIAWizardSummaryStep9.cshtml")
+                    <input id="submitBtn" class="btn-block btn-danger" type="submit" value="Submit Data" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts
+{
+    <script src="~/js/piaWizardToolTips.js"></script>
+    <link rel="stylesheet" href="~/lib//smartwizard/dist/css/smart_wizard_all.min.css" />
+    <script src="~/lib/smartwizard/dist/js/jquery.smartWizard.min.js" asp-append-version="true"></script>
+    <script src="~/lib/showdown/showdown.min.js" asp-append-version="true"></script>
+    <script src="~/js/setDisplayNameDatasetUsers.js" asp-append-version="true"></script>
+
+    <script src="~/js/piaWizard.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        getPIAWizardModelData(@Html.Raw(Json.Serialize(Model))); // allows external js file to access model data
+    </script>
+    <script src="~/js/customValidators.js" asp-append-version="true"></script>
+}

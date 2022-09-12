@@ -1,5 +1,6 @@
-Import-Module .\GatherOutputsFromTerraform.psm1 -force
-$tout = GatherOutputsFromTerraform
+Import-Module ./GatherOutputsFromTerraform_SynapseFolder.psm1 -Force
+$tout = GatherOutputsFromTerraform_SynapseFolder
+$newfolder = "./output/"
 
 
 #Generate Patterns.json
@@ -9,18 +10,19 @@ $GenerateArm="false"
 
 if (!(Test-Path "./output"))
 {
-    New-Item -itemType Directory -Name "output"
+    $fld = New-Item -itemType Directory -Name "output"
 }
 else
 {
-    Write-Information "Output Folder already exists"
+    Write-Verbose "Output Folder already exists"
 }
 
 #Remove Previous Outputs
-Get-ChildItem ./output | foreach {
+$hiddenoutput = Get-ChildItem ./output | foreach {
     Remove-item $_ -force
 }
-
+#create tout json to be used for git integration
+$toutjson = $tout | ConvertTo-Json -Depth 10 | Set-Content($newfolder + "tout.json")
 #Copy Static Pipelines
 $folder = "./pipeline/static"
 $templates = (Get-ChildItem -Path $folder -Filter "*.json"  -Verbose)
@@ -33,14 +35,14 @@ foreach ($file in $templates)
 
 
 #Copy IR Specific Pipelines
-$patterns = (Get-Content "Patterns.json") | ConvertFrom-Json
+$patterns = (Get-Content "Patterns.json") | ConvertFrom-Json -Depth 10
 foreach ($ir in $tout.integration_runtimes)
 {    
 
     $GFPIR = $ir
     if (($tout.synapse_spark_pool_name -eq ""))
     {
-        Write-Host "Skipping Synapse pipeline generation as there is no Synapse Spark Pool"
+        Write-Verbose "Skipping Synapse pipeline generation as there is no Synapse Spark Pool"
     }
     else
     {        
@@ -49,9 +51,9 @@ foreach ($ir in $tout.integration_runtimes)
             $folder = "./pipeline/" + $pattern.Folder
             $templates = (Get-ChildItem -Path $folder -Filter "*.libsonnet"  -Verbose)
 
-            Write-Host "_____________________________"
-            Write-Host $folder 
-            Write-Host "_____________________________"
+            Write-Verbose "_____________________________"
+            Write-Verbose $folder 
+            Write-Verbose "_____________________________"
 
             foreach ($t in $templates) {        
                 $GFPIR = $pattern.GFPIR
@@ -62,7 +64,7 @@ foreach ($ir in $tout.integration_runtimes)
                 $SparkPoolName = $tout.synapse_spark_pool_name
 
                 $newname = ($t.PSChildName).Replace(".libsonnet",".json")        
-                Write-Host $newname        
+                Write-Verbose $newname        
                 (jsonnet --tla-str GenerateArm=$GenerateArm  --tla-str SparkPoolName="$SparkPoolName"  --tla-str GFPIR="$GFPIR" $t.FullName) | Set-Content('./output/' + $newname)
 
             }
@@ -79,10 +81,9 @@ foreach ($patternFolder in $patternFolders)
     #clear previous runs
     if (Test-Path ("./pipeline/" + $patternFolder + "/output/schemas/taskmasterjson/"))
     {
-        Get-ChildItem ("./pipeline/" + $patternFolder + "/output/schemas/taskmasterjson/") | Remove-item -Recurse
+        $hiddenoutput = Get-ChildItem ("./pipeline/" + $patternFolder + "/output/schemas/taskmasterjson/") | Remove-item -Recurse
     }
-
-    Get-ChildItem 
+    
     $patternsInFolder = ($patterns | where-object {$_.Folder -eq $patternFolder})
     #get all patterns for that folder and generate the schema files
     $patternsInFolder | ForEach-Object {
@@ -100,20 +101,20 @@ foreach ($patternFolder in $patternFolders)
             Pipeline = $item.pipeline
         }               
         $schemafiles += $schemafile
-        Write-Host "_____________________________"
-        Write-Host "Generating ADF Schema Files: " 
-        Write-Host $schemafile.$folder 
-        Write-Host "_____________________________"
+        Write-Verbose "_____________________________"
+        Write-Verbose "Generating ADF Schema Files: " 
+        Write-Verbose ($schemafile.SourceFolder)
+        Write-Verbose "_____________________________"
         
         $newfolder = ($schemafile.SourceFolder + "/output")
-        !(Test-Path $newfolder) ? ($F = New-Item -itemType Directory -Name $newfolder) : ($F = "")
+        $hiddenoutput = !(Test-Path $newfolder) ? ($F = New-Item -itemType Directory -Name $newfolder -Force) : ($F = "")
         $newfolder = ($newfolder + "/schemas")
-        !(Test-Path $newfolder) ? ($F = New-Item -itemType Directory -Name $newfolder) : ($F = "")
+        $hiddenoutput = !(Test-Path $newfolder) ? ($F = New-Item -itemType Directory -Name $newfolder -Force) : ($F = "")
         $newfolder = ($newfolder + "/taskmasterjson/")
-        !(Test-Path $newfolder) ? ($F = New-Item -itemType Directory -Name $newfolder) : ($F = "")
+        $hiddenoutput = !(Test-Path $newfolder) ? ($F = New-Item -itemType Directory -Name $newfolder -Force) : ($F = "")
         
         $schemafile.TargetFolder = $newfolder
-        $schemafiletemplate = (Get-ChildItem -Path ($schemafile.SourceFolder+"/jsonschema/") -Filter "Main.libsonnet"  -Verbose)
+        $schemafiletemplate = (Get-ChildItem -Path ($schemafile.SourceFolder+"/jsonschema/") -Filter "Main.libsonnet")
 
         $newname = ($schemafiletemplate.PSChildName).Replace(".libsonnet",".json").Replace("Main", $guid);
 
@@ -136,10 +137,10 @@ foreach ($patternFolder in $patternFolders)
     {  
         $pipeline = $pattern.Pipeline                
                 
-        #Write-Host "_____________________________"
-        #Write-Host "Inserting into TempTTM: " 
-        #Write-Host $pipeline
-        #Write-Host "_____________________________"        
+        #Write-Verbose "_____________________________"
+        #Write-Verbose "Inserting into TempTTM: " 
+        #Write-Verbose $pipeline
+        #Write-Verbose "_____________________________"        
         $psplit = $pipeline.split("_")
         $SourceType = $pattern.SourceType
         $SourceFormat = $pattern.SourceFormat
@@ -147,7 +148,7 @@ foreach ($patternFolder in $patternFolders)
         $TargetFormat = $pattern.TargetFormat
         $TaskTypeId = $pattern.TaskTypeId
 
-        $schemafileguid = ($schemafiles | where-object {$_.SourceFormat -eq $SourceFormat -and $_.SourceType -eq $SourceType -and $_.TargetFormat -eq $TargetFormat -and $_.TargetType -eq $TargetType}).Guid
+        $schemafileguid = ($schemafiles | where-object {$_.SourceFormat -eq $SourceFormat -and $_.SourceType -eq $SourceType -and $_.TargetFormat -eq $TargetFormat -and $_.TargetType -eq $TargetType -and $_.Pipeline -eq $pipeline}).Guid
         $tschemafile = $folder + "/output/schemas/taskmasterjson/"+ $schemafileguid + ".json"
 
         #$SourceType = $psplit[1]
@@ -175,7 +176,7 @@ foreach ($patternFolder in $patternFolders)
         $TargetFormat = "Table"
         }
 
-        if ($TaskTypeId -eq -6) 
+        if ($TaskTypeId -eq -6 -or $TaskTypeId -eq -10) 
         {
             $MappingType = 'DLL'
         }
@@ -237,17 +238,141 @@ if($GenerateArm -eq "true") {
         Copy-Item -Path "./output/$template" -Destination "../../DeploymentV2\terraform\modules\data_factory_pipelines_selfhosted/arm/"  
     }
         
-    Write-Host "Copied $($templates.Count) to Self Hosted Pipelines Module in Terraform folder"
+    Write-Verbose "Copied $($templates.Count) to Self Hosted Pipelines Module in Terraform folder"
 
     $templates = Get-ChildItem -Path './output/*' -Exclude '*_Azure.json', '*_Azure.json' -Include "GPL*.json", "GPL_Az*.json" -Name
     foreach($template in $templates) {
         Copy-Item -Path "./output/$template" -Destination "../../DeploymentV2\terraform\modules\data_factory_pipelines_azure/arm/"  
     }
-    Write-Host "Copied $($templates.Count) to Azure Hosted Pipelines Module in Terraform folder"
+    Write-Verbose "Copied $($templates.Count) to Azure Hosted Pipelines Module in Terraform folder"
 
     $templates = Get-ChildItem -Path './output/*' -Exclude '*_Azure.json', '*_Azure.json' -Include "SPL_Az*.json" -Name
     foreach($template in $templates) {
         Copy-Item -Path "./output/$template" -Destination "../../DeploymentV2\terraform\modules\data_factory_pipelines_azure/arm/"  
     }
-    Write-Host "Copied $($templates.Count) to Static Hosted Pipelines Module in Terraform folder"
+    Write-Verbose "Copied $($templates.Count) to Static Hosted Pipelines Module in Terraform folder"
 }
+
+
+if($($tout.synapse_git_toggle_integration)) {
+    $newfolder = "./output/"
+    #LINKED SERVICES
+    $folder = "./linkedService/"
+    $templates = (Get-ChildItem -Path $folder -Filter "*.libsonnet" -Verbose)
+    Write-Verbose "_____________________________"
+    Write-Verbose "Generating Synapse linked services for Git Integration: " 
+    Write-Verbose "_____________________________"
+    foreach ($file in $templates){
+        $schemafiletemplate = (Get-ChildItem -Path ($folder) -Filter "$($file.PSChildName)"  -Verbose)
+        $newName = ($file.PSChildName).Replace(".libsonnet",".json")
+        $newName = "LS_" + $newName
+        $newName = $newName.Replace("(workspaceName)", $($tout.synapse_workspace_name))
+        (jsonnet $schemafiletemplate | Set-Content($newfolder + $newName))
+    }
+    #NOTEBOOKS
+    $folder = "./notebook/"
+    $notebooks = (Get-ChildItem -Path $folder -Filter "*.ipynb" -Verbose)
+    $schemafiletemplate = (Get-ChildItem -Path ($folder) -Filter "*.libsonnet"  -Verbose)
+    Write-Verbose "_____________________________"
+    Write-Verbose "Generating Synapse notebooks for Git Integration: " 
+    Write-Verbose "_____________________________"
+    foreach ($file in $notebooks){
+        $jsonobject = $file | Get-Content 
+        $newName = ($file.PSChildName).Replace(".ipynb",".json")
+        $newName = "NB_" + $newName
+        $jsonobject | Set-Content($newfolder + "cells.json") -Force
+        $jsonobject = (Get-ChildItem -Path ($newfolder) -Filter "cells.json" -Verbose)
+        $jsonobject = $jsonobject | Get-Content | ConvertFrom-Json -Depth 50
+        $cells = $jsonobject.cells
+        #Write-Verbose $cells
+        $notebookName = $file.BaseName
+        (jsonnet --tla-str notebookName="$notebookName" $schemafiletemplate | Set-Content($newfolder + $newName) -Force)
+
+    }
+    #delete cells temp file
+    Remove-Item "$($newfolder)/cells.json"
+
+    #INTEGRATED RUNTIMES
+
+    $folder = "./integrationRuntime/"
+    $IRS = (Get-ChildItem -Path $folder -Filter "*.libsonnet" -Verbose)
+    Write-Verbose "_____________________________"
+    Write-Verbose "Generating Synapse integration runtimes for Git Integration: " 
+    Write-Verbose "_____________________________"
+    foreach ($file in $IRS)
+    {
+        $schemafiletemplate = (Get-ChildItem -Path ($folder) -Filter "$($file.PSChildName)"  -Verbose)
+        $newName = ($file.PSChildName).Replace(".libsonnet",".json")
+        $newName = "IR_" + $newName
+        (jsonnet $schemafiletemplate | Set-Content($newfolder + $newName))
+
+    }
+
+    #CREDENTIAL
+    $folder = "./credential/"
+    $credentials = (Get-ChildItem -Path $folder -Filter "*.libsonnet" -Verbose)
+    Write-Verbose "_____________________________"
+    Write-Verbose "Generating Synapse credentials for Git Integration: " 
+    Write-Verbose "_____________________________"
+    foreach ($file in $credentials)
+    {
+        $schemafiletemplate = (Get-ChildItem -Path ($folder) -Filter "$($file.PSChildName)"  -Verbose)
+        $newName = ($file.PSChildName).Replace(".libsonnet",".json")
+        $newName = "CR_" + $newName
+        (jsonnet $schemafiletemplate | Set-Content($newfolder + $newName))
+
+    }
+    #MANAGED VIRTUAL NETWORK
+
+    $folder = "./managedVirtualNetwork/"
+    $files = (Get-ChildItem -Path $folder -Filter "*.libsonnet" -Verbose)
+    Write-Verbose "_____________________________"
+    Write-Verbose "Generating Synapse managed virtual networks for Git Integration: " 
+    Write-Verbose "_____________________________"
+    foreach ($file in $files)
+    {
+        $schemafiletemplate = (Get-ChildItem -Path ($folder) -Filter "$($file.PSChildName)"  -Verbose)
+        $newName = ($file.PSChildName).Replace(".libsonnet",".json")
+        $newName = "MVN_" + $newName
+        (jsonnet $schemafiletemplate | Set-Content($newfolder + $newName))
+    }
+
+    #managedPrivateEndpoint/default folder within MANAGED VIRTUAL NETWORK
+    $folder = "./managedVirtualNetwork/default/managedPrivateEndpoint"
+    #if our vnet isolation isnt on, we only want the standard files
+    if (!$tout.is_vnet_isolated) {
+        $files = (Get-ChildItem -Path $folder -Exclude *is_vnet_isolated*)
+    } else {
+        $files = (Get-ChildItem -Path $folder -Filter "*.libsonnet" -Verbose)
+
+    }
+    Write-Verbose "_____________________________"
+    Write-Verbose "Generating Synapse managed private endpoints for Git Integration: " 
+    Write-Verbose "_____________________________"
+    foreach ($file in $files)
+    {
+        $schemafiletemplate = (Get-ChildItem -Path ($folder) -Filter "$($file.PSChildName)"  -Verbose)
+        $newName = ($file.PSChildName).Replace(".libsonnet",".json")
+        $newName = "MVN_default-managedPrivateEndpoint_" + $newName
+        $newName = $newName.Replace("[is_vnet_isolated]", "")
+        $newName = $newName.Replace("(workspaceName)", $($tout.synapse_workspace_name))
+        (jsonnet $schemafiletemplate | Set-Content($newfolder + $newName))
+    }
+
+    #REPLACING FQDNS grabbed from az synapse
+    #REASON: FQDNS Contains a GUID on these files that I cannot identify where it is retrieved from otherwise
+
+    $files = (Get-ChildItem -Path $newFolder -Filter *fqdns*)
+    foreach ($file in $files)
+    {
+        $fileSysObj = Get-Content $file -raw | ConvertFrom-Json
+        $fileAZ = az synapse managed-private-endpoints show --workspace-name $($tout.synapse_workspace_name) --pe-name $fileSysObj.name
+        $fileAZ = $fileAZ | ConvertFrom-Json
+        $fileSysObj.properties.fqdns = $fileAZ.properties.fqdns
+        $newName = $($file.PSChildName).Replace("{fqdns}", "")
+        $fileSysObj | ConvertTo-Json -depth 32| Set-Content($($newfolder) + $($newName))
+    }
+
+
+}
+

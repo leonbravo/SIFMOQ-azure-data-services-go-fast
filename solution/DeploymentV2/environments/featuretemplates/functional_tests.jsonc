@@ -1,0 +1,23 @@
+[
+    {"Name":"deploy_web_app","Value":true},
+    {"Name":"deploy_function_app","Value":true},
+    {"Name":"deploy_custom_terraform","Value":false},
+    {"Name":"deploy_app_service_plan","Value":true},
+    {"Name":"deploy_data_factory","Value":true},
+    {"Name":"deploy_sentinel","Value":true},
+    {"Name":"deploy_purview","Value":true},
+    {"Name":"deploy_synapse","Value":true},
+    {"Name":"deploy_metadata_database","Value":true},
+    {"Name":"is_vnet_isolated","Value":true},
+    {"Name":"publish_web_app","Value":true},
+    {"Name":"publish_function_app","Value":true},
+    {"Name":"publish_sample_files","Value":true},
+    {"Name":"publish_metadata_database","Value":true},
+    {"Name":"configure_networking","Value":true},
+    {"Name":"publish_datafactory_pipelines","Value":true},
+    {"Name":"publish_web_app_addcurrentuserasadmin","Value":true},
+    {"Name":"publish_sif_database","Value":true},    
+    {"Name":"deploy_selfhostedsql","Value":true},
+    {"Name":"is_onprem_datafactory_ir_registered","Value":false},        
+    {"Name":"deployment_layer3_complete","Value":false}    
+]

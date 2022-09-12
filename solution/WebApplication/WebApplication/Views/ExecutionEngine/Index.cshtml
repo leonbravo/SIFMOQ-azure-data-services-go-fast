@@ -15,11 +15,14 @@
     <thead class="thead-dark">
         <tr>
             <th></th>
-             <th>
+            <th>
                 @Html.DisplayNameFor(model => model.EngineId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.EngineName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SystemType)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ResourceGroup)
@@ -29,6 +32,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DefaultKeyVaultURL)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EngineJson)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.LogAnalyticsWorkspaceId)
@@ -50,6 +56,9 @@
                 @Html.DisplayFor(modelItem => item.EngineName)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.SystemType)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.ResourceGroup)
             </td>
             <td>
@@ -57,6 +66,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DefaultKeyVaultURL)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EngineJson)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.LogAnalyticsWorkspaceId)
